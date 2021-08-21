@@ -1,0 +1,8 @@
+{
+  "name": "job-itinerary",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "4caff056"
+}
