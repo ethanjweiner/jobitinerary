@@ -4,8 +4,24 @@
       <ion-item>
         <ion-label position="stacked">Enter Your Activation Token</ion-label>
         <ion-input
+          type="text"
           v-model="activationToken"
           placeholder="Enter activation token"
+          required
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Your Name</ion-label>
+        <ion-input v-model="name" placeholder="Employee" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Phone Number</ion-label>
+        <ion-input
+          v-model="phone"
+          type="tel"
+          inputmode="tel"
+          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+          placeholder="123-123-1234"
           required
         ></ion-input>
       </ion-item>
@@ -44,6 +60,8 @@ export default {
   setup(props: any) {
     const credentials = reactive({
       email: props.email,
+      name: null,
+      phone: null,
       password: null,
     });
 

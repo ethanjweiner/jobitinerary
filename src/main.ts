@@ -1,4 +1,4 @@
-import { App as AppType, createApp, nextTick } from "vue";
+import { App as AppType, createApp } from "vue";
 import { handleAuthStateChanged } from "./helpers";
 import App from "./App.vue";
 import router from "./router";

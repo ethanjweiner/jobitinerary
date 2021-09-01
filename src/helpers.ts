@@ -1,4 +1,4 @@
-import { auth, employeesCollection } from "./main";
+import { auth } from "./main";
 import {
   store,
   fetchCompanyData,
@@ -27,39 +27,11 @@ const initRouteGuards = () => {
   routeGuardsInitialized = true;
 };
 
-// Does the _email_ match the _activationToken_ for the employee?
-export async function verifyEmployee(
-  email: string,
-  activationToken: string
-): Promise<boolean> {
-  const snapshot = await employeesCollection
-    .where("activationToken", "==", activationToken)
-    .limit(1)
-    .get();
-  let verified = false;
-  snapshot.docs.forEach((doc) => {
-    if (doc.data().email == email) {
-      verified = true;
-    }
-  });
-  return verified;
-}
-
 // Handle auth state changes here
 export async function handleAuthStateChanged(user: firebase.User | null) {
   console.log("Auth state changed...");
   // User has not been activated
   if (user) {
-    // Try to find a company
-    const companyData = await fetchCompanyData(user);
-
-    if (companyData) {
-      updateUser(companyData);
-      initRouteGuards();
-      if (!router.currentRoute.value.fullPath.startsWith("/company"))
-        router.push("/company");
-      return;
-    }
     // Try to find an employee
     const employeeData = await fetchEmployeeData(user);
 
@@ -68,6 +40,17 @@ export async function handleAuthStateChanged(user: firebase.User | null) {
       initRouteGuards();
       if (!router.currentRoute.value.fullPath.startsWith("/employee"))
         router.push("/employee");
+      return;
+    }
+
+    // Try to find a company
+    const companyData = await fetchCompanyData(user);
+
+    if (companyData) {
+      updateUser(companyData);
+      initRouteGuards();
+      if (!router.currentRoute.value.fullPath.startsWith("/company"))
+        router.push("/company");
       return;
     }
 
@@ -81,6 +64,12 @@ export async function handleAuthStateChanged(user: firebase.User | null) {
     // The user is not logged in
   } else {
     updateUser(null);
+    if (
+      router.currentRoute.value.fullPath.startsWith("/employee") ||
+      router.currentRoute.value.fullPath.startsWith("/company")
+    )
+      router.push("/");
+
     initRouteGuards();
   }
 }
