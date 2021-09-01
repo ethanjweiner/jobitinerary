@@ -5,9 +5,7 @@
 import { readonly } from "vue";
 import { auth, db, companiesCollection, employeesCollection } from "./main";
 import * as Types from "./types";
-import { verifyEmployee } from "./helpers";
 import firebase from "firebase/app";
-import router from "./router";
 
 interface State {
   user: Types.User;
@@ -53,7 +51,7 @@ export async function fetchEmployeeData(
       data = doc.data() as Types.Employee;
     });
     return data;
-  } catch {
+  } catch (error) {
     // If the user doesn't have access to this document, just return
     return;
   }
@@ -97,28 +95,52 @@ export async function createCompany(credentials: any) {
   }
 }
 
-export async function activateEmployee(
+// TEMPORARY
+// Does the company exist? (requires read priveleges of companies)
+function companyExistsCloudFunction(companyID: string) {
+  if (companyID) return true;
+  return false;
+}
+
+export async function createEmployee(
   credentials: any,
-  activationToken: string
+  employeeID: string,
+  companyID: string
 ) {
-  // Verify that the activation token matches with the correct email
-  if (await verifyEmployee(credentials.email, activationToken)) {
+  try {
+    // If necessary, create as a cloud function & bar company access...
+    companiesCollection
+      .doc(companyID)
+      .collection("employees")
+      .doc(employeeID)
+      .set({
+        name: credentials.name,
+        email: credentials.email,
+        phone: credentials.phone,
+        kind: "employee",
+      });
+  } catch (error) {
+    console.log(error);
+    state.errorMessage = error.message;
+  }
+}
+
+export async function activateEmployee(credentials: any, companyID: string) {
+  // Check that the employee exists
+  if (companyExistsCloudFunction(companyID)) {
     try {
-      await auth.createUserWithEmailAndPassword(
+      const { user } = await auth.createUserWithEmailAndPassword(
         credentials.email,
         credentials.password
       );
+      if (user) await createEmployee(credentials, user.uid, companyID);
+      else throw Error("Could not activate employee.");
     } catch (error) {
       console.log(error);
       state.errorMessage = error.message;
     }
   } else {
-    state.errorMessage =
-      "The email and activation token do not match. Please ask your company to resend the link.";
+    state.errorMessage = "The activation token is invalid.";
     throw Error(state.errorMessage);
   }
-}
-
-export async function createEmployee(credentials: any) {
-  console.log(credentials);
 }
