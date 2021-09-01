@@ -3,12 +3,14 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>Employees</ion-title>
+        <SettingsButton />
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Employees</ion-title>
+          <SettingsButton />
         </ion-toolbar>
       </ion-header>
     </ion-content>
@@ -24,8 +26,17 @@ import {
   IonContent,
 } from "@ionic/vue";
 
+import SettingsButton from "@/components/buttons/SettingsButton.vue";
+
 export default {
   name: "Employees",
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: {
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonPage,
+    SettingsButton,
+  },
 };
 </script>

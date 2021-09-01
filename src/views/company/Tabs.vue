@@ -4,17 +4,17 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home" href="/company/home">
-          <ion-icon :icon="triangle" />
+          <ion-icon :icon="home" />
           <ion-label>Home</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="customers" href="/company/customers">
-          <ion-icon :icon="ellipse" />
+          <ion-icon :icon="cart" />
           <ion-label>Customers</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="employeees" href="/company/employees">
-          <ion-icon :icon="square" />
+          <ion-icon :icon="hammer" />
           <ion-label>Employees</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -32,7 +32,7 @@ import {
   IonPage,
   IonRouterOutlet,
 } from "@ionic/vue";
-import { ellipse, square, triangle } from "ionicons/icons";
+import { home, cart, hammer } from "ionicons/icons";
 
 export default {
   name: "Tabs",
@@ -47,9 +47,9 @@ export default {
   },
   setup() {
     return {
-      ellipse,
-      square,
-      triangle,
+      home,
+      cart,
+      hammer,
     };
   },
 };

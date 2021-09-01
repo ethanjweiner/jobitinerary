@@ -4,17 +4,17 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="today" href="/employee/today">
-          <ion-icon :icon="triangle" />
+          <ion-icon :icon="today" />
           <ion-label>Today</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="days" href="/employee/days">
-          <ion-icon :icon="ellipse" />
+          <ion-icon :icon="calendar" />
           <ion-label>Days</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="pay" href="/employee/pay">
-          <ion-icon :icon="square" />
+          <ion-icon :icon="cash" />
           <ion-label>Pay</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -32,7 +32,7 @@ import {
   IonPage,
   IonRouterOutlet,
 } from "@ionic/vue";
-import { ellipse, square, triangle } from "ionicons/icons";
+import { today, calendar, cash } from "ionicons/icons";
 
 export default {
   name: "Tabs",
@@ -47,9 +47,9 @@ export default {
   },
   setup() {
     return {
-      ellipse,
-      square,
-      triangle,
+      today,
+      calendar,
+      cash,
     };
   },
 };

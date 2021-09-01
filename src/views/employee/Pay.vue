@@ -3,12 +3,14 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>Pay</ion-title>
+        <SettingsButton />
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Pay</ion-title>
+          <SettingsButton />
         </ion-toolbar>
       </ion-header>
       <PaymentInfo />
@@ -26,6 +28,8 @@ import {
   IonContent,
 } from "@ionic/vue";
 
+import SettingsButton from "@/components/buttons/SettingsButton.vue";
+
 export default {
   name: "Days",
   components: {
@@ -35,6 +39,7 @@ export default {
     IonContent,
     IonPage,
     PaymentInfo,
+    SettingsButton,
   },
 };
 </script>

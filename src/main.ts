@@ -1,4 +1,5 @@
-import { createApp } from "vue";
+import { App as AppType, createApp, nextTick } from "vue";
+import { handleAuthStateChanged } from "./helpers";
 import App from "./App.vue";
 import router from "./router";
 
@@ -46,11 +47,29 @@ firebase.analytics();
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
+export const companiesCollection = db.collection("companies");
+export const employeesCollection = db.collectionGroup("employees");
 
-const app = createApp(App)
-  .use(IonicVue)
-  .use(router);
+// Set the user upon the creation of the app
+let app: null | AppType = null;
 
-router.isReady().then(() => {
-  app.mount("#app");
+auth.onAuthStateChanged(async (user) => {
+  if (!app) {
+    // Create app and update user
+    app = createApp(App)
+      .use(IonicVue)
+      .use(router);
+    await router.isReady();
+    await handleAuthStateChanged(user);
+
+    app.mount("#app");
+  } else {
+    await handleAuthStateChanged(user);
+  }
+});
+
+router.beforeEach((to) => {
+  if (to.meta.requiresAuth && !auth.currentUser) {
+    router.push("/");
+  }
 });
