@@ -1,14 +1,16 @@
 <template>
   <ion-buttons :collapse="true" slot="end">
     <!-- Temporarily Log Out -->
-    <ion-icon @click="auth.signOut()" :icon="settings"></ion-icon>
+    <ion-icon @click="router.push(link)" :icon="settingsOutline"></ion-icon>
   </ion-buttons>
 </template>
 
 <script>
-import { auth } from "@/main";
-import { settings } from "ionicons/icons";
+import { settingsOutline } from "ionicons/icons";
 import { IonButtons, IonIcon } from "@ionic/vue";
+import router from "@/router";
+import { store } from "@/store";
+import { computed } from "@vue/reactivity";
 
 export default {
   name: "Settings Button",
@@ -17,9 +19,11 @@ export default {
     IonIcon,
   },
   setup() {
+    const link = computed(() => `/${store.user.kind}/settings`);
     return {
-      settings,
-      auth,
+      settingsOutline,
+      router,
+      link,
     };
   },
 };
@@ -28,7 +32,11 @@ export default {
 <style scoped>
 ion-icon {
   font-size: 35px;
-  color: grey;
+  color: rgb(78, 78, 78);
   cursor: pointer;
+  margin-right: 8px;
+}
+ion-icon:hover {
+  color: #027e46;
 }
 </style>

@@ -1,20 +1,19 @@
 <template>
   <ion-page>
-    <!-- Note: This setup is the "collapsible large title setup" -->
-    <!-- Learn more at https://ionicframework.com/docs/api/title#collapsible-large-titles -->
     <ion-header>
       <ion-toolbar>
-        <ion-title>Home</ion-title>
-        <SettingsButton />
+        <ion-title>Settings</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Home</ion-title>
+          <ion-title size="large">Settings</ion-title>
         </ion-toolbar>
       </ion-header>
-      <SettingsButton />
+      <ion-button color="danger" expand="fill" @click="auth.signOut()"
+        >Logout</ion-button
+      >
     </ion-content>
   </ion-page>
 </template>
@@ -26,19 +25,27 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonButton,
 } from "@ionic/vue";
 
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
+import { auth } from "@/main";
 
 export default {
-  name: "Home",
+  name: "Settings",
   components: {
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
     IonPage,
-    SettingsButton,
+    IonButton,
+  },
+  setup() {
+    return {
+      auth,
+    };
   },
 };
 </script>
+
+<style></style>

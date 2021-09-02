@@ -87,6 +87,10 @@ const routes: Array<RouteRecordRaw> = [
         path: "employees/:employee_id/days/:date/visits/:visit_id",
         component: () => import("@/views/general/VisitView.vue"),
       },
+      {
+        path: "settings",
+        component: () => import("@/views/general/Settings.vue"),
+      },
     ],
   },
   {
@@ -132,6 +136,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "pay/days/:date",
         component: () => import("@/views/employee/EmployeeDay.vue"),
+      },
+      {
+        path: "settings",
+        component: () => import("@/views/general/Settings.vue"),
       },
     ],
   },
