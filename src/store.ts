@@ -81,6 +81,7 @@ export async function createCompany(credentials: any) {
 
   if (user) {
     const companyData: Types.Company = {
+      id: user.uid,
       name: credentials.name,
       email: credentials.email,
       phone: credentials.phone,
@@ -108,17 +109,18 @@ export async function createEmployee(
   companyID: string
 ) {
   try {
-    // If necessary, create as a cloud function & bar company access...
+    const employeeData: Types.Employee = {
+      id: employeeID,
+      name: credentials.name,
+      email: credentials.email,
+      phone: credentials.phone,
+      kind: "employee",
+    };
     companiesCollection
       .doc(companyID)
       .collection("employees")
       .doc(employeeID)
-      .set({
-        name: credentials.name,
-        email: credentials.email,
-        phone: credentials.phone,
-        kind: "employee",
-      });
+      .set(employeeData);
   } catch (error) {
     console.log(error);
     state.errorMessage = error.message;
