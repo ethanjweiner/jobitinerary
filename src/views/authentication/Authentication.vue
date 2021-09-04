@@ -9,7 +9,13 @@
           class="ion-justify-content-center ion-align-items-center"
           style="height: 100%;"
         >
-          <ion-col :size="state.cardSize">
+          <ion-col
+            size-xs="11"
+            size-sm="10"
+            size-md="6"
+            size-lg="5"
+            size-xl="4"
+          >
             <div class="ion-text-start">
               <h3 class="text-secondary">{{ state.title }}</h3>
             </div>
@@ -70,7 +76,6 @@ export default defineComponent({
       state: {
         authenticationType: "login",
         title: "Log in to JobItinerary",
-        cardSize: 6,
       },
     };
   },
@@ -89,20 +94,14 @@ export default defineComponent({
           break;
       }
     },
-    setCardSize() {
-      this.state.cardSize = Math.min(Math.floor(7000 / window.innerWidth), 12);
-    },
   },
   created() {
     this.changeForm(this.state.authenticationType);
-    window.addEventListener("resize", () => {
-      this.setCardSize();
-    });
   },
 });
 </script>
 
-<style>
+<style scoped>
 div {
   border: 1px solid white;
 }

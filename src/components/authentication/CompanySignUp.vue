@@ -3,7 +3,12 @@
     <form @submit.prevent="signUp">
       <ion-item>
         <ion-label position="stacked">Company Name</ion-label>
-        <ion-input v-model="name" placeholder="Company" required></ion-input>
+        <ion-input
+          @keyup.enter="signUp"
+          v-model="name"
+          placeholder="Company"
+          required
+        ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Company Email</ion-label>
@@ -12,6 +17,7 @@
           type="email"
           placeholder="Enter email"
           required
+          @keyup.enter="signUp"
         ></ion-input>
       </ion-item>
       <ion-item>
@@ -23,6 +29,7 @@
           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="123-123-1234"
           required
+          @keyup.enter="signUp"
         ></ion-input>
       </ion-item>
       <ion-item>
@@ -32,6 +39,7 @@
           type="password"
           placeholder="Enter password"
           required
+          @keyup.enter="signUp"
         ></ion-input>
       </ion-item>
       <p class="ion-padding" style="margin-top: 0; margin-bottom: 0;">

@@ -7,6 +7,7 @@
           v-model="email"
           type="email"
           placeholder="Enter email"
+          @keyup.enter="logIn"
         ></ion-input>
       </ion-item>
       <ion-item>
@@ -15,6 +16,7 @@
           v-model="password"
           type="password"
           placeholder="Enter password"
+          @keyup.enter="logIn"
         ></ion-input>
       </ion-item>
       <ion-button type="submit" expand="block">Login</ion-button>

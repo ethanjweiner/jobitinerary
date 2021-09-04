@@ -10,10 +10,10 @@ const routes: Array<RouteRecordRaw> = [
     // Add route guard to redirect based on authentication
   },
   {
-    path: "/activation/:email", // Access company_id for sign up purposes
+    path: "/activation/:email", // Access companyID for sign up purposes
     component: () => import("@/views/authentication/EmployeeActivation.vue"),
     props: true,
-    // Add route guard to redirect for invalid company ids
+    // Add route guard to redirect for invalid company icuds
   },
   {
     path: "/company/",
@@ -34,16 +34,16 @@ const routes: Array<RouteRecordRaw> = [
       },
       // Open recent visit or create new visit
       {
-        path: "home/visits/:visit_id", // Link to go to the job too
+        path: "home/visits/:visitID", // Link to go to the job too
         component: () => import("@/views/general/VisitView.vue"),
       },
       // Open recent job or create new job
       {
-        path: "home/jobs/:job_id",
+        path: "home/jobs/:jobID",
         component: () => import("@/views/general/Job.vue"),
       },
       {
-        path: "home/jobs/:job_id/visits/:visit_id",
+        path: "home/jobs/:jobID/visits/:visitID",
         component: () => import("@/views/general/VisitView.vue"),
       },
       // Plan a new day for an employee (select date afterward)
@@ -58,15 +58,21 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/company/Customers.vue"),
       },
       {
-        path: "customers/:customer_id",
+        path: "customers/:customerID",
+        name: "Customer",
+        props: true,
         component: () => import("@/views/company/Customers.vue"),
       },
       {
-        path: "customers/:customer_id/customer-day/:date",
+        path: "customers/:customerID/customer-day/:date",
+        name: "Customer Day",
+        props: true,
         component: () => import("@/views/general/CustomerDay.vue"),
       },
       {
-        path: "customers/:customer_id/jobs/:job_id",
+        path: "customers/:customerID/jobs/:jobID",
+        name: "Customer Job",
+        props: true,
         component: () => import("@/views/general/Job.vue"),
       },
 
@@ -76,15 +82,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/company/Employees.vue"),
       },
       {
-        path: "employees/:employee_id",
-        component: () => import("@/views/general/Employee.vue"),
+        path: "employees/:employeeID",
+        component: () => import("@/views/company/Employees.vue"),
       },
       {
-        path: "employees/:employee_id/days/:date",
+        path: "employees/:employeeID/days/:date",
         component: () => import("@/views/employee/EmployeeDay.vue"),
       },
       {
-        path: "employees/:employee_id/days/:date/visits/:visit_id",
+        path: "employees/:employeeID/days/:date/visits/:visitID",
         component: () => import("@/views/general/VisitView.vue"),
       },
       {
@@ -110,7 +116,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/employee/EmployeeDay.vue"),
       },
       {
-        path: "today/visits/:visit_id",
+        path: "today/visits/:visitID",
         component: () => import("@/views/general/VisitView.vue"),
       },
 
@@ -124,7 +130,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/employee/EmployeeDay.vue"),
       },
       {
-        path: "days/:date/visits/:visit_id",
+        path: "days/:date/visits/:visitID",
         component: () => import("@/views/general/VisitView.vue"),
       },
 
