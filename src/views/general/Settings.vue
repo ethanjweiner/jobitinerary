@@ -2,13 +2,19 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start" :collapse="true">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
         <ion-title>Settings</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Settings</ion-title>
+          <ion-buttons slot="start" :collapse="true">
+            <ion-back-button></ion-back-button>
+          </ion-buttons>
+          <ion-title>Settings</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-button color="danger" expand="fill" @click="auth.signOut()"
@@ -26,6 +32,8 @@ import {
   IonTitle,
   IonContent,
   IonButton,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/vue";
 
 import { auth } from "@/main";
@@ -39,6 +47,8 @@ export default {
     IonContent,
     IonPage,
     IonButton,
+    IonButtons,
+    IonBackButton,
   },
   setup() {
     return {

@@ -8,11 +8,17 @@
           v-model="activationToken"
           placeholder="Enter activation token"
           required
+          @keyup.enter="activate"
         ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Your Name</ion-label>
-        <ion-input v-model="name" placeholder="Employee" required></ion-input>
+        <ion-input
+          v-model="name"
+          placeholder="Employee"
+          required
+          @keyup.enter="activate"
+        ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Phone Number</ion-label>
@@ -23,6 +29,7 @@
           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="123-123-1234"
           required
+          @keyup.enter="activate"
         ></ion-input>
       </ion-item>
       <ion-item>
@@ -32,6 +39,7 @@
           type="password"
           placeholder="Enter password"
           required
+          @keyup.enter="activate"
         ></ion-input>
       </ion-item>
       <ion-button expand="block" type="submit">Activate</ion-button>
