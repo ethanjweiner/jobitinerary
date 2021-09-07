@@ -1,7 +1,7 @@
 <template>
-  <ion-item :color="visit.read ? '' : 'light'">
+  <ion-item :color="visit.readByCompany ? '' : 'light'">
     <div style="width: 20px;">
-      <span class="dot" v-if="!visit.read"></span>
+      <span class="dot" v-if="!visit.readByCompany"></span>
     </div>
     <div>
       <ion-label>{{ visit.customerName }} </ion-label>

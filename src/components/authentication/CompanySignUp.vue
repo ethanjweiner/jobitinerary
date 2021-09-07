@@ -54,7 +54,7 @@
 <script lang="ts">
 import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import { createCompany } from "@/store";
+import { createCompany } from "@/companyState";
 
 export default {
   name: "Company Sign Up",

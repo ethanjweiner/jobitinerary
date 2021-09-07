@@ -51,7 +51,7 @@
 import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
 import { ref } from "vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import { activateEmployee } from "@/store";
+import { activateEmployee } from "@/employeeState";
 
 export default {
   name: "Employee Sign Up",

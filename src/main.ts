@@ -1,5 +1,5 @@
 import { App as AppType, createApp } from "vue";
-import { handleAuthStateChanged } from "./helpers";
+import { signOut } from "./helpers";
 import App from "./App.vue";
 import router from "./router";
 
@@ -29,6 +29,7 @@ import "@ionic/vue/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import { loadUser } from "./helpers";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -54,17 +55,20 @@ export const employeesCollection = db.collectionGroup("employees");
 let app: null | AppType = null;
 
 auth.onAuthStateChanged(async (user) => {
+  //
   if (!app) {
     // Create app and update user
+
     app = createApp(App)
       .use(IonicVue)
       .use(router);
     await router.isReady();
-    await handleAuthStateChanged(user);
-
+    if (user) {
+      await loadUser(user);
+    } else {
+      await signOut();
+    }
     app.mount("#app");
-  } else {
-    await handleAuthStateChanged(user);
   }
 });
 

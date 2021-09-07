@@ -9,7 +9,7 @@
 import { settingsOutline } from "ionicons/icons";
 import { IonButtons, IonIcon } from "@ionic/vue";
 import router from "@/router";
-import { store } from "@/store";
+import { globalState } from "@/globalState";
 import { computed } from "@vue/reactivity";
 
 export default {
@@ -19,7 +19,7 @@ export default {
     IonIcon,
   },
   setup() {
-    const link = computed(() => `/${store.user.kind}/settings`);
+    const link = computed(() => `/${globalState.user.kind}/settings`);
     return {
       settingsOutline,
       router,

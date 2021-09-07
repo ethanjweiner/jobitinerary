@@ -1,48 +1,71 @@
 export interface UserData {
-  id: string;
   readonly email: string;
   name: string;
   phone: string;
 }
 
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
+export interface Location {
+  address: string;
+  coordinates: { lat: number; lng: number } | null;
 }
 
-export const sampleAddress: Address = {
-  street: "210 Old Mill Road",
-  city: "Marstons Mills",
-  state: "MA",
-  postalCode: "02648",
-  country: "US",
+export const sampleLocation: Location = {
+  address: "210 Old Mill",
+  coordinates: {
+    lat: 1.35,
+    lng: 2.45,
+  },
+};
+
+export interface ImageWithCaption {
+  ref: string;
+  caption: string;
+}
+
+const sampleImage: ImageWithCaption = {
+  ref: "../resources/splash.png",
+  caption: "This is an image",
 };
 
 export interface Company extends UserData {
+  id: string;
   kind: "company";
 }
 
 export interface Employee extends UserData {
   kind: "employee";
+  companyID: string;
+  hourlyRate: number | null;
 }
+
+export const sampleEmployee: Employee = {
+  name: "Employee Name",
+  companyID: "company ID",
+  kind: "employee",
+  email: "employeeEmail@email.com",
+  phone: "Employee phone",
+  hourlyRate: 20,
+};
 
 export interface Customer extends UserData {
   kind: "customer";
-  address: Address;
-  notes: string;
+  companyID: string;
+  location: Location;
+  customerNotes: string;
+  propertyNotes: string;
+  propertyImages: Array<ImageWithCaption>;
 }
 
 export const sampleCustomer: Customer = {
-  id: "customer_id",
+  name: "Customer Name",
+  companyID: "company ID",
   kind: "customer",
   email: "customerEmail@email.com",
-  name: "Customer Name",
   phone: "Customer phone",
-  address: sampleAddress,
-  notes: "Notes about the customer go here...",
+  location: sampleLocation,
+  customerNotes: "Notes about the customer go here...",
+  propertyNotes: "Notes about the property go here...",
+  propertyImages: [sampleImage, sampleImage],
 };
 
 export type User = Company | Employee | null;
@@ -56,7 +79,7 @@ export interface TimeLog {
 export interface Task {
   name: string;
   notes: string;
-  imageRefs: Array<string>;
+  imageRefs: Array<ImageWithCaption>;
   complete: boolean;
 }
 
@@ -68,9 +91,7 @@ export interface Tool {
 
 export interface Visit {
   id: string;
-  employeeID: string;
   employeeName: string;
-  customerID: string;
   customerName: string;
   jobID: string;
   date: Date;
@@ -78,15 +99,13 @@ export interface Visit {
   notes: string;
   tasks: Array<Task>;
   tools: Array<Tool>;
-  imageRefs: Array<string>;
+  imageRefs: Array<ImageWithCaption>;
   readByCompany: boolean;
 }
 
 export const sampleVisit: Visit = {
   id: "visit_id",
-  employeeID: "employee",
   employeeName: "employee name",
-  customerID: "customer",
   customerName: "customer name",
   jobID: "job",
   date: new Date(),
@@ -100,7 +119,7 @@ export const sampleVisit: Visit = {
     {
       name: "task",
       notes: "task notes",
-      imageRefs: ["image"],
+      imageRefs: [sampleImage, sampleImage],
       complete: false,
     },
   ],
@@ -111,8 +130,8 @@ export const sampleVisit: Visit = {
       backToShop: false,
     },
   ],
-  imageRefs: ["image"],
-  readByCompany: false,
+  imageRefs: [sampleImage, sampleImage],
+  readByCompany: true,
 };
 
 export interface Day {
@@ -147,7 +166,7 @@ export const sampleJob: Job = {
     {
       name: "task",
       notes: "task notes",
-      imageRefs: ["image"],
+      imageRefs: [sampleImage, sampleImage],
       complete: false,
     },
   ],
@@ -180,7 +199,7 @@ export interface Message {
     email: string;
   };
   text: string;
-  imageRefs: Array<string>;
+  imageRef: ImageWithCaption;
   readByRecipient: boolean;
 }
 
@@ -197,7 +216,7 @@ export const sampleMessage: Message = {
   },
   text:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  imageRefs: ["image_1"],
+  imageRef: sampleImage,
   readByRecipient: false,
 };
 

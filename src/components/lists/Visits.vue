@@ -1,21 +1,41 @@
 <template>
-  <ion-content>
-    <ion-list>
-      <VisitItem v-for="visit in visits" :key="visit.id" :visit="visit" />
-    </ion-list>
+  <ion-card class="ion-text-start">
+    <ion-card-header>
+      <h3 class="list-header">
+        <ion-text color="dark">
+          Recent Visits
+        </ion-text>
+      </h3>
+      <ion-badge color="danger">{{ numUnreadVisits }}</ion-badge>
+      <ion-searchbar
+        v-model="searchText"
+        placeholder="Search by customer, employee, date, etc."
+      ></ion-searchbar>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-content>
+        <ion-list>
+          <VisitItem
+            v-for="visit in filteredVisits"
+            :key="visit.id"
+            :visit="visit"
+          />
+        </ion-list>
 
-    <ion-infinite-scroll
-      @ionInfinite="loadData($event)"
-      threshold="100px"
-      id="infinite-scroll"
-    >
-      <ion-infinite-scroll-content
-        loading-spinner="bubbles"
-        loading-text="Loading visits..."
-      >
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </ion-content>
+        <ion-infinite-scroll
+          @ionInfinite="loadData($event)"
+          threshold="100px"
+          id="infinite-scroll"
+        >
+          <ion-infinite-scroll-content
+            loading-spinner="bubbles"
+            loading-text="Loading visits..."
+          >
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script lang="ts">
@@ -23,14 +43,22 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonList,
+  IonCard,
+  IonCardHeader,
+  IonBadge,
+  IonSearchbar,
+  IonText,
   IonContent,
+  IonCardContent,
 } from "@ionic/vue";
 
 import VisitItem from "./items/VisitItem.vue";
 
 import { Visit, sampleVisit } from "@/types";
 
-import { ref } from "vue";
+import { computed, reactive, ref, toRefs } from "vue";
+
+import { includeItemInSearch } from "@/helpers";
 
 export default {
   name: "Visits",
@@ -38,11 +66,39 @@ export default {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonList,
-    IonContent,
     VisitItem,
+    IonCard,
+    IonCardHeader,
+    IonBadge,
+    IonSearchbar,
+    IonText,
+    IonContent,
+    IonCardContent,
   },
   setup() {
+    const state = reactive({
+      searchText: "",
+    });
+    // Retrieve visits for given employee OR
+    // Supply the visits as a prop
     const visits = ref<Array<Visit>>([]);
+    const numUnreadVisits = computed(() => {
+      return visits.value.reduce((numUnreadVisitsSoFar, visit) => {
+        if (!visit.readByCompany) return ++numUnreadVisitsSoFar;
+        return numUnreadVisitsSoFar;
+      }, 0);
+    });
+
+    const filteredVisits = computed(() => {
+      if (state.searchText == "") return visits.value;
+      return visits.value.filter((visit) =>
+        includeItemInSearch(visit, state.searchText, [
+          "employeeName",
+          "customerName",
+          "date",
+        ])
+      );
+    });
 
     const pushData = () => {
       const max = visits.value.length + 5;
@@ -71,9 +127,31 @@ export default {
     return {
       loadData,
       visits,
+      numUnreadVisits,
+      filteredVisits,
+      ...toRefs(state),
     };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-card {
+  height: 100%;
+}
+ion-card-content {
+  height: 80%;
+  padding: 0;
+}
+ion-card-header {
+  border-bottom: 1px solid green;
+}
+.list-header {
+  margin: 0;
+  display: inline;
+}
+ion-searchbar {
+  padding-left: 0;
+  padding-bottom: 0;
+}
+</style>

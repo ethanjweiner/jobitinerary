@@ -1,42 +1,38 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Employees</ion-title>
-        <SettingsButton />
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Employees</ion-title>
-          <SettingsButton />
-        </ion-toolbar>
-      </ion-header>
-    </ion-content>
-  </ion-page>
+  <Users :users="employees" :username="username" type="employee">
+    <EmployeeComponent
+      v-if="username"
+      :employee="employees.find((employee) => employee.name == username)"
+    />
+  </Users>
 </template>
 
 <script lang="ts">
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-} from "@ionic/vue";
-
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
-
+import Users from "./Users.vue";
+import { ref } from "vue";
+import EmployeeComponent from "@/components/units/Employee.vue";
+import { Employee, sampleEmployee } from "@/types";
+// Sort employees alphabetically, with none selected
+// Show employee if a employee is selected
 export default {
   name: "Employees",
+  props: ["username"],
   components: {
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonPage,
-    SettingsButton,
+    Users,
+    EmployeeComponent,
+  },
+  setup() {
+    const employees = ref<Array<Employee>>([
+      sampleEmployee,
+      sampleEmployee,
+      sampleEmployee,
+    ]);
+
+    return {
+      employees,
+    };
   },
 };
 </script>
+
+<style></style>

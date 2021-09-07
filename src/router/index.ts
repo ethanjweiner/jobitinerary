@@ -58,19 +58,19 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/company/Customers.vue"),
       },
       {
-        path: "customers/:customerID",
+        path: "customers/:username",
         name: "Customer",
         props: true,
         component: () => import("@/views/company/Customers.vue"),
       },
       {
-        path: "customers/:customerID/customer-day/:date",
+        path: "customers/:username/customer-day/:date",
         name: "Customer Day",
         props: true,
         component: () => import("@/views/general/CustomerDay.vue"),
       },
       {
-        path: "customers/:customerID/jobs/:jobID",
+        path: "customers/:username/jobs/:jobID",
         name: "Customer Job",
         props: true,
         component: () => import("@/views/general/Job.vue"),
@@ -82,15 +82,21 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/company/Employees.vue"),
       },
       {
-        path: "employees/:employeeID",
+        path: "employees/:username",
+        name: "Employee",
+        props: true,
         component: () => import("@/views/company/Employees.vue"),
       },
       {
-        path: "employees/:employeeID/days/:date",
+        path: "employees/:username/days/:date",
+        name: "Employee Day",
+        props: true,
         component: () => import("@/views/employee/EmployeeDay.vue"),
       },
       {
-        path: "employees/:employeeID/days/:date/visits/:visitID",
+        path: "employees/:username/days/:date/visits/:visitID",
+        name: "Employee Visit",
+        props: true,
         component: () => import("@/views/general/VisitView.vue"),
       },
       {
@@ -143,6 +149,13 @@ const routes: Array<RouteRecordRaw> = [
         path: "pay/days/:date",
         component: () => import("@/views/employee/EmployeeDay.vue"),
       },
+      // MESSAGES
+      {
+        path: "messages",
+        component: () => import("@/views/employee/Messages.vue"),
+      },
+
+      // SETTINGS
       {
         path: "settings",
         component: () => import("@/views/general/Settings.vue"),
