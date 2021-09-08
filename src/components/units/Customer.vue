@@ -7,7 +7,7 @@
     </template>
     <template v-slot:jobs>
       <div class="list">
-        <Jobs :customer="customer" />
+        <Jobs :showCustomer="false" />
       </div>
     </template>
     <template v-slot:customer-info>
@@ -25,7 +25,7 @@
                   <ion-input
                     type="email"
                     placeholder="email"
-                    :value="customer.email"
+                    :value="state.companyState.selectedCustomer.email"
                   ></ion-input>
                 </ion-item>
               </ion-col>
@@ -40,14 +40,14 @@
                     inputmode="tel"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     placeholder="123-123-1234"
-                    :value="customer.phone"
+                    :value="state.companyState.selectedCustomer.phone"
                   ></ion-input>
                 </ion-item>
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-list>
-        <Address />
+        <Address :value="state.companyState.selectedCustomer.location" />
         <ion-list>
           <ion-list-header>Notes</ion-list-header>
           <ion-grid>
@@ -58,7 +58,7 @@
                   <ion-textarea
                     auto-grow
                     placeholder="Notes on customer"
-                    :value="customer.customerNotes"
+                    :value="state.companyState.selectedCustomer.customerNotes"
                   ></ion-textarea>
                 </ion-item>
               </ion-col>
@@ -68,7 +68,7 @@
                   <ion-textarea
                     auto-grow
                     placeholder="Notes on property"
-                    :value="customer.propertyNotes"
+                    :value="state.companyState.selectedCustomer.propertyNotes"
                   ></ion-textarea>
                 </ion-item>
               </ion-col>
@@ -82,7 +82,8 @@
           <ion-grid>
             <ion-row class="ion-justify-content-left">
               <ion-col
-                v-for="image in customer.propertyImages"
+                v-for="image in state.companyState.selectedCustomer
+                  .propertyImages"
                 :key="image.ref"
                 size-xs="12"
                 size-sm="6"
@@ -130,10 +131,10 @@ import Address from "../Address.vue";
 import Sections from "../Sections.vue";
 import { ref } from "@vue/reactivity";
 import { SectionType } from "@/types";
+import store from "@/store";
 
 export default {
   name: "Customer",
-  props: ["customer"],
   components: {
     IonList,
     IonListHeader,
@@ -173,6 +174,7 @@ export default {
       mailOutline,
       callOutline,
       sections,
+      state: store.state,
     };
   },
 };

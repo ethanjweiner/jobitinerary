@@ -54,7 +54,7 @@
 <script lang="ts">
 import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import { createCompany } from "@/companyState";
+import store from "@/store";
 
 export default {
   name: "Company Sign Up",
@@ -75,7 +75,7 @@ export default {
 
     const signUp = async () => {
       try {
-        await createCompany(credentials);
+        await store.createCompany(credentials);
       } catch (error) {
         console.log(error);
       } finally {

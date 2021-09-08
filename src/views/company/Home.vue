@@ -26,7 +26,7 @@
             class="ion-hide-sm-down"
             id="jobs-column"
           >
-            <Jobs />
+            <Jobs :showCustomer="true" />
           </ion-col>
           <ion-col size="12" id="messages-column">
             <Messages />

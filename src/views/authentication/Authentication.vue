@@ -1,9 +1,6 @@
 <template>
   <ion-page>
     <ion-content style="height: 100%;">
-      <!-- Don't use sections -->
-      <!-- Instead, use a very minimalist, centered form -->
-      <!-- Use a sgement to toggle between sign in and sign up -->
       <ion-grid style="width: 100%; height: 100%;">
         <ion-row
           class="ion-justify-content-center ion-align-items-center"

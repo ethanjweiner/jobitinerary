@@ -93,7 +93,8 @@ export default {
     IonButtons,
   },
   setup(props: any) {
-    const changeUser = ({ name }: { name: string }) => {
+    const changeUser = (name: string) => {
+      console.log("Name", name);
       router.push({
         name: capitalize(props.type),
         params: { username: name },

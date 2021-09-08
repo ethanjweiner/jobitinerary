@@ -2,27 +2,29 @@
 // Purpose: Manage user data in one place throughout the application
 // Reduces number of gets for user data
 
-import { readonly } from "vue";
-import { auth, companiesCollection } from "./main";
-import * as Types from "./types";
+import { auth, companiesCollection } from "../main";
+import * as Types from "../types";
 import firebase from "firebase/app";
-import { loadCompany } from "./helpers";
+import { loadCompany } from "../helpers";
+import { state } from "./store";
 
-interface CompanyState {
+export interface CompanyState {
+  company: Types.Company | null;
   customers: Array<Types.Customer> | null;
   employees: Array<Types.Employee> | null;
   selectedCustomer: Types.Customer | null;
   selectedEmployee: Types.Employee | null;
 }
 
-const state: CompanyState = {
-  customers: null,
-  employees: null,
-  selectedCustomer: null,
-  selectedEmployee: null,
-};
-
-export const companyState = readonly(state);
+export function initializeCompanyState(): CompanyState {
+  return {
+    company: null,
+    customers: null,
+    employees: null,
+    selectedCustomer: null,
+    selectedEmployee: null,
+  };
+}
 
 export async function fetchCompanyData(
   user: firebase.User
@@ -62,27 +64,37 @@ export async function createCompany(credentials: any) {
 }
 
 export function setCustomers(customers: Array<Types.Customer> | null) {
-  state.customers = customers;
+  state.companyState.customers = customers;
 }
 
-export async function fetchCustomers(company: Types.Company) {
-  console.log("Fetching customers for ", company.id);
-  const customers = [Types.sampleCustomer, Types.sampleCustomer];
-  setCustomers(customers);
+export async function fetchCustomers() {
+  if (state.companyState.company) {
+    console.log("Fetching customers for ", state.companyState.company.id);
+    // Temporary
+    const customers = [Types.sampleCustomer, Types.sampleCustomer];
+    setCustomers(customers);
+  } else {
+    throw Error("No company is signed in to perform the requested action.");
+  }
 }
 
 export function setEmployees(employees: Array<Types.Employee> | null) {
-  state.employees = employees;
+  state.companyState.employees = employees;
 }
 
-export async function fetchEmployees(userID: string) {
-  console.log("Fetching employees for ", userID);
-  const employees = [Types.sampleEmployee, Types.sampleEmployee];
-  setEmployees(employees);
+export async function fetchEmployees() {
+  if (state.companyState.company) {
+    console.log("Fetching employees for ", state.companyState.company.id);
+    // Temporary
+    const employees = [Types.sampleEmployee, Types.sampleEmployee];
+    setEmployees(employees);
+  } else {
+    throw Error("No company is signed in to perform the requested action.");
+  }
 }
 
 export function setSelectedCustomer(customer: Types.Customer | null) {
-  state.selectedCustomer = customer;
+  state.companyState.selectedCustomer = customer;
 }
 
 export async function fetchSelectedCustomer(customerID: string) {
@@ -92,7 +104,7 @@ export async function fetchSelectedCustomer(customerID: string) {
 }
 
 export function setSelectedEmployee(employee: Types.Employee | null) {
-  state.selectedEmployee = employee;
+  state.companyState.selectedEmployee = employee;
 }
 
 export async function fetchSelectedEmployee(employeeID: string) {

@@ -44,7 +44,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const selectUser = (e: CustomEvent) => {
-      emit("userChange", { name: e.detail.value });
+      console.log("user selected");
+      emit("userChange", e.detail.value);
     };
     return {
       personOutline,

@@ -2,7 +2,7 @@
   <ion-item>
     <div>
       <ion-label>{{ job.name }} </ion-label>
-      <ion-note>for {{ job.customerName }}</ion-note>
+      <ion-note v-if="showCustomer">for {{ job.customerName }}</ion-note>
     </div>
     <div slot="end">
       <p>starts</p>
@@ -16,7 +16,7 @@ import { IonItem, IonLabel, IonNote, IonText } from "@ionic/vue";
 
 export default {
   name: "Visit Item",
-  props: ["job"],
+  props: ["job", "showCustomer"],
   components: {
     IonItem,
     IonLabel,

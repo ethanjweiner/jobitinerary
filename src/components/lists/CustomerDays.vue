@@ -1,11 +1,14 @@
 <template>
   <ion-card class="ion-text-start">
     <ion-card-header>
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Dates
-        </ion-text>
-      </h3>
+      <div class="ion-text-center">
+        <h3 class="list-header">
+          <ion-text color="dark">
+            Dates
+          </ion-text>
+        </h3>
+      </div>
+
       <ion-item>
         <ion-input
           type="date"
@@ -17,11 +20,7 @@
     <ion-card-content>
       <ion-content>
         <ion-list>
-          <CustomerDayItem
-            v-for="date in filteredDays"
-            :key="date"
-            :date="date"
-          />
+          <DayItem v-for="date in filteredDays" :key="date" :date="date" />
         </ion-list>
 
         <ion-infinite-scroll
@@ -54,7 +53,7 @@ import {
   IonItem,
 } from "@ionic/vue";
 
-import CustomerDayItem from "./items/CustomerDayItem.vue";
+import DayItem from "./items/DayItem.vue";
 
 import { computed, ref } from "vue";
 
@@ -66,7 +65,7 @@ export default {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonList,
-    CustomerDayItem,
+    DayItem,
     IonCard,
     IonCardHeader,
     IonInput,

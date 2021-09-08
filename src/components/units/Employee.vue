@@ -1,50 +1,62 @@
 <template>
-  <div>
-    <ion-grid>
-      <ion-row>
-        <ion-col class="list">
-          <Visits />
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <form class="ion-padding">
-      <ion-list>
-        <ion-list-header>Contact Info</ion-list-header>
-        <ion-grid>
-          <ion-row class="ion-justify-content-around">
-            <ion-col size="12" size-sm="6">
-              <ion-item>
-                <ion-label position="stacked">
-                  <ion-icon :icon="mailOutline"></ion-icon>
-                  <span style="padding: 5px;">Email</span>
-                </ion-label>
-                <ion-input
-                  type="email"
-                  placeholder="email"
-                  :value="employee.email"
-                ></ion-input>
-              </ion-item>
-            </ion-col>
-            <ion-col size="12" size-sm="6">
-              <ion-item>
-                <ion-label position="stacked">
-                  <ion-icon :icon="callOutline"></ion-icon>
-                  <span style="padding: 5px;">Phone</span>
-                </ion-label>
-                <ion-input
-                  type="tel"
-                  inputmode="tel"
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                  placeholder="123-123-1234"
-                  :value="employee.phone"
-                ></ion-input>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-list>
-    </form>
-  </div>
+  <Sections :sections="sections">
+    <template v-slot:messages>
+      <div class="list">
+        <!-- change to messages -->
+        <Messages />
+      </div>
+    </template>
+    <template v-slot:dates>
+      <div class="list">
+        <!-- change to employee days -->
+        <EmployeeDays />
+      </div>
+    </template>
+    <template v-slot:pay>
+      <div>
+        <PaymentInfo />
+      </div>
+    </template>
+    <template v-slot:employee-info>
+      <form class="ion-padding">
+        <ion-list>
+          <ion-list-header>Contact Info</ion-list-header>
+          <ion-grid>
+            <ion-row class="ion-justify-content-around">
+              <ion-col size="12" size-sm="6">
+                <ion-item>
+                  <ion-label position="stacked">
+                    <ion-icon :icon="mailOutline"></ion-icon>
+                    <span style="padding: 5px;">Email</span>
+                  </ion-label>
+                  <ion-input
+                    type="email"
+                    placeholder="email"
+                    :value="state.companyState.selectedEmployee.email"
+                  ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-sm="6">
+                <ion-item>
+                  <ion-label position="stacked">
+                    <ion-icon :icon="callOutline"></ion-icon>
+                    <span style="padding: 5px;">Phone</span>
+                  </ion-label>
+                  <ion-input
+                    type="tel"
+                    inputmode="tel"
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    placeholder="123-123-1234"
+                    :value="state.companyState.selectedEmployee.phone"
+                  ></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-list>
+      </form>
+    </template>
+  </Sections>
 </template>
 
 <script lang="ts">
@@ -60,12 +72,25 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import Visits from "@/components/lists/Visits.vue";
-import { mailOutline, callOutline } from "ionicons/icons";
+import Messages from "@/components/lists/Messages.vue";
+
+import EmployeeDays from "@/components/lists/EmployeeDays.vue";
+import {
+  mailOutline,
+  callOutline,
+  mailOpenOutline,
+  calendarNumberOutline,
+  personOutline,
+  cashOutline,
+} from "ionicons/icons";
+import Sections from "../Sections.vue";
+import store from "@/store";
+import { SectionType } from "@/types";
+import { ref } from "@vue/reactivity";
+import PaymentInfo from "@/components/PaymentInfo.vue";
 
 export default {
   name: "Employee",
-  props: ["employee"],
   components: {
     IonList,
     IonListHeader,
@@ -76,10 +101,37 @@ export default {
     IonRow,
     IonCol,
     IonIcon,
-    Visits,
+    Sections,
+    Messages,
+    EmployeeDays,
+    PaymentInfo,
   },
   setup() {
+    const sections = ref<Array<SectionType>>([
+      {
+        name: "Messages",
+        icon: mailOpenOutline,
+        id: "messages",
+      },
+      {
+        name: "Dates",
+        icon: calendarNumberOutline,
+        id: "dates",
+      },
+      {
+        name: "Pay",
+        icon: cashOutline,
+        id: "pay",
+      },
+      {
+        name: "Employee",
+        icon: personOutline,
+        id: "employee-info",
+      },
+    ]);
     return {
+      state: store.state,
+      sections,
       mailOutline,
       callOutline,
     };

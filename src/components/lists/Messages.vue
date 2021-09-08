@@ -1,19 +1,21 @@
 <template>
   <ion-card>
     <ion-card-header>
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Messages
-        </ion-text>
-      </h3>
-      <ion-badge color="danger">{{ numUnreadMessages }}</ion-badge>
+      <div class="ion-text-center">
+        <h3 class="list-header">
+          <ion-text color="dark">
+            Messages
+          </ion-text>
+        </h3>
+        <ion-badge color="danger">{{ numUnreadMessages }}</ion-badge>
+      </div>
     </ion-card-header>
     <ion-card-content>
       <ion-content>
         <ion-list>
           <MessageItem
-            v-for="message in messages"
-            :key="message.id"
+            v-for="(message, index) in messages"
+            :key="index"
             :message="message"
           />
         </ion-list>

@@ -1,11 +1,14 @@
 <template>
   <ion-card>
     <ion-card-header>
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Scheduled Jobs
-        </ion-text>
-      </h3>
+      <div class="ion-text-center">
+        <h3 class="list-header">
+          <ion-text color="dark">
+            Scheduled Jobs
+          </ion-text>
+        </h3>
+      </div>
+
       <ion-searchbar
         v-model="searchText"
         placeholder="Search by job name, customer, start date, description, etc."
@@ -18,7 +21,7 @@
             v-for="job in filteredJobs"
             :key="job.id"
             :job="job"
-            :customer="customer"
+            :showCustomer="showCustomer"
           />
         </ion-list>
 
@@ -61,7 +64,7 @@ import { computed, reactive, ref, toRefs } from "vue";
 
 export default {
   name: "Jobs",
-  props: ["customer"],
+  props: ["showCustomer"],
   components: {
     IonInfiniteScroll,
     IonInfiniteScrollContent,

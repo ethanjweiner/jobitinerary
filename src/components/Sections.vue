@@ -65,10 +65,9 @@ export default {
   width: 100%;
 }
 @media (min-width: 768px) {
-  .dates {
-    width: 50%;
-  }
-  .jobs {
+  .dates,
+  .jobs,
+  .messages {
     width: 50%;
   }
 }

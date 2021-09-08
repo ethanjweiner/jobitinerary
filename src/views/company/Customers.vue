@@ -1,19 +1,16 @@
 <template>
   <Users :users="customers" :username="username" type="customer">
-    <CustomerComponent
-      v-if="username"
-      :customer="customers.find((customer) => customer.name == username)"
-    />
+    <CustomerComponent v-if="state.companyState.selectedCustomer" />
   </Users>
 </template>
 
 <script lang="ts">
 import Users from "./Users.vue";
-import { onMounted, ref } from "vue";
 import CustomerComponent from "@/components/units/Customer.vue";
-import { Customer, Company, sampleCustomer } from "@/types";
-import { fetchCustomers } from "@/companyState";
-import { globalState } from "@/globalState";
+import store from "@/store";
+import { Customer, sampleCustomer } from "@/types";
+import { ref } from "@vue/reactivity";
+
 // Sort customers alphabetically, with none selected
 // Show customer if a customer is selected
 export default {
@@ -23,20 +20,20 @@ export default {
     Users,
     CustomerComponent,
   },
-  setup() {
-    // Fetch customers
-
-    onMounted(() => {
-      if (globalState.user) fetchCustomers(globalState.user as Company);
-    });
-
+  setup(props: any) {
+    // Fetch customers here
     const customers = ref<Array<Customer>>([
       sampleCustomer,
       sampleCustomer,
       sampleCustomer,
     ]);
 
+    if (props.username) store.fetchSelectedCustomer(props.username);
+
+    // Fetch customers
+
     return {
+      state: store.state,
       customers,
     };
   },

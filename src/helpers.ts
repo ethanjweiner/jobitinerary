@@ -1,12 +1,10 @@
-import { fetchCompanyData } from "./companyState";
-
-import { fetchEmployeeData } from "./employeeState";
-
 import firebase from "firebase/app";
 import router from "./router";
 import { auth } from "./main";
 import { dateToStrings } from "./jsHelpers.js";
-import { globalState, setUser } from "./globalState";
+import store from "./store";
+const { state } = store;
+import { companiesCollection } from "@/main";
 
 let routeGuardsInitialized = false;
 
@@ -15,10 +13,10 @@ const initRouteGuards = () => {
     // This route guard does not actually secure the user out of the route
     router.beforeEach((to, from, next) => {
       if (to.meta.requiresAuth && to.fullPath.includes("company/")) {
-        if (globalState.user && globalState.user.kind == "company") next();
+        if (state.companyState.company) next();
         else router.push("/");
       } else if (to.meta.requiresAuth && to.fullPath.includes("employee/")) {
-        if (globalState.user && globalState.user.kind == "employee") next();
+        if (state.employeeState.employee) next();
         else router.push("/");
       } else next();
     });
@@ -29,7 +27,7 @@ const initRouteGuards = () => {
 
 // Authentication helpers
 
-function initializeUserRouting(userKind: "employee" | "company") {
+export function initializeUserRouting(userKind: "employee" | "company") {
   initRouteGuards();
   if (!router.currentRoute.value.fullPath.startsWith(`/${userKind}`))
     router.push(`/${userKind}`);
@@ -37,7 +35,7 @@ function initializeUserRouting(userKind: "employee" | "company") {
 
 export async function signOut() {
   auth.signOut();
-  setUser(null);
+  store.setUser(null);
   if (
     router.currentRoute.value.fullPath.startsWith("/employee") ||
     router.currentRoute.value.fullPath.startsWith("/company")
@@ -45,33 +43,9 @@ export async function signOut() {
     router.push("/");
 }
 
-export async function loadEmployee(user: firebase.User) {
-  const employeeData = await fetchEmployeeData(user);
-
-  if (employeeData) {
-    setUser(employeeData);
-    initializeUserRouting("employee");
-    return true;
-  }
-
-  return false;
-}
-
-export async function loadCompany(user: firebase.User) {
-  const companyData = await fetchCompanyData(user);
-
-  if (companyData) {
-    setUser(companyData);
-    initializeUserRouting("company");
-    return true;
-  }
-
-  return false;
-}
-
 export async function loadUser(user: firebase.User) {
-  if (!(await loadEmployee(user))) {
-    if (!(await loadCompany(user))) {
+  if (!(await store.fetchEmployee(user))) {
+    if (!(await store.fetchCompany(user))) {
       signOut();
       throw Error("No data could be found for the signed in user.");
     }
@@ -136,4 +110,16 @@ export function includeItemInSearch(
     }
   }
   return false;
+}
+
+// Turn into a cloud function
+export async function companyExists(companyID: string) {
+  try {
+    const doc = await companiesCollection.doc(companyID).get();
+    if (doc.exists) return true;
+    return false;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }

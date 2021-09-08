@@ -2,21 +2,20 @@
 // Purpose: Manage user data in one place throughout the application
 // Reduces number of gets for user data
 
-import { readonly } from "vue";
-import { auth, companiesCollection, employeesCollection } from "./main";
-import * as Types from "./types";
+import { auth, companiesCollection, employeesCollection } from "../main";
+import * as Types from "../types";
 import firebase from "firebase/app";
-import { loadEmployee, nameToID } from "./helpers";
+import { loadEmployee, nameToID } from "../helpers";
 
-interface EmployeeState {
-  temp: null;
+export interface EmployeeState {
+  employee: Types.Employee | null;
 }
 
-const state: EmployeeState = {
-  temp: null,
-};
-
-export const employeeState = readonly(state);
+export function initializeEmployeeState(): EmployeeState {
+  return {
+    employee: null,
+  };
+}
 
 // Purpose: Is the user an employee? If so, update the user's data.
 export async function fetchEmployeeData(
@@ -55,18 +54,6 @@ export async function createEmployee(credentials: any, companyID: string) {
       .set(employeeData);
   } catch (error) {
     console.log(error);
-  }
-}
-
-// Turn into a cloud function
-async function companyExists(companyID: string) {
-  try {
-    const doc = await companiesCollection.doc(companyID).get();
-    if (doc.exists) return true;
-    return false;
-  } catch (error) {
-    console.log(error);
-    return false;
   }
 }
 

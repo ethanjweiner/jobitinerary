@@ -8,7 +8,7 @@
           id="autocomplete"
           placeholder="Enter address"
           ref="autocompleteInput"
-          v-model="location.address"
+          :value="location.address"
           @input="onInput"
         ></ion-input>
       </ion-item>
@@ -28,7 +28,7 @@
   </ion-list>
 </template>
 
-<script>
+<script lang="ts">
 import {
   IonButton,
   IonToolbar,
@@ -58,15 +58,17 @@ export default {
     IonInput,
     IonIcon,
   },
-  setup() {
+  props: ["value"],
+  setup(props) {
     const state = reactive({
       location: {
-        address: "",
-        coordinates: null,
+        address: props.value.address,
+        coordinates: props.value.coordinates,
       },
       suggestions: [],
       autocomplete: null,
     });
+
     const autocompleteInput = ref();
 
     onMounted(async () => {
