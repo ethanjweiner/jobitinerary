@@ -1,29 +1,26 @@
 <template>
-  <ion-card>
+  <ion-card class="ion-text-start">
     <ion-card-header>
       <div class="ion-text-center">
         <h3 class="list-header">
           <ion-text color="dark">
-            Recent Visits
+            Dates
           </ion-text>
         </h3>
-        <ion-badge color="danger">{{ numUnreadVisits }}</ion-badge>
       </div>
 
-      <ion-searchbar
-        class="ion-text-start"
-        v-model="searchText"
-        placeholder="Search by customer, employee, date, etc."
-      ></ion-searchbar>
+      <ion-item>
+        <ion-input
+          type="date"
+          v-model="searchDate"
+          placeholder="Search by date"
+        ></ion-input>
+      </ion-item>
     </ion-card-header>
     <ion-card-content>
       <ion-content>
         <ion-list>
-          <VisitItem
-            v-for="visit in filteredVisits"
-            :key="visit.id"
-            :visit="visit"
-          />
+          <DayItem v-for="date in filteredDays" :key="date" :date="date" />
         </ion-list>
 
         <ion-infinite-scroll
@@ -33,7 +30,7 @@
         >
           <ion-infinite-scroll-content
             loading-spinner="bubbles"
-            loading-text="Loading visits..."
+            loading-text="Loading days..."
           >
           </ion-infinite-scroll-content>
         </ion-infinite-scroll>
@@ -49,66 +46,52 @@ import {
   IonList,
   IonCard,
   IonCardHeader,
-  IonBadge,
-  IonSearchbar,
+  IonInput,
   IonText,
   IonContent,
   IonCardContent,
+  IonItem,
 } from "@ionic/vue";
 
-import VisitItem from "./items/VisitItem.vue";
+import DayItem from "./items/DayItem.vue";
 
-import { Visit, sampleVisit } from "@/types";
+import { computed, ref } from "vue";
 
-import { computed, reactive, ref, toRefs } from "vue";
-
-import { includeItemInSearch } from "@/helpers";
+import date from "date-and-time";
 
 export default {
-  name: "Visits",
+  name: "Employee Days",
   components: {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonList,
-    VisitItem,
+    DayItem,
     IonCard,
     IonCardHeader,
-    IonBadge,
-    IonSearchbar,
+    IonInput,
     IonText,
     IonContent,
     IonCardContent,
+    IonItem,
   },
   setup() {
-    const state = reactive({
-      searchText: "",
-    });
-    // Retrieve visits for given employee OR
-    // Supply the visits as a prop
-    const visits = ref<Array<Visit>>([]);
-    const numUnreadVisits = computed(() => {
-      return visits.value.reduce((numUnreadVisitsSoFar, visit) => {
-        if (!visit.readByCompany) return ++numUnreadVisitsSoFar;
-        return numUnreadVisitsSoFar;
-      }, 0);
-    });
+    const searchDate = ref<string>("");
+    // Retrieve dates in which the given customer worked
+    const days = ref<Array<Date>>([]);
 
-    const filteredVisits = computed(() => {
-      if (state.searchText == "") return visits.value;
-      return visits.value.filter((visit) =>
-        includeItemInSearch(visit, state.searchText, [
-          "employeeName",
-          "customerName",
-          "date",
-        ])
-      );
+    const filteredDays = computed(() => {
+      if (searchDate.value)
+        return days.value.filter(
+          (day) => date.format(day, "YYYY-MM-DD") == searchDate.value
+        );
+      return days.value;
     });
 
     const pushData = () => {
-      const max = visits.value.length + 5;
+      const max = days.value.length + 5;
       const min = max - 5;
       for (let i = min; i < max; i++) {
-        visits.value.push(sampleVisit);
+        days.value.push(new Date());
       }
     };
 
@@ -120,7 +103,7 @@ export default {
 
         // App logic to determine if all data is loaded
         // and disable the infinite scroll
-        if (visits.value.length == 1000) {
+        if (days.value.length == 1000) {
           ev.target.disabled = true;
         }
       }, 500);
@@ -130,10 +113,9 @@ export default {
 
     return {
       loadData,
-      visits,
-      numUnreadVisits,
-      filteredVisits,
-      ...toRefs(state),
+      days,
+      filteredDays,
+      searchDate,
     };
   },
 };
@@ -154,7 +136,7 @@ ion-card-header {
   margin: 0;
   display: inline;
 }
-ion-searchbar {
+ion-input {
   padding-left: 0;
   padding-bottom: 0;
 }

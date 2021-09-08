@@ -17,6 +17,11 @@
           <ion-icon :icon="cash" />
           <ion-label>Pay</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button tab="messages" href="/employee/messages">
+          <ion-icon :icon="send" />
+          <ion-label>Send Message</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -32,7 +37,7 @@ import {
   IonPage,
   IonRouterOutlet,
 } from "@ionic/vue";
-import { today, calendar, cash } from "ionicons/icons";
+import { today, calendar, cash, send } from "ionicons/icons";
 
 export default {
   name: "Tabs",
@@ -50,6 +55,7 @@ export default {
       today,
       calendar,
       cash,
+      send,
     };
   },
 };

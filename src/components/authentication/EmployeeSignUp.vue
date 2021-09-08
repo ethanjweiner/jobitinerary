@@ -51,7 +51,7 @@
 import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
 import { ref } from "vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import { activateEmployee } from "@/store";
+import store from "@/store";
 
 export default {
   name: "Employee Sign Up",
@@ -77,7 +77,7 @@ export default {
 
     const activate = async () => {
       try {
-        await activateEmployee(credentials, activationToken.value);
+        await store.activateEmployee(credentials, activationToken.value);
       } catch (error) {
         console.log(error);
       }

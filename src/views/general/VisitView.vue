@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Visit from "@/components/Visit.vue";
+import Visit from "@/components/units/Visit.vue";
 import {
   IonPage,
   IonHeader,

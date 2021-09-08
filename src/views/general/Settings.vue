@@ -17,7 +17,7 @@
           <ion-title>Settings</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-button color="danger" expand="fill" @click="auth.signOut()"
+      <ion-button color="danger" expand="fill" @click="signOut"
         >Logout</ion-button
       >
     </ion-content>
@@ -36,7 +36,7 @@ import {
   IonBackButton,
 } from "@ionic/vue";
 
-import { auth } from "@/main";
+import { signOut } from "@/helpers";
 
 export default {
   name: "Settings",
@@ -52,7 +52,7 @@ export default {
   },
   setup() {
     return {
-      auth,
+      signOut,
     };
   },
 };

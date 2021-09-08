@@ -18,20 +18,7 @@
       <ion-grid>
         <ion-row class="ion-justify-content-around">
           <ion-col size="12" size-sm="6" id="visits-column">
-            <ion-card>
-              <ion-card-header>
-                <h3 class="list-header">
-                  <ion-text color="dark">
-                    Recent Visits
-                  </ion-text>
-                </h3>
-                <ion-badge color="danger">66</ion-badge>
-                <ion-searchbar></ion-searchbar>
-              </ion-card-header>
-              <ion-card-content>
-                <Visits />
-              </ion-card-content>
-            </ion-card>
+            <Visits />
           </ion-col>
           <ion-col
             size="12"
@@ -39,34 +26,10 @@
             class="ion-hide-sm-down"
             id="jobs-column"
           >
-            <ion-card>
-              <ion-card-header>
-                <h3 class="list-header">
-                  <ion-text color="dark">
-                    Scheduled Jobs
-                  </ion-text>
-                </h3>
-                <ion-searchbar></ion-searchbar>
-              </ion-card-header>
-              <ion-card-content>
-                <Jobs />
-              </ion-card-content>
-            </ion-card>
+            <Jobs :showCustomer="true" />
           </ion-col>
           <ion-col size="12" id="messages-column">
-            <ion-card>
-              <ion-card-header>
-                <h3 class="list-header">
-                  <ion-text color="dark">
-                    Messages
-                  </ion-text>
-                </h3>
-                <ion-badge color="danger">66</ion-badge>
-              </ion-card-header>
-              <ion-card-content>
-                <Messages />
-              </ion-card-content>
-            </ion-card>
+            <Messages />
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -85,12 +48,6 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonText,
-  IonBadge,
-  IonSearchbar,
 } from "@ionic/vue";
 
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
@@ -113,14 +70,8 @@ export default {
     IonGrid,
     IonRow,
     IonCol,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonText,
     Jobs,
     Messages,
-    IonBadge,
-    IonSearchbar,
   },
 };
 </script>
@@ -147,23 +98,5 @@ ion-col {
 }
 .ios > ion-col {
   margin-top: 0px;
-}
-ion-card {
-  height: 100%;
-}
-ion-card-content {
-  height: 80%;
-  padding: 0;
-}
-ion-card-header {
-  border-bottom: 1px solid green;
-}
-.list-header {
-  margin: 0;
-  display: inline;
-}
-ion-searchbar {
-  padding-left: 0;
-  padding-bottom: 0;
 }
 </style>

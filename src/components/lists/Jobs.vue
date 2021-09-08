@@ -1,21 +1,44 @@
 <template>
-  <ion-content>
-    <ion-list>
-      <JobItem v-for="job in jobs" :key="job.id" :job="job" />
-    </ion-list>
+  <ion-card>
+    <ion-card-header>
+      <div class="ion-text-center">
+        <h3 class="list-header">
+          <ion-text color="dark">
+            Scheduled Jobs
+          </ion-text>
+        </h3>
+      </div>
 
-    <ion-infinite-scroll
-      @ionInfinite="loadData($event)"
-      threshold="100px"
-      id="infinite-scroll"
-    >
-      <ion-infinite-scroll-content
-        loading-spinner="bubbles"
-        loading-text="Loading jobs..."
-      >
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </ion-content>
+      <ion-searchbar
+        v-model="searchText"
+        placeholder="Search by job name, customer, start date, description, etc."
+      ></ion-searchbar>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-content>
+        <ion-list>
+          <JobItem
+            v-for="job in filteredJobs"
+            :key="job.id"
+            :job="job"
+            :showCustomer="showCustomer"
+          />
+        </ion-list>
+
+        <ion-infinite-scroll
+          @ionInfinite="loadData($event)"
+          threshold="100px"
+          id="infinite-scroll"
+        >
+          <ion-infinite-scroll-content
+            loading-spinner="bubbles"
+            loading-text="Loading jobs..."
+          >
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script lang="ts">
@@ -24,25 +47,53 @@ import {
   IonInfiniteScrollContent,
   IonList,
   IonContent,
+  IonCard,
+  IonCardHeader,
+  IonSearchbar,
+  IonText,
+  IonCardContent,
 } from "@ionic/vue";
+
+import { includeItemInSearch } from "@/helpers";
 
 import JobItem from "./items/JobItem.vue";
 
 import { Job, sampleJob } from "@/types";
 
-import { ref } from "vue";
+import { computed, reactive, ref, toRefs } from "vue";
 
 export default {
   name: "Jobs",
+  props: ["showCustomer"],
   components: {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonList,
     IonContent,
     JobItem,
+    IonCard,
+    IonCardHeader,
+    IonSearchbar,
+    IonText,
+    IonCardContent,
   },
   setup() {
+    const state = reactive({
+      searchText: "",
+    });
     const jobs = ref<Array<Job>>([]);
+
+    const filteredJobs = computed(() => {
+      if (state.searchText == "") return jobs.value;
+      return jobs.value.filter((job) =>
+        includeItemInSearch(job, state.searchText, [
+          "name",
+          "customerName",
+          "startDate",
+          "description",
+        ])
+      );
+    });
 
     const pushData = () => {
       const max = jobs.value.length + 5;
@@ -69,11 +120,32 @@ export default {
     pushData();
 
     return {
+      ...toRefs(state),
       loadData,
       jobs,
+      filteredJobs,
     };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-card {
+  height: 100%;
+}
+ion-card-content {
+  height: 80%;
+  padding: 0;
+}
+ion-card-header {
+  border-bottom: 1px solid green;
+}
+.list-header {
+  margin: 0;
+  display: inline;
+}
+ion-searchbar {
+  padding-left: 0;
+  padding-bottom: 0;
+}
+</style>
