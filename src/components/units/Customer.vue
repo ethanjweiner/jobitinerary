@@ -1,5 +1,5 @@
 <template>
-  <Sections :sections="sections">
+  <Sections :sections="sections" :wrapCards="true">
     <template v-slot:dates>
       <div class="list">
         <CustomerDays />
@@ -11,7 +11,7 @@
       </div>
     </template>
     <template v-slot:customer-info>
-      <form class="ion-padding">
+      <form>
         <ion-list>
           <ion-list-header>Contact Info</ion-list-header>
           <ion-grid>
@@ -91,7 +91,7 @@
                 size-lg="3"
                 size-xl="3"
               >
-                <ImageWithCaption :imageRef="image" />
+                <ImageWithCaption :image="image" />
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -158,16 +158,19 @@ export default {
         name: "Dates",
         icon: calendarNumberOutline,
         id: "dates",
+        size: 6,
       },
       {
         name: "Jobs",
         icon: calendarOutline,
         id: "jobs",
+        size: 6,
       },
       {
         name: "Customer",
         icon: personOutline,
         id: "customer-info",
+        size: 12,
       },
     ]);
     return {

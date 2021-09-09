@@ -1,12 +1,13 @@
-import { reactive, readonly } from "vue";
+import { reactive } from "vue";
 import * as Types from "../types";
 import firebase from "firebase/app";
 import { auth, companiesCollection, employeesCollection } from "../main";
 import { initializeUserRouting, nameToID, companyExists } from "@/helpers";
-import { fetchCustomers, setCustomers } from "./company";
 
 interface CompanyState {
   company: Types.Company | null;
+  customers: Array<Types.Customer>;
+  employees: Array<Types.Employee>;
   selectedCustomer: Types.Customer | null;
   selectedEmployee: Types.Employee | null;
 }
@@ -29,6 +30,8 @@ const store = {
     errorMessage: null,
     companyState: {
       company: null,
+      customers: [],
+      employees: [],
       selectedCustomer: null,
       selectedEmployee: null,
     },
@@ -44,8 +47,11 @@ const store = {
     } else
       switch (user.kind) {
         case "company":
+          // Initialize the company store
           this.state.userType = "company";
           this.state.companyState.company = user;
+          this.fetchCustomers();
+          this.fetchEmployees();
           break;
         case "employee":
           this.state.userType = "employee";
@@ -95,25 +101,41 @@ const store = {
   clearCompanyState() {
     this.state.companyState = {
       company: null,
+      customers: [],
+      employees: [],
       selectedCustomer: null,
       selectedEmployee: null,
     };
   },
-  async setSelectedCustomer(customer: Types.Customer) {
+  setCustomers(customers: Array<Types.Customer>) {
+    this.state.companyState.customers = customers;
+  },
+  async fetchCustomers() {
+    console.log("Fetching customers for company");
+    this.setCustomers([Types.sampleCustomer1, Types.sampleCustomer2]);
+  },
+  setEmployees(employees: Array<Types.Employee>) {
+    this.state.companyState.employees = employees;
+  },
+  async fetchEmployees() {
+    console.log("Fetching employees for company");
+    this.setEmployees([Types.sampleEmployee1, Types.sampleEmployee2]);
+  },
+  setSelectedCustomer(customer: Types.Customer) {
     this.state.companyState.selectedCustomer = customer;
   },
   async fetchSelectedCustomer(name: string) {
     const id = nameToID(name);
     console.log("Fetching customer ", id);
-    this.setSelectedCustomer(Types.sampleCustomer);
+    this.setSelectedCustomer(Types.sampleCustomer1);
   },
-  async setSelectedEmployee(employee: Types.Employee) {
+  setSelectedEmployee(employee: Types.Employee) {
     this.state.companyState.selectedEmployee = employee;
   },
   async fetchSelectedEmployee(name: string) {
     const id = nameToID(name);
     console.log("Fetching employee ", id);
-    this.setSelectedEmployee(Types.sampleEmployee);
+    this.setSelectedEmployee(Types.sampleEmployee1);
   },
   // EMPLOYEE
   async fetchEmployee(user: firebase.User): Promise<boolean> {

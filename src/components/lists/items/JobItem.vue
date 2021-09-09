@@ -5,7 +5,6 @@
       <ion-note v-if="showCustomer">for {{ job.customerName }}</ion-note>
     </div>
     <div slot="end">
-      <p>starts</p>
       <ion-text color="dark">{{ job.startDate.toLocaleDateString() }}</ion-text>
     </div>
   </ion-item>

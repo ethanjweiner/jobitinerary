@@ -1,42 +1,44 @@
 <template>
-  <ion-card class="ion-text-start">
-    <ion-card-header>
-      <div class="ion-text-center">
-        <h3 class="list-header">
-          <ion-text color="dark">
-            Dates
-          </ion-text>
-        </h3>
-      </div>
+  <ion-card-header>
+    <div class="ion-text-center">
+      <h3 class="list-header">
+        <ion-text color="dark">
+          Dates
+        </ion-text>
+      </h3>
+      <ion-chip>
+        <ion-icon :icon="add"></ion-icon>
+        <ion-label>Add New</ion-label>
+      </ion-chip>
+    </div>
 
-      <ion-item>
-        <ion-input
-          type="date"
-          v-model="searchDate"
-          placeholder="Search by date"
-        ></ion-input>
-      </ion-item>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-content>
-        <ion-list>
-          <DayItem v-for="date in filteredDays" :key="date" :date="date" />
-        </ion-list>
+    <ion-item>
+      <ion-input
+        type="date"
+        v-model="searchDate"
+        placeholder="Search by date"
+      ></ion-input>
+    </ion-item>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-content>
+      <ion-list>
+        <DayItem v-for="date in filteredDays" :key="date" :date="date" />
+      </ion-list>
 
-        <ion-infinite-scroll
-          @ionInfinite="loadData($event)"
-          threshold="100px"
-          id="infinite-scroll"
+      <ion-infinite-scroll
+        @ionInfinite="loadData($event)"
+        threshold="100px"
+        id="infinite-scroll"
+      >
+        <ion-infinite-scroll-content
+          loading-spinner="bubbles"
+          loading-text="Loading days..."
         >
-          <ion-infinite-scroll-content
-            loading-spinner="bubbles"
-            loading-text="Loading days..."
-          >
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-      </ion-content>
-    </ion-card-content>
-  </ion-card>
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-content>
+  </ion-card-content>
 </template>
 
 <script lang="ts">
@@ -44,13 +46,15 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonList,
-  IonCard,
   IonCardHeader,
   IonInput,
   IonText,
   IonContent,
   IonCardContent,
   IonItem,
+  IonChip,
+  IonLabel,
+  IonIcon,
 } from "@ionic/vue";
 
 import DayItem from "./items/DayItem.vue";
@@ -59,6 +63,8 @@ import { computed, ref } from "vue";
 
 import date from "date-and-time";
 
+import { add } from "ionicons/icons";
+
 export default {
   name: "Employee Days",
   components: {
@@ -66,13 +72,15 @@ export default {
     IonInfiniteScrollContent,
     IonList,
     DayItem,
-    IonCard,
     IonCardHeader,
     IonInput,
     IonText,
     IonContent,
     IonCardContent,
     IonItem,
+    IonChip,
+    IonLabel,
+    IonIcon,
   },
   setup() {
     const searchDate = ref<string>("");
@@ -116,6 +124,7 @@ export default {
       days,
       filteredDays,
       searchDate,
+      add,
     };
   },
 };

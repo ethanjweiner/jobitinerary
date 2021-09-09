@@ -21,8 +21,8 @@
       <ion-toolbar id="select-user-toolbar">
         <UserSelect
           ref="userSelect"
-          :users="users"
-          :selectedUser="username"
+          :names="users.map((user) => user.name)"
+          :selectedName="username"
           :type="type"
           @userChange="changeUser"
         />
@@ -94,7 +94,6 @@ export default {
   },
   setup(props: any) {
     const changeUser = (name: string) => {
-      console.log("Name", name);
       router.push({
         name: capitalize(props.type),
         params: { username: name },

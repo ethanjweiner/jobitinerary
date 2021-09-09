@@ -1,42 +1,40 @@
 <template>
-  <ion-card class="ion-text-start">
-    <ion-card-header>
-      <div class="ion-text-center">
-        <h3 class="list-header">
-          <ion-text color="dark">
-            Dates
-          </ion-text>
-        </h3>
-      </div>
+  <ion-card-header>
+    <div class="ion-text-center">
+      <h3 class="list-header">
+        <ion-text color="dark">
+          Dates
+        </ion-text>
+      </h3>
+    </div>
 
-      <ion-item>
-        <ion-input
-          type="date"
-          v-model="searchDate"
-          placeholder="Search by date"
-        ></ion-input>
-      </ion-item>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-content>
-        <ion-list>
-          <DayItem v-for="date in filteredDays" :key="date" :date="date" />
-        </ion-list>
+    <ion-item>
+      <ion-input
+        type="date"
+        v-model="searchDate"
+        placeholder="Search by date"
+      ></ion-input>
+    </ion-item>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-content>
+      <ion-list>
+        <DayItem v-for="date in filteredDays" :key="date" :date="date" />
+      </ion-list>
 
-        <ion-infinite-scroll
-          @ionInfinite="loadData($event)"
-          threshold="100px"
-          id="infinite-scroll"
+      <ion-infinite-scroll
+        @ionInfinite="loadData($event)"
+        threshold="100px"
+        id="infinite-scroll"
+      >
+        <ion-infinite-scroll-content
+          loading-spinner="bubbles"
+          loading-text="Loading days..."
         >
-          <ion-infinite-scroll-content
-            loading-spinner="bubbles"
-            loading-text="Loading days..."
-          >
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-      </ion-content>
-    </ion-card-content>
-  </ion-card>
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-content>
+  </ion-card-content>
 </template>
 
 <script lang="ts">
@@ -44,7 +42,6 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonList,
-  IonCard,
   IonCardHeader,
   IonInput,
   IonText,
@@ -66,7 +63,6 @@ export default {
     IonInfiniteScrollContent,
     IonList,
     DayItem,
-    IonCard,
     IonCardHeader,
     IonInput,
     IonText,

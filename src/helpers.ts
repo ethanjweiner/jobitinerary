@@ -1,10 +1,24 @@
 import firebase from "firebase/app";
 import router from "./router";
 import { auth } from "./main";
-import { dateToStrings } from "./jsHelpers.js";
-import store from "./store";
-const { state } = store;
 import { companiesCollection } from "@/main";
+import date from "date-and-time";
+import store from "./store";
+
+const { state } = store;
+
+export function dateToStrings(inputDate: Date): Array<string> {
+  return [
+    inputDate.toString(),
+    inputDate.toDateString(),
+    inputDate.toISOString(),
+    inputDate.toLocaleDateString(),
+    inputDate.toLocaleString(),
+    inputDate.toUTCString(),
+    date.format(inputDate, "MMMM"),
+    date.format(inputDate, "dddd"),
+  ];
+}
 
 let routeGuardsInitialized = false;
 

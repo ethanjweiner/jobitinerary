@@ -1,20 +1,18 @@
 <template>
   <ion-item>
-    <ion-icon id="user-select" :icon="personOutline"></ion-icon>
+    <ion-icon v-if="type == 'customer'" :icon="cartOutline"></ion-icon>
+    <ion-icon v-if="type == 'employee'" :icon="hammerOutline"></ion-icon>
     <ion-label style="margin-left: 10px;"
       >Select {{ type.charAt(0).toUpperCase() + type.slice(1) }}</ion-label
     >
     <ion-select
       style="border: none !important;"
-      @ionChange="selectUser($event)"
-      :value="selectedUser"
+      @ionChange="selectName($event)"
+      :value="selectedName"
     >
-      <ion-select-option
-        v-for="user in users"
-        :key="user.name"
-        :value="user.name"
-        >{{ user.name }}</ion-select-option
-      >
+      <ion-select-option v-for="name in names" :key="name" :value="name">{{
+        name
+      }}</ion-select-option>
     </ion-select>
   </ion-item>
 </template>
@@ -30,11 +28,11 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import { personOutline } from "ionicons/icons";
+import { cartOutline, hammerOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: "User Select",
-  props: ["users", "selectedUser", "type"],
+  props: ["names", "selectedName", "type"],
   components: {
     IonItem,
     IonLabel,
@@ -43,13 +41,15 @@ export default defineComponent({
     IonIcon,
   },
   setup(props, { emit }) {
-    const selectUser = (e: CustomEvent) => {
-      console.log("user selected");
-      emit("userChange", e.detail.value);
+    const selectName = (e: CustomEvent) => {
+      if (e.detail.value) {
+        emit("userChange", e.detail.value);
+      }
     };
     return {
-      personOutline,
-      selectUser,
+      cartOutline,
+      hammerOutline,
+      selectName,
     };
   },
 });

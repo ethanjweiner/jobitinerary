@@ -23,7 +23,7 @@ export interface ImageWithCaption {
 }
 
 const sampleImage: ImageWithCaption = {
-  ref: "../resources/splash.png",
+  ref: "../images/splash.png",
   caption: "This is an image",
 };
 
@@ -38,8 +38,17 @@ export interface Employee extends UserData {
   hourlyRate: number | null;
 }
 
-export const sampleEmployee: Employee = {
-  name: "Employee Name",
+export const sampleEmployee1: Employee = {
+  name: "Employee 1",
+  companyID: "company ID",
+  kind: "employee",
+  email: "employeeEmail@email.com",
+  phone: "Employee phone",
+  hourlyRate: 20,
+};
+
+export const sampleEmployee2: Employee = {
+  name: "Employee 2",
   companyID: "company ID",
   kind: "employee",
   email: "employeeEmail@email.com",
@@ -56,8 +65,20 @@ export interface Customer extends UserData {
   propertyImages: Array<ImageWithCaption>;
 }
 
-export const sampleCustomer: Customer = {
-  name: "Customer Name",
+export const sampleCustomer1: Customer = {
+  name: "Customer 1",
+  companyID: "company ID",
+  kind: "customer",
+  email: "customerEmail@email.com",
+  phone: "Customer phone",
+  location: sampleLocation,
+  customerNotes: "Notes about the customer go here...",
+  propertyNotes: "Notes about the property go here...",
+  propertyImages: [sampleImage, sampleImage],
+};
+
+export const sampleCustomer2: Customer = {
+  name: "Customer 2",
   companyID: "company ID",
   kind: "customer",
   email: "customerEmail@email.com",
@@ -73,7 +94,7 @@ export type User = Company | Employee | null;
 export interface TimeLog {
   start: string;
   end: string;
-  total: number;
+  hours: number;
 }
 
 export interface Task {
@@ -93,7 +114,10 @@ export interface Visit {
   id: string;
   employeeName: string;
   customerName: string;
-  jobID: string;
+  job: {
+    name: string;
+    id: string;
+  };
   date: Date;
   time: TimeLog;
   notes: string;
@@ -103,16 +127,40 @@ export interface Visit {
   readByCompany: boolean;
 }
 
-export const sampleVisit: Visit = {
-  id: "visit_id",
-  employeeName: "employee name",
-  customerName: "customer name",
-  jobID: "job",
+export const sampleEmptyVisit: Visit = {
+  id: "new_visit_id",
+  employeeName: "",
+  customerName: "",
+  job: {
+    name: "",
+    id: "",
+  },
   date: new Date(),
   time: {
-    start: "9:00",
-    end: "5:00",
-    total: 8,
+    start: "",
+    end: "",
+    hours: 0,
+  },
+  notes: "",
+  tasks: [],
+  tools: [],
+  imageRefs: [],
+  readByCompany: false,
+};
+
+export const sampleVisit: Visit = {
+  id: "visit_id",
+  employeeName: "Employee 1",
+  customerName: "Customer 1",
+  job: {
+    name: "Some Job",
+    id: "Job ID",
+  },
+  date: new Date(),
+  time: {
+    start: "08:00",
+    end: "18:00",
+    hours: 8,
   },
   notes: "notes",
   tasks: [
@@ -159,7 +207,7 @@ export interface Job {
 export const sampleJob: Job = {
   id: "job_id",
   name: "job name",
-  customerName: "customer name",
+  customerName: "Customer Name",
   description: "job description",
   startDate: new Date(),
   tasks: [
@@ -183,11 +231,11 @@ export interface SectionType {
   name: string;
   icon: any;
   id: string;
+  size?: number;
 }
 
 // A ONE-WAY message (can't be used as a thread...)
 export interface Message {
-  id: string;
   to: {
     userKind: "employee" | "company";
     name?: string;
@@ -199,24 +247,23 @@ export interface Message {
     email: string;
   };
   text: string;
-  imageRef: ImageWithCaption;
+  image: ImageWithCaption;
   readByRecipient: boolean;
 }
 
 export const sampleMessage: Message = {
-  id: "message_id",
   to: {
     userKind: "company",
     email: "company@email.com",
   },
   from: {
     userKind: "employee",
-    name: "employee name",
+    name: "Employee Name",
     email: "employee@email.com",
   },
   text:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  imageRef: sampleImage,
+  image: sampleImage,
   readByRecipient: false,
 };
 

@@ -1,45 +1,49 @@
 <template>
-  <ion-card>
-    <ion-card-header>
-      <div class="ion-text-center">
-        <h3 class="list-header">
-          <ion-text color="dark">
-            Recent Visits
-          </ion-text>
-        </h3>
-        <ion-badge color="danger">{{ numUnreadVisits }}</ion-badge>
-      </div>
+  <ion-card-header>
+    <div class="ion-text-center">
+      <ion-badge color="danger" style="margin-right: 5px;">{{
+        numUnreadVisits
+      }}</ion-badge>
+      <h3 class="list-header">
+        <ion-text color="dark">
+          Recent Visits
+        </ion-text>
+      </h3>
+      <ion-chip>
+        <ion-icon :icon="add"></ion-icon>
+        <ion-label>Add New</ion-label>
+      </ion-chip>
+    </div>
 
-      <ion-searchbar
-        class="ion-text-start"
-        v-model="searchText"
-        placeholder="Search by customer, employee, date, etc."
-      ></ion-searchbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-content>
-        <ion-list>
-          <VisitItem
-            v-for="visit in filteredVisits"
-            :key="visit.id"
-            :visit="visit"
-          />
-        </ion-list>
+    <ion-searchbar
+      class="ion-text-start"
+      v-model="searchText"
+      placeholder="Search by customer, employee, date, etc."
+    ></ion-searchbar>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-content>
+      <ion-list>
+        <VisitItem
+          v-for="visit in filteredVisits"
+          :key="visit.id"
+          :visit="visit"
+        />
+      </ion-list>
 
-        <ion-infinite-scroll
-          @ionInfinite="loadData($event)"
-          threshold="100px"
-          id="infinite-scroll"
+      <ion-infinite-scroll
+        @ionInfinite="loadData($event)"
+        threshold="100px"
+        id="infinite-scroll"
+      >
+        <ion-infinite-scroll-content
+          loading-spinner="bubbles"
+          loading-text="Loading visits..."
         >
-          <ion-infinite-scroll-content
-            loading-spinner="bubbles"
-            loading-text="Loading visits..."
-          >
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-      </ion-content>
-    </ion-card-content>
-  </ion-card>
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-content>
+  </ion-card-content>
 </template>
 
 <script lang="ts">
@@ -47,13 +51,15 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonList,
-  IonCard,
   IonCardHeader,
   IonBadge,
   IonSearchbar,
   IonText,
   IonContent,
   IonCardContent,
+  IonChip,
+  IonLabel,
+  IonIcon,
 } from "@ionic/vue";
 
 import VisitItem from "./items/VisitItem.vue";
@@ -64,6 +70,8 @@ import { computed, reactive, ref, toRefs } from "vue";
 
 import { includeItemInSearch } from "@/helpers";
 
+import { add } from "ionicons/icons";
+
 export default {
   name: "Visits",
   components: {
@@ -71,13 +79,15 @@ export default {
     IonInfiniteScrollContent,
     IonList,
     VisitItem,
-    IonCard,
     IonCardHeader,
     IonBadge,
     IonSearchbar,
     IonText,
     IonContent,
     IonCardContent,
+    IonChip,
+    IonLabel,
+    IonIcon,
   },
   setup() {
     const state = reactive({
@@ -134,6 +144,7 @@ export default {
       numUnreadVisits,
       filteredVisits,
       ...toRefs(state),
+      add,
     };
   },
 };

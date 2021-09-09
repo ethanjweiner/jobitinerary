@@ -1,5 +1,5 @@
 <template>
-  <Sections :sections="sections">
+  <Sections :sections="sections" :wrapCards="true">
     <template v-slot:messages>
       <div class="list">
         <!-- change to messages -->
@@ -112,21 +112,25 @@ export default {
         name: "Messages",
         icon: mailOpenOutline,
         id: "messages",
+        size: 6,
       },
       {
         name: "Dates",
         icon: calendarNumberOutline,
         id: "dates",
+        size: 6,
       },
       {
         name: "Pay",
         icon: cashOutline,
         id: "pay",
+        size: 6,
       },
       {
         name: "Employee",
         icon: personOutline,
         id: "employee-info",
+        size: 6,
       },
     ]);
     return {

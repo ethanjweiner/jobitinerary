@@ -1,39 +1,39 @@
 <template>
-  <ion-card>
-    <ion-card-header>
-      <div class="ion-text-center">
-        <h3 class="list-header">
-          <ion-text color="dark">
-            Messages
-          </ion-text>
-        </h3>
-        <ion-badge color="danger">{{ numUnreadMessages }}</ion-badge>
-      </div>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-content>
-        <ion-list>
-          <MessageItem
-            v-for="(message, index) in messages"
-            :key="index"
-            :message="message"
-          />
-        </ion-list>
+  <ion-card-header>
+    <div class="ion-text-center">
+      <ion-badge color="danger" style="margin-right: 5px;">{{
+        numUnreadMessages
+      }}</ion-badge>
+      <h3 class="list-header">
+        <ion-text color="dark">
+          Messages
+        </ion-text>
+      </h3>
+    </div>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-content>
+      <ion-list>
+        <MessageItem
+          v-for="(message, index) in messages"
+          :key="index"
+          :message="message"
+        />
+      </ion-list>
 
-        <ion-infinite-scroll
-          @ionInfinite="loadData($event)"
-          threshold="100px"
-          id="infinite-scroll"
+      <ion-infinite-scroll
+        @ionInfinite="loadData($event)"
+        threshold="100px"
+        id="infinite-scroll"
+      >
+        <ion-infinite-scroll-content
+          loading-spinner="bubbles"
+          loading-text="Loading messages..."
         >
-          <ion-infinite-scroll-content
-            loading-spinner="bubbles"
-            loading-text="Loading messages..."
-          >
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-      </ion-content>
-    </ion-card-content>
-  </ion-card>
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-content>
+  </ion-card-content>
 </template>
 
 <script lang="ts">
@@ -42,7 +42,6 @@ import {
   IonInfiniteScrollContent,
   IonList,
   IonContent,
-  IonCard,
   IonCardHeader,
   IonBadge,
   IonText,
@@ -63,7 +62,6 @@ export default {
     IonList,
     IonContent,
     MessageItem,
-    IonCard,
     IonCardHeader,
     IonBadge,
     IonText,

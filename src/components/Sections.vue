@@ -16,45 +16,81 @@
       </ion-segment-button>
     </ion-segment>
     <!-- Sections -->
-    <div
-      v-for="section in sections"
-      :key="section.id"
-      class="section-container"
-      :class="[
-        section.id !== selectedSection
-          ? 'ion-hide-md-down ' + section.id
-          : section.id,
-      ]"
-    >
-      <slot :name="section.id"></slot>
-    </div>
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          v-for="section in sections"
+          :key="section.id"
+          :class="
+            section.id != selectedSection
+              ? 'ion-hide-md-down ' + section.id
+              : section.id
+          "
+          size="12"
+          :size-md="section.size"
+        >
+          <ion-card
+            v-if="screenWidth > 768 && wrapCards"
+            :class="section.id + '-card'"
+            class="ion-margin"
+          >
+            <slot :name="section.id"></slot>
+          </ion-card>
+          <slot v-else :name="section.id"></slot>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
-import { IonSegment, IonSegmentButton, IonIcon, IonLabel } from "@ionic/vue";
+import {
+  IonSegment,
+  IonSegmentButton,
+  IonIcon,
+  IonLabel,
+  IonCard,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from "@ionic/vue";
 
 export default {
   name: "Sections",
   props: {
     sections: Array,
+    wrapCards: Boolean,
   },
   setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);
 
     const changeSection = (e: CustomEvent) => {
       selectedSection.value = e.detail.value;
+      console.log(selectedSection.value + e.detail.value);
     };
 
-    return { changeSection, selectedSection };
+    const screenWidth = ref(0);
+
+    onMounted(() => {
+      screenWidth.value = window.innerWidth;
+      window.addEventListener("resize", () => {
+        screenWidth.value = window.innerWidth;
+      });
+    });
+
+    return { changeSection, selectedSection, screenWidth };
   },
   components: {
     IonSegment,
     IonSegmentButton,
     IonIcon,
     IonLabel,
+    IonCard,
+    IonGrid,
+    IonRow,
+    IonCol,
   },
 };
 </script>
@@ -62,13 +98,8 @@ export default {
 <style scoped>
 .section-container {
   display: inline-block;
-  width: 100%;
 }
-@media (min-width: 768px) {
-  .dates,
-  .jobs,
-  .messages {
-    width: 50%;
-  }
+ion-label {
+  margin-bottom: 2px !important;
 }
 </style>
