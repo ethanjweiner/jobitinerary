@@ -2,7 +2,12 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Visit on {{ visit.date.toLocaleDateString() }}</ion-title>
+        <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title
+          >Visit<span v-if="visit.date"> on </span>{{ visit.date }}</ion-title
+        >
 
         <div style="padding-left: 20px;">
           <ion-note v-if="visit.customerName"
@@ -25,12 +30,17 @@
       :event="popoverEvent"
       @didDismiss="toggleVisitSettings(false)"
     >
-      <VisitPopover />
+      <VisitPopover @deleteVisit="deleteVisit" />
     </ion-popover>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title>Visit on {{ visit.date.toLocaleDateString() }}</ion-title>
+          <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+          </ion-buttons>
+          <ion-title class="ion-text-start" style="padding-left: 15px;"
+            >Visit on {{ visit.date }}</ion-title
+          >
           <ion-buttons collapse="condense" slot="end">
             <ion-button @click="toggleVisitSettings(true, $event)">
               <ion-icon :icon="ellipsisVertical"></ion-icon>
@@ -46,80 +56,95 @@
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
-            <ion-item>
-              <ion-icon :icon="calendarNumberOutline"></ion-icon>
-              <ion-label style="margin-left: 7px;">Date of Visit </ion-label>
-              <ion-input
-                type="date"
-                v-model="visit.date"
-                placeholder="Search by date"
-              ></ion-input>
-            </ion-item>
-            <!-- Employee Select -->
-
-            <UserSelect
-              :names="
-                store.state.companyState.employees.map(
-                  (employee) => employee.name
-                )
-              "
-              :selectedName="visit.employeeName"
-              @userChange="(name) => (visit.employeeName = name)"
-              type="employee"
-            />
-            <!-- Customer Select -->
-            <UserSelect
-              v-if="!visit.jobID"
-              :names="
-                store.state.companyState.customers.map(
-                  (customer) => customer.name
-                )
-              "
-              :selectedName="visit.customerName"
-              @userChange="(name) => (visit.customerName = name)"
-              type="customer"
-            />
-            <!-- Job Attacher -->
-            <ion-item>
-              <ion-toolbar>
-                <ion-note>Attach a Job</ion-note>
-                <ion-label v-if="visit.job.id"
-                  >"{{ visit.job.name }}"</ion-label
-                >
-                <ion-buttons :slot="visit.job.id ? 'end' : 'end'">
-                  <ion-chip @click="jobsModalIsOpen = true">
-                    <ion-icon :icon="calendarOutline"></ion-icon>
-                    <ion-label style="margin-top: 6px;">Attach New</ion-label>
-                  </ion-chip>
-                </ion-buttons>
-              </ion-toolbar>
-            </ion-item>
-            <TimeLog :time="visit.time" :title="'Visit Time Log'" />
-            <!-- Additional Notes -->
-            <h3 class="ion-text-center">
-              <ion-text>Visit Notes</ion-text>
-            </h3>
-            <ion-item>
-              <ion-textarea auto-grow v-model="visit.notes"></ion-textarea>
-            </ion-item>
+            <VisitMain :visit="visit" @visitChanged="updateVisit" />
           </template>
           <template v-slot:tasks>
-            <div style="height: 600px;"></div>
+            <Tasks
+              :tasks="visit.tasks"
+              @tasksChanged="(newTasks) => (visit.tasks = newTasks)"
+            />
           </template>
           <template v-slot:tools>
-            Tools
+            <Tools
+              :tools="visit.tools"
+              @toolsChanged="(newTools) => (visit.tools = newTools)"
+            />
+          </template>
+          <template v-slot:images>
+            <Images
+              :images="visit.images"
+              @imagesChange="(newImages) => (visit.images = newImages)"
+            />
+          </template>
+          <template v-slot:sectionsAsGrid>
+            <ion-row>
+              <ion-col size="6">
+                <ion-card>
+                  <VisitMain :visit="visit" @visitChanged="updateVisit" />
+                </ion-card>
+              </ion-col>
+              <ion-col size="6">
+                <ion-card>
+                  <ion-card-header class="ion-text-center">
+                    <ion-card-title>
+                      <ion-icon :icon="constructOutline"></ion-icon>
+                      Tasks</ion-card-title
+                    >
+                  </ion-card-header>
+                  <ion-card-content>
+                    <Tasks
+                      :tasks="visit.tasks"
+                      @tasksChanged="(newTasks) => (visit.tasks = newTasks)"
+                    />
+                  </ion-card-content>
+                </ion-card>
+
+                <ion-card>
+                  <ion-card-header class="ion-text-center">
+                    <ion-card-title>
+                      <ion-icon :icon="hammerOutline"></ion-icon>
+                      Tools</ion-card-title
+                    >
+                    <ion-card-subtitle
+                      class="ion-text-start"
+                      style="margin-top: 5px; margin-left: 15px;"
+                      >Swipe right to mark a tool as returned</ion-card-subtitle
+                    >
+                  </ion-card-header>
+                  <ion-card-content>
+                    <Tools
+                      :tools="visit.tools"
+                      @toolsChanged="(newTools) => (visit.tools = newTools)"
+                    />
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <ion-card>
+                  <ion-card-header
+                    class="ion-text-center"
+                    style="padding-bottom: 2px;"
+                  >
+                    <ion-card-title>
+                      <ion-icon :icon="imagesOutline"></ion-icon>
+                      Images
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content>
+                    <Images
+                      :images="visit.images"
+                      @imagesChange="(newImages) => (visit.images = newImages)"
+                    />
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
           </template>
         </Sections>
       </form>
-      <ion-modal
-        :is-open="jobsModalIsOpen"
-        @didDismiss="jobsModalIsOpen = false"
-      >
-        <JobsModal
-          @jobSelected="attachJob"
-          @closeModal="jobsModalIsOpen = false"
-        />
-      </ion-modal>
+
       <ion-modal
         :is-open="messageModalIsOpen"
         @didDismiss="messageModalIsOpen = false"
@@ -127,7 +152,7 @@
         <MessageModal
           @messageSent="sendMessage"
           @closeModal="messageModalIsOpen = false"
-          :date="visit.date.toLocaleDateString()"
+          :visit="visit"
         />
       </ion-modal>
     </ion-content>
@@ -141,31 +166,26 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonLabel,
-  IonInput,
-  IonItem,
   IonNote,
-  IonChip,
   IonIcon,
   IonButtons,
   IonModal,
   IonPopover,
   IonButton,
-  IonTextarea,
-  IonText,
+  IonCard,
+  IonCol,
+  IonRow,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonCardSubtitle,
+  IonBackButton,
 } from "@ionic/vue";
 
 import Sections from "@/components/Sections.vue";
-import JobsModal from "@/components/modals/JobsModal.vue";
 
-import {
-  sampleVisit,
-  sampleEmptyVisit,
-  SectionType,
-  Job,
-  Message,
-} from "@/types";
-import { reactive, ref, toRefs } from "@vue/reactivity";
+import { sampleVisit, SectionType, Message, Visit, emptyVisit } from "@/types";
+import { computed, reactive, ref, toRefs } from "@vue/reactivity";
 import {
   documentTextOutline,
   constructOutline,
@@ -173,13 +193,17 @@ import {
   calendarOutline,
   calendarNumberOutline,
   ellipsisVertical,
+  imagesOutline,
 } from "ionicons/icons";
-import UserSelect from "@/components/UserSelect.vue";
 import store from "@/store";
 import VisitPopover from "@/components/popovers/VisitPopover.vue";
-import TimeLog from "@/components/TimeLog.vue";
 import SendMessage from "@/components/buttons/SendMessage.vue";
 import MessageModal from "@/components/modals/MessageModal.vue";
+import VisitMain from "@/components/forms/VisitMain.vue";
+import Tasks from "@/components/lists/Tasks.vue";
+import Tools from "@/components/lists/Tools.vue";
+import Images from "@/components/lists/Images.vue";
+import router from "@/router";
 
 export default {
   name: "VisitView",
@@ -191,40 +215,34 @@ export default {
         name: "Main",
         icon: documentTextOutline,
         id: "main",
-        size: 6,
       },
       {
         name: "Tasks",
         icon: constructOutline,
         id: "tasks",
-        size: 6,
       },
       {
         name: "Tools",
         icon: hammerOutline,
         id: "tools",
-        size: 6,
+      },
+      {
+        name: "Images",
+        icon: imagesOutline,
+        id: "images",
       },
     ]);
     const state = reactive({
-      visit: sampleEmptyVisit,
+      visit: emptyVisit(),
     });
 
     if (props.visitID == "new") {
-      // Create empty visit and set...
-      state.visit = sampleEmptyVisit;
+      // Clear the form (if has input)
+      state.visit = emptyVisit();
     } else {
       // Fetch visit with id
       state.visit = sampleVisit;
     }
-
-    const jobsModalIsOpen = ref(false);
-
-    const attachJob = (job: Job) => {
-      jobsModalIsOpen.value = false;
-      state.visit.job.id = job.id;
-      state.visit.job.name = job.name;
-    };
 
     const messageModalIsOpen = ref(false);
 
@@ -240,20 +258,41 @@ export default {
       popoverIsOpen.value = state;
     };
 
+    const displayToolsLeft = computed(() => {
+      return true;
+    });
+
+    const updateVisit = (newVisit: Visit) => {
+      state.visit = newVisit;
+    };
+
+    const deleteVisit = () => {
+      popoverIsOpen.value = false;
+      // Delete visit from database
+      // Return to home
+      router.go(-1);
+
+      // Update the state
+    };
+
     return {
       store,
       ...toRefs(state),
+      updateVisit,
       sections,
       calendarOutline,
       calendarNumberOutline,
       ellipsisVertical,
-      jobsModalIsOpen,
       toggleVisitSettings,
       popoverIsOpen,
       popoverEvent,
-      attachJob,
       messageModalIsOpen,
       sendMessage,
+      displayToolsLeft,
+      hammerOutline,
+      constructOutline,
+      imagesOutline,
+      deleteVisit,
     };
   },
   components: {
@@ -263,26 +302,33 @@ export default {
     IonContent,
     IonPage,
     Sections,
-    UserSelect,
-    IonLabel,
-    IonInput,
-    IonItem,
     IonNote,
-    IonChip,
     IonIcon,
     IonButtons,
-    JobsModal,
     IonModal,
     IonPopover,
     IonButton,
     VisitPopover,
-    TimeLog,
-    IonTextarea,
-    IonText,
     SendMessage,
     MessageModal,
+    VisitMain,
+    IonCard,
+    IonCol,
+    IonRow,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    Tasks,
+    Tools,
+    IonCardSubtitle,
+    Images,
+    IonBackButton,
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-title {
+  padding-left: 5px;
+}
+</style>

@@ -9,7 +9,14 @@
           Recent Visits
         </ion-text>
       </h3>
-      <ion-chip>
+      <ion-chip
+        @click="
+          router.push({
+            name: 'Company Visit',
+            params: { visitID: 'new' },
+          })
+        "
+      >
         <ion-icon :icon="add"></ion-icon>
         <ion-label>Add New</ion-label>
       </ion-chip>
@@ -28,6 +35,12 @@
           v-for="visit in filteredVisits"
           :key="visit.id"
           :visit="visit"
+          @click="
+            router.push({
+              name: 'Company Visit',
+              params: { visitID: visit.id },
+            })
+          "
         />
       </ion-list>
 
@@ -72,6 +85,10 @@ import { includeItemInSearch } from "@/helpers";
 
 import { add } from "ionicons/icons";
 
+import router from "@/router";
+
+import store from "@/store";
+
 export default {
   name: "Visits",
   components: {
@@ -96,6 +113,7 @@ export default {
     // Retrieve visits for given employee OR
     // Supply the visits as a prop
     const visits = ref<Array<Visit>>([]);
+
     const numUnreadVisits = computed(() => {
       return visits.value.reduce((numUnreadVisitsSoFar, visit) => {
         if (!visit.readByCompany) return ++numUnreadVisitsSoFar;
@@ -145,6 +163,8 @@ export default {
       filteredVisits,
       ...toRefs(state),
       add,
+      router,
+      store,
     };
   },
 };

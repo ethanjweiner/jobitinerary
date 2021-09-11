@@ -16,29 +16,22 @@
       </ion-segment-button>
     </ion-segment>
     <!-- Sections -->
-    <ion-grid>
-      <ion-row>
-        <ion-col
-          v-for="section in sections"
-          :key="section.id"
-          :class="
-            section.id != selectedSection
-              ? 'ion-hide-md-down ' + section.id
-              : section.id
-          "
-          size="12"
-          :size-md="section.size"
-        >
-          <ion-card
-            v-if="screenWidth > 768 && wrapCards"
-            :class="section.id + '-card'"
-            class="ion-margin"
-          >
-            <slot :name="section.id"></slot>
-          </ion-card>
-          <slot v-else :name="section.id"></slot>
-        </ion-col>
-      </ion-row>
+    <div v-if="screenWidth < 768">
+      <div
+        v-for="section in sections"
+        :key="section.id"
+        :class="
+          section.id != selectedSection
+            ? 'ion-hide-md-down ' + section.id
+            : section.id
+        "
+      >
+        <slot :name="section.id"></slot>
+      </div>
+    </div>
+
+    <ion-grid v-else>
+      <slot name="sectionsAsGrid" />
     </ion-grid>
   </div>
 </template>
@@ -51,10 +44,7 @@ import {
   IonSegmentButton,
   IonIcon,
   IonLabel,
-  IonCard,
   IonGrid,
-  IonRow,
-  IonCol,
 } from "@ionic/vue";
 
 export default {
@@ -87,10 +77,7 @@ export default {
     IonSegmentButton,
     IonIcon,
     IonLabel,
-    IonCard,
     IonGrid,
-    IonRow,
-    IonCol,
   },
 };
 </script>

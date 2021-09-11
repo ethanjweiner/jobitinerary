@@ -55,6 +55,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonCard,
 } from "@ionic/vue";
 
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
@@ -79,6 +80,7 @@ export default {
     IonCol,
     Jobs,
     Messages,
+    IonCard,
   },
 };
 </script>

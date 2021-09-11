@@ -26,19 +26,51 @@
       <ion-col size="6" size-lg="4">
         <ion-item>
           <ion-label position="stacked">Start Time</ion-label>
-          <ion-input type="time" :value="time.start"></ion-input>
+          <ion-datetime
+            @ionChange="
+              $emit('timeChange', {
+                start: $event.detail.value,
+                end: time.end,
+                hours: time.hours,
+              })
+            "
+            display-format="h:mm A"
+            picker-format="h:mm A"
+            :value="time.start"
+          ></ion-datetime>
         </ion-item>
       </ion-col>
       <ion-col size="6" size-lg="4">
         <ion-item>
           <ion-label position="stacked">End Time</ion-label>
-          <ion-input type="time" :value="time.end"></ion-input>
+          <ion-datetime
+            @ionChange="
+              $emit('timeChange', {
+                start: time.start,
+                end: $event.detail.value,
+                hours: time.hours,
+              })
+            "
+            display-format="h:mm A"
+            picker-format="h:mm A"
+            :value="time.end"
+          ></ion-datetime>
         </ion-item>
       </ion-col>
       <ion-col size="12" size-lg="4">
         <ion-item>
           <ion-label position="stacked">Total Hours</ion-label>
-          <ion-input type="number" :value="time.hours"></ion-input>
+          <ion-input
+            @ionInput="
+              $emit('timeChange', {
+                start: time.start,
+                end: time.end,
+                hours: parseInt($event.target.value),
+              })
+            "
+            type="number"
+            :value="time.hours"
+          ></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -58,6 +90,7 @@ import {
   IonItem,
   IonText,
   IonNote,
+  IonDatetime,
 } from "@ionic/vue";
 import { computed } from "@vue/reactivity";
 export default {
@@ -82,6 +115,7 @@ export default {
     IonItem,
     IonText,
     IonNote,
+    IonDatetime,
   },
 };
 </script>

@@ -1,9 +1,8 @@
 <template>
   <ion-list>
-    <ion-item button>
+    <ion-item button @click="$emit('deleteVisit')">
       <ion-text color="danger">
         <ion-icon :icon="trash" color="danger"></ion-icon>
-
         Delete Visit
       </ion-text>
     </ion-item>
@@ -12,9 +11,10 @@
 
 <script>
 import { trash } from "ionicons/icons";
+import { IonList, IonItem, IonText, IonIcon } from "@ionic/vue";
 export default {
   name: "Visit Popover",
-  components: {},
+  components: { IonList, IonItem, IonText, IonIcon },
   setup() {
     return { trash };
   },

@@ -13,71 +13,61 @@
       </div>
     </template>
     <template v-slot:pay>
-      <div>
-        <PaymentInfo />
-      </div>
+      <PaymentInfo />
     </template>
     <template v-slot:employee-info>
-      <form class="ion-padding">
-        <ion-list>
-          <ion-list-header>Contact Info</ion-list-header>
-          <ion-grid>
-            <ion-row class="ion-justify-content-around">
-              <ion-col size="12" size-sm="6">
-                <ion-item>
-                  <ion-label position="stacked">
-                    <ion-icon :icon="mailOutline"></ion-icon>
-                    <span style="padding: 5px;">Email</span>
-                  </ion-label>
-                  <ion-input
-                    type="email"
-                    placeholder="email"
-                    :value="state.companyState.selectedEmployee.email"
-                  ></ion-input>
-                </ion-item>
-              </ion-col>
-              <ion-col size="12" size-sm="6">
-                <ion-item>
-                  <ion-label position="stacked">
-                    <ion-icon :icon="callOutline"></ion-icon>
-                    <span style="padding: 5px;">Phone</span>
-                  </ion-label>
-                  <ion-input
-                    type="tel"
-                    inputmode="tel"
-                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    placeholder="123-123-1234"
-                    :value="state.companyState.selectedEmployee.phone"
-                  ></ion-input>
-                </ion-item>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-list>
-      </form>
+      <EmployeeForm />
+    </template>
+    <template v-slot:sectionsAsGrid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-card>
+            <div class="list">
+              <!-- change to messages -->
+              <Messages />
+            </div>
+          </ion-card>
+        </ion-col>
+        <ion-col size="6">
+          <ion-card>
+            <div class="list">
+              <!-- change to employee days -->
+              <EmployeeDays />
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-card class="ion-padding">
+            <ion-card-header>
+              <ion-card-title>
+                Employee Info
+              </ion-card-title>
+            </ion-card-header>
+            <EmployeeForm />
+          </ion-card>
+        </ion-col>
+        <ion-col size="6">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>
+                Payment Info
+              </ion-card-title>
+            </ion-card-header>
+            <PaymentInfo />
+          </ion-card>
+        </ion-col>
+      </ion-row>
     </template>
   </Sections>
 </template>
 
 <script lang="ts">
-import {
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonIcon,
-} from "@ionic/vue";
-
 import Messages from "@/components/lists/Messages.vue";
 
 import EmployeeDays from "@/components/lists/EmployeeDays.vue";
 import {
-  mailOutline,
-  callOutline,
   mailOpenOutline,
   calendarNumberOutline,
   personOutline,
@@ -88,23 +78,28 @@ import store from "@/store";
 import { SectionType } from "@/types";
 import { ref } from "@vue/reactivity";
 import PaymentInfo from "@/components/PaymentInfo.vue";
+import EmployeeForm from "@/components/forms/EmployeeForm.vue";
+import {
+  IonRow,
+  IonCol,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+} from "@ionic/vue";
 
 export default {
   name: "Employee",
   components: {
-    IonList,
-    IonListHeader,
-    IonInput,
-    IonItem,
-    IonLabel,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonIcon,
     Sections,
     Messages,
     EmployeeDays,
     PaymentInfo,
+    EmployeeForm,
+    IonRow,
+    IonCol,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
   },
   setup() {
     const sections = ref<Array<SectionType>>([
@@ -112,32 +107,26 @@ export default {
         name: "Messages",
         icon: mailOpenOutline,
         id: "messages",
-        size: 6,
       },
       {
         name: "Dates",
         icon: calendarNumberOutline,
         id: "dates",
-        size: 6,
       },
       {
         name: "Pay",
         icon: cashOutline,
         id: "pay",
-        size: 6,
       },
       {
         name: "Employee",
         icon: personOutline,
         id: "employee-info",
-        size: 6,
       },
     ]);
     return {
       state: store.state,
       sections,
-      mailOutline,
-      callOutline,
     };
   },
 };

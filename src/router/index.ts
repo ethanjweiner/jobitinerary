@@ -30,6 +30,7 @@ const routes: Array<RouteRecordRaw> = [
       // HOME
       {
         path: "home",
+        name: "Home",
         component: () => import("@/views/company/Home.vue"),
       },
       // Open recent job or create new job
@@ -87,6 +88,7 @@ const routes: Array<RouteRecordRaw> = [
       // VISITS
       {
         path: "visits/:visitID",
+        name: "Company Visit",
         props: true,
         component: () => import("@/views/general/Visit.vue"),
       },
@@ -139,6 +141,7 @@ const routes: Array<RouteRecordRaw> = [
       // VISITS
       {
         path: "visits/:visitID",
+        name: "Visit",
         props: true,
         component: () => import("@/views/general/Visit.vue"),
       },

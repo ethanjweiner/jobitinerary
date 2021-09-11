@@ -5,7 +5,12 @@
     </ion-fab-button>
     <ion-fab-list side="end">
       <ion-fab-button>Day</ion-fab-button>
-      <ion-fab-button>Visit</ion-fab-button>
+      <ion-fab-button
+        @click="
+          router.push({ name: 'Company Visit', params: { visitID: 'new' } })
+        "
+        >Visit</ion-fab-button
+      >
       <ion-fab-button>Job</ion-fab-button>
     </ion-fab-list>
   </ion-fab>
@@ -14,6 +19,8 @@
 <script>
 import { IonFab, IonFabButton, IonIcon, IonFabList } from "@ionic/vue";
 import { add } from "ionicons/icons";
+import router from "@/router";
+
 export default {
   name: "Create Button",
   components: {
@@ -25,6 +32,7 @@ export default {
   setup() {
     return {
       add,
+      router,
     };
   },
 };

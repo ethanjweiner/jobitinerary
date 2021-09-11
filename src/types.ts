@@ -18,11 +18,13 @@ export const sampleLocation: Location = {
 };
 
 export interface ImageWithCaption {
+  id: number;
   ref: string;
   caption: string;
 }
 
 const sampleImage: ImageWithCaption = {
+  id: Date.now(),
   ref: "../images/splash.png",
   caption: "This is an image",
 };
@@ -98,65 +100,70 @@ export interface TimeLog {
 }
 
 export interface Task {
-  name: string;
-  notes: string;
-  imageRefs: Array<ImageWithCaption>;
+  text: string;
+  image: ImageWithCaption | null;
   complete: boolean;
+  id: number;
 }
 
 export interface Tool {
   name: string;
-  outToJob: boolean;
-  backToShop: boolean;
+  returned: boolean;
+  id: number;
 }
 
 export interface Visit {
   id: string;
   employeeName: string;
   customerName: string;
+  workType: string;
   job: {
     name: string;
     id: string;
   };
-  date: Date;
+  date: string;
   time: TimeLog;
   notes: string;
   tasks: Array<Task>;
   tools: Array<Tool>;
-  imageRefs: Array<ImageWithCaption>;
+  images: Array<ImageWithCaption>;
   readByCompany: boolean;
 }
 
-export const sampleEmptyVisit: Visit = {
-  id: "new_visit_id",
-  employeeName: "",
-  customerName: "",
-  job: {
-    name: "",
-    id: "",
-  },
-  date: new Date(),
-  time: {
-    start: "",
-    end: "",
-    hours: 0,
-  },
-  notes: "",
-  tasks: [],
-  tools: [],
-  imageRefs: [],
-  readByCompany: false,
-};
+export function emptyVisit(): Visit {
+  return {
+    id: "new_visit_id",
+    employeeName: "",
+    customerName: "",
+    workType: "",
+    job: {
+      name: "",
+      id: "",
+    },
+    date: "",
+    time: {
+      start: "",
+      end: "",
+      hours: 0,
+    },
+    notes: "",
+    tasks: [],
+    tools: [],
+    images: [],
+    readByCompany: false,
+  };
+}
 
 export const sampleVisit: Visit = {
   id: "visit_id",
   employeeName: "Employee 1",
   customerName: "Customer 1",
+  workType: "Cleanup",
   job: {
     name: "Some Job",
     id: "Job ID",
   },
-  date: new Date(),
+  date: "2021-01-01",
   time: {
     start: "08:00",
     end: "18:00",
@@ -165,20 +172,20 @@ export const sampleVisit: Visit = {
   notes: "notes",
   tasks: [
     {
-      name: "task",
-      notes: "task notes",
-      imageRefs: [sampleImage, sampleImage],
+      text: "task",
+      image: null,
       complete: false,
+      id: Date.now(),
     },
   ],
   tools: [
     {
       name: "tool",
-      outToJob: true,
-      backToShop: false,
+      returned: false,
+      id: Date.now(),
     },
   ],
-  imageRefs: [sampleImage, sampleImage],
+  images: [sampleImage, sampleImage],
   readByCompany: true,
 };
 
@@ -212,10 +219,10 @@ export const sampleJob: Job = {
   startDate: new Date(),
   tasks: [
     {
-      name: "task",
-      notes: "task notes",
-      imageRefs: [sampleImage, sampleImage],
+      text: "task",
+      image: null,
       complete: false,
+      id: Date.now(),
     },
   ],
 };
@@ -231,7 +238,6 @@ export interface SectionType {
   name: string;
   icon: any;
   id: string;
-  size?: number;
 }
 
 // A ONE-WAY message (can't be used as a thread...)

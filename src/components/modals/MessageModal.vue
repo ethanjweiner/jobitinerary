@@ -2,18 +2,17 @@
   <div id="message-modal">
     <ion-toolbar>
       <ion-title>Send Message</ion-title>
-
       <ion-buttons slot="end">
         <ion-button @click="closeModal">
           <ion-icon :icon="close"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
-    <ion-content class="ion-padding">
-      <div style="padding-left: 20px;">
-        <ion-note>For visit on {{ date }}</ion-note>
+    <ion-content>
+      <div style="padding-left: 25px;">
+        <ion-note>For visit on {{ visit.date.substring(0, 10) }}</ion-note>
       </div>
-      <form @submit.prevent="sendMessage">
+      <form @submit.prevent="sendMessage" class="ion-padding">
         <ion-card class="ion-padding">
           <ion-label position="stacked">
             Message
@@ -54,8 +53,8 @@ import ImageWithCaption from "../ImageWithCaption.vue";
 
 export default {
   name: "Message Modal",
-  props: ["date"],
-  setup(props: any, { emit }) {
+  props: ["visit"],
+  setup(props: any, { emit }: { emit: any }) {
     sampleMessage.text = "";
     const state = reactive({
       message: sampleMessage,
