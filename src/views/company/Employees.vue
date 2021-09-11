@@ -1,14 +1,16 @@
 <template>
-  <Users :users="employees" :username="username" type="employee">
+  <Users
+    :users="state.companyState.employees"
+    :username="username"
+    type="employee"
+  >
     <EmployeeComponent v-if="state.companyState.selectedEmployee" />
   </Users>
 </template>
 
 <script lang="ts">
 import Users from "./Users.vue";
-import { ref } from "vue";
 import EmployeeComponent from "@/components/units/Employee.vue";
-import { Employee, sampleEmployee } from "@/types";
 import store from "@/store";
 
 // Sort employees alphabetically, with none selected
@@ -21,17 +23,10 @@ export default {
     EmployeeComponent,
   },
   setup(props: any) {
-    const employees = ref<Array<Employee>>([
-      sampleEmployee,
-      sampleEmployee,
-      sampleEmployee,
-    ]);
-
     if (props.username) store.fetchSelectedEmployee(props.username);
 
     return {
       state: store.state,
-      employees,
     };
   },
 };

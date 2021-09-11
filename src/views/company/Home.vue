@@ -15,10 +15,13 @@
           <SettingsButton />
         </ion-toolbar>
       </ion-header>
+
       <ion-grid>
         <ion-row class="ion-justify-content-around">
           <ion-col size="12" size-sm="6" id="visits-column">
-            <Visits />
+            <ion-card>
+              <Visits />
+            </ion-card>
           </ion-col>
           <ion-col
             size="12"
@@ -26,10 +29,14 @@
             class="ion-hide-sm-down"
             id="jobs-column"
           >
-            <Jobs :showCustomer="true" />
+            <ion-card>
+              <Jobs :showCustomer="true" />
+            </ion-card>
           </ion-col>
           <ion-col size="12" id="messages-column">
-            <Messages />
+            <ion-card>
+              <Messages />
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -48,6 +55,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonCard,
 } from "@ionic/vue";
 
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
@@ -72,6 +80,7 @@ export default {
     IonCol,
     Jobs,
     Messages,
+    IonCard,
   },
 };
 </script>
@@ -98,5 +107,8 @@ ion-col {
 }
 .ios > ion-col {
   margin-top: 0px;
+}
+ion-card {
+  height: 100%;
 }
 </style>

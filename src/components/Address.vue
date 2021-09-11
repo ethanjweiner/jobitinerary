@@ -28,7 +28,7 @@
   </ion-list>
 </template>
 
-<script lang="ts">
+<script>
 import {
   IonButton,
   IonToolbar,

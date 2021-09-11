@@ -86,3 +86,8 @@ form ion-label {
 .list {
   height: 400px;
 }
+
+.list-header {
+  margin: 0;
+  display: inline;
+}

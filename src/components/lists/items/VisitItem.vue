@@ -8,9 +8,10 @@
       <ion-note>by {{ visit.employeeName }}</ion-note>
     </div>
 
-    <ion-text slot="end" color="dark">{{
-      visit.date.toLocaleDateString()
-    }}</ion-text>
+    <div slot="end">
+      <ion-text color="dark" style="display: block;">{{ visit.date }}</ion-text>
+      <ion-note v-if="visit.workType">{{ visit.workType }}</ion-note>
+    </div>
   </ion-item>
 </template>
 

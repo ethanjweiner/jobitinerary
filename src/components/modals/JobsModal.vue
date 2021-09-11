@@ -1,33 +1,30 @@
 <template>
-  <ion-card-header>
-    <div class="ion-text-center">
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Scheduled Jobs
-        </ion-text>
-      </h3>
-      <ion-chip>
-        <ion-icon :icon="add"></ion-icon>
-        <ion-label>Add New</ion-label>
-      </ion-chip>
-    </div>
-
-    <ion-searchbar
-      v-model="searchText"
-      placeholder="Search by job name, customer, start date, description, etc."
-    ></ion-searchbar>
-  </ion-card-header>
-  <ion-card-content>
+  <div id="jobs-modal">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title> Choose a Job</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="closeModal">
+            <ion-icon :icon="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-searchbar
+        v-model="searchText"
+        placeholder="Search by job name, customer, start date, description, etc."
+      ></ion-searchbar>
+    </ion-header>
     <ion-content>
       <ion-list>
         <JobItem
+          class="job-item"
           v-for="job in filteredJobs"
           :key="job.id"
           :job="job"
-          :showCustomer="showCustomer"
+          :showCustomer="true"
+          @click="selectJob(job)"
         />
       </ion-list>
-
       <ion-infinite-scroll
         @ionInfinite="loadData($event)"
         threshold="100px"
@@ -40,7 +37,7 @@
         </ion-infinite-scroll-content>
       </ion-infinite-scroll>
     </ion-content>
-  </ion-card-content>
+  </div>
 </template>
 
 <script lang="ts">
@@ -49,43 +46,42 @@ import {
   IonInfiniteScrollContent,
   IonList,
   IonContent,
-  IonCardHeader,
   IonSearchbar,
-  IonText,
-  IonCardContent,
-  IonChip,
-  IonLabel,
+  IonToolbar,
+  IonTitle,
+  IonHeader,
   IonIcon,
+  IonButton,
+  IonButtons,
 } from "@ionic/vue";
 
 import { includeItemInSearch } from "@/helpers";
 
-import JobItem from "./items/JobItem.vue";
+import JobItem from "@/components/lists/items/JobItem.vue";
 
 import { Job, sampleJob } from "@/types";
 
-import { computed, reactive, ref, toRefs } from "vue";
+import { computed, defineComponent, reactive, ref, toRefs } from "vue";
 
-import { add } from "ionicons/icons";
+import { close } from "ionicons/icons";
 
-export default {
+export default defineComponent({
   name: "Jobs",
-  props: ["showCustomer"],
   components: {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonList,
     IonContent,
     JobItem,
-    IonCardHeader,
     IonSearchbar,
-    IonText,
-    IonCardContent,
-    IonChip,
-    IonLabel,
+    IonToolbar,
+    IonTitle,
+    IonHeader,
     IonIcon,
+    IonButton,
+    IonButtons,
   },
-  setup() {
+  setup(props: any, { emit }) {
     const state = reactive({
       searchText: "",
     });
@@ -104,8 +100,8 @@ export default {
     });
 
     const pushData = () => {
-      const max = jobs.value.length + 5;
-      const min = max - 5;
+      const max = jobs.value.length + 10;
+      const min = max - 10;
       for (let i = min; i < max; i++) {
         jobs.value.push(sampleJob);
       }
@@ -125,6 +121,14 @@ export default {
       }, 500);
     };
 
+    const selectJob = (job: Job) => {
+      emit("jobSelected", job);
+    };
+
+    const closeModal = () => {
+      emit("closeModal");
+    };
+
     pushData();
 
     return {
@@ -132,25 +136,26 @@ export default {
       loadData,
       jobs,
       filteredJobs,
-      add,
+      close,
+      selectJob,
+      closeModal,
     };
   },
-};
+});
 </script>
 
 <style scoped>
-ion-card {
-  height: 100%;
-}
-ion-card-content {
-  height: 80%;
-  padding: 0;
-}
-ion-card-header {
-  border-bottom: 1px solid green;
-}
 ion-searchbar {
   padding-left: 0;
   padding-bottom: 0;
+}
+.job-item {
+  cursor: pointer;
+}
+ion-searchbar {
+  padding: 0;
+}
+#jobs-modal {
+  height: calc(100% - 105px);
 }
 </style>
