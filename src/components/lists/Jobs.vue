@@ -3,7 +3,7 @@
     <div class="ion-text-center">
       <h3 class="list-header">
         <ion-text color="dark">
-          Scheduled Jobs
+          Jobs
         </ion-text>
       </h3>
       <ion-chip>
@@ -20,12 +20,28 @@
   <ion-card-content>
     <ion-content>
       <ion-list>
-        <JobItem
-          v-for="job in filteredJobs"
-          :key="job.id"
-          :job="job"
-          :showCustomer="showCustomer"
-        />
+        <ion-item-group v-if="futureJobs.length">
+          <ion-item-divider>
+            <ion-label>Future Jobs</ion-label>
+          </ion-item-divider>
+          <JobItem
+            v-for="job in futureJobs"
+            :key="job.id"
+            :job="job"
+            :showCustomer="showCustomer"
+          />
+        </ion-item-group>
+        <ion-item-group v-if="pastJobs.length">
+          <ion-item-divider>
+            <ion-label>Past Jobs</ion-label>
+          </ion-item-divider>
+          <JobItem
+            v-for="job in pastJobs"
+            :key="job.id"
+            :job="job"
+            :showCustomer="showCustomer"
+          />
+        </ion-item-group>
       </ion-list>
 
       <ion-infinite-scroll
@@ -56,6 +72,8 @@ import {
   IonChip,
   IonLabel,
   IonIcon,
+  IonItemGroup,
+  IonItemDivider,
 } from "@ionic/vue";
 
 import { includeItemInSearch } from "@/helpers";
@@ -84,6 +102,8 @@ export default {
     IonChip,
     IonLabel,
     IonIcon,
+    IonItemGroup,
+    IonItemDivider,
   },
   setup() {
     const state = reactive({
@@ -100,6 +120,18 @@ export default {
           "startDate",
           "description",
         ])
+      );
+    });
+
+    const pastJobs = computed(() => {
+      return filteredJobs.value.filter(
+        (job) => new Date(job.startDate) > new Date()
+      );
+    });
+
+    const futureJobs = computed(() => {
+      return filteredJobs.value.filter(
+        (job) => new Date(job.startDate) <= new Date()
       );
     });
 
@@ -131,7 +163,8 @@ export default {
       ...toRefs(state),
       loadData,
       jobs,
-      filteredJobs,
+      futureJobs,
+      pastJobs,
       add,
     };
   },

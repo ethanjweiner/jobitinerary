@@ -31,17 +31,38 @@
   <ion-card-content>
     <ion-content>
       <ion-list>
-        <VisitItem
-          v-for="visit in filteredVisits"
-          :key="visit.id"
-          :visit="visit"
-          @click="
-            router.push({
-              name: 'Company Visit',
-              params: { visitID: visit.id },
-            })
-          "
-        />
+        <ion-item-group v-if="futureVisits.length">
+          <ion-item-divider>
+            <ion-label>Future Visits</ion-label>
+          </ion-item-divider>
+          <VisitItem
+            v-for="visit in futureVisits"
+            :key="visit.id"
+            :visit="visit"
+            @click="
+              router.push({
+                name: 'Company Visit',
+                params: { visitID: visit.id },
+              })
+            "
+          />
+        </ion-item-group>
+        <ion-item-group v-if="pastVisits.length">
+          <ion-item-divider>
+            <ion-label>Past Visits</ion-label>
+          </ion-item-divider>
+          <VisitItem
+            v-for="visit in pastVisits"
+            :key="visit.id"
+            :visit="visit"
+            @click="
+              router.push({
+                name: 'Company Visit',
+                params: { visitID: visit.id },
+              })
+            "
+          />
+        </ion-item-group>
       </ion-list>
 
       <ion-infinite-scroll
@@ -73,6 +94,8 @@ import {
   IonChip,
   IonLabel,
   IonIcon,
+  IonItemGroup,
+  IonItemDivider,
 } from "@ionic/vue";
 
 import VisitItem from "./items/VisitItem.vue";
@@ -105,6 +128,8 @@ export default {
     IonChip,
     IonLabel,
     IonIcon,
+    IonItemGroup,
+    IonItemDivider,
   },
   setup() {
     const state = reactive({
@@ -129,6 +154,18 @@ export default {
           "customerName",
           "date",
         ])
+      );
+    });
+
+    const futureVisits = computed(() => {
+      return filteredVisits.value.filter(
+        (visit) => new Date(visit.date) > new Date()
+      );
+    });
+
+    const pastVisits = computed(() => {
+      return filteredVisits.value.filter(
+        (visit) => new Date(visit.date) <= new Date()
       );
     });
 
@@ -160,7 +197,8 @@ export default {
       loadData,
       visits,
       numUnreadVisits,
-      filteredVisits,
+      futureVisits,
+      pastVisits,
       ...toRefs(state),
       add,
       router,

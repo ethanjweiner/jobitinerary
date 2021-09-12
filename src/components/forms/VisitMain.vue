@@ -9,9 +9,35 @@
         @ionChange="changeDate($event)"
       ></ion-datetime>
     </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Planned Start</ion-label>
+            <ion-datetime
+              v-model="state.visit.plannedStart"
+              display-format="h:mm A"
+              picker-format="h:mm A"
+            ></ion-datetime>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Planned End</ion-label>
+            <ion-datetime
+              v-model="state.visit.plannedEnd"
+              display-format="h:mm A"
+              picker-format="h:mm A"
+            ></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
     <!-- Employee Select -->
 
     <UserSelect
+      v-if="showEmployeeSelect"
       :names="
         store.state.companyState.employees.map((employee) => employee.name)
       "
@@ -21,7 +47,7 @@
     />
     <!-- Customer Select -->
     <UserSelect
-      v-if="!state.visit.job"
+      v-if="!state.visit.job.id"
       :names="
         store.state.companyState.customers.map((customer) => customer.name)
       "
@@ -62,6 +88,7 @@
     </ion-modal>
 
     <TimeLogComponent
+      v-if="store.state.userType == 'employee'"
       :time="state.visit.time"
       :title="'Visit Time Log'"
       @timeChange="(time) => (state.visit.time = time)"
@@ -90,10 +117,13 @@ import {
   IonButtons,
   IonModal,
   IonInput,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 
 import JobsModal from "@/components/modals/JobsModal.vue";
-import UserSelect from "@/components/UserSelect.vue";
+import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
 import { calendarNumberOutline, calendarOutline } from "ionicons/icons";
 import store from "@/store";
@@ -104,6 +134,7 @@ export default {
   name: "Visit Main",
   props: {
     visit: Object,
+    showEmployeeSelect: Boolean,
   },
   emits: ["visitChanged"],
   components: {
@@ -122,6 +153,9 @@ export default {
     JobsModal,
     IonModal,
     IonInput,
+    IonGrid,
+    IonRow,
+    IonCol,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
@@ -137,10 +171,11 @@ export default {
     const attachJob = (job: Job) => {
       jobsModalIsOpen.value = false;
       state.visit.job = { id: job.id, name: job.name };
+      console.log(job);
+      state.visit.customerName = job.customerName;
     };
 
     watch(state.visit, (newVisit) => {
-      console.log(newVisit);
       emit("visitChanged", newVisit);
     });
 

@@ -9,7 +9,7 @@
       </ion-buttons>
     </ion-toolbar>
     <ion-content>
-      <div style="padding-left: 25px;">
+      <div style="padding-left: 25px;" v-if="visit">
         <ion-note>For visit on {{ visit.date.substring(0, 10) }}</ion-note>
       </div>
       <form @submit.prevent="sendMessage" class="ion-padding">

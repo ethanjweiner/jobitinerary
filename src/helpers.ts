@@ -107,12 +107,12 @@ export function includeItemInSearch(
   searchText: string,
   parameters: Array<string>
 ): boolean {
-  searchText = searchText.trim();
+  searchText = searchText.trim().toLowerCase();
   for (const param of parameters) {
     const itemProperty = item[param];
     if (itemProperty) {
       if (typeof itemProperty == "string") {
-        if (stringsOverlap(searchText, itemProperty)) return true;
+        if (stringsOverlap(searchText, itemProperty.toLowerCase())) return true;
       } else if (itemProperty instanceof Date) {
         if (
           dateToStrings(itemProperty).find((dateString: string) =>
@@ -136,4 +136,9 @@ export async function companyExists(companyID: string) {
     console.log(error);
     return false;
   }
+}
+
+// Date helpers
+export function dateToString(date: Date) {
+  return date.toLocaleDateString().replaceAll("/", "-");
 }
