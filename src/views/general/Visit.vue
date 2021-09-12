@@ -18,8 +18,15 @@
           >
         </div>
         <ion-buttons :collapse="true" slot="end">
-          <ion-button @click="toggleVisitSettings(true, $event)">
+          <ion-button
+            v-if="!isModal"
+            @click="toggleVisitSettings(true, $event)"
+          >
             <ion-icon :icon="ellipsisVertical"></ion-icon>
+          </ion-button>
+          <ion-button v-else @click="$emit('close')">
+            Return to Day
+            <ion-icon :icon="close"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -42,21 +49,29 @@
             >Visit on {{ visit.date }}</ion-title
           >
           <ion-buttons collapse="condense" slot="end">
-            <ion-button @click="toggleVisitSettings(true, $event)">
+            <ion-button
+              v-if="!isModal"
+              @click="toggleVisitSettings(true, $event)"
+            >
               <ion-icon :icon="ellipsisVertical"></ion-icon>
+            </ion-button>
+            <ion-button v-else @click="$emit('close')">
+              Return to Day
+              <ion-icon :icon="close"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
-
-        <!-- Whenever a change to this form is made (debounced), update in Firestore -->
-        <!-- Use IonInput debounce function to trigger less changes -->
       </ion-header>
 
       <SendMessage @click="messageModalIsOpen = true" />
       <form>
-        <Sections :sections="sections" wrapCards>
+        <Sections :sections="sections" :separateByDefault="isModal" wrapCards>
           <template v-slot:main>
-            <VisitMain :visit="visit" @visitChanged="updateVisit" />
+            <VisitMain
+              :visit="visit"
+              @visitChanged="updateVisit"
+              :showEmployeeSelect="visitID ? true : false"
+            />
           </template>
           <template v-slot:tasks>
             <Tasks
@@ -80,7 +95,11 @@
             <ion-row>
               <ion-col size="6">
                 <ion-card>
-                  <VisitMain :visit="visit" @visitChanged="updateVisit" />
+                  <VisitMain
+                    :visit="visit"
+                    @visitChanged="updateVisit"
+                    :showEmployeeSelect="visitID ? true : false"
+                  />
                 </ion-card>
               </ion-col>
               <ion-col size="6">
@@ -185,7 +204,7 @@ import {
 import Sections from "@/components/Sections.vue";
 
 import { sampleVisit, SectionType, Message, Visit, emptyVisit } from "@/types";
-import { computed, reactive, ref, toRefs } from "@vue/reactivity";
+import { reactive, ref, toRefs } from "@vue/reactivity";
 import {
   documentTextOutline,
   constructOutline,
@@ -194,6 +213,7 @@ import {
   calendarNumberOutline,
   ellipsisVertical,
   imagesOutline,
+  close,
 } from "ionicons/icons";
 import store from "@/store";
 import VisitPopover from "@/components/popovers/VisitPopover.vue";
@@ -207,7 +227,8 @@ import router from "@/router";
 
 export default {
   name: "VisitView",
-  props: ["visitID"],
+  props: ["visitID", "isModal"],
+  emits: ["close"],
   setup(props: any) {
     const sections = ref<Array<SectionType>>([
       {
@@ -258,10 +279,6 @@ export default {
       popoverIsOpen.value = state;
     };
 
-    const displayToolsLeft = computed(() => {
-      return true;
-    });
-
     const updateVisit = (newVisit: Visit) => {
       state.visit = newVisit;
     };
@@ -288,11 +305,11 @@ export default {
       popoverEvent,
       messageModalIsOpen,
       sendMessage,
-      displayToolsLeft,
       hammerOutline,
       constructOutline,
       imagesOutline,
       deleteVisit,
+      close,
     };
   },
   components: {

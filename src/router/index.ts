@@ -38,11 +38,6 @@ const routes: Array<RouteRecordRaw> = [
         path: "home/jobs/:jobID",
         component: () => import("@/views/general/Job.vue"),
       },
-      // Plan a new day for an em@/views/general/Visit.vue)
-      {
-        path: "home/days/new",
-        component: () => import("@/views/employee/EmployeeDay.vue"),
-      },
 
       // CUSTOMERS
       {
@@ -91,6 +86,17 @@ const routes: Array<RouteRecordRaw> = [
         name: "Company Visit",
         props: true,
         component: () => import("@/views/general/Visit.vue"),
+      },
+      // NEW DAYS
+      {
+        path: "new-day",
+        component: () => import("@/views/general/SelectDate.vue"),
+      },
+      {
+        path: "new-day/:date",
+        name: "New Day",
+        props: true,
+        component: () => import("@/views/general/EmployeeDay.vue"),
       },
       // SETTINGS
       {

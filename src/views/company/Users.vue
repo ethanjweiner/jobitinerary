@@ -67,7 +67,7 @@ import {
 import { capitalize } from "@/helpers";
 
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
-import UserSelect from "@/components/UserSelect.vue";
+import UserSelect from "@/components/selects/UserSelect.vue";
 import { add } from "ionicons/icons";
 import router from "@/router";
 

@@ -117,6 +117,8 @@ export interface Visit {
   employeeName: string;
   customerName: string;
   workType: string;
+  plannedStart: string;
+  plannedEnd: string;
   job: {
     name: string;
     id: string;
@@ -130,17 +132,19 @@ export interface Visit {
   readByCompany: boolean;
 }
 
-export function emptyVisit(): Visit {
+export function emptyVisit(date = ""): Visit {
   return {
     id: "new_visit_id",
     employeeName: "",
     customerName: "",
     workType: "",
+    plannedStart: "",
+    plannedEnd: "",
     job: {
       name: "",
       id: "",
     },
-    date: "",
+    date: date,
     time: {
       start: "",
       end: "",
@@ -159,6 +163,8 @@ export const sampleVisit: Visit = {
   employeeName: "Employee 1",
   customerName: "Customer 1",
   workType: "Cleanup",
+  plannedStart: "08:00",
+  plannedEnd: "16:00",
   job: {
     name: "Some Job",
     id: "Job ID",
@@ -190,16 +196,52 @@ export const sampleVisit: Visit = {
 };
 
 export interface Day {
-  date: Date;
+  date: string;
+  employeeName: string;
   startLocation: string;
-  plannedStartTime: string;
-  plannedEndTime: string;
-  visitIDs: Array<string>;
+  plannedStart: string;
+  plannedEnd: string;
   time: TimeLog;
   notes: string;
   paid: boolean;
   readByEmployee: boolean;
   readByCompany: boolean;
+}
+
+export const sampleDay: Day = {
+  date: "01-01-2020",
+  employeeName: "Employee Name",
+  startLocation: "Start Location",
+  plannedStart: "08:00",
+  plannedEnd: "17:00",
+  time: {
+    start: "08:02",
+    end: "16:20",
+    hours: 7,
+  },
+  notes: "Some notes",
+  paid: false,
+  readByEmployee: false,
+  readByCompany: false,
+};
+
+export function emptyDay(date: string): Day {
+  return {
+    date: date,
+    employeeName: "",
+    startLocation: "",
+    plannedStart: "",
+    plannedEnd: "",
+    time: {
+      start: "",
+      end: "",
+      hours: 0,
+    },
+    notes: "",
+    paid: false,
+    readByEmployee: false,
+    readByCompany: false,
+  };
 }
 
 export interface Job {
@@ -232,6 +274,22 @@ export interface Expense {
   name: string;
   cost: number;
   paid: boolean;
+}
+
+export const sampleExpense: Expense = {
+  id: "expense id",
+  name: "Expense",
+  cost: 1,
+  paid: true,
+};
+
+export function emptyExpense(id: string): Expense {
+  return {
+    id,
+    name: "",
+    cost: 0,
+    paid: false,
+  };
 }
 
 export interface SectionType {

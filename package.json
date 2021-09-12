@@ -21,6 +21,7 @@
     "date-and-time": "^2.0.0",
     "firebase": "^8.10.0",
     "vue": "^3.2.1",
+    "vue-currency-input": "^2.0.2",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.2"
   },

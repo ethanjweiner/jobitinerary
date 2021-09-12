@@ -4,7 +4,7 @@
     <ion-segment
       @ionChange="changeSection($event)"
       :value="sections[0].id"
-      class="ion-hide-md-up"
+      :class="separateByDefault ? '' : 'ion-hide-md-up'"
     >
       <ion-segment-button
         v-for="section in sections"
@@ -16,14 +16,12 @@
       </ion-segment-button>
     </ion-segment>
     <!-- Sections -->
-    <div v-if="screenWidth < 768">
+    <div v-if="screenWidth < 768 || separateByDefault">
       <div
         v-for="section in sections"
         :key="section.id"
         :class="
-          section.id != selectedSection
-            ? 'ion-hide-md-down ' + section.id
-            : section.id
+          section.id != selectedSection ? 'ion-hide ' + section.id : section.id
         "
       >
         <slot :name="section.id"></slot>
@@ -52,13 +50,13 @@ export default {
   props: {
     sections: Array,
     wrapCards: Boolean,
+    separateByDefault: Boolean,
   },
   setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);
 
     const changeSection = (e: CustomEvent) => {
       selectedSection.value = e.detail.value;
-      console.log(selectedSection.value + e.detail.value);
     };
 
     const screenWidth = ref(0);
