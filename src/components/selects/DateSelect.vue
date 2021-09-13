@@ -1,40 +1,31 @@
 <template>
-  <div>
-    <div class="ion-text-start">
-      <h3 class="text-secondary">Select a Date</h3>
-    </div>
-    <ion-item>
-      <ion-label position="stacked"></ion-label>
-      <ion-datetime display-format="MM/DD/YYYY" v-model="date"></ion-datetime>
-    </ion-item>
-    <ion-button
-      expand="block"
-      color="primary"
-      @click="$emit('dateSelected', date.substring(0, 10))"
-      >Confirm Date</ion-button
-    >
-    <ion-note
-      >You won't be able to change the date later, so make sure this is
-      right.</ion-note
-    >
-  </div>
+  <ion-item>
+    <ion-label position="stacked"></ion-label>
+    <ion-datetime display-format="MM/DD/YYYY" v-model="date"></ion-datetime>
+  </ion-item>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from "@vue/reactivity";
-import { IonItem, IonLabel, IonDatetime, IonButton, IonNote } from "@ionic/vue";
+import { IonItem, IonLabel, IonDatetime } from "@ionic/vue";
 import { dateToString } from "@/helpers";
+import { watch } from "@vue/runtime-core";
 export default {
   name: "Date Select",
   components: {
     IonItem,
     IonLabel,
     IonDatetime,
-    IonButton,
-    IonNote,
   },
-  setup() {
+  emits: ["dateChange"],
+  setup(props, { emit }: { emit: any }) {
     const date = ref(dateToString(new Date()));
+
+    watch(date, (newDate) => {
+      console.log(newDate);
+      emit("dateChange", newDate);
+    });
+
     return {
       date,
     };

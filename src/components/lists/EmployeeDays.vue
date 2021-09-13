@@ -6,7 +6,9 @@
           Dates
         </ion-text>
       </h3>
-      <ion-chip @click="router.push('/company/new-day')">
+      <ion-chip
+        @click="router.push({ name: 'New Day', params: { employeeName } })"
+      >
         <ion-icon :icon="add"></ion-icon>
         <ion-label>Add New</ion-label>
       </ion-chip>
@@ -95,6 +97,9 @@ export default {
     IonLabel,
     IonIcon,
     IonNote,
+  },
+  props: {
+    employeeName: String,
   },
   setup() {
     const searchDate = ref<string>("");

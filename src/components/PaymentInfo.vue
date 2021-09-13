@@ -55,7 +55,9 @@
         </ion-item>
 
         <div style="width: 100%; margin-top: 10px;">
-          <ion-title class="ion-text-center">Payment Data</ion-title>
+          <h2>
+            <ion-text class="ion-text-center">Payment Data</ion-text>
+          </h2>
           <div class="ion-text-left ion-padding">
             <ion-note
               >Note: The data displayed is only as accurated as the hours and
@@ -117,27 +119,22 @@
                     v-for="(day, index) in days"
                     :key="index"
                     :day="day"
-                    @click="
-                      router.push({
-                        name: 'Employee Day',
-                        params: { username: day.employeeName, date: day.date },
-                      })
-                    "
+                    :showPaymentToggle="true"
+                    @togglePaid="togglePaid(day)"
                   />
                 </ion-list>
-              </ion-content>
-
-              <ion-infinite-scroll
-                @ionInfinite="loadDays($event)"
-                threshold="100px"
-                id="infinite-scroll"
-              >
-                <ion-infinite-scroll-content
-                  loading-spinner="bubbles"
-                  loading-text="Loading days..."
+                <ion-infinite-scroll
+                  @ionInfinite="loadDays($event)"
+                  threshold="100px"
+                  id="infinite-scroll"
                 >
-                </ion-infinite-scroll-content>
-              </ion-infinite-scroll>
+                  <ion-infinite-scroll-content
+                    loading-spinner="bubbles"
+                    loading-text="Loading days..."
+                  >
+                  </ion-infinite-scroll-content>
+                </ion-infinite-scroll>
+              </ion-content>
             </ion-card-content>
           </ion-card>
         </ion-row>
@@ -152,25 +149,24 @@
             <ion-card-content>
               <ion-content>
                 <ion-list>
-                  <Expense
+                  <ExpenseItem
                     v-for="expense in expenses"
                     :key="expense.id"
                     :expense="expense"
                   />
                 </ion-list>
-              </ion-content>
-
-              <ion-infinite-scroll
-                @ionInfinite="loadExpenses($event)"
-                threshold="100px"
-                id="infinite-scroll"
-              >
-                <ion-infinite-scroll-content
-                  loading-spinner="bubbles"
-                  loading-text="Loading days..."
+                <ion-infinite-scroll
+                  @ionInfinite="loadExpenses($event)"
+                  threshold="100px"
+                  id="infinite-scroll"
                 >
-                </ion-infinite-scroll-content>
-              </ion-infinite-scroll>
+                  <ion-infinite-scroll-content
+                    loading-spinner="bubbles"
+                    loading-text="Loading days..."
+                  >
+                  </ion-infinite-scroll-content>
+                </ion-infinite-scroll>
+              </ion-content>
             </ion-card-content>
           </ion-card>
         </ion-row>
@@ -197,7 +193,6 @@ import {
   IonRadioGroup,
   IonRadio,
   IonIcon,
-  IonTitle,
   IonNote,
   IonDatetime,
   IonToggle,
@@ -208,9 +203,11 @@ import {
   IonCardTitle,
   IonContent,
   IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonText,
 } from "@ionic/vue";
-import { sampleDay, sampleExpense } from "@/types";
-import Expense from "./lists/items/Expense.vue";
+import { sampleDay, sampleExpense, Day, Expense } from "@/types";
+import ExpenseItem from "./lists/items/Expense.vue";
 
 export default {
   name: "Payment Info",
@@ -228,7 +225,6 @@ export default {
     IonRadioGroup,
     IonRadio,
     IonIcon,
-    IonTitle,
     IonNote,
     IonDatetime,
     IonToggle,
@@ -240,7 +236,9 @@ export default {
     DayItem,
     IonContent,
     IonInfiniteScroll,
-    Expense,
+    IonInfiniteScrollContent,
+    ExpenseItem,
+    IonText,
   },
   setup(props: any, { emit }: { emit: any }) {
     // Set hourly rate dependent on whether employee is given
@@ -255,8 +253,8 @@ export default {
     const days = ref<Array<Day>>([]);
 
     const pushDays = () => {
-      const max = days.value.length + 3;
-      const min = max - 3;
+      const max = days.value.length + 5;
+      const min = max - 5;
       for (let i = min; i < max; i++) {
         days.value.push(sampleDay);
       }
@@ -281,8 +279,8 @@ export default {
     const expenses = ref<Array<Expense>>([]);
 
     const pushExpenses = () => {
-      const max = expenses.value.length + 3;
-      const min = max - 3;
+      const max = expenses.value.length + 5;
+      const min = max - 5;
       for (let i = min; i < max; i++) {
         expenses.value.push(sampleExpense);
       }
@@ -322,6 +320,11 @@ export default {
       () => hoursAmount.value + expensesAmount.value
     );
 
+    const togglePaid = (day: Day) => {
+      // Chage the paid
+      console.log("Toggling paid for ", day);
+    };
+
     watch(state.employee, (newEmployee) => {
       emit("employeeChanged", newEmployee);
     });
@@ -338,6 +341,7 @@ export default {
       expensesAmount,
       totalAmount,
       timeOutline,
+      togglePaid,
     };
   },
 };

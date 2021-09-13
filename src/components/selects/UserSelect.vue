@@ -40,7 +40,9 @@ export default defineComponent({
     IonSelectOption,
     IonIcon,
   },
+  emits: ["userChange"],
   setup(props, { emit }) {
+    console.log(props);
     const selectName = (e: CustomEvent) => {
       if (e.detail.value) {
         emit("userChange", e.detail.value);

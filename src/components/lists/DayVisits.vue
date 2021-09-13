@@ -38,7 +38,7 @@ export default defineComponent({
   setup(props: any, { emit }: { emit: any }) {
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
-      // Retrieve the visits from the database using props.date
+      // RETRIEVE VISITS ALREADY EXISTING ON THIS DATE/EMPLOYEE
       visits: [sampleVisit, sampleVisit],
     });
 

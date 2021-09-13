@@ -89,14 +89,10 @@ const routes: Array<RouteRecordRaw> = [
       },
       // NEW DAYS
       {
-        path: "new-day",
-        component: () => import("@/views/general/SelectDate.vue"),
-      },
-      {
-        path: "new-day/:date",
+        path: "new-day/:employeeName",
         name: "New Day",
         props: true,
-        component: () => import("@/views/general/EmployeeDay.vue"),
+        component: () => import("@/views/general/NewDay.vue"),
       },
       // SETTINGS
       {

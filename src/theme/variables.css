@@ -91,3 +91,8 @@ form ion-label {
   margin: 0;
   display: inline;
 }
+
+ion-title {
+  padding-inline-start: 15px;
+  padding-inline-end: 25px;
+}

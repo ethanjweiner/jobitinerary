@@ -5,7 +5,7 @@
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title
+        <ion-title style="padding-inline-end: 5px;"
           >Visit<span v-if="visit.date"> on </span>{{ visit.date }}</ion-title
         >
 
@@ -40,29 +40,6 @@
       <VisitPopover @deleteVisit="deleteVisit" />
     </ion-popover>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
-          </ion-buttons>
-          <ion-title class="ion-text-start" style="padding-left: 15px;"
-            >Visit on {{ visit.date }}</ion-title
-          >
-          <ion-buttons collapse="condense" slot="end">
-            <ion-button
-              v-if="!isModal"
-              @click="toggleVisitSettings(true, $event)"
-            >
-              <ion-icon :icon="ellipsisVertical"></ion-icon>
-            </ion-button>
-            <ion-button v-else @click="$emit('close')">
-              Return to Day
-              <ion-icon :icon="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-
       <SendMessage @click="messageModalIsOpen = true" />
       <form>
         <Sections :sections="sections" :separateByDefault="isModal" wrapCards>

@@ -5,7 +5,12 @@
     :expense="expense"
     @deleteExpense="state.expenses.splice(index, 1)"
   />
-  <ion-item button color="primary" @click="addExpense">
+  <ion-item
+    style="margin-top: 10px;"
+    button
+    color="primary"
+    @click="addExpense"
+  >
     <ion-icon :icon="add"></ion-icon>
     <ion-label>Add Expense</ion-label>
   </ion-item>

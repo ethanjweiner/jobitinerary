@@ -4,7 +4,12 @@
       <ion-icon :icon="add"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="end">
-      <ion-fab-button>Day</ion-fab-button>
+      <ion-fab-button
+        @click="
+          router.push({ name: 'New Day', params: { employeeName: 'new' } })
+        "
+        >Day</ion-fab-button
+      >
       <ion-fab-button
         @click="
           router.push({ name: 'Company Visit', params: { visitID: 'new' } })

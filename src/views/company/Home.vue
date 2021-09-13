@@ -9,13 +9,6 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Home</ion-title>
-          <SettingsButton />
-        </ion-toolbar>
-      </ion-header>
-
       <ion-grid>
         <ion-row class="ion-justify-content-around">
           <ion-col size="12" size-sm="6" id="visits-column">
@@ -93,9 +86,7 @@ export default {
 ion-grid {
   height: calc(100% - 120px);
 }
-.ios > ion-grid {
-  height: calc(100% - 170px);
-}
+
 ion-row {
   height: 100%;
 }

@@ -9,14 +9,6 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{
-            username ? username : capitalize(type) + "s"
-          }}</ion-title>
-          <SettingsButton />
-        </ion-toolbar>
-      </ion-header>
       <!-- On select, route to the users page w/ a prop -->
       <ion-toolbar id="select-user-toolbar">
         <UserSelect

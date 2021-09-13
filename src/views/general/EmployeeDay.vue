@@ -5,12 +5,7 @@
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title class="ion-text-start">
-          <span v-if="day && day.employeeName">
-            {{ day.employeeName }} on
-          </span>
-          {{ day.date ? day.date : "New Day" }}
-        </ion-title>
+        <ion-title> {{ username }} on {{ date }} </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
             <ion-icon :icon="ellipsisVertical"></ion-icon>
@@ -22,28 +17,17 @@
       :is-open="popoverIsOpen"
       :translucent="true"
       :event="popoverEvent"
-      @didDismiss="toggleVisitSettings(false)"
+      @didDismiss="toggleDaySettings(false)"
     >
+      <DayPopover
+        @deleteDay="deleteDay"
+        @changeDate="changeDate"
+        @copyDay="copyDay"
+      />
       <!-- Add Day Popover here -->
     </ion-popover>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
-          </ion-buttons>
-          <ion-title class="ion-text-start" style="padding-left: 15px;">{{
-            day.date
-          }}</ion-title>
-          <ion-buttons collapse="condense" slot="end">
-            <ion-button @click="toggleDaySettings(true, $event)">
-              <ion-icon :icon="ellipsisVertical"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-
       <SendMessage @click="messageModalIsOpen = true" />
       <form>
         <Sections :sections="sections" wrapCards>
@@ -163,6 +147,7 @@ import {
   ellipsisVertical,
   homeOutline,
 } from "ionicons/icons";
+import DayPopover from "@/components/popovers/DayPopover.vue";
 
 interface State {
   day: Day;
@@ -170,7 +155,10 @@ interface State {
 }
 export default {
   name: "Employee Day",
-  props: ["date"],
+  props: {
+    username: String,
+    date: String,
+  },
   setup(props: any) {
     const route = useRoute();
     const sections = ref<Array<SectionType>>([
@@ -230,6 +218,14 @@ export default {
       // Update the state
     };
 
+    const changeDate = () => {
+      console.log("Changing date");
+    };
+
+    const copyDay = () => {
+      console.log("Copying day");
+    };
+
     const visitModalIsOpen = ref(false);
 
     const openVisitModal = (visitID: string) => {
@@ -256,6 +252,8 @@ export default {
       router,
       openVisitModal,
       visitModalIsOpen,
+      changeDate,
+      copyDay,
     };
   },
   components: {
@@ -283,6 +281,7 @@ export default {
     IonCardContent,
     IonBackButton,
     VisitModal,
+    DayPopover,
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <Sections :sections="sections" :wrapCards="true">
     <template v-slot:dates>
       <div class="list">
-        <EmployeeDays />
+        <EmployeeDays :employeeName="employee.name" />
       </div>
     </template>
     <template v-slot:messages>
@@ -21,7 +21,7 @@
         <ion-col size="6">
           <ion-card>
             <div style="height: 500px;">
-              <EmployeeDays />
+              <EmployeeDays :employeeName="employee.name" />
             </div>
           </ion-card>
         </ion-col>

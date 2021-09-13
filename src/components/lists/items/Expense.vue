@@ -69,4 +69,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.currency-input {
+  width: 80px;
+}
+</style>
