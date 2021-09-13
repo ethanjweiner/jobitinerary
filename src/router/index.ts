@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "employees/:username/days/:date",
         name: "Employee Day",
         props: true,
-        component: () => import("@/views/employee/EmployeeDay.vue"),
+        component: () => import("@/views/general/EmployeeDay.vue"),
       },
       // VISITS
       {

@@ -165,7 +165,7 @@ const store = {
         companyID,
         email: credentials.email,
         phone: credentials.phone,
-        hourlyRate: null,
+        defaultHourlyRate: null,
         kind: "employee",
       };
       companiesCollection

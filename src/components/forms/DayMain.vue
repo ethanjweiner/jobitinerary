@@ -32,6 +32,17 @@
     </ion-row>
   </ion-grid>
   <ion-item>
+    <div style="margin-bottom: 10px;">
+      <ion-label>Hourly Rate</ion-label>
+      <ion-note>{{ paymentText }}</ion-note>
+    </div>
+    <CurrencyInput
+      v-model="state.day.hourlyRate"
+      :options="{ currency: 'USD' }"
+      placeholder="$/hr"
+    />
+  </ion-item>
+  <ion-item>
     <ion-label>Mark Day as Paid</ion-label>
     <ion-note style="margin: auto;" v-if="state.day.paid"
       ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
@@ -55,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { reactive } from "@vue/reactivity";
+import { computed, reactive } from "@vue/reactivity";
 import { checkmark } from "ionicons/icons";
 import TimeLogComponent from "@/components/TimeLog.vue";
 import {
@@ -74,6 +85,7 @@ import {
 } from "@ionic/vue";
 import { watch } from "@vue/runtime-core";
 import store from "@/store";
+import CurrencyInput from "../inputs/CurrencyInput.vue";
 
 export default {
   name: "Day Main",
@@ -95,10 +107,19 @@ export default {
     IonIcon,
     TimeLogComponent,
     IonText,
+    CurrencyInput,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
       day: props.day,
+    });
+
+    const paymentText = computed(() => {
+      if (store.state.userType == "company")
+        return "If no hourly rate is specified, the default rate for this employee will be assumed.";
+      else if (store.state.userType == "employee")
+        return "If no hourly rate is specified, your default hourly rate will be assumed.";
+      else return "";
     });
 
     watch(state.day, (newDay) => {
@@ -109,6 +130,7 @@ export default {
       store,
       state,
       checkmark,
+      paymentText,
     };
   },
 };

@@ -1,10 +1,11 @@
 <template>
   <input
+    class="currency-input"
     ref="inputRef"
     type="text"
     :value="formattedValue"
-    placeholder="Cost"
-    style="margin-right: 10px; width: 80px;"
+    :placeholder="placeholder"
+    style="margin-right: 10px;"
   />
 </template>
 
@@ -16,6 +17,7 @@ export default {
   props: {
     modelValue: Number,
     options: Object,
+    placeholder: String,
   },
   setup(props: any) {
     const { formattedValue, inputRef } = useCurrencyInput(props.options);

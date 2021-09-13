@@ -1,83 +1,85 @@
 <template>
-  <ion-card-header>
-    <div class="ion-text-center">
-      <ion-badge color="danger" style="margin-right: 5px;">{{
-        numUnreadVisits
-      }}</ion-badge>
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Recent Visits
-        </ion-text>
-      </h3>
-      <ion-chip
-        @click="
-          router.push({
-            name: 'Company Visit',
-            params: { visitID: 'new' },
-          })
-        "
-      >
-        <ion-icon :icon="add"></ion-icon>
-        <ion-label>Add New</ion-label>
-      </ion-chip>
-    </div>
-
-    <ion-searchbar
-      class="ion-text-start"
-      v-model="searchText"
-      placeholder="Search by customer, employee, date, etc."
-    ></ion-searchbar>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-content>
-      <ion-list>
-        <ion-item-group v-if="futureVisits.length">
-          <ion-item-divider>
-            <ion-label>Future Visits</ion-label>
-          </ion-item-divider>
-          <VisitItem
-            v-for="visit in futureVisits"
-            :key="visit.id"
-            :visit="visit"
-            @click="
-              router.push({
-                name: 'Company Visit',
-                params: { visitID: visit.id },
-              })
-            "
-          />
-        </ion-item-group>
-        <ion-item-group v-if="pastVisits.length">
-          <ion-item-divider>
-            <ion-label>Past Visits</ion-label>
-          </ion-item-divider>
-          <VisitItem
-            v-for="visit in pastVisits"
-            :key="visit.id"
-            :visit="visit"
-            @click="
-              router.push({
-                name: 'Company Visit',
-                params: { visitID: visit.id },
-              })
-            "
-          />
-        </ion-item-group>
-      </ion-list>
-
-      <ion-infinite-scroll
-        @ionInfinite="loadData($event)"
-        threshold="100px"
-        id="infinite-scroll"
-      >
-        <ion-infinite-scroll-content
-          loading-spinner="bubbles"
-          loading-text="Loading visits..."
+  <div style="height: 100%;">
+    <ion-card-header>
+      <div class="ion-text-center">
+        <ion-badge color="danger" style="margin-right: 5px;">{{
+          numUnreadVisits
+        }}</ion-badge>
+        <h3 class="list-header">
+          <ion-text color="dark">
+            Recent Visits
+          </ion-text>
+        </h3>
+        <ion-chip
+          @click="
+            router.push({
+              name: 'Company Visit',
+              params: { visitID: 'new' },
+            })
+          "
         >
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
-    </ion-content>
-  </ion-card-content>
+          <ion-icon :icon="add"></ion-icon>
+          <ion-label>Add New</ion-label>
+        </ion-chip>
+      </div>
+
+      <ion-searchbar
+        class="ion-text-start"
+        v-model="searchText"
+        placeholder="Search by customer, employee, date, etc."
+      ></ion-searchbar>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-content>
+        <ion-list>
+          <ion-item-group v-if="futureVisits.length">
+            <ion-item-divider>
+              <ion-label>Future Visits</ion-label>
+            </ion-item-divider>
+            <VisitItem
+              v-for="visit in futureVisits"
+              :key="visit.id"
+              :visit="visit"
+              @click="
+                router.push({
+                  name: 'Company Visit',
+                  params: { visitID: visit.id },
+                })
+              "
+            />
+          </ion-item-group>
+          <ion-item-group v-if="pastVisits.length">
+            <ion-item-divider>
+              <ion-label>Past Visits</ion-label>
+            </ion-item-divider>
+            <VisitItem
+              v-for="visit in pastVisits"
+              :key="visit.id"
+              :visit="visit"
+              @click="
+                router.push({
+                  name: 'Company Visit',
+                  params: { visitID: visit.id },
+                })
+              "
+            />
+          </ion-item-group>
+        </ion-list>
+
+        <ion-infinite-scroll
+          @ionInfinite="loadData($event)"
+          threshold="100px"
+          id="infinite-scroll"
+        >
+          <ion-infinite-scroll-content
+            loading-spinner="bubbles"
+            loading-text="Loading visits..."
+          >
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </ion-card-content>
+  </div>
 </template>
 
 <script lang="ts">

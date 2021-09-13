@@ -82,6 +82,10 @@ export default {
     Messages,
     IonCard,
   },
+  setup() {
+    // Load all data in this component --> Pass to lower level components
+    return {};
+  },
 };
 </script>
 

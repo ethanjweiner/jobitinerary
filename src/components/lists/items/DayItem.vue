@@ -3,7 +3,7 @@
     <div>
       <ion-label>
         <ion-text>
-          {{ date.toDateString() }}
+          {{ day.date }}
         </ion-text>
       </ion-label>
     </div>
@@ -15,11 +15,14 @@ import { IonItem, IonLabel, IonText } from "@ionic/vue";
 
 export default {
   name: "Visit Item",
-  props: ["date"],
+  props: ["day"],
   components: {
     IonItem,
     IonLabel,
     IonText,
+  },
+  setup() {
+    return {};
   },
 };
 </script>

@@ -1,10 +1,10 @@
 <template>
   <Users
-    :users="state.companyState.employees"
+    :users="store.state.companyState.employees"
     :username="username"
     type="employee"
   >
-    <EmployeeComponent v-if="state.companyState.selectedEmployee" />
+    <EmployeeComponent :employee="state.selectedEmployee" />
   </Users>
 </template>
 
@@ -12,6 +12,9 @@
 import Users from "./Users.vue";
 import EmployeeComponent from "@/components/units/Employee.vue";
 import store from "@/store";
+import { reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
+import { Employee } from "@/types";
 
 // Sort employees alphabetically, with none selected
 // Show employee if a employee is selected
@@ -23,10 +26,26 @@ export default {
     EmployeeComponent,
   },
   setup(props: any) {
-    if (props.username) store.fetchSelectedEmployee(props.username);
+    const state = reactive<{ selectedEmployee: Employee | undefined }>({
+      selectedEmployee: undefined,
+    });
+
+    state.selectedEmployee = store.state.companyState.employees.find(
+      (employee) => employee.name == props.username
+    );
+
+    console.log(state.selectedEmployee);
+
+    if (state.selectedEmployee) {
+      watch(state.selectedEmployee, (newEmployee) => {
+        // Update this employee in the database
+        console.log(newEmployee);
+      });
+    }
 
     return {
-      state: store.state,
+      store,
+      state,
     };
   },
 };

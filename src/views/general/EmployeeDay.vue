@@ -191,12 +191,13 @@ export default {
       },
     ]);
     const state = reactive<State>({
-      day: emptyDay(""),
+      day: emptyDay(""), // Use the default hourly rate
       selectedVisitID: "",
     });
 
     if (route.name == "New Day") {
       if (props.date != "new") {
+        // Input the default hourly rate for the given employee
         state.day = emptyDay(props.date);
       }
     }

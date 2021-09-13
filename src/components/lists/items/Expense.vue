@@ -7,6 +7,7 @@
     ></ion-input>
     <CurrencyInput
       v-model="state.expense.cost"
+      placeholder="Cost"
       :options="{ currency: 'USD' }"
     />
 
