@@ -1,61 +1,59 @@
 <template>
   <Sections :sections="sections" :wrapCards="true">
-    <template v-slot:messages>
-      <div class="list">
-        <!-- change to messages -->
-        <Messages />
-      </div>
-    </template>
     <template v-slot:dates>
       <div class="list">
-        <!-- change to employee days -->
         <EmployeeDays />
       </div>
     </template>
+    <template v-slot:messages>
+      <div class="list">
+        <Messages />
+      </div>
+    </template>
     <template v-slot:pay>
-      <PaymentInfo />
+      <PaymentInfo :employee="employee" />
     </template>
     <template v-slot:employee-info>
-      <EmployeeForm />
+      <EmployeeForm :employee="employee" />
     </template>
     <template v-slot:sectionsAsGrid>
       <ion-row>
         <ion-col size="6">
           <ion-card>
-            <div class="list">
-              <!-- change to messages -->
-              <Messages />
-            </div>
-          </ion-card>
-        </ion-col>
-        <ion-col size="6">
-          <ion-card>
-            <div class="list">
-              <!-- change to employee days -->
+            <div style="height: 500px;">
               <EmployeeDays />
             </div>
           </ion-card>
         </ion-col>
+        <ion-col size="6">
+          <ion-row>
+            <ion-card class="ion-padding" style="width: 100%;">
+              <ion-card-header>
+                <ion-card-title>
+                  Employee Info
+                </ion-card-title>
+              </ion-card-header>
+              <EmployeeForm :employee="employee" />
+            </ion-card>
+          </ion-row>
+          <ion-row>
+            <ion-card style="width: 100%;">
+              <div style="height: 300px;">
+                <Messages />
+              </div>
+            </ion-card>
+          </ion-row>
+        </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="6">
-          <ion-card class="ion-padding">
-            <ion-card-header>
-              <ion-card-title>
-                Employee Info
-              </ion-card-title>
-            </ion-card-header>
-            <EmployeeForm />
-          </ion-card>
-        </ion-col>
-        <ion-col size="6">
+        <ion-col size="12">
           <ion-card>
             <ion-card-header>
               <ion-card-title>
                 Payment Info
               </ion-card-title>
             </ion-card-header>
-            <PaymentInfo />
+            <PaymentInfo :employee="employee" />
           </ion-card>
         </ion-col>
       </ion-row>
@@ -101,6 +99,9 @@ export default {
     IonCardHeader,
     IonCardTitle,
   },
+  props: {
+    employee: Object,
+  },
   setup() {
     const sections = ref<Array<SectionType>>([
       {
@@ -124,6 +125,7 @@ export default {
         id: "employee-info",
       },
     ]);
+    // Retrieve employee-specific data (dates, messages)
     return {
       state: store.state,
       sections,

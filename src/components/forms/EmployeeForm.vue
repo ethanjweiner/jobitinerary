@@ -12,7 +12,7 @@
               <ion-input
                 type="email"
                 placeholder="email"
-                :value="state.companyState.selectedEmployee.email"
+                :value="state.employee.email"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -27,7 +27,7 @@
                 inputmode="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 placeholder="123-123-1234"
-                :value="state.companyState.selectedEmployee.phone"
+                :value="state.employee.phone"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -37,7 +37,7 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
 import {
   IonList,
   IonInput,
@@ -50,6 +50,7 @@ import {
 } from "@ionic/vue";
 import { mailOutline, callOutline } from "ionicons/icons";
 import store from "@/store";
+import { reactive } from "@vue/reactivity";
 export default {
   name: "Employee Form",
   components: {
@@ -62,9 +63,15 @@ export default {
     IonCol,
     IonIcon,
   },
-  setup() {
+  props: {
+    employee: Object,
+  },
+  setup(props: any) {
+    const state = reactive({
+      employee: props.employee,
+    });
     return {
-      state: store.state,
+      state,
       mailOutline,
       callOutline,
     };

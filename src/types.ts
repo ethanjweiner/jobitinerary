@@ -1,6 +1,6 @@
 export interface UserData {
-  readonly email: string;
-  name: string;
+  email: string;
+  readonly name: string;
   phone: string;
 }
 
@@ -37,7 +37,7 @@ export interface Company extends UserData {
 export interface Employee extends UserData {
   kind: "employee";
   companyID: string;
-  hourlyRate: number | null;
+  defaultHourlyRate: number | null;
 }
 
 export const sampleEmployee1: Employee = {
@@ -46,7 +46,7 @@ export const sampleEmployee1: Employee = {
   kind: "employee",
   email: "employeeEmail@email.com",
   phone: "Employee phone",
-  hourlyRate: 20,
+  defaultHourlyRate: 20,
 };
 
 export const sampleEmployee2: Employee = {
@@ -55,7 +55,7 @@ export const sampleEmployee2: Employee = {
   kind: "employee",
   email: "employeeEmail@email.com",
   phone: "Employee phone",
-  hourlyRate: 20,
+  defaultHourlyRate: 20,
 };
 
 export interface Customer extends UserData {
@@ -206,6 +206,7 @@ export interface Day {
   paid: boolean;
   readByEmployee: boolean;
   readByCompany: boolean;
+  hourlyRate: number | null;
 }
 
 export const sampleDay: Day = {
@@ -223,9 +224,10 @@ export const sampleDay: Day = {
   paid: false,
   readByEmployee: false,
   readByCompany: false,
+  hourlyRate: 20,
 };
 
-export function emptyDay(date: string): Day {
+export function emptyDay(date: string, hourlyRate = null): Day {
   return {
     date: date,
     employeeName: "",
@@ -239,6 +241,7 @@ export function emptyDay(date: string): Day {
     },
     notes: "",
     paid: false,
+    hourlyRate,
     readByEmployee: false,
     readByCompany: false,
   };
