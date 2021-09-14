@@ -18,7 +18,7 @@ export default {
     IonDatetime,
   },
   emits: ["dateChange"],
-  setup(props, { emit }: { emit: any }) {
+  setup(props: any, { emit }: { emit: any }) {
     const date = ref(dateToString(new Date()));
 
     watch(date, (newDate) => {

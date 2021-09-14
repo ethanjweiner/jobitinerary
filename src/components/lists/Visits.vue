@@ -102,9 +102,9 @@ import {
 
 import VisitItem from "./items/VisitItem.vue";
 
-import { Visit, sampleVisit } from "@/types";
+import { sampleVisit, Visit } from "@/types";
 
-import { computed, reactive, ref, toRefs } from "vue";
+import { computed, reactive, toRefs } from "vue";
 
 import { includeItemInSearch } from "@/helpers";
 
@@ -133,24 +133,30 @@ export default {
     IonItemGroup,
     IonItemDivider,
   },
-  setup() {
+  props: {
+    visits: Array,
+  },
+  setup(props: any) {
     const state = reactive({
       searchText: "",
+      visits: [...props.visits],
     });
     // Retrieve visits for given employee OR
-    // Supply the visits as a prop
-    const visits = ref<Array<Visit>>([]);
+    // Supply the visits as a prop (better)
 
     const numUnreadVisits = computed(() => {
-      return visits.value.reduce((numUnreadVisitsSoFar, visit) => {
-        if (!visit.readByCompany) return ++numUnreadVisitsSoFar;
-        return numUnreadVisitsSoFar;
-      }, 0);
+      return state.visits.reduce(
+        (numUnreadVisitsSoFar: number, visit: Visit) => {
+          if (!visit.readByCompany) return ++numUnreadVisitsSoFar;
+          return numUnreadVisitsSoFar;
+        },
+        0
+      );
     });
 
     const filteredVisits = computed(() => {
-      if (state.searchText == "") return visits.value;
-      return visits.value.filter((visit) =>
+      if (state.searchText == "") return state.visits;
+      return state.visits.filter((visit: Visit) =>
         includeItemInSearch(visit, state.searchText, [
           "employeeName",
           "customerName",
@@ -161,21 +167,21 @@ export default {
 
     const futureVisits = computed(() => {
       return filteredVisits.value.filter(
-        (visit) => new Date(visit.date) > new Date()
+        (visit: Visit) => new Date(visit.date) > new Date()
       );
     });
 
     const pastVisits = computed(() => {
       return filteredVisits.value.filter(
-        (visit) => new Date(visit.date) <= new Date()
+        (visit: Visit) => new Date(visit.date) <= new Date()
       );
     });
 
     const pushData = () => {
-      const max = visits.value.length + 5;
+      const max = state.visits.length + 5;
       const min = max - 5;
       for (let i = min; i < max; i++) {
-        visits.value.push(sampleVisit);
+        state.visits.push(sampleVisit);
       }
     };
 
@@ -187,7 +193,7 @@ export default {
 
         // App logic to determine if all data is loaded
         // and disable the infinite scroll
-        if (visits.value.length == 1000) {
+        if (state.visits.length == 1000) {
           ev.target.disabled = true;
         }
       }, 500);
@@ -197,7 +203,7 @@ export default {
 
     return {
       loadData,
-      visits,
+      state,
       numUnreadVisits,
       futureVisits,
       pastVisits,

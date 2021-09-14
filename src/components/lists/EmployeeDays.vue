@@ -70,7 +70,7 @@ import {
   IonNote,
 } from "@ionic/vue";
 
-import DayItem from "./items/DayItem.vue";
+import DayItem from "./items/EmployeeDayItem.vue";
 
 import { computed, ref } from "vue";
 
