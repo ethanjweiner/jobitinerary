@@ -19,7 +19,7 @@
   <ion-card-content>
     <ion-content>
       <ion-list>
-        <DayItem v-for="date in filteredDays" :key="date" :date="date" />
+        <DayItem v-for="day in filteredDays" :key="day.date" :day="day" />
       </ion-list>
 
       <ion-infinite-scroll
@@ -50,11 +50,12 @@ import {
   IonItem,
 } from "@ionic/vue";
 
-import DayItem from "./items/DayItem.vue";
+import DayItem from "./items/CustomerDayItem.vue";
 
 import { computed, ref } from "vue";
 
 import date from "date-and-time";
+import { dateToString } from "@/helpers";
 
 export default {
   name: "Customer Days",
@@ -73,12 +74,13 @@ export default {
   setup() {
     const searchDate = ref<string>("");
     // Retrieve dates in which the given customer worked
-    const days = ref<Array<Date>>([]);
+    const days = ref<Array<{ date: string }>>([]);
 
     const filteredDays = computed(() => {
       if (searchDate.value)
         return days.value.filter(
-          (day) => date.format(day, "YYYY-MM-DD") == searchDate.value
+          (day) =>
+            date.format(new Date(day.date), "YYYY-MM-DD") == searchDate.value
         );
       return days.value;
     });
@@ -87,7 +89,7 @@ export default {
       const max = days.value.length + 5;
       const min = max - 5;
       for (let i = min; i < max; i++) {
-        days.value.push(new Date());
+        days.value.push({ date: dateToString(new Date()) });
       }
     };
 

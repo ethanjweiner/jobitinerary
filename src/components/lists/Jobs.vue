@@ -6,7 +6,11 @@
           Jobs
         </ion-text>
       </h3>
-      <ion-chip>
+      <ion-chip
+        @click="
+          router.push({ name: 'New Job', params: { customerName: 'new' } })
+        "
+      >
         <ion-icon :icon="add"></ion-icon>
         <ion-label>Add New</ion-label>
       </ion-chip>
@@ -20,6 +24,23 @@
   <ion-card-content>
     <ion-content>
       <ion-list>
+        <ion-item-group v-if="presentJobs.length">
+          <ion-item-divider>
+            <ion-label>Present Jobs</ion-label>
+          </ion-item-divider>
+          <JobItem
+            v-for="job in presentJobs"
+            :key="job.id"
+            :job="job"
+            :showCustomer="showCustomer"
+            @click="
+              router.push({
+                name: 'Job',
+                params: { username: job.customerName, jobID: job.id },
+              })
+            "
+          />
+        </ion-item-group>
         <ion-item-group v-if="futureJobs.length">
           <ion-item-divider>
             <ion-label>Future Jobs</ion-label>
@@ -86,6 +107,8 @@ import { computed, reactive, ref, toRefs } from "vue";
 
 import { add } from "ionicons/icons";
 
+import router from "@/router";
+
 export default {
   name: "Jobs",
   props: ["showCustomer"],
@@ -125,13 +148,21 @@ export default {
 
     const pastJobs = computed(() => {
       return filteredJobs.value.filter(
-        (job) => new Date(job.startDate) > new Date()
+        (job) => new Date(job.endDate) < new Date()
+      );
+    });
+
+    const presentJobs = computed(() => {
+      return filteredJobs.value.filter(
+        (job) =>
+          new Date(job.startDate) <= new Date() &&
+          new Date(job.endDate) >= new Date()
       );
     });
 
     const futureJobs = computed(() => {
       return filteredJobs.value.filter(
-        (job) => new Date(job.startDate) <= new Date()
+        (job) => new Date(job.startDate) > new Date()
       );
     });
 
@@ -165,7 +196,9 @@ export default {
       jobs,
       futureJobs,
       pastJobs,
+      presentJobs,
       add,
+      router,
     };
   },
 };

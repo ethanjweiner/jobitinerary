@@ -181,7 +181,7 @@ import store from "@/store";
 import CurrencyInput from "./inputs/CurrencyInput.vue";
 import { watch } from "@vue/runtime-core";
 import { timeOutline } from "ionicons/icons";
-import DayItem from "@/components/lists/items/DayItem.vue";
+import DayItem from "@/components/lists/items/EmployeeDayItem.vue";
 
 import {
   IonGrid,

@@ -5,13 +5,18 @@
       <ion-note v-if="showCustomer">for {{ job.customerName }}</ion-note>
     </div>
     <div slot="end">
-      <ion-text color="dark">{{ job.startDate.toLocaleDateString() }}</ion-text>
+      <div style="padding: 0;">
+        <ion-note color="dark">Start: {{ job.startDate }}</ion-note>
+      </div>
+      <div style="padding: 0;">
+        <ion-note color="dark">End: {{ job.endDate }}</ion-note>
+      </div>
     </div>
   </ion-item>
 </template>
 
 <script lang="ts">
-import { IonItem, IonLabel, IonNote, IonText } from "@ionic/vue";
+import { IonItem, IonLabel, IonNote } from "@ionic/vue";
 
 export default {
   name: "Visit Item",
@@ -20,12 +25,14 @@ export default {
     IonItem,
     IonLabel,
     IonNote,
-    IonText,
   },
 };
 </script>
 
 <style scoped>
+ion-item {
+  cursor: pointer;
+}
 div {
   padding-top: 5px;
   padding-bottom: 5px;

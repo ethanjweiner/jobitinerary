@@ -252,7 +252,8 @@ export interface Job {
   name: string;
   customerName: string;
   description: string;
-  startDate: Date;
+  startDate: string;
+  endDate: string;
   tasks: Array<Task>;
 }
 
@@ -261,7 +262,8 @@ export const sampleJob: Job = {
   name: "job name",
   customerName: "Customer Name",
   description: "job description",
-  startDate: new Date(),
+  startDate: "2021-09-10",
+  endDate: "2021-09-20",
   tasks: [
     {
       text: "task",
@@ -303,6 +305,8 @@ export interface SectionType {
 
 // A ONE-WAY message (can't be used as a thread...)
 export interface Message {
+  id: string;
+  thread: Array<string>;
   to: {
     userKind: "employee" | "company";
     name?: string;
@@ -319,6 +323,8 @@ export interface Message {
 }
 
 export const sampleMessage: Message = {
+  id: "message_id",
+  thread: ["id1", "id2"],
   to: {
     userKind: "company",
     email: "company@email.com",

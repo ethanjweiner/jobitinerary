@@ -5,7 +5,7 @@
         <ion-buttons slot="start" :collapse="true">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>New Day</ion-title>
+        <ion-title>New Job</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true" style="height: 100%;">
@@ -16,30 +16,31 @@
         >
           <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
             <div class="ion-text-start">
-              <h3 class="text-secondary">Select an Employee</h3>
+              <h3 class="text-secondary">Select a Customer</h3>
             </div>
             <UserSelect
               :names="
-                store.state.companyState.employees.map(
-                  (employee) => employee.name
+                store.state.companyState.customers.map(
+                  (customer) => customer.name
                 )
               "
-              :selectedName="state.employeeName"
-              type="employee"
-              @userChange="(name) => (state.employeeName = name)"
+              :selectedName="state.customerName"
+              type="customer"
+              @userChange="(name) => (state.customerName = name)"
             />
             <div class="ion-text-start">
-              <h3 class="text-secondary">Select a Date</h3>
+              <h3 class="text-secondary">Create a Name</h3>
             </div>
-            <DateSelect
-              @dateChange="(newDate) => (state.date = newDate.substring(0, 10))"
-            />
-            <ion-button expand="block" color="primary" @click="createDay"
-              >Create Day</ion-button
+            <ion-input
+              type="text"
+              placeholder="Descriptive name for the job"
+              v-model="state.jobName"
+            ></ion-input>
+            <ion-button expand="block" color="primary" @click="createJob"
+              >Create Job</ion-button
             >
             <ion-note
-              >Note: You won't be able to change the date or employee
-              later.</ion-note
+              >Note: You won't be able to change the customer later.</ion-note
             >
           </ion-col>
         </ion-row>
@@ -49,7 +50,6 @@
 </template>
 
 <script lang="ts">
-import DateSelect from "@/components/selects/DateSelect.vue";
 import {
   IonPage,
   IonContent,
@@ -63,20 +63,19 @@ import {
   IonBackButton,
   IonButton,
   IonNote,
+  IonInput,
 } from "@ionic/vue";
 
 import router from "@/router";
 import store from "@/store";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import { reactive } from "@vue/reactivity";
-import { dateToString } from "@/helpers";
 
 export default {
   name: "Select Date",
   components: {
     IonPage,
     IonContent,
-    DateSelect,
     IonGrid,
     IonRow,
     IonCol,
@@ -88,21 +87,23 @@ export default {
     UserSelect,
     IonButton,
     IonNote,
+    IonInput,
   },
   props: {
-    employeeName: String,
+    customerName: String,
   },
   setup(props: any) {
     const state = reactive({
-      employeeName: props.employeeName == "new" ? "" : props.employeeName,
-      date: dateToString(new Date()),
+      customerName: props.customerName == "new" ? "" : props.customerName,
+      jobName: "",
     });
 
-    const createDay = () => {
-      if (state.employeeName && state.date)
+    const createJob = () => {
+      // Create a job with an id
+      if (state.customerName && state.jobName)
         router.push({
-          name: "Employee Day",
-          params: { username: state.employeeName, date: state.date },
+          name: "Job",
+          params: { username: state.customerName, jobID: "sample_job_id" },
         });
       else throw Error("Please select an employee and date.");
     };
@@ -111,7 +112,7 @@ export default {
       router,
       state,
       store,
-      createDay,
+      createJob,
     };
   },
 };

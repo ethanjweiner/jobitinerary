@@ -47,7 +47,7 @@ import store from "@/store";
 import router from "@/router";
 
 export default {
-  name: "Visit Item",
+  name: "Employee Day Item",
   props: {
     day: Object,
     showPaymentToggle: Boolean,

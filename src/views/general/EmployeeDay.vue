@@ -32,20 +32,20 @@
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
-            <DayMain :day="day" @dayChanged="updateDay" />
+            <DayMain :day="state.day" @dayChanged="updateDay" />
           </template>
           <template v-slot:visits>
-            <DayVisits :date="day.date" @openVisit="openVisitModal" />
+            <DayVisits :date="state.day.date" @openVisit="openVisitModal" />
           </template>
           <template v-slot:expenses>
-            <Expenses :date="day.date" />
+            <Expenses :date="state.day.date" />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
               <ion-col size="6">
                 <ion-row>
                   <ion-card style="width: 100%;">
-                    <DayMain :day="day" @dayChanged="updateDay" />
+                    <DayMain :day="state.day" @dayChanged="updateDay" />
                   </ion-card>
                 </ion-row>
                 <ion-row>
@@ -57,7 +57,7 @@
                       </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <Expenses :date="day.date" />
+                      <Expenses :date="state.day.date" />
                     </ion-card-content>
                   </ion-card>
                 </ion-row>
@@ -71,7 +71,10 @@
                     </ion-card-title>
                   </ion-card-header>
                   <ion-card-content>
-                    <DayVisits :date="day.date" @openVisit="openVisitModal" />
+                    <DayVisits
+                      :date="state.day.date"
+                      @openVisit="openVisitModal"
+                    />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -94,7 +97,7 @@
         @didDismiss="visitModalIsOpen = false"
       >
         <VisitModal
-          :visitID="selectedVisitID"
+          :visitID="state.selectedVisitID"
           :isModal="true"
           @close="visitModalIsOpen = false"
         />
@@ -126,8 +129,8 @@ import {
 
 import { ref } from "vue";
 
-import { Day, emptyDay, Message, SectionType } from "@/types";
-import { reactive, toRefs } from "@vue/reactivity";
+import { Day, Message, sampleDay, SectionType } from "@/types";
+import { reactive } from "@vue/reactivity";
 
 import Sections from "@/components/Sections.vue";
 import SendMessage from "@/components/buttons/SendMessage.vue";
@@ -138,7 +141,6 @@ import Expenses from "@/components/lists/Expenses.vue";
 
 import store from "@/store";
 import router from "@/router";
-import { useRoute } from "vue-router";
 import VisitModal from "@/views/general/Visit.vue";
 
 import {
@@ -159,8 +161,7 @@ export default {
     username: String,
     date: String,
   },
-  setup(props: any) {
-    const route = useRoute();
+  setup() {
     const sections = ref<Array<SectionType>>([
       {
         name: "Main",
@@ -179,16 +180,9 @@ export default {
       },
     ]);
     const state = reactive<State>({
-      day: emptyDay(""), // Use the default hourly rate
+      day: sampleDay, // Use the default hourly rate
       selectedVisitID: "",
     });
-
-    if (route.name == "New Day") {
-      if (props.date != "new") {
-        // Input the default hourly rate for the given employee
-        state.day = emptyDay(props.date);
-      }
-    }
 
     const messageModalIsOpen = ref(false);
 
@@ -236,7 +230,7 @@ export default {
 
     return {
       store,
-      ...toRefs(state),
+      state,
       updateDay,
       sections,
       documentTextOutline,

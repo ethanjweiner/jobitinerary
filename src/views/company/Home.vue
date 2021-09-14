@@ -13,7 +13,7 @@
         <ion-row class="ion-justify-content-around">
           <ion-col size="12" size-sm="6" id="visits-column">
             <ion-card>
-              <Visits />
+              <Visits :visits="[sampleVisit, sampleVisit]" />
             </ion-card>
           </ion-col>
           <ion-col
@@ -56,6 +56,7 @@ import CreateButton from "@/components/buttons/CreateButton.vue";
 import Visits from "@/components/lists/Visits.vue";
 import Jobs from "@/components/lists/Jobs.vue";
 import Messages from "@/components/lists/Messages.vue";
+import { sampleVisit } from "@/types";
 
 export default {
   name: "Home",
@@ -77,7 +78,9 @@ export default {
   },
   setup() {
     // Load all data in this component --> Pass to lower level components
-    return {};
+    return {
+      sampleVisit,
+    };
   },
 };
 </script>

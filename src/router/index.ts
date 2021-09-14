@@ -33,11 +33,6 @@ const routes: Array<RouteRecordRaw> = [
         name: "Home",
         component: () => import("@/views/company/Home.vue"),
       },
-      // Open recent job or create new job
-      {
-        path: "home/jobs/:jobID",
-        component: () => import("@/views/general/Job.vue"),
-      },
 
       // CUSTOMERS
       {
@@ -58,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "customers/:username/jobs/:jobID",
-        name: "Customer Job",
+        name: "Job",
         props: true,
         component: () => import("@/views/general/Job.vue"),
       },
@@ -93,6 +88,13 @@ const routes: Array<RouteRecordRaw> = [
         name: "New Day",
         props: true,
         component: () => import("@/views/general/NewDay.vue"),
+      },
+      // NEW JOBS
+      {
+        path: "new-job/:customerName",
+        name: "New Job",
+        props: true,
+        component: () => import("@/views/general/NewJob.vue"),
       },
       // SETTINGS
       {
