@@ -28,7 +28,6 @@
     </ion-popover>
 
     <ion-content :fullscreen="true">
-      <SendMessage @click="messageModalIsOpen = true" />
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
@@ -82,15 +81,7 @@
           </template>
         </Sections>
       </form>
-      <ion-modal
-        :is-open="messageModalIsOpen"
-        @didDismiss="messageModalIsOpen = false"
-      >
-        <MessageModal
-          @messageSent="sendMessage"
-          @closeModal="messageModalIsOpen = false"
-        />
-      </ion-modal>
+
       <ion-modal
         v-if="visitModalIsOpen"
         :is-open="visitModalIsOpen"
@@ -129,12 +120,10 @@ import {
 
 import { ref } from "vue";
 
-import { Day, Message, sampleDay, SectionType } from "@/types";
+import { Day, sampleDay, SectionsType } from "@/types";
 import { reactive } from "@vue/reactivity";
 
 import Sections from "@/components/Sections.vue";
-import SendMessage from "@/components/buttons/SendMessage.vue";
-import MessageModal from "@/components/modals/MessageModal.vue";
 import DayMain from "@/components/forms/DayMain.vue";
 import DayVisits from "@/components/lists/DayVisits.vue";
 import Expenses from "@/components/lists/Expenses.vue";
@@ -162,7 +151,7 @@ export default {
     date: String,
   },
   setup() {
-    const sections = ref<Array<SectionType>>([
+    const sections = ref<SectionsType>([
       {
         name: "Main",
         icon: documentTextOutline,
@@ -183,13 +172,6 @@ export default {
       day: sampleDay, // Use the default hourly rate
       selectedVisitID: "",
     });
-
-    const messageModalIsOpen = ref(false);
-
-    const sendMessage = (message: Message) => {
-      console.log(message);
-      messageModalIsOpen.value = false;
-    };
 
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
@@ -240,8 +222,6 @@ export default {
       toggleDaySettings,
       popoverIsOpen,
       popoverEvent,
-      messageModalIsOpen,
-      sendMessage,
       deleteDay,
       router,
       openVisitModal,
@@ -262,8 +242,6 @@ export default {
     IonModal,
     IonPopover,
     IonButton,
-    SendMessage,
-    MessageModal,
     DayMain,
     DayVisits,
     Expenses,

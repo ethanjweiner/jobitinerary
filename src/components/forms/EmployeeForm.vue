@@ -6,11 +6,12 @@
           <ion-col size="12" size-sm="6">
             <ion-item>
               <ion-label position="stacked">
-                <ion-icon :icon="mailOutline"></ion-icon>
+                <ion-icon :icon="icons.mailOutline"></ion-icon>
                 <span style="padding: 5px;">Email</span>
               </ion-label>
               <ion-input
                 type="email"
+                disabled
                 placeholder="email"
                 :value="state.employee.email"
               ></ion-input>
@@ -19,7 +20,7 @@
           <ion-col size="12" size-sm="6">
             <ion-item>
               <ion-label position="stacked">
-                <ion-icon :icon="callOutline"></ion-icon>
+                <ion-icon :icon="icons.callOutline"></ion-icon>
                 <span style="padding: 5px;">Phone</span>
               </ion-label>
               <ion-input
@@ -48,9 +49,10 @@ import {
   IonCol,
   IonIcon,
 } from "@ionic/vue";
-import { mailOutline, callOutline } from "ionicons/icons";
-import store from "@/store";
 import { reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
+import { mailOutline, callOutline } from "ionicons/icons";
+
 export default {
   name: "Employee Form",
   components: {
@@ -64,16 +66,24 @@ export default {
     IonIcon,
   },
   props: {
-    employee: Object,
+    modelValue: Object,
   },
-  setup(props: any) {
+  emits: ["update:modelValue"],
+  setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      employee: props.employee,
+      employee: props.modelValue,
     });
+
+    watch(state.employee, (newEmployee) =>
+      emit("update:modelValue", newEmployee)
+    );
+
     return {
       state,
-      mailOutline,
-      callOutline,
+      icons: {
+        mailOutline,
+        callOutline,
+      },
     };
   },
 };

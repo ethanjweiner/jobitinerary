@@ -1,25 +1,54 @@
 <template>
-  <ion-item>
-    <ion-buttons slot="start">
-      <ion-reorder slot="start"></ion-reorder>
-      <ion-checkbox slot="start" v-model="state.task.complete"></ion-checkbox>
-    </ion-buttons>
-    <ion-textarea
-      placeholder="Enter task"
-      auto-grow
-      rows="1"
-      v-model="state.task.text"
-    ></ion-textarea>
-    <ion-buttons slot="end">
-      <div v-if="task.image">Image Thumbnail</div>
-      <ion-button v-else>
-        <ion-icon :icon="cameraOutline"></ion-icon>
-      </ion-button>
-      <ion-button @click="$emit('deleteTask')">
-        <ion-icon :icon="trashOutline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-item>
+  <ion-reorder>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-checkbox v-model="state.task.complete"></ion-checkbox>
+      </ion-buttons>
+      <ion-input
+        placeholder="General name"
+        v-model="state.task.header"
+        type="text"
+      >
+      </ion-input>
+      <ion-thumbnail
+        slot="end"
+        v-if="state.task.image.ref"
+        @click="state.imageModalIsOpen = true"
+      >
+        <img :src="state.imageURL" alt="Img" />
+      </ion-thumbnail>
+      <ion-buttons slot="end">
+        <ImageUploader :hideText="true" @imageChange="changeImage" />
+        <ion-button @click="$emit('deleteTask')">
+          <ion-icon :icon="icons.trashOutline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+    <ion-item v-if="state.showTextAreas">
+      <ion-textarea
+        placeholder="Task-specific notes"
+        auto-grow
+        rows="1"
+        v-model="state.task.notes"
+      ></ion-textarea>
+    </ion-item>
+    <ion-modal
+      :is-open="state.imageModalIsOpen"
+      @didDismiss="state.imageModalIsOpen = false"
+    >
+      <ion-card>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button @click="state.imageModalIsOpen = false">
+              <ion-icon :icon="icons.close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <img class="expanded-image" :src="state.imageURL" alt="Image" />
+      </ion-card>
+    </ion-modal>
+  </ion-reorder>
 </template>
 
 <script lang="ts">
@@ -31,10 +60,17 @@ import {
   IonButton,
   IonIcon,
   IonReorder,
+  IonInput,
+  IonThumbnail,
+  IonModal,
+  IonCard,
+  IonToolbar,
 } from "@ionic/vue";
-import { trashOutline, cameraOutline } from "ionicons/icons";
+import { trashOutline, cameraOutline, close } from "ionicons/icons";
 import { reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
+import ImageUploader from "@/components/ImageUploader.vue";
+import { getImageURL } from "@/helpers";
 
 export default {
   name: "Task",
@@ -49,12 +85,31 @@ export default {
     IonButton,
     IonIcon,
     IonReorder,
+    IonInput,
+    IonThumbnail,
+    IonModal,
+    IonCard,
+    IonToolbar,
+    ImageUploader,
   },
   emits: ["updateTask", "deleteTask"],
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
       task: props.task,
+      showTextAreas: false,
+      imageModalIsOpen: false,
+      imageURL: "",
     });
+
+    setTimeout(() => (state.showTextAreas = true), 250);
+
+    const changeImage = async (imageRef: string) => {
+      state.task.image.ref = imageRef;
+      state.imageURL = await getImageURL(imageRef);
+    };
+
+    if (state.task.image.ref)
+      getImageURL(state.task.image.ref).then((url) => (state.imageURL = url));
 
     watch(state.task, (newTask) => {
       emit("updateTask", newTask);
@@ -62,8 +117,8 @@ export default {
 
     return {
       state,
-      trashOutline,
-      cameraOutline,
+      changeImage,
+      icons: { trashOutline, cameraOutline, close },
     };
   },
 };
@@ -82,5 +137,17 @@ ion-textarea {
 }
 ion-buttons {
   margin-right: 0;
+}
+ion-thumbnail {
+  cursor: pointer;
+}
+ion-card {
+  height: 100%;
+}
+.expanded-image {
+  margin-top: auto;
+  margin-bottom: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>

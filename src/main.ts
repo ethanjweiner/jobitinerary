@@ -7,6 +7,7 @@ import router from "./router";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 import "firebase/analytics";
 
 import { IonicVue } from "@ionic/vue";
@@ -26,6 +27,9 @@ import "@ionic/vue/css/text-alignment.css";
 import "@ionic/vue/css/text-transformation.css";
 import "@ionic/vue/css/flex-utils.css";
 import "@ionic/vue/css/display.css";
+
+// Custom progressive-web-app elements (e.g. camera in web app)
+import { defineCustomElements } from "@ionic/pwa-elements/loader";
 
 /* Theme variables */
 import "./theme/variables.css";
@@ -48,6 +52,7 @@ firebase.analytics();
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
+export const storage = firebase.storage();
 export const companiesCollection = db.collection("companies");
 export const employeesCollection = db.collectionGroup("employees");
 
@@ -62,6 +67,7 @@ auth.onAuthStateChanged(async (user) => {
     app = createApp(App)
       .use(IonicVue)
       .use(router);
+    defineCustomElements(window);
     await router.isReady();
     if (user) {
       await loadUser(user);

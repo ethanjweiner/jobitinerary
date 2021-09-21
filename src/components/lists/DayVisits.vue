@@ -22,7 +22,7 @@ import { add } from "ionicons/icons";
 import { reactive } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { emptyVisit, sampleVisit } from "@/types";
+import { emptyVisit, sampleVisit1 } from "@/types";
 
 export default defineComponent({
   name: "Day Visits",
@@ -39,7 +39,7 @@ export default defineComponent({
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
       // RETRIEVE VISITS ALREADY EXISTING ON THIS DATE/EMPLOYEE
-      visits: [sampleVisit, sampleVisit],
+      visits: [sampleVisit1, sampleVisit1],
     });
 
     const deleteVisit = (index: number) => {

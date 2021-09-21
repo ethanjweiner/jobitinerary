@@ -8,20 +8,20 @@
           id="autocomplete"
           placeholder="Enter address"
           ref="autocompleteInput"
-          :value="location.address"
+          :value="state.location.address"
           @input="onInput"
         ></ion-input>
       </ion-item>
 
       <ion-buttons slot="end">
-        <ion-button v-if="location.coordinates">
+        <ion-button v-if="state.location.coordinates">
           <ion-icon :icon="navigateOutline" color="grey"></ion-icon>
           <span style="padding-left: 5px;">Directions</span>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
     <ion-card id="suggestions-card">
-      <ion-item v-for="(suggestion, index) in suggestions" :key="index">{{
+      <ion-item v-for="(suggestion, index) in state.suggestions" :key="index">{{
         suggestion
       }}</ion-item>
     </ion-card>
@@ -41,8 +41,8 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import { reactive, toRefs } from "@vue/reactivity";
-import { onMounted, ref } from "vue";
+import { reactive } from "@vue/reactivity";
+import { onMounted, ref, watch } from "vue";
 import { navigateOutline } from "ionicons/icons";
 
 export default {
@@ -58,16 +58,23 @@ export default {
     IonInput,
     IonIcon,
   },
-  props: ["value"],
-  setup(props) {
+  props: {
+    modelValue: Object,
+  },
+  emits: ["update:modelValue"],
+  setup(props, { emit }) {
     const state = reactive({
       location: {
-        address: props.value.address,
-        coordinates: props.value.coordinates,
+        address: props.modelValue.address,
+        coordinates: props.modelValue.coordinates,
       },
       suggestions: [],
       autocomplete: null,
     });
+
+    watch(state.location, (newLocation) =>
+      emit("update:modelValue", newLocation)
+    );
 
     const autocompleteInput = ref();
 
@@ -84,7 +91,6 @@ export default {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
         };
-        console.log(state.location);
       });
     });
 
@@ -95,7 +101,7 @@ export default {
     };
 
     return {
-      ...toRefs(state),
+      state,
       autocompleteInput,
       onInput,
       navigateOutline,

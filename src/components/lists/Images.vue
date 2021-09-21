@@ -13,13 +13,13 @@
         :key="image.id"
         size-xs="12"
         size-sm="6"
-        size-md="4"
-        size-lg="3"
-        size-xl="3"
+        size-md="12"
+        size-lg="12"
+        size-xl="12"
       >
         <ImageWithCaption
-          :image="image"
-          @imageChange="(newImage) => (state.images[index] = newImage)"
+          :modelValue="image"
+          @update:modelValue="(newImage) => (state.images[index] = newImage)"
           @deleteImage="deleteImage(index)"
           style="margin: auto;"
           :showCaption="true"
@@ -47,9 +47,9 @@ import { add } from "ionicons/icons";
 export default {
   name: "Images",
   props: {
-    images: Array,
+    modelValue: Array,
   },
-  emits: ["imagesChange"],
+  emits: ["update:modelValue"],
   components: {
     ImageWithCaption,
     IonGrid,
@@ -61,7 +61,7 @@ export default {
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      images: props.images,
+      images: props.modelValue,
     });
 
     const addImage = () => {
@@ -76,7 +76,7 @@ export default {
     };
 
     watch(state.images, (newImages) => {
-      emit("imagesChange", newImages);
+      emit("update:modelValue", newImages);
     });
 
     return {

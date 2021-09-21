@@ -1,68 +1,114 @@
 <template>
-  <ion-item>
-    <ion-icon v-if="type == 'customer'" :icon="cartOutline"></ion-icon>
-    <ion-icon v-if="type == 'employee'" :icon="hammerOutline"></ion-icon>
-    <ion-label style="margin-left: 10px;"
-      >Select {{ type.charAt(0).toUpperCase() + type.slice(1) }}</ion-label
+  <ion-toolbar>
+    <ion-item>
+      <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
+      <ion-icon
+        v-if="type == 'employee'"
+        :icon="icons.hammerOutline"
+      ></ion-icon>
+      <ion-select
+        @ionChange="$emit('update:modelValue', $event.detail.value)"
+        :value="modelValue"
+        :placeholder="'Select ' + capitalize(type)"
+        :key="modelValue"
+      >
+        <ion-select-option v-for="name in names" :key="name" :value="name">{{
+          name
+        }}</ion-select-option>
+      </ion-select>
+      <ion-buttons slot="end">
+        <ion-fab-button size="small" @click="newUserModalIsOpen = true">
+          <ion-icon :icon="icons.add"></ion-icon>
+        </ion-fab-button>
+      </ion-buttons>
+    </ion-item>
+    <ion-modal
+      :is-open="newUserModalIsOpen"
+      @didDismiss="newUserModalIsOpen = false"
+      css-class="new-user-modal"
     >
-    <ion-select
-      style="border: none !important;"
-      @ionChange="selectName($event)"
-      :value="selectedName"
-    >
-      <ion-select-option v-for="name in names" :key="name" :value="name">{{
-        name
-      }}</ion-select-option>
-    </ion-select>
-  </ion-item>
+      <NewUserModal
+        :type="type"
+        @userAdded="addUser"
+        @didDismiss="newUserModalIsOpen = false"
+      />
+    </ion-modal>
+  </ion-toolbar>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 import {
+  IonToolbar,
   IonItem,
-  IonLabel,
   IonSelect,
   IonSelectOption,
   IonIcon,
+  IonFabButton,
+  IonButtons,
+  IonModal,
 } from "@ionic/vue";
 
-import { cartOutline, hammerOutline } from "ionicons/icons";
+import { cartOutline, hammerOutline, add } from "ionicons/icons";
+
+import store from "@/store";
+
+import NewUserModal from "@/components/modals/NewUserModal.vue";
+
+import { capitalize } from "@/helpers";
 
 export default defineComponent({
   name: "User Select",
-  props: ["names", "selectedName", "type"],
+  props: {
+    modelValue: String,
+    names: Array,
+    type: String,
+  },
+  emits: ["update:modelValue", "userAdded"],
   components: {
+    IonToolbar,
     IonItem,
-    IonLabel,
     IonSelect,
     IonSelectOption,
     IonIcon,
+    IonFabButton,
+    IonButtons,
+    IonModal,
+    NewUserModal,
   },
-  emits: ["userChange"],
-  setup(props, { emit }) {
-    console.log(props);
-    const selectName = (e: CustomEvent) => {
-      if (e.detail.value) {
-        emit("userChange", e.detail.value);
-      }
+  setup(props: any, { emit }: { emit: any }) {
+    const newUserModalIsOpen = ref(false);
+
+    const addUser = async (dets: { name: string; email: string }) => {
+      const { name, email } = dets;
+      if (props.type == "customer") await store.addCustomer(name, email);
+      else if (props.type == "employee") await store.addEmployee(name, email);
+      else throw Error("No user type was provided");
+
+      emit("update:modelValue", name);
     };
+
     return {
-      cartOutline,
-      hammerOutline,
-      selectName,
+      icons: {
+        add,
+        cartOutline,
+        hammerOutline,
+      },
+      addUser,
+      capitalize,
+      newUserModalIsOpen,
     };
   },
 });
 </script>
 
 <style scoped>
-ion-card {
-  max-width: 500px;
-}
 ion-item {
   padding-bottom: 0;
   margin-bottom: 0;
+}
+ion-select {
+  margin-inline-start: 10px;
 }
 </style>

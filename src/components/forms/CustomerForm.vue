@@ -7,20 +7,21 @@
           <ion-col size="12" size-sm="6">
             <ion-item>
               <ion-label position="stacked">
-                <ion-icon :icon="mailOutline"></ion-icon>
+                <ion-icon :icon="icons.mailOutline"></ion-icon>
                 <span style="padding: 5px;">Email</span>
               </ion-label>
               <ion-input
                 type="email"
+                disabled
                 placeholder="email"
-                :value="state.companyState.selectedCustomer.email"
+                v-model="state.customer.email"
               ></ion-input>
             </ion-item>
           </ion-col>
           <ion-col size="12" size-sm="6">
             <ion-item>
               <ion-label position="stacked">
-                <ion-icon :icon="callOutline"></ion-icon>
+                <ion-icon :icon="icons.callOutline"></ion-icon>
                 <span style="padding: 5px;">Phone</span>
               </ion-label>
               <ion-input
@@ -28,14 +29,14 @@
                 inputmode="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 placeholder="123-123-1234"
-                :value="state.companyState.selectedCustomer.phone"
+                v-model="state.customer.phone"
               ></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-list>
-    <Address :value="state.companyState.selectedCustomer.location" />
+    <Address v-model="state.customer.location" />
     <ion-list>
       <ion-list-header>Notes</ion-list-header>
       <ion-grid>
@@ -46,7 +47,7 @@
               <ion-textarea
                 auto-grow
                 placeholder="Notes on customer"
-                :value="state.companyState.selectedCustomer.customerNotes"
+                v-model="state.customer.customerNotes"
               ></ion-textarea>
             </ion-item>
           </ion-col>
@@ -56,7 +57,7 @@
               <ion-textarea
                 auto-grow
                 placeholder="Notes on property"
-                :value="state.companyState.selectedCustomer.propertyNotes"
+                :value="state.customer.propertyNotes"
               ></ion-textarea>
             </ion-item>
           </ion-col>
@@ -65,12 +66,16 @@
     </ion-list>
     <ion-list>
       <ion-list-header>
-        Property Images
+        <h4 style="margin; 0">
+          Property Images
+        </h4>
+
+        <AddButton @click="addImage" />
       </ion-list-header>
       <ion-grid>
         <ion-row class="ion-justify-content-left">
           <ion-col
-            v-for="image in state.companyState.selectedCustomer.propertyImages"
+            v-for="(image, index) in state.customer.propertyImages"
             :key="image.ref"
             size-xs="12"
             size-sm="6"
@@ -78,7 +83,11 @@
             size-lg="3"
             size-xl="3"
           >
-            <ImageWithCaption :image="image" />
+            <ImageWithCaption
+              :modelValue="image"
+              :showCaption="true"
+              @deleteImage="state.customer.propertyImages.splice(index, 1)"
+            />
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -103,10 +112,34 @@ import {
 import ImageWithCaption from "@/components/ImageWithCaption.vue";
 import Address from "@/components/Address.vue";
 import { mailOutline, callOutline } from "ionicons/icons";
-import store from "@/store";
+import { reactive } from "@vue/reactivity";
+import { emptyImage } from "@/types";
+import AddButton from "@/components/buttons/AddButton.vue";
 
 export default {
   name: "Customer Form",
+  props: {
+    modelValue: Object,
+  },
+  emits: ["update:modelValue"],
+  setup(props: any) {
+    const state = reactive({
+      customer: props.modelValue,
+    });
+
+    const addImage = () => {
+      state.customer.propertyImages.unshift(emptyImage(Date.now()));
+    };
+
+    return {
+      state,
+      addImage,
+      icons: {
+        mailOutline,
+        callOutline,
+      },
+    };
+  },
   components: {
     IonList,
     IonListHeader,
@@ -120,13 +153,7 @@ export default {
     IonIcon,
     Address,
     ImageWithCaption,
-  },
-  setup() {
-    return {
-      mailOutline,
-      callOutline,
-      state: store.state,
-    };
+    AddButton,
   },
 };
 </script>

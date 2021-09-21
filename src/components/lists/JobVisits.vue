@@ -4,13 +4,13 @@
       <ion-item-divider>
         <ion-label>Future Visits</ion-label>
       </ion-item-divider>
-      <JobVisitItem
+      <VisitItem
         v-for="(visit, index) in futureVisits"
         :key="visit.id"
-        @deleteVisit="deleteVisit(index)"
-        @openVisit="$emit('openVisit', visit.id)"
         :visit="visit"
-        @updateVisit="(newVisit) => (state.visits[index] = newVisit)"
+        @deleteVisit="deleteVisit(index)"
+        @openVisit="$emit('openVisit', visit)"
+        type="job"
       />
     </ion-item-group>
 
@@ -18,13 +18,13 @@
       <ion-item-divider>
         <ion-label>Past Visits</ion-label>
       </ion-item-divider>
-      <JobVisitItem
+      <VisitItem
         v-for="(visit, index) in pastVisits"
         :key="visit.id"
-        @deleteVisit="deleteVisit(index)"
-        @openVisit="$emit('openVisit', visit.id)"
         :visit="visit"
-        @updateVisit="(newVisit) => (state.visits[index] = newVisit)"
+        @deleteVisit="deleteVisit(index)"
+        @openVisit="$emit('openVisit', visit)"
+        type="job"
       />
     </ion-item-group>
 
@@ -44,31 +44,34 @@ import {
   IonItemGroup,
   IonItemDivider,
 } from "@ionic/vue";
-import JobVisitItem from "./items/JobVisitItem.vue";
 import { add } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent, watch } from "@vue/runtime-core";
 import router from "@/router";
-import { emptyVisit, sampleVisit, Visit } from "@/types";
+import { emptyVisit, Visit } from "@/types";
+import { dateToString } from "@/helpers";
+import VisitItem from "./items/VisitItem.vue";
 
 export default defineComponent({
-  name: "Day Visits",
-  props: ["visits", "date"],
-  emits: ["openVisit", "addVisit"],
+  name: "Job Visits",
+  props: {
+    modelValue: Array,
+  },
+  emits: ["update:modelValue", "openVisit"],
   components: {
     IonIcon,
     IonItem,
     IonLabel,
-    JobVisitItem,
     IonList,
     IonItemGroup,
     IonItemDivider,
+    VisitItem,
   },
   setup(props: any, { emit }: { emit: any }) {
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
       // RETRIEVE VISITS ALREADY EXISTING ON THIS DATE/EMPLOYEE
-      visits: [sampleVisit, sampleVisit],
+      visits: [...props.modelValue],
     });
 
     const futureVisits = computed(() => {
@@ -89,24 +92,23 @@ export default defineComponent({
     };
 
     const addVisit = () => {
-      // Create a new visit & add to database
-      state.visits.push(emptyVisit(props.date));
-      emit("openVisit", "new_visit_id");
+      // CREATE NEW VISIT AND ADD TO DATABASE
+      const newVisit = emptyVisit(dateToString(new Date()));
+
+      state.visits.push(newVisit);
+      // PASS THIS VISIT INTO THE EMIT
+      emit("openVisit", newVisit);
     };
 
-    const reorderVisits = (ev: CustomEvent) => {
-      ev.detail.complete();
-      const temp = state.visits[ev.detail.from];
-      state.visits[ev.detail.from] = state.visits[ev.detail.to];
-      state.visits[ev.detail.to] = temp;
-    };
+    watch(state.visits, (newVisits) => {
+      emit("update:modelValue", newVisits);
+    });
 
     return {
       state,
       add,
       router,
       deleteVisit,
-      reorderVisits,
       addVisit,
       futureVisits,
       pastVisits,

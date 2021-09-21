@@ -1,7 +1,7 @@
 <template>
   <div>
     <ion-item>
-      <ion-icon :icon="calendarNumberOutline"></ion-icon>
+      <ion-icon :icon="icons.calendarNumberOutline"></ion-icon>
       <ion-label style="margin-left: 7px;">Date of Visit </ion-label>
       <ion-datetime
         display-format="MM/DD/YYYY"
@@ -37,34 +37,36 @@
     <!-- Employee Select -->
 
     <UserSelect
-      v-if="showEmployeeSelect"
+      v-if="!hideEmployeeSelect"
       :names="
         store.state.companyState.employees.map((employee) => employee.name)
       "
-      :selectedName="state.visit.employeeName"
-      @userChange="(name) => (state.visit.employeeName = name)"
+      v-model="state.visit.employeeName"
       type="employee"
     />
     <!-- Customer Select -->
     <UserSelect
-      v-if="!state.visit.job.id"
+      v-if="!state.visit.job"
       :names="
         store.state.companyState.customers.map((customer) => customer.name)
       "
-      :selectedName="state.visit.customerName"
-      @userChange="(name) => (state.visit.customerName = name)"
+      v-model="state.visit.customerName"
       type="customer"
     />
     <!-- Job Attacher -->
-    <ion-item>
+    <ion-item v-if="!hideJob">
       <ion-toolbar>
         <ion-note>Attach a Job</ion-note>
-        <ion-label v-if="state.visit.job.id"
+        <ion-label v-if="state.visit.job"
           >"{{ state.visit.job.name }}"</ion-label
         >
-        <ion-buttons :slot="state.visit.job.id ? 'end' : 'end'">
+        <ion-buttons slot="end">
+          <ion-chip v-if="state.visit.job" @click="state.visit.job = null">
+            <ion-icon :icon="icons.trashOutline"></ion-icon>
+            <ion-label>Clear Job</ion-label>
+          </ion-chip>
           <ion-chip @click="jobsModalIsOpen = true">
-            <ion-icon :icon="calendarOutline"></ion-icon>
+            <ion-icon :icon="icons.calendarOutline"></ion-icon>
             <ion-label style="margin-top: 6px;">Attach New</ion-label>
           </ion-chip>
         </ion-buttons>
@@ -97,8 +99,12 @@
     <h3 class="ion-text-center">
       <ion-text>Visit Notes</ion-text>
     </h3>
-    <ion-item>
-      <ion-textarea auto-grow v-model="state.visit.notes"></ion-textarea>
+    <ion-item v-if="state.showTextAreas">
+      <ion-textarea
+        auto-grow
+        v-model="state.visit.notes"
+        placeholder="Notes for the visit"
+      ></ion-textarea>
     </ion-item>
   </div>
 </template>
@@ -125,7 +131,11 @@ import {
 import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
-import { calendarNumberOutline, calendarOutline } from "ionicons/icons";
+import {
+  calendarNumberOutline,
+  calendarOutline,
+  trashOutline,
+} from "ionicons/icons";
 import store from "@/store";
 import { Job } from "@/types";
 import { reactive, ref, watch } from "vue";
@@ -133,10 +143,11 @@ import { reactive, ref, watch } from "vue";
 export default {
   name: "Visit Main",
   props: {
-    visit: Object,
-    showEmployeeSelect: Boolean,
+    modelValue: Object,
+    hideEmployeeSelect: Boolean,
+    hideJob: Boolean,
   },
-  emits: ["visitChanged"],
+  emits: ["update:modelValue"],
   components: {
     IonLabel,
     IonDatetime,
@@ -159,8 +170,11 @@ export default {
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      visit: props.visit,
+      visit: props.modelValue,
+      showTextAreas: false,
     });
+
+    setTimeout(() => (state.showTextAreas = true), 250);
 
     const changeDate = (ev: CustomEvent) => {
       state.visit.date = ev.detail.value.substring(0, 10);
@@ -171,19 +185,21 @@ export default {
     const attachJob = (job: Job) => {
       jobsModalIsOpen.value = false;
       state.visit.job = { id: job.id, name: job.name };
-      console.log(job);
       state.visit.customerName = job.customerName;
     };
 
     watch(state.visit, (newVisit) => {
-      emit("visitChanged", newVisit);
+      emit("update:modelValue", newVisit);
     });
 
     return {
       state,
-      calendarNumberOutline,
-      calendarOutline,
       store,
+      icons: {
+        calendarNumberOutline,
+        calendarOutline,
+        trashOutline,
+      },
       changeDate,
       jobsModalIsOpen,
       attachJob,

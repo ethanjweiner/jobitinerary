@@ -1,120 +1,81 @@
 <template>
-  <ion-card-header>
-    <div class="ion-text-center">
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Dates
-        </ion-text>
-      </h3>
-    </div>
+  <div style="height: 100%;">
+    <ion-card-header>
+      <ion-card-title>
+        Days
+      </ion-card-title>
 
-    <ion-item>
-      <ion-input
-        type="date"
-        v-model="searchDate"
-        placeholder="Search by date"
-      ></ion-input>
-    </ion-item>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-content>
-      <ion-list>
-        <DayItem v-for="day in filteredDays" :key="day.date" :day="day" />
-      </ion-list>
-
-      <ion-infinite-scroll
-        @ionInfinite="loadData($event)"
-        threshold="100px"
-        id="infinite-scroll"
+      <ion-item>
+        <ion-input
+          type="date"
+          v-model="searchDate"
+          placeholder="Search by date"
+        ></ion-input>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <InfiniteList
+        :key="searchDate"
+        :pushQuantity="6"
+        :sampleItem="sampleCustomerDay"
+        :searchParams="['date']"
+        :searchFilter="searchDate"
       >
-        <ion-infinite-scroll-content
-          loading-spinner="bubbles"
-          loading-text="Loading days..."
-        >
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
-    </ion-content>
-  </ion-card-content>
+        <template v-slot:item="itemProps">
+          <DayItem
+            :day="itemProps.item"
+            @click="
+              router.push({
+                name: 'Customer Day',
+                params: { username: customerName, date: itemProps.item.date },
+              })
+            "
+          />
+        </template>
+      </InfiniteList>
+    </ion-card-content>
+  </div>
 </template>
 
 <script lang="ts">
 import {
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonList,
   IonCardHeader,
   IonInput,
-  IonText,
-  IonContent,
+  IonCardTitle,
   IonCardContent,
   IonItem,
 } from "@ionic/vue";
+import { ref } from "vue";
+import router from "@/router";
+
+import { sampleCustomerDay } from "@/types";
 
 import DayItem from "./items/CustomerDayItem.vue";
-
-import { computed, ref } from "vue";
-
-import date from "date-and-time";
-import { dateToString } from "@/helpers";
+import InfiniteList from "./InfiniteList.vue";
 
 export default {
   name: "Customer Days",
-  components: {
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonList,
-    DayItem,
-    IonCardHeader,
-    IonInput,
-    IonText,
-    IonContent,
-    IonCardContent,
-    IonItem,
+  props: {
+    customerName: String,
+    dbRef: String,
   },
   setup() {
     const searchDate = ref<string>("");
-    // Retrieve dates in which the given customer worked
-    const days = ref<Array<{ date: string }>>([]);
-
-    const filteredDays = computed(() => {
-      if (searchDate.value)
-        return days.value.filter(
-          (day) =>
-            date.format(new Date(day.date), "YYYY-MM-DD") == searchDate.value
-        );
-      return days.value;
-    });
-
-    const pushData = () => {
-      const max = days.value.length + 5;
-      const min = max - 5;
-      for (let i = min; i < max; i++) {
-        days.value.push({ date: dateToString(new Date()) });
-      }
-    };
-
-    const loadData = (ev: any) => {
-      setTimeout(() => {
-        pushData();
-        console.log("Loaded data");
-        ev.target.complete();
-
-        // App logic to determine if all data is loaded
-        // and disable the infinite scroll
-        if (days.value.length == 1000) {
-          ev.target.disabled = true;
-        }
-      }, 500);
-    };
-
-    pushData();
 
     return {
-      loadData,
-      days,
-      filteredDays,
       searchDate,
+      sampleCustomerDay,
+      router,
     };
+  },
+  components: {
+    DayItem,
+    IonCardHeader,
+    IonInput,
+    IonCardTitle,
+    IonCardContent,
+    InfiniteList,
+    IonItem,
   },
 };
 </script>

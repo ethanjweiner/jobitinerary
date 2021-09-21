@@ -1,7 +1,5 @@
 <template>
   <ion-page>
-    <!-- Note: This setup is the "collapsible large title setup" -->
-    <!-- Learn more at https://ionicframework.com/docs/api/title#collapsible-large-titles -->
     <ion-header>
       <ion-toolbar>
         <ion-title>Home</ion-title>
@@ -11,24 +9,28 @@
     <ion-content :fullscreen="true">
       <ion-grid>
         <ion-row class="ion-justify-content-around">
-          <ion-col size="12" size-sm="6" id="visits-column">
+          <ion-col
+            size-xs="12"
+            size-sm="12"
+            size-md="6"
+            size-lg="6"
+            size-xl="6"
+            class="visits-column"
+          >
             <ion-card>
-              <Visits :visits="[sampleVisit, sampleVisit]" />
+              <Visits />
             </ion-card>
           </ion-col>
           <ion-col
-            size="12"
-            size-sm="6"
-            class="ion-hide-sm-down"
-            id="jobs-column"
+            size-xs="12"
+            size-sm="12"
+            size-md="6"
+            size-lg="6"
+            size-xl="6"
+            class="jobs-column"
           >
             <ion-card>
-              <Jobs :showCustomer="true" />
-            </ion-card>
-          </ion-col>
-          <ion-col size="12" id="messages-column">
-            <ion-card>
-              <Messages />
+              <Jobs />
             </ion-card>
           </ion-col>
         </ion-row>
@@ -55,17 +57,15 @@ import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import CreateButton from "@/components/buttons/CreateButton.vue";
 import Visits from "@/components/lists/Visits.vue";
 import Jobs from "@/components/lists/Jobs.vue";
-import Messages from "@/components/lists/Messages.vue";
-import { sampleVisit } from "@/types";
 
 export default {
   name: "Home",
   components: {
+    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonPage,
     SettingsButton,
     CreateButton,
     Visits,
@@ -73,14 +73,7 @@ export default {
     IonRow,
     IonCol,
     Jobs,
-    Messages,
     IonCard,
-  },
-  setup() {
-    // Load all data in this component --> Pass to lower level components
-    return {
-      sampleVisit,
-    };
   },
 };
 </script>
@@ -96,13 +89,18 @@ ion-row {
 ion-col {
   margin-top: 10px;
 }
-#visits-column,
-#jobs-column {
-  height: 60%;
+.visits-column,
+.jobs-column {
+  height: 100%;
 }
-#messages-column {
-  height: 40%;
+
+@media (max-width: 768px) {
+  .visits-column,
+  .jobs-column {
+    height: 50%;
+  }
 }
+
 .ios > ion-col {
   margin-top: 0px;
 }

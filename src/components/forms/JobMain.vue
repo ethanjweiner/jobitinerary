@@ -73,22 +73,23 @@ import {
   IonDatetime,
   IonTextarea,
 } from "@ionic/vue";
+import { watch } from "@vue/runtime-core";
+
 import { Visit } from "@/types";
 
 export default {
   name: "Job Main",
   props: {
-    job: Object,
+    modelValue: Object,
     visits: Array,
   },
-  emits: ["jobChanged"],
-  setup(props: any) {
-    console.log(props.visits);
+  emits: ["update:modelValue"],
+  setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      job: props.job,
+      job: props.modelValue,
     });
 
-    // Retrieve all visits, and compute hours per employee based on visits
+    // Job metrics
 
     // Step 1: Extract employees from visits
     const employeeNames = [
@@ -109,12 +110,15 @@ export default {
       });
     });
 
+    // Step 3: Determine the total number of hours
     const totalHours = computed(() =>
       props.visits.reduce(
         (hoursAcc: number, visit: Visit) => hoursAcc + visit.time.hours,
         0
       )
     );
+
+    watch(state.job, (newJob) => emit("update:modelValue", newJob));
 
     return {
       state,

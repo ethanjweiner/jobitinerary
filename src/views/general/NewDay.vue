@@ -26,14 +26,13 @@
               "
               :selectedName="state.employeeName"
               type="employee"
-              @userChange="(name) => (state.employeeName = name)"
+              :key="state.employeeName"
+              v-model="state.employeeName"
             />
             <div class="ion-text-start">
               <h3 class="text-secondary">Select a Date</h3>
             </div>
-            <DateSelect
-              @dateChange="(newDate) => (state.date = newDate.substring(0, 10))"
-            />
+            <DateSelect v-model="state.date" />
             <ion-button expand="block" color="primary" @click="createDay"
               >Create Day</ion-button
             >

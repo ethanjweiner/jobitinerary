@@ -79,10 +79,6 @@ ion-list {
   padding-top: 0 !important;
 }
 
-form ion-label {
-  margin-bottom: 10px !important;
-}
-
 .list {
   height: 400px;
 }
@@ -95,4 +91,9 @@ form ion-label {
 ion-title {
   padding-inline-start: 15px;
   padding-inline-end: 25px;
+}
+
+.new-user-modal .modal-wrapper {
+  height: 217px;
+  width: 350px;
 }

@@ -1,30 +1,28 @@
 <template>
   <ion-card style="width: fit-content;">
     <ion-toolbar>
-      <ion-buttons slot="start" v-if="showUploadOption">
-        <ion-button @click="uploadImage">
-          <ion-icon :icon="cameraOutline"></ion-icon>
-          <span style="padding-left: 5px;">Upload Image</span>
-        </ion-button>
+      <ion-buttons slot="start" v-if="!hideUploadOption">
+        <ImageUploader @imageChange="changeImage" />
       </ion-buttons>
 
       <ion-buttons slot="end">
-        <ion-button @click="$emit('deleteImage')">
-          <ion-icon :icon="close"></ion-icon>
+        <ion-button @click="$emit('deleteImage')" v-if="!hideClose">
+          <ion-icon :icon="icons.close"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
-    <img v-if="image.ref" src="../images/splash.png" alt="Image" />
+    <!-- Change the src to be the image url -->
+    <img v-if="state.image.ref" :src="state.imageURL" alt="Image" />
     <ion-textarea
       v-model="state.image.caption"
       placeholder="Caption"
-      v-if="showCaption"
+      v-if="!hideCaption"
     ></ion-textarea>
   </ion-card>
 </template>
 
 <script lang="ts">
-import { computed, reactive } from "@vue/reactivity";
+import { reactive } from "@vue/reactivity";
 import { close, cameraOutline } from "ionicons/icons";
 import {
   IonCard,
@@ -35,34 +33,42 @@ import {
   IonTextarea,
 } from "@ionic/vue";
 import { watch } from "@vue/runtime-core";
+import ImageUploader from "./ImageUploader.vue";
+import { getImageURL } from "@/helpers";
 
 export default {
   name: "Image With Caption",
-  props: ["image", "showUploadOption", "showCaption"],
+  props: {
+    modelValue: Object,
+    hideUploadOption: Boolean,
+    hideCaption: Boolean,
+    hideClose: Boolean,
+  },
+  emits: ["update:modelValue", "deleteImage"],
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      image: props.image,
+      image: props.modelValue,
+      imageURL: "",
     });
 
-    const uploadImage = () => {
-      console.log("Uplading image...");
+    const changeImage = async (imageRef: string) => {
+      state.image.ref = imageRef;
+      state.imageURL = await getImageURL(imageRef);
     };
 
-    const imageURL = computed(() => {
-      // Upon any ref change, retrieve a new image URL
-      return state.image.ref;
-    });
+    if (state.image.ref)
+      getImageURL(state.image.ref).then((url) => (state.imageURL = url));
 
     watch(state.image, (newImage) => {
-      emit("imageChange", newImage);
+      emit("update:modelValue", newImage);
     });
 
+    // Retrieve image URL on load with saved ref
+
     return {
-      imageURL,
-      close,
-      cameraOutline,
       state,
-      uploadImage,
+      icons: { close, cameraOutline },
+      changeImage,
     };
   },
   components: {
@@ -72,6 +78,7 @@ export default {
     IonButtons,
     IonIcon,
     IonTextarea,
+    ImageUploader,
   },
 };
 </script>
@@ -82,6 +89,5 @@ img {
 }
 ion-textarea {
   margin: 0;
-  padding-left: 8px !important;
 }
 </style>

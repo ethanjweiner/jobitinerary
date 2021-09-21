@@ -3,6 +3,7 @@
     <div>
       <ion-label>
         <ion-text>
+          <!-- Add more information about day here (e.g. total hours worked) -->
           {{ day.date }}
         </ion-text>
       </ion-label>

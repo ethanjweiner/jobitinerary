@@ -17,7 +17,7 @@
         {{ state.day.time.hours }} hours @ ${{ hourlyRate }}/hr
       </ion-note>
     </div>
-    <ion-buttons slot="end" v-if="showPaymentToggle">
+    <ion-buttons slot="end" v-if="showPaidToggle">
       <ion-note style="margin: auto;" v-if="state.day.paid"
         ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
       >
@@ -50,7 +50,7 @@ export default {
   name: "Employee Day Item",
   props: {
     day: Object,
-    showPaymentToggle: Boolean,
+    showPaidToggle: Boolean,
   },
   components: {
     IonItem,

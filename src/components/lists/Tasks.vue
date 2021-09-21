@@ -1,47 +1,73 @@
 <template>
-  <ion-reorder-group @ionItemReorder="reorderTasks($event)" disabled="false">
-    <Task
-      v-for="(task, index) in state.tasks"
-      :key="task.id"
-      @deleteTask="deleteTask(index)"
-      :task="task"
-      @updateTask="(newTask) => (state.tasks[index] = newTask)"
-    />
-    <ion-item button color="primary" @click="addTask">
-      <ion-icon :icon="add"></ion-icon>
-      <ion-label>Add Task</ion-label>
+  <div>
+    <ion-item>
+      <ion-toggle v-model="state.enableReorder"></ion-toggle>
+      <ion-label>Reorder Tasks</ion-label>
     </ion-item>
-  </ion-reorder-group>
+    <ion-reorder-group
+      @ionItemReorder="reorderTasks($event)"
+      :disabled="!state.enableReorder"
+    >
+      <Task
+        v-for="(task, index) in state.tasks"
+        :key="task.id"
+        @deleteTask="deleteTask(index)"
+        :task="task"
+        @updateTask="(newTask) => (state.tasks[index] = newTask)"
+      />
+      <ion-item button color="primary" @click="addTask">
+        <ion-icon :icon="add"></ion-icon>
+        <ion-label>Add Task</ion-label>
+      </ion-item>
+    </ion-reorder-group>
+  </div>
 </template>
 
 <script lang="ts">
-import { IonReorderGroup, IonIcon, IonItem, IonLabel } from "@ionic/vue";
-import Task from "./items/Task.vue";
-import { add } from "ionicons/icons";
+import {
+  IonReorderGroup,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonToggle,
+} from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { defineComponent, watch } from "@vue/runtime-core";
+import { add } from "ionicons/icons";
+
+import Task from "./items/Task.vue";
 
 export default defineComponent({
   name: "Tasks",
-  props: ["tasks"],
-  emits: ["tasksChanged"],
+  props: {
+    modelValue: Array,
+  },
+  emits: ["update:modelValue"],
   components: {
     IonReorderGroup,
     Task,
     IonItem,
     IonLabel,
     IonIcon,
+    IonToggle,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      tasks: [...props.tasks],
+      tasks: [...props.modelValue],
+      enableReorder: false,
     });
+
+    // Task updates
 
     const addTask = () => {
       state.tasks.push({
         text: "",
         complete: false,
-        image: null,
+        image: {
+          id: Date.now(),
+          ref: "",
+          caption: "",
+        },
         id: Date.now(),
       });
     };
@@ -58,18 +84,22 @@ export default defineComponent({
     };
 
     watch(state.tasks, (newTasks) => {
-      emit("tasksChanged", newTasks);
+      emit("update:modelValue", newTasks);
     });
 
     return {
+      state,
       add,
       reorderTasks,
       addTask,
       deleteTask,
-      state,
     };
   },
 });
 </script>
 
-<style></style>
+<style sceoped>
+ion-reorder-group {
+  cursor: grab;
+}
+</style>

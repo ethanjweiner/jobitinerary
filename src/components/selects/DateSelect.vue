@@ -8,7 +8,6 @@
 <script lang="ts">
 import { ref } from "@vue/reactivity";
 import { IonItem, IonLabel, IonDatetime } from "@ionic/vue";
-import { dateToString } from "@/helpers";
 import { watch } from "@vue/runtime-core";
 export default {
   name: "Date Select",
@@ -17,13 +16,15 @@ export default {
     IonLabel,
     IonDatetime,
   },
-  emits: ["dateChange"],
+  props: {
+    modelValue: String,
+  },
+  emits: ["update:modelValue"],
   setup(props: any, { emit }: { emit: any }) {
-    const date = ref(dateToString(new Date()));
+    const date = ref(props.modelValue);
 
     watch(date, (newDate) => {
-      console.log(newDate);
-      emit("dateChange", newDate);
+      emit("update:modelValue", newDate.substring(0, 10));
     });
 
     return {

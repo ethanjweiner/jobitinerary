@@ -68,7 +68,7 @@
         <ion-grid>
           <ion-chip>
             <ion-label
-              ><span class="payment-data">{{ days.length }}</span>
+              ><span class="payment-data">{{ unpaidDays }}</span>
               <span v-if="state.filterUnpaid">&nbsp;Unpaid </span>
               Work Days</ion-label
             >
@@ -105,69 +105,20 @@
       </ion-col>
       <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
         <ion-row>
-          <ion-card style="width: 100%; height: 200px;">
-            <ion-card-header>
-              <ion-card-title v-if="state.filterUnpaid"
-                >Unpaid Days</ion-card-title
-              >
-              <ion-card-title v-else>Days</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-content>
-                <ion-list>
-                  <DayItem
-                    v-for="(day, index) in days"
-                    :key="index"
-                    :day="day"
-                    :showPaymentToggle="true"
-                    @togglePaid="togglePaid(day)"
-                  />
-                </ion-list>
-                <ion-infinite-scroll
-                  @ionInfinite="loadDays($event)"
-                  threshold="100px"
-                  id="infinite-scroll"
-                >
-                  <ion-infinite-scroll-content
-                    loading-spinner="bubbles"
-                    loading-text="Loading days..."
-                  >
-                  </ion-infinite-scroll-content>
-                </ion-infinite-scroll>
-              </ion-content>
-            </ion-card-content>
+          <ion-card style="width: 100%; height: 300px;">
+            <!-- DB_REF SHOULD BE CONDITIONAL, DEPENDENT ON WHETHER FILTERING UNPAID -->
+            <EmployeeDays
+              :employeeName="state.employee.name"
+              :hideAdd="true"
+              :sampleItem="sampleDay"
+              :showPaidToggle="true"
+              :title="state.filterUnpaid ? 'Unpaid Dates' : 'All Dates'"
+            />
           </ion-card>
         </ion-row>
         <ion-row>
-          <ion-card style="width: 100%; height: 200px;">
-            <ion-card-header>
-              <ion-card-title v-if="state.filterUnpaid"
-                >Unpaid Expenses</ion-card-title
-              >
-              <ion-card-title v-else>Expenses</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-content>
-                <ion-list>
-                  <ExpenseItem
-                    v-for="expense in expenses"
-                    :key="expense.id"
-                    :expense="expense"
-                  />
-                </ion-list>
-                <ion-infinite-scroll
-                  @ionInfinite="loadExpenses($event)"
-                  threshold="100px"
-                  id="infinite-scroll"
-                >
-                  <ion-infinite-scroll-content
-                    loading-spinner="bubbles"
-                    loading-text="Loading days..."
-                  >
-                  </ion-infinite-scroll-content>
-                </ion-infinite-scroll>
-              </ion-content>
-            </ion-card-content>
+          <ion-card style="width: 100%; height: 250px;">
+            <Expenses />
           </ion-card>
         </ion-row>
       </ion-col>
@@ -176,13 +127,6 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, ref } from "@vue/reactivity";
-import store from "@/store";
-import CurrencyInput from "./inputs/CurrencyInput.vue";
-import { watch } from "@vue/runtime-core";
-import { timeOutline } from "ionicons/icons";
-import DayItem from "@/components/lists/items/EmployeeDayItem.vue";
-
 import {
   IonGrid,
   IonRow,
@@ -196,111 +140,54 @@ import {
   IonNote,
   IonDatetime,
   IonToggle,
-  IonList,
   IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonCardTitle,
-  IonContent,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
   IonText,
 } from "@ionic/vue";
-import { sampleDay, sampleExpense, Day, Expense } from "@/types";
-import ExpenseItem from "./lists/items/Expense.vue";
+import { computed, reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
+import { timeOutline } from "ionicons/icons";
+
+import store from "@/store";
+
+import { sampleDay, Day, Employee } from "@/types";
+
+import CurrencyInput from "./inputs/CurrencyInput.vue";
+import EmployeeDays from "./lists/EmployeeDays.vue";
+import Expenses from "./lists/ExpensesInfinite.vue";
+
+interface State {
+  employee: Employee;
+  filterUnpaid: boolean;
+  filterByDate: boolean;
+  startDate: string;
+  endDate: string;
+}
 
 export default {
   name: "Payment Info",
   props: {
-    employee: Object,
+    modelValue: Object,
   },
-  components: {
-    CurrencyInput,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonItem,
-    IonChip,
-    IonLabel,
-    IonRadioGroup,
-    IonRadio,
-    IonIcon,
-    IonNote,
-    IonDatetime,
-    IonToggle,
-    IonList,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
-    DayItem,
-    IonContent,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    ExpenseItem,
-    IonText,
-  },
+  emits: ["update:modelValue"],
   setup(props: any, { emit }: { emit: any }) {
     // Set hourly rate dependent on whether employee is given
-    const state = reactive({
-      employee: props.employee,
+    const state = reactive<State>({
+      employee: props.modelValue,
       filterUnpaid: true,
       filterByDate: false,
       startDate: "",
       endDate: "",
     });
 
-    const days = ref<Array<Day>>([]);
+    watch(state.employee, (newEmployee) => {
+      emit("update:modelValue", newEmployee);
+    });
 
-    const pushDays = () => {
-      const max = days.value.length + 5;
-      const min = max - 5;
-      for (let i = min; i < max; i++) {
-        days.value.push(sampleDay);
-      }
-    };
+    // QUERY ALL UNPAID DAYS, RETRIEVE DATA BASED ON THAT
 
-    const loadDays = (ev: any) => {
-      setTimeout(() => {
-        pushDays();
-        console.log("Loaded data");
-        ev.target.complete();
-
-        // App logic to determine if all data is loaded
-        // and disable the infinite scroll
-        if (days.value.length == 1000) {
-          ev.target.disabled = true;
-        }
-      }, 500);
-    };
-
-    pushDays();
-
-    const expenses = ref<Array<Expense>>([]);
-
-    const pushExpenses = () => {
-      const max = expenses.value.length + 5;
-      const min = max - 5;
-      for (let i = min; i < max; i++) {
-        expenses.value.push(sampleExpense);
-      }
-    };
-
-    const loadExpenses = (ev: any) => {
-      setTimeout(() => {
-        pushExpenses();
-        console.log("Loaded data");
-        ev.target.complete();
-
-        // App logic to determine if all data is loaded
-        // and disable the infinite scroll
-        if (days.value.length == 1000) {
-          ev.target.disabled = true;
-        }
-      }, 500);
-    };
-
-    pushExpenses();
+    const unpaidDays = computed(() => {
+      return 0;
+    });
 
     const hours = computed(() => {
       return 0;
@@ -321,28 +208,41 @@ export default {
     );
 
     const togglePaid = (day: Day) => {
-      // Chage the paid
+      // UPDATE PAID ATTRIBUTE
       console.log("Toggling paid for ", day);
     };
-
-    watch(state.employee, (newEmployee) => {
-      emit("employeeChanged", newEmployee);
-    });
 
     return {
       store,
       state,
-      loadDays,
-      loadExpenses,
-      days,
-      expenses,
+      unpaidDays,
       hours,
       hoursAmount,
       expensesAmount,
       totalAmount,
       timeOutline,
       togglePaid,
+      sampleDay,
     };
+  },
+  components: {
+    CurrencyInput,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonItem,
+    IonChip,
+    IonLabel,
+    IonRadioGroup,
+    IonRadio,
+    IonIcon,
+    IonNote,
+    IonDatetime,
+    IonToggle,
+    IonCard,
+    EmployeeDays,
+    Expenses,
+    IonText,
   },
 };
 </script>

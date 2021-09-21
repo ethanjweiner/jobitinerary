@@ -16,7 +16,12 @@
         "
         >Visit</ion-fab-button
       >
-      <ion-fab-button>Job</ion-fab-button>
+      <ion-fab-button
+        @click="
+          router.push({ name: 'New Job', params: { customerName: 'new' } })
+        "
+        >Job</ion-fab-button
+      >
     </ion-fab-list>
   </ion-fab>
 </template>

@@ -32,9 +32,6 @@ export default {
 </script>
 
 <style scoped>
-ion-textarea {
-  margin: 0;
-}
 ion-fab-button {
   transform: scale(1.2);
 }

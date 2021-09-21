@@ -2,30 +2,33 @@
   <Sections :sections="sections" :wrapCards="true">
     <template v-slot:dates>
       <div class="list">
-        <CustomerDays />
+        <CustomerDays :days="state.days" :customerName="state.customer.name" />
       </div>
     </template>
     <template v-slot:jobs>
       <div class="list">
-        <Jobs :showCustomer="false" />
+        <Jobs :jobs="state.jobs" :customerName="state.customer.name" />
       </div>
     </template>
     <template v-slot:customer-info>
-      <CustomerForm />
+      <CustomerForm v-model="state.customer" />
     </template>
     <template v-slot:sectionsAsGrid>
       <ion-row>
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <CustomerDays />
+              <CustomerDays
+                :days="state.days"
+                :customerName="state.customer.name"
+              />
             </div>
           </ion-card>
         </ion-col>
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <Jobs :showCustomer="false" />
+              <Jobs :jobs="state.jobs" :customerName="state.customer.name" />
             </div>
           </ion-card>
         </ion-col>
@@ -38,7 +41,7 @@
                 Customer Info
               </ion-card-title>
             </ion-card-header>
-            <CustomerForm />
+            <CustomerForm v-model="state.customer" />
           </ion-card>
         </ion-col>
       </ion-row>
@@ -57,6 +60,7 @@ import {
   IonCardHeader,
   IonCardTitle,
 } from "@ionic/vue";
+import { reactive, ref } from "@vue/reactivity";
 
 import {
   calendarOutline,
@@ -64,26 +68,25 @@ import {
   personOutline,
 } from "ionicons/icons";
 
+import store from "@/store";
+import { SectionsType } from "@/types";
+
 import Sections from "../Sections.vue";
-import { ref } from "@vue/reactivity";
-import { SectionType } from "@/types";
 import CustomerForm from "../forms/CustomerForm.vue";
 
 export default {
   name: "Customer",
-  components: {
-    Jobs,
-    Sections,
-    CustomerDays,
-    CustomerForm,
-    IonRow,
-    IonCol,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
+  props: {
+    username: String,
   },
-  setup() {
-    const sections = ref<Array<SectionType>>([
+  setup(props: any) {
+    const state = reactive({
+      customer: store.state.companyState.customers.find(
+        (customer) => customer.name == props.username
+      ),
+    });
+
+    const sections = ref<SectionsType>([
       {
         name: "Dates",
         icon: calendarNumberOutline,
@@ -100,9 +103,22 @@ export default {
         id: "customer-info",
       },
     ]);
+
     return {
       sections,
+      state,
     };
+  },
+  components: {
+    Jobs,
+    Sections,
+    CustomerDays,
+    CustomerForm,
+    IonRow,
+    IonCol,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
   },
 };
 </script>

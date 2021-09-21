@@ -1,205 +1,117 @@
 <template>
-  <ion-card-header>
-    <div class="ion-text-center">
-      <h3 class="list-header">
-        <ion-text color="dark">
-          Jobs
-        </ion-text>
-      </h3>
-      <ion-chip
-        @click="
-          router.push({ name: 'New Job', params: { customerName: 'new' } })
-        "
-      >
-        <ion-icon :icon="add"></ion-icon>
-        <ion-label>Add New</ion-label>
-      </ion-chip>
-    </div>
+  <div style="height: 100%;">
+    <ion-card-header>
+      <ion-card-title>
+        Jobs
+        <AddButton @click="createJob" />
+      </ion-card-title>
 
-    <ion-searchbar
-      v-model="searchText"
-      placeholder="Search by job name, customer, start date, description, etc."
-    ></ion-searchbar>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-content>
-      <ion-list>
-        <ion-item-group v-if="presentJobs.length">
-          <ion-item-divider>
-            <ion-label>Present Jobs</ion-label>
-          </ion-item-divider>
+      <ion-searchbar
+        class="ion-text-start"
+        v-model="searchText"
+        placeholder="Search by job name, customer, start date, description, etc."
+      ></ion-searchbar>
+    </ion-card-header>
+
+    <ion-card-content>
+      <InfiniteList
+        :key="searchText"
+        :splitters="splitters"
+        :pushQuantity="10"
+        :sampleItem="sampleJob"
+        :searchParams="['name', 'customer', 'startDate', 'description']"
+        :searchFilter="searchText"
+      >
+        <template v-slot:item="itemProps">
           <JobItem
-            v-for="job in presentJobs"
-            :key="job.id"
-            :job="job"
-            :showCustomer="showCustomer"
+            :job="itemProps.item"
+            :showCustomer="customerName ? false : true"
             @click="
               router.push({
                 name: 'Job',
-                params: { username: job.customerName, jobID: job.id },
+                params: {
+                  username: itemProps.item.customerName,
+                  jobID: itemProps.item.id,
+                },
               })
             "
           />
-        </ion-item-group>
-        <ion-item-group v-if="futureJobs.length">
-          <ion-item-divider>
-            <ion-label>Future Jobs</ion-label>
-          </ion-item-divider>
-          <JobItem
-            v-for="job in futureJobs"
-            :key="job.id"
-            :job="job"
-            :showCustomer="showCustomer"
-          />
-        </ion-item-group>
-        <ion-item-group v-if="pastJobs.length">
-          <ion-item-divider>
-            <ion-label>Past Jobs</ion-label>
-          </ion-item-divider>
-          <JobItem
-            v-for="job in pastJobs"
-            :key="job.id"
-            :job="job"
-            :showCustomer="showCustomer"
-          />
-        </ion-item-group>
-      </ion-list>
-
-      <ion-infinite-scroll
-        @ionInfinite="loadData($event)"
-        threshold="100px"
-        id="infinite-scroll"
-      >
-        <ion-infinite-scroll-content
-          loading-spinner="bubbles"
-          loading-text="Loading jobs..."
-        >
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
-    </ion-content>
-  </ion-card-content>
+        </template>
+      </InfiniteList>
+    </ion-card-content>
+  </div>
 </template>
 
 <script lang="ts">
 import {
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonList,
-  IonContent,
   IonCardHeader,
   IonSearchbar,
-  IonText,
+  IonCardTitle,
   IonCardContent,
-  IonChip,
-  IonLabel,
-  IonIcon,
-  IonItemGroup,
-  IonItemDivider,
 } from "@ionic/vue";
+import { reactive, ref } from "vue";
+import router from "@/router";
 
-import { includeItemInSearch } from "@/helpers";
+import { Job, sampleJob, Splitter } from "@/types";
 
 import JobItem from "./items/JobItem.vue";
-
-import { Job, sampleJob } from "@/types";
-
-import { computed, reactive, ref, toRefs } from "vue";
-
-import { add } from "ionicons/icons";
-
-import router from "@/router";
+import AddButton from "@/components/buttons/AddButton.vue";
+import InfiniteList from "./InfiniteList.vue";
 
 export default {
   name: "Jobs",
-  props: ["showCustomer"],
+  props: {
+    dbRef: Object, // Determine database query in parent component
+    customerName: String,
+  },
+  setup(props: any) {
+    const searchText = ref<string>("");
+
+    const state = reactive({
+      customerName: props.customerName ? props.customerName : "new",
+    });
+
+    const splitters = ref<Array<Splitter>>([
+      {
+        name: "Scheduled Jobs",
+        filter: (item: Job) => new Date(item.startDate) > new Date(),
+      },
+      {
+        name: "Current Jobs",
+        filter: (item: Job) =>
+          new Date(item.startDate) <= new Date() &&
+          new Date(item.endDate) >= new Date(),
+      },
+      {
+        name: "Past Jobs",
+        filter: (item: Job) => new Date(item.endDate) < new Date(),
+      },
+    ]);
+
+    const createJob = async () => {
+      router.push({
+        name: "New Job",
+        params: { customerName: state.customerName },
+      });
+    };
+
+    return {
+      state,
+      splitters,
+      createJob,
+      sampleJob,
+      searchText,
+      router,
+    };
+  },
   components: {
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonList,
-    IonContent,
     JobItem,
     IonCardHeader,
     IonSearchbar,
-    IonText,
+    IonCardTitle,
     IonCardContent,
-    IonChip,
-    IonLabel,
-    IonIcon,
-    IonItemGroup,
-    IonItemDivider,
-  },
-  setup() {
-    const state = reactive({
-      searchText: "",
-    });
-    const jobs = ref<Array<Job>>([]);
-
-    const filteredJobs = computed(() => {
-      if (state.searchText == "") return jobs.value;
-      return jobs.value.filter((job) =>
-        includeItemInSearch(job, state.searchText, [
-          "name",
-          "customerName",
-          "startDate",
-          "description",
-        ])
-      );
-    });
-
-    const pastJobs = computed(() => {
-      return filteredJobs.value.filter(
-        (job) => new Date(job.endDate) < new Date()
-      );
-    });
-
-    const presentJobs = computed(() => {
-      return filteredJobs.value.filter(
-        (job) =>
-          new Date(job.startDate) <= new Date() &&
-          new Date(job.endDate) >= new Date()
-      );
-    });
-
-    const futureJobs = computed(() => {
-      return filteredJobs.value.filter(
-        (job) => new Date(job.startDate) > new Date()
-      );
-    });
-
-    const pushData = () => {
-      const max = jobs.value.length + 5;
-      const min = max - 5;
-      for (let i = min; i < max; i++) {
-        jobs.value.push(sampleJob);
-      }
-    };
-
-    const loadData = (ev: any) => {
-      setTimeout(() => {
-        pushData();
-        console.log("Loaded data");
-        ev.target.complete();
-
-        // App logic to determine if all data is loaded
-        // and disable the infinite scroll
-        if (jobs.value.length == 1000) {
-          ev.target.disabled = true;
-        }
-      }, 500);
-    };
-
-    pushData();
-
-    return {
-      ...toRefs(state),
-      loadData,
-      jobs,
-      futureJobs,
-      pastJobs,
-      presentJobs,
-      add,
-      router,
-    };
+    AddButton,
+    InfiniteList,
   },
 };
 </script>

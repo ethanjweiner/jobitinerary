@@ -23,8 +23,10 @@ import { defineComponent, watch } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "Tasks",
-  props: ["tools"],
-  emits: ["toolsChanged"],
+  props: {
+    modelValue: Array,
+  },
+  emits: ["update:modelValue"],
   components: {
     IonReorderGroup,
     Tool,
@@ -34,7 +36,7 @@ export default defineComponent({
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      tools: [...props.tools],
+      tools: [...props.modelValue],
     });
 
     const addTool = () => {
@@ -57,7 +59,7 @@ export default defineComponent({
     };
 
     watch(state.tools, (newTools) => {
-      emit("toolsChanged", newTools);
+      emit("update:modelValue", newTools);
     });
 
     return {

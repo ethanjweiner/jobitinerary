@@ -24,18 +24,20 @@
                   (customer) => customer.name
                 )
               "
-              :selectedName="state.customerName"
+              v-model="state.customerName"
               type="customer"
-              @userChange="(name) => (state.customerName = name)"
             />
             <div class="ion-text-start">
-              <h3 class="text-secondary">Create a Name</h3>
+              <h3 class="text-secondary">Create a Job Name</h3>
             </div>
-            <ion-input
-              type="text"
-              placeholder="Descriptive name for the job"
-              v-model="state.jobName"
-            ></ion-input>
+            <ion-item>
+              <ion-input
+                type="text"
+                placeholder="Descriptive name for the job"
+                v-model="state.jobName"
+              ></ion-input>
+            </ion-item>
+
             <ion-button expand="block" color="primary" @click="createJob"
               >Create Job</ion-button
             >
@@ -64,6 +66,7 @@ import {
   IonButton,
   IonNote,
   IonInput,
+  IonItem,
 } from "@ionic/vue";
 
 import router from "@/router";
@@ -73,22 +76,6 @@ import { reactive } from "@vue/reactivity";
 
 export default {
   name: "Select Date",
-  components: {
-    IonPage,
-    IonContent,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonTitle,
-    IonBackButton,
-    UserSelect,
-    IonButton,
-    IonNote,
-    IonInput,
-  },
   props: {
     customerName: String,
   },
@@ -105,15 +92,32 @@ export default {
           name: "Job",
           params: { username: state.customerName, jobID: "sample_job_id" },
         });
-      else throw Error("Please select an employee and date.");
+      else throw Error("Please select a customer and job name.");
     };
 
     return {
+      store,
       router,
       state,
-      store,
       createJob,
     };
+  },
+  components: {
+    IonPage,
+    IonContent,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonTitle,
+    IonBackButton,
+    UserSelect,
+    IonButton,
+    IonNote,
+    IonInput,
+    IonItem,
   },
 };
 </script>

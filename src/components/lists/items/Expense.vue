@@ -1,17 +1,26 @@
 <template>
   <ion-item>
-    <ion-input
-      type="text"
-      placeholder="Name"
-      v-model="state.expense.name"
-    ></ion-input>
+    <div slot="start">
+      <ion-input
+        type="text"
+        placeholder="Name"
+        v-model="state.expense.name"
+        :disabled="hideControls"
+      ></ion-input>
+      <ion-note style="margin: 0;" v-if="showDate">
+        {{ state.expense.date }}
+      </ion-note>
+    </div>
+
     <CurrencyInput
+      slot="end"
       v-model="state.expense.cost"
       placeholder="Cost"
       :options="{ currency: 'USD' }"
+      :disabled="hideControls"
     />
 
-    <ion-buttons slot="end">
+    <ion-buttons slot="end" style="margin: 0;">
       <ion-note style="margin: auto;" v-if="state.expense.paid"
         ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
       >
@@ -19,7 +28,7 @@
         >Unpaid</ion-note
       >
       <ion-toggle v-model="state.expense.paid" value="paid"></ion-toggle>
-      <ion-button @click="$emit('deleteExpense')">
+      <ion-button @click="$emit('deleteExpense')" v-if="!hideControls">
         <ion-icon :icon="trashOutline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -44,6 +53,8 @@ export default {
   name: "Expense",
   props: {
     expense: Object,
+    hideControls: Boolean,
+    showDate: Boolean,
   },
   emits: ["deleteExpense"],
   components: {

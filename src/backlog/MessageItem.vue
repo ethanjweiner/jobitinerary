@@ -1,5 +1,5 @@
 <template>
-  <ion-item :color="message.read ? '' : 'light'">
+  <ion-item :color="message.readByRecipient ? '' : 'light'">
     <div style="width: 20px;">
       <span class="dot" v-if="!message.readByRecipient"></span>
     </div>

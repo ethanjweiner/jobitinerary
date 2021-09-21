@@ -37,13 +37,18 @@ const routes: Array<RouteRecordRaw> = [
       // CUSTOMERS
       {
         path: "customers",
-        component: () => import("@/views/company/Customers.vue"),
+        name: "Customers",
+        props: { type: "customer" },
+        component: () => import("@/views/company/Users.vue"),
       },
       {
         path: "customers/:username",
         name: "Customer",
-        props: true,
-        component: () => import("@/views/company/Customers.vue"),
+        props: (route) => ({
+          type: "customer",
+          username: route.params.username,
+        }),
+        component: () => import("@/views/company/Users.vue"),
       },
       {
         path: "customers/:username/customer-day/:date",
@@ -61,13 +66,17 @@ const routes: Array<RouteRecordRaw> = [
       // EMPLOYEES
       {
         path: "employees",
-        component: () => import("@/views/company/Employees.vue"),
+        props: { type: "employee" },
+        component: () => import("@/views/company/Users.vue"),
       },
       {
         path: "employees/:username",
         name: "Employee",
-        props: true,
-        component: () => import("@/views/company/Employees.vue"),
+        props: (route) => ({
+          type: "employee",
+          username: route.params.username,
+        }),
+        component: () => import("@/views/company/Users.vue"),
       },
       {
         path: "employees/:username/days/:date",

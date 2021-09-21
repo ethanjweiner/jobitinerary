@@ -13,7 +13,7 @@
         >
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleJobSettings(true, $event)">
-            <ion-icon :icon="ellipsisVertical"></ion-icon>
+            <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -24,54 +24,38 @@
       :event="popoverEvent"
       @didDismiss="toggleJobSettings(false)"
     >
-      <JobPopover @deleteJob="deleteJob" />
+      <DeletePopover unitName="Job" @delete="deleteJob" />
     </ion-popover>
     <ion-content :fullscreen="true">
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
-            <JobMain
-              :job="state.job"
-              :visits="state.visits"
-              @jobChanged="updateJob"
-            />
+            <JobMain v-model="state.job" :visits="state.visits" />
           </template>
           <template v-slot:tasks>
-            <Tasks
-              :tasks="state.job.tasks"
-              @taskChanged="(newTasks) => (state.job.tasks = newTasks)"
-            />
+            <Tasks v-model="state.job.tasks" />
           </template>
           <template v-slot:visits>
-            <JobVisits :visits="state.visits" @openVisit="openVisitModal" />
+            <JobVisits v-model="state.visits" @openVisit="openVisit" />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
               <ion-col size="6">
                 <ion-row>
                   <ion-card style="width: 100%;">
-                    <JobMain
-                      :job="state.job"
-                      :visits="state.visits"
-                      @jobChanged="updateJob"
-                    />
+                    <JobMain v-model="state.job" :visits="state.visits" />
                   </ion-card>
                 </ion-row>
                 <ion-row>
                   <ion-card style="width: 100%;">
                     <ion-card-header class="ion-text-center">
                       <ion-card-title>
-                        <ion-icon :icon="constructOutline"></ion-icon>
+                        <ion-icon :icon="icons.constructOutline"></ion-icon>
                         Tasks
                       </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <Tasks
-                        :tasks="state.job.tasks"
-                        @taskChanged="
-                          (newTasks) => (state.job.tasks = newTasks)
-                        "
-                      />
+                      <Tasks v-model="state.job.tasks" />
                     </ion-card-content>
                   </ion-card>
                 </ion-row>
@@ -80,15 +64,12 @@
                 <ion-card>
                   <ion-card-header class="ion-text-center">
                     <ion-card-title>
-                      <ion-icon :icon="homeOutline"></ion-icon>
+                      <ion-icon :icon="icons.homeOutline"></ion-icon>
                       Visits
                     </ion-card-title>
                   </ion-card-header>
                   <ion-card-content>
-                    <JobVisits
-                      :visits="state.visits"
-                      @openVisit="openVisitModal"
-                    />
+                    <JobVisits v-model="state.visits" @openVisit="openVisit" />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -97,14 +78,15 @@
         </Sections>
       </form>
       <ion-modal
-        v-if="visitModalIsOpen"
-        :is-open="visitModalIsOpen"
-        @didDismiss="visitModalIsOpen = false"
+        v-if="state.selectedVisitIndex != -1"
+        :is-open="state.selectedVisitIndex != -1"
+        @didDismiss="closeModal"
       >
         <VisitModal
-          :visitID="state.selectedVisitID"
+          v-model="state.visits[state.selectedVisitIndex]"
           :isModal="true"
-          @close="visitModalIsOpen = false"
+          :hideJob="true"
+          @close="closeModal"
         />
       </ion-modal>
     </ion-content>
@@ -133,12 +115,7 @@ import {
   IonNote,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
-import { Job, sampleJob, sampleVisit, SectionType } from "@/types";
-import Sections from "@/components/Sections.vue";
-import JobMain from "@/components/forms/JobMain.vue";
-import JobVisits from "@/components/lists/JobVisits.vue";
-import Tasks from "@/components/lists/Tasks.vue";
-import VisitModal from "@/views/general/Visit.vue";
+import router from "@/router";
 
 import {
   documentTextOutline,
@@ -146,14 +123,92 @@ import {
   constructOutline,
   ellipsisVertical,
 } from "ionicons/icons";
-import JobPopover from "@/components/popovers/JobPopover.vue";
-import router from "@/router";
+
+import { sampleJob, sampleVisit1, SectionsType, Visit } from "@/types";
+
+import Sections from "@/components/Sections.vue";
+import JobMain from "@/components/forms/JobMain.vue";
+import JobVisits from "@/components/lists/JobVisits.vue";
+import Tasks from "@/components/lists/Tasks.vue";
+import VisitModal from "@/views/general/Visit.vue";
+import DeletePopover from "@/components/popovers/DeletePopover.vue";
 
 export default {
   name: "Job",
   props: {
     username: String,
     jobID: String,
+  },
+  setup() {
+    // Sections
+    const sections = ref<SectionsType>([
+      {
+        name: "Main",
+        icon: documentTextOutline,
+        id: "main",
+      },
+      {
+        name: "Tasks",
+        icon: constructOutline,
+        id: "tasks",
+      },
+      {
+        name: "Visits",
+        icon: homeOutline,
+        id: "visits",
+      },
+    ]);
+
+    // State
+    const state = reactive({
+      // RETRIEVE JOB WITH CUSTOMER USERNAME AND JOB ID
+      job: sampleJob,
+      // RETRIEVE VISITS RELATED TO JOB
+      visits: [sampleVisit1, sampleVisit1],
+      selectedVisitIndex: -1,
+    });
+
+    // Popover
+    const popoverIsOpen = ref(false);
+    const popoverEvent = ref();
+    const toggleJobSettings = (state: boolean, ev?: Event) => {
+      popoverEvent.value = ev;
+      popoverIsOpen.value = state;
+    };
+
+    const deleteJob = () => {
+      // DELETE JOB FROM DATABASE, THEN ROUTE
+      router.go(-1);
+    };
+
+    const openVisit = (visit: Visit) => {
+      state.selectedVisitIndex = state.visits.findIndex(
+        (_visit) => _visit.id == visit.id
+      );
+    };
+
+    const closeModal = () => {
+      console.log("close modal");
+      // Update the visits with the new visit data
+      state.selectedVisitIndex = -1;
+    };
+
+    return {
+      state,
+      sections,
+      popoverIsOpen,
+      popoverEvent,
+      toggleJobSettings,
+      openVisit,
+      deleteJob,
+      closeModal,
+      icons: {
+        ellipsisVertical,
+        homeOutline,
+        documentTextOutline,
+        constructOutline,
+      },
+    };
   },
   components: {
     IonPage,
@@ -178,74 +233,8 @@ export default {
     IonCol,
     JobVisits,
     VisitModal,
-    JobPopover,
+    DeletePopover,
     IonNote,
-  },
-  setup() {
-    const sections = ref<Array<SectionType>>([
-      {
-        name: "Main",
-        icon: documentTextOutline,
-        id: "main",
-      },
-      {
-        name: "Tasks",
-        icon: constructOutline,
-        id: "tasks",
-      },
-      {
-        name: "Visits",
-        icon: homeOutline,
-        id: "visits",
-      },
-    ]);
-    const state = reactive({
-      job: sampleJob,
-      // Retrieve visits upon load
-      visits: [sampleVisit, sampleVisit],
-      selectedVisitID: "",
-    });
-    console.log(sampleVisit);
-    const popoverIsOpen = ref(false);
-    const popoverEvent = ref();
-    const toggleJobSettings = (state: boolean, ev?: Event) => {
-      popoverEvent.value = ev;
-      popoverIsOpen.value = state;
-    };
-
-    const updateJob = (newJob: Job) => {
-      console.log(newJob);
-      state.job = newJob;
-    };
-
-    const deleteJob = () => {
-      popoverIsOpen.value = false;
-      router.go(-1);
-    };
-
-    const visitModalIsOpen = ref(false);
-
-    const openVisitModal = (visitID: string) => {
-      console.log("opening visit modal");
-      visitModalIsOpen.value = true;
-      state.selectedVisitID = visitID;
-    };
-
-    return {
-      state,
-      sections,
-      popoverIsOpen,
-      popoverEvent,
-      toggleJobSettings,
-      updateJob,
-      ellipsisVertical,
-      homeOutline,
-      documentTextOutline,
-      constructOutline,
-      visitModalIsOpen,
-      openVisitModal,
-      deleteJob,
-    };
   },
 };
 </script>

@@ -1,12 +1,24 @@
-export interface UserData {
-  email: string;
-  readonly name: string;
-  phone: string;
+import { dateToString } from "./helpers";
+
+// Auxiliary
+export interface SectionType {
+  name: string;
+  icon: any;
+  id: string;
 }
+
+export type SectionsType = Array<SectionType>;
 
 export interface Location {
   address: string;
   coordinates: { lat: number; lng: number } | null;
+}
+
+function newLocation(): Location {
+  return {
+    address: "",
+    coordinates: null,
+  };
 }
 
 export const sampleLocation: Location = {
@@ -23,55 +35,198 @@ export interface ImageWithCaption {
   caption: string;
 }
 
-const sampleImage: ImageWithCaption = {
-  id: Date.now(),
-  ref: "../images/splash.png",
-  caption: "This is an image",
+export const emptyImage = (id: number): ImageWithCaption => {
+  return {
+    id,
+    ref: "",
+    caption: "",
+  };
 };
+
+export const sampleImage: ImageWithCaption = {
+  id: Date.now(),
+  ref: "",
+  caption: "Image caption",
+};
+
+export interface Task {
+  header: string;
+  notes: string;
+  image: ImageWithCaption | null;
+  complete: boolean;
+  id: number;
+}
+
+export const sampleTask1: Task = {
+  header: "Task 1",
+  notes: "Notes for task 1, specific to employees",
+  image: sampleImage,
+  complete: false,
+  id: 1234689071,
+};
+
+export const sampleTask2: Task = {
+  header: "Task 2",
+  notes: "Notes for task 2, specific to employees",
+  image: sampleImage,
+  complete: true,
+  id: 1235689071,
+};
+
+export interface Tool {
+  name: string;
+  returned: boolean;
+  id: number;
+}
+
+export const sampleTool1: Tool = {
+  name: "Tool 1",
+  returned: false,
+  id: 230598735,
+};
+
+export const sampleTool2: Tool = {
+  name: "Tool 2",
+  returned: true,
+  id: 230598765,
+};
+
+export interface TimeLog {
+  start: string;
+  end: string;
+  hours: number;
+}
+
+export const sampleTimeLog: TimeLog = {
+  start: "08:00",
+  end: "16:00",
+  hours: 8,
+};
+
+export interface Expense {
+  id: string;
+  name: string;
+  date: string;
+  cost: number;
+  paid: boolean;
+}
+
+export const sampleExpense: Expense = {
+  id: "expense id",
+  name: "Expense",
+  date: "2020-01-01",
+  cost: 1,
+  paid: true,
+};
+
+export function emptyExpense(id: string): Expense {
+  return {
+    id,
+    name: "",
+    date: dateToString(new Date()),
+    cost: 0,
+    paid: false,
+  };
+}
+
+export enum AuthenticationTitleText {
+  LogIn = "Log in to JobItinerary",
+  CompanySignUp = "Sign up your company for JobItinerary",
+  EmployeeSignUp = "Join your company in JobItinerary",
+}
+
+// Users
+
+export interface UserData {
+  email: string;
+  readonly name: string;
+  phone: string;
+}
 
 export interface Company extends UserData {
   id: string;
   kind: "company";
 }
 
+export const sampleCompany: Company = {
+  id: "company_id",
+  kind: "company",
+  email: "company@email.com",
+  name: "Jesse",
+  phone: "Company phone",
+};
+
 export interface Employee extends UserData {
   kind: "employee";
-  companyID: string;
   defaultHourlyRate: number | null;
+  company: Company;
+}
+
+export function newEmployee(
+  name: string,
+  email: string,
+  company: Company
+): Employee {
+  return {
+    name,
+    email,
+    company,
+    kind: "employee",
+    phone: "",
+    defaultHourlyRate: null,
+  };
 }
 
 export const sampleEmployee1: Employee = {
   name: "Employee 1",
-  companyID: "company ID",
   kind: "employee",
-  email: "employeeEmail@email.com",
+  email: "employeeEmail1@email.com",
   phone: "Employee phone",
   defaultHourlyRate: 20,
+  company: sampleCompany,
 };
 
 export const sampleEmployee2: Employee = {
   name: "Employee 2",
-  companyID: "company ID",
   kind: "employee",
-  email: "employeeEmail@email.com",
+  email: "employeeEmail2@email.com",
   phone: "Employee phone",
   defaultHourlyRate: 20,
+  company: sampleCompany,
 };
 
 export interface Customer extends UserData {
   kind: "customer";
-  companyID: string;
+  company: Company;
   location: Location;
   customerNotes: string;
   propertyNotes: string;
   propertyImages: Array<ImageWithCaption>;
 }
 
+export function newCustomer(
+  name: string,
+  email: string,
+  company: Company
+): Customer {
+  return {
+    name,
+    email,
+    company,
+    kind: "customer",
+    phone: "",
+    location: newLocation(),
+    customerNotes: "",
+    propertyNotes: "",
+    propertyImages: [],
+  };
+}
+
 export const sampleCustomer1: Customer = {
   name: "Customer 1",
-  companyID: "company ID",
+  company: sampleCompany,
   kind: "customer",
-  email: "customerEmail@email.com",
+  email: "customer1Email@email.com",
   phone: "Customer phone",
   location: sampleLocation,
   customerNotes: "Notes about the customer go here...",
@@ -81,9 +236,9 @@ export const sampleCustomer1: Customer = {
 
 export const sampleCustomer2: Customer = {
   name: "Customer 2",
-  companyID: "company ID",
+  company: sampleCompany,
   kind: "customer",
-  email: "customerEmail@email.com",
+  email: "customer2Email@email.com",
   phone: "Customer phone",
   location: sampleLocation,
   customerNotes: "Notes about the customer go here...",
@@ -93,24 +248,65 @@ export const sampleCustomer2: Customer = {
 
 export type User = Company | Employee | null;
 
-export interface TimeLog {
-  start: string;
-  end: string;
-  hours: number;
-}
+// Messages
 
-export interface Task {
+export interface Message {
   text: string;
   image: ImageWithCaption | null;
-  complete: boolean;
-  id: number;
+  readByRecipient: boolean;
+  timestamp: number;
+  threadID: string;
+  to?: User;
+  from?: User;
 }
 
-export interface Tool {
-  name: string;
-  returned: boolean;
-  id: number;
+export function emptyMessage(): Message {
+  return {
+    text: "",
+    image: emptyImage(Date.now()),
+    readByRecipient: false,
+    timestamp: Date.now(),
+    threadID: "",
+  };
 }
+
+const sampleMessage1: Message = {
+  text: "Message 1",
+  image: sampleImage,
+  readByRecipient: true,
+  timestamp: 1000,
+  threadID: "thread_id",
+  to: sampleEmployee1,
+  from: sampleCompany,
+};
+
+const sampleMessage2: Message = {
+  text: "Message 2",
+  image: sampleImage,
+  readByRecipient: false,
+  timestamp: 2000,
+  threadID: "thread_id",
+  to: sampleCompany,
+  from: sampleEmployee1,
+};
+
+export interface Thread {
+  id: number;
+  timestamp: number;
+  messages: Array<Message>; // Must be sorted by timestamp (newest first)
+  sender: User;
+  receiver: User;
+}
+
+export const sampleThread: Thread = {
+  id: Date.now(),
+  timestamp: 1000,
+  messages: [sampleMessage1, sampleMessage2],
+  sender: sampleCompany,
+  receiver: sampleEmployee1,
+};
+
+// Units
 
 export interface Visit {
   id: string;
@@ -122,7 +318,7 @@ export interface Visit {
   job: {
     name: string;
     id: string;
-  };
+  } | null;
   date: string;
   time: TimeLog;
   notes: string;
@@ -134,16 +330,13 @@ export interface Visit {
 
 export function emptyVisit(date = ""): Visit {
   return {
-    id: "new_visit_id",
+    id: "",
     employeeName: "",
     customerName: "",
     workType: "",
     plannedStart: "",
     plannedEnd: "",
-    job: {
-      name: "",
-      id: "",
-    },
+    job: null,
     date: date,
     time: {
       start: "",
@@ -158,7 +351,7 @@ export function emptyVisit(date = ""): Visit {
   };
 }
 
-export const sampleVisit: Visit = {
+export const sampleVisit1: Visit = {
   id: "visit_id",
   employeeName: "Employee 1",
   customerName: "Customer 1",
@@ -170,29 +363,12 @@ export const sampleVisit: Visit = {
     id: "Job ID",
   },
   date: "2021-01-01",
-  time: {
-    start: "08:00",
-    end: "18:00",
-    hours: 8,
-  },
+  time: sampleTimeLog,
   notes: "notes",
-  tasks: [
-    {
-      text: "task",
-      image: null,
-      complete: false,
-      id: Date.now(),
-    },
-  ],
-  tools: [
-    {
-      name: "tool",
-      returned: false,
-      id: Date.now(),
-    },
-  ],
+  tasks: [sampleTask1, sampleTask2],
+  tools: [sampleTool1, sampleTool2],
   images: [sampleImage, sampleImage],
-  readByCompany: true,
+  readByCompany: false,
 };
 
 export interface Day {
@@ -215,11 +391,7 @@ export const sampleDay: Day = {
   startLocation: "Start Location",
   plannedStart: "08:00",
   plannedEnd: "17:00",
-  time: {
-    start: "08:02",
-    end: "16:20",
-    hours: 7,
-  },
+  time: sampleTimeLog,
   notes: "Some notes",
   paid: false,
   readByEmployee: false,
@@ -247,6 +419,19 @@ export function emptyDay(date: string, hourlyRate = null): Day {
   };
 }
 
+export interface CustomerDay {
+  date: string;
+  customerName: string;
+  employeeHours: Array<{ employeeName: string; hours: number }>;
+  // Vitis and jobs worked aren't needed -- just find upon load
+}
+
+export const sampleCustomerDay: CustomerDay = {
+  date: "2021-09-12",
+  customerName: "Customer 1",
+  employeeHours: [{ employeeName: "Customer 1", hours: 6 }],
+};
+
 export interface Job {
   id: string;
   name: string;
@@ -263,85 +448,16 @@ export const sampleJob: Job = {
   customerName: "Customer Name",
   description: "job description",
   startDate: "2021-09-10",
-  endDate: "2021-09-20",
-  tasks: [
-    {
-      text: "task",
-      image: null,
-      complete: false,
-      id: Date.now(),
-    },
-  ],
+  endDate: "2021-09-25",
+  tasks: [sampleTask1, sampleTask2],
 };
 
-export interface Expense {
-  id: string;
-  name: string;
-  cost: number;
-  paid: boolean;
-}
+// Complex types
 
-export const sampleExpense: Expense = {
-  id: "expense id",
-  name: "Expense",
-  cost: 1,
-  paid: true,
-};
+// A Loader loads _data_ at a particular _searchFilter_
+export type Loader = (searchFilter?: string) => Promise<0 | 1>;
 
-export function emptyExpense(id: string): Expense {
-  return {
-    id,
-    name: "",
-    cost: 0,
-    paid: false,
-  };
-}
+// A Splitter splits a larger list into smaller lists, based on a filter
+type Filter = (item: any) => boolean;
 
-export interface SectionType {
-  name: string;
-  icon: any;
-  id: string;
-}
-
-// A ONE-WAY message (can't be used as a thread...)
-export interface Message {
-  id: string;
-  thread: Array<string>;
-  to: {
-    userKind: "employee" | "company";
-    name?: string;
-    email: string;
-  };
-  from: {
-    userKind: "employee" | "company";
-    name?: string;
-    email: string;
-  };
-  text: string;
-  image: ImageWithCaption;
-  readByRecipient: boolean;
-}
-
-export const sampleMessage: Message = {
-  id: "message_id",
-  thread: ["id1", "id2"],
-  to: {
-    userKind: "company",
-    email: "company@email.com",
-  },
-  from: {
-    userKind: "employee",
-    name: "Employee Name",
-    email: "employee@email.com",
-  },
-  text:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  image: sampleImage,
-  readByRecipient: false,
-};
-
-export enum AuthenticationTitleText {
-  LogIn = "Log in to JobItinerary",
-  CompanySignUp = "Sign up your company for JobItinerary",
-  EmployeeSignUp = "Join your company in JobItinerary",
-}
+export type Splitter = { name: string; filter: Filter };

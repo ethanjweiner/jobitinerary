@@ -1,9 +1,9 @@
 import firebase from "firebase/app";
 import router from "./router";
-import { auth } from "./main";
-import { companiesCollection } from "@/main";
+import { auth, storage } from "./main";
 import date from "date-and-time";
 import store from "./store";
+import { Loader } from "./types";
 
 const { state } = store;
 
@@ -27,10 +27,10 @@ const initRouteGuards = () => {
     // This route guard does not actually secure the user out of the route
     router.beforeEach((to, from, next) => {
       if (to.meta.requiresAuth && to.fullPath.includes("company/")) {
-        if (state.companyState.company) next();
+        if (state.userType == "company") next();
         else router.push("/");
       } else if (to.meta.requiresAuth && to.fullPath.includes("employee/")) {
-        if (state.employeeState.employee) next();
+        if (state.userType == "employee") next();
         else router.push("/");
       } else next();
     });
@@ -111,34 +111,48 @@ export function includeItemInSearch(
   for (const param of parameters) {
     const itemProperty = item[param];
     if (itemProperty) {
-      if (typeof itemProperty == "string") {
-        if (stringsOverlap(searchText, itemProperty.toLowerCase())) return true;
-      } else if (itemProperty instanceof Date) {
+      if (param.toLowerCase().includes("date")) {
         if (
-          dateToStrings(itemProperty).find((dateString: string) =>
-            dateString.includes(searchText)
+          dateToStrings(new Date(itemProperty)).find((dateString: string) =>
+            dateString.toLowerCase().includes(searchText)
           )
         )
           return true;
-      }
+      } else if (typeof itemProperty == "string") {
+        if (stringsOverlap(searchText, itemProperty.toLowerCase())) return true;
+      } else if (typeof itemProperty == "number") {
+        if (stringsOverlap(searchText, itemProperty.toString())) return true;
+      } else return false;
     }
   }
   return false;
 }
 
-// Turn into a cloud function
-export async function companyExists(companyID: string) {
-  try {
-    const doc = await companiesCollection.doc(companyID).get();
-    if (doc.exists) return true;
-    return false;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
 // Date helpers
 export function dateToString(date: Date) {
   return date.toLocaleDateString().replaceAll("/", "-");
+}
+
+// Load data on infinite scroll
+export async function loadData(ev: any, loader: Loader, searchFilter?: string) {
+  // Attempt to load data
+  const status = await loader(searchFilter);
+  // Continue using Infinite Scroll depending on status
+  if (status == 0) ev.target.complete();
+  else ev.target.disabled = true;
+}
+
+export function generateUUID() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    const r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+export async function getImageURL(ref: string) {
+  return await storage
+    .ref()
+    .child(ref)
+    .getDownloadURL();
 }

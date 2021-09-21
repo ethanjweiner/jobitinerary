@@ -23,7 +23,6 @@ import { reactive } from "@vue/reactivity";
 import { sampleExpense, emptyExpense } from "@/types";
 import { IonItem, IonIcon, IonLabel } from "@ionic/vue";
 import Expense from "./items/Expense.vue";
-
 export default {
   name: "Expenses",
   props: {
@@ -34,16 +33,13 @@ export default {
     const state = reactive({
       expenses: [sampleExpense],
     });
-
     const deleteExpense = (index: number) => {
       state.expenses.splice(index, 1);
     };
-
     const addExpense = () => {
       // Add expense to database & retrieve
       state.expenses.push(emptyExpense(Date.now().toString()));
     };
-
     return {
       state,
       deleteExpense,

@@ -4,17 +4,17 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home" href="/company/home">
-          <ion-icon :icon="home" />
+          <ion-icon :icon="icons.home" />
           <ion-label>Home</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="customers" href="/company/customers">
-          <ion-icon :icon="cart" />
+          <ion-icon :icon="icons.cart" />
           <ion-label>Customers</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="employeees" href="/company/employees">
-          <ion-icon :icon="hammer" />
+          <ion-icon :icon="icons.hammer" />
           <ion-label>Employees</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -47,9 +47,7 @@ export default {
   },
   setup() {
     return {
-      home,
-      cart,
-      hammer,
+      icons: { home, cart, hammer },
     };
   },
 };

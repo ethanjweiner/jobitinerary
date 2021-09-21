@@ -6,15 +6,16 @@
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title style="padding-inline-end: 5px;"
-          >Visit<span v-if="visit.date"> on </span>{{ visit.date }}</ion-title
+          >Visit<span v-if="state.visit.date"> on </span
+          >{{ state.visit.date }}</ion-title
         >
 
         <div style="padding-left: 20px;">
-          <ion-note v-if="visit.customerName"
-            >for {{ visit.customerName }} |
+          <ion-note v-if="state.visit.customerName"
+            >for {{ state.visit.customerName }} |
           </ion-note>
-          <ion-note v-if="visit.employeeName"
-            >by {{ visit.employeeName }}</ion-note
+          <ion-note v-if="state.visit.employeeName"
+            >by {{ state.visit.employeeName }}</ion-note
           >
         </div>
         <ion-buttons :collapse="true" slot="end">
@@ -37,47 +38,52 @@
       :event="popoverEvent"
       @didDismiss="toggleVisitSettings(false)"
     >
-      <VisitPopover @deleteVisit="deleteVisit" />
+      <DeletePopover unitName="Visit" @delete="deleteVisit" />
     </ion-popover>
     <ion-content :fullscreen="true">
-      <SendMessage @click="messageModalIsOpen = true" />
       <form>
         <Sections :sections="sections" :separateByDefault="isModal" wrapCards>
           <template v-slot:main>
             <VisitMain
-              :visit="visit"
-              @visitChanged="updateVisit"
-              :showEmployeeSelect="visitID ? true : false"
+              v-model="state.visit"
+              :hideJob="hideJob"
+              :hideEmployeeSelect="visitID == 'new'"
             />
           </template>
           <template v-slot:tasks>
-            <Tasks
-              :tasks="visit.tasks"
-              @tasksChanged="(newTasks) => (visit.tasks = newTasks)"
-            />
+            <Tasks v-model="state.visit.tasks" />
           </template>
           <template v-slot:tools>
-            <Tools
-              :tools="visit.tools"
-              @toolsChanged="(newTools) => (visit.tools = newTools)"
-            />
+            <Tools v-model="state.visit.tools" />
           </template>
           <template v-slot:images>
-            <Images
-              :images="visit.images"
-              @imagesChange="(newImages) => (visit.images = newImages)"
-            />
+            <Images v-model="state.visit.images" />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
               <ion-col size="6">
-                <ion-card>
-                  <VisitMain
-                    :visit="visit"
-                    @visitChanged="updateVisit"
-                    :showEmployeeSelect="visitID ? true : false"
-                  />
-                </ion-card>
+                <ion-row>
+                  <ion-card style="width: 100%;">
+                    <VisitMain v-model="state.visit" :hideJob="hideJob" />
+                  </ion-card>
+                </ion-row>
+
+                <ion-row>
+                  <ion-card style="width: 100%;">
+                    <ion-card-header
+                      class="ion-text-center"
+                      style="padding-bottom: 2px;"
+                    >
+                      <ion-card-title>
+                        <ion-icon :icon="imagesOutline"></ion-icon>
+                        Images
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <Images v-model="state.visit.images" />
+                    </ion-card-content>
+                  </ion-card>
+                </ion-row>
               </ion-col>
               <ion-col size="6">
                 <ion-card>
@@ -88,10 +94,7 @@
                     >
                   </ion-card-header>
                   <ion-card-content>
-                    <Tasks
-                      :tasks="visit.tasks"
-                      @tasksChanged="(newTasks) => (visit.tasks = newTasks)"
-                    />
+                    <Tasks v-model="state.visit.tasks" />
                   </ion-card-content>
                 </ion-card>
 
@@ -108,31 +111,7 @@
                     >
                   </ion-card-header>
                   <ion-card-content>
-                    <Tools
-                      :tools="visit.tools"
-                      @toolsChanged="(newTools) => (visit.tools = newTools)"
-                    />
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="12">
-                <ion-card>
-                  <ion-card-header
-                    class="ion-text-center"
-                    style="padding-bottom: 2px;"
-                  >
-                    <ion-card-title>
-                      <ion-icon :icon="imagesOutline"></ion-icon>
-                      Images
-                    </ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                    <Images
-                      :images="visit.images"
-                      @imagesChange="(newImages) => (visit.images = newImages)"
-                    />
+                    <Tools v-model="state.visit.tools" />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -140,17 +119,6 @@
           </template>
         </Sections>
       </form>
-
-      <ion-modal
-        :is-open="messageModalIsOpen"
-        @didDismiss="messageModalIsOpen = false"
-      >
-        <MessageModal
-          @messageSent="sendMessage"
-          @closeModal="messageModalIsOpen = false"
-          :visit="visit"
-        />
-      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
@@ -165,7 +133,6 @@ import {
   IonNote,
   IonIcon,
   IonButtons,
-  IonModal,
   IonPopover,
   IonButton,
   IonCard,
@@ -180,8 +147,8 @@ import {
 
 import Sections from "@/components/Sections.vue";
 
-import { sampleVisit, SectionType, Message, Visit, emptyVisit } from "@/types";
-import { reactive, ref, toRefs } from "@vue/reactivity";
+import { sampleVisit1, SectionsType, Visit, emptyVisit } from "@/types";
+import { reactive, ref } from "@vue/reactivity";
 import {
   documentTextOutline,
   constructOutline,
@@ -193,21 +160,25 @@ import {
   close,
 } from "ionicons/icons";
 import store from "@/store";
-import VisitPopover from "@/components/popovers/VisitPopover.vue";
-import SendMessage from "@/components/buttons/SendMessage.vue";
-import MessageModal from "@/components/modals/MessageModal.vue";
+import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import VisitMain from "@/components/forms/VisitMain.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import Tools from "@/components/lists/Tools.vue";
 import Images from "@/components/lists/Images.vue";
 import router from "@/router";
+import { watch } from "@vue/runtime-core";
 
 export default {
   name: "VisitView",
-  props: ["visitID", "isModal"],
-  emits: ["close"],
-  setup(props: any) {
-    const sections = ref<Array<SectionType>>([
+  props: {
+    visitID: String,
+    isModal: Boolean,
+    modelValue: Object,
+    hideJob: Boolean,
+  },
+  emits: ["close", "update:modelValue"],
+  setup(props: any, { emit }: { emit: any }) {
+    const sections = ref<SectionsType>([
       {
         // Includes date, employee, customer, notes, & messaging
         name: "Main",
@@ -230,25 +201,21 @@ export default {
         id: "images",
       },
     ]);
+
     const state = reactive({
       visit: emptyVisit(),
     });
 
-    if (props.visitID == "new") {
-      // Clear the form (if has input)
-      state.visit = emptyVisit();
+    if (props.visitID) {
+      // RETRIEVE VISIT UPON LOAD
+      state.visit = sampleVisit1;
     } else {
-      // Fetch visit with id
-      state.visit = sampleVisit;
+      console.log(props.modelValue);
+      state.visit = { ...props.modelValue };
+      watch(state.visit, (newVisit) => emit("update:modelValue", newVisit));
     }
 
-    const messageModalIsOpen = ref(false);
-
-    const sendMessage = (message: Message) => {
-      console.log(message);
-      messageModalIsOpen.value = false;
-    };
-
+    // Popover
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
     const toggleVisitSettings = (state: boolean, ev?: Event) => {
@@ -261,31 +228,27 @@ export default {
     };
 
     const deleteVisit = () => {
-      popoverIsOpen.value = false;
-      // Delete visit from database
+      // DELETE VISIT FROM DATABASE
+
       // Return to home
       router.go(-1);
-
-      // Update the state
     };
 
     return {
-      store,
-      ...toRefs(state),
-      updateVisit,
       sections,
+      store,
+      state,
+      updateVisit,
+      toggleVisitSettings,
+      deleteVisit,
       calendarOutline,
       calendarNumberOutline,
       ellipsisVertical,
-      toggleVisitSettings,
       popoverIsOpen,
       popoverEvent,
-      messageModalIsOpen,
-      sendMessage,
       hammerOutline,
       constructOutline,
       imagesOutline,
-      deleteVisit,
       close,
     };
   },
@@ -299,12 +262,9 @@ export default {
     IonNote,
     IonIcon,
     IonButtons,
-    IonModal,
     IonPopover,
     IonButton,
-    VisitPopover,
-    SendMessage,
-    MessageModal,
+    DeletePopover,
     VisitMain,
     IonCard,
     IonCol,
