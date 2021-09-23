@@ -1,38 +1,42 @@
 <template>
-  <ion-list>
-    <ion-item-group v-if="futureVisits.length">
-      <ion-item-divider>
-        <ion-label>Future Visits</ion-label>
-      </ion-item-divider>
-      <VisitItem
-        v-for="(visit, index) in futureVisits"
-        :key="visit.id"
-        :visit="visit"
-        @deleteVisit="deleteVisit(index)"
-        @openVisit="$emit('openVisit', visit)"
-        type="job"
-      />
-    </ion-item-group>
+  <div>
+    <ion-list>
+      <ion-item-group v-if="scheduledVisits.length">
+        <ion-item-divider>
+          <ion-label>Future Visits</ion-label>
+        </ion-item-divider>
+        <!-- Add a database reference -->
+        <VisitItem
+          v-for="visit in scheduledVisits"
+          :key="visit.id"
+          :visit="visit"
+          :itemAction="(state) => (state.modalIsOpen = true)"
+          @deleteVisit="deleteVisit(visit.id)"
+          type="job"
+        />
+      </ion-item-group>
 
-    <ion-item-group v-if="pastVisits.length">
-      <ion-item-divider>
-        <ion-label>Past Visits</ion-label>
-      </ion-item-divider>
-      <VisitItem
-        v-for="(visit, index) in pastVisits"
-        :key="visit.id"
-        :visit="visit"
-        @deleteVisit="deleteVisit(index)"
-        @openVisit="$emit('openVisit', visit)"
-        type="job"
-      />
-    </ion-item-group>
+      <ion-item-group v-if="pastVisits.length">
+        <ion-item-divider>
+          <ion-label>Past Visits</ion-label>
+        </ion-item-divider>
+        <!-- Add a database reference -->
+        <VisitItem
+          v-for="visit in pastVisits"
+          :key="visit.id"
+          :visit="visit"
+          :itemAction="(state) => (state.modalIsOpen = true)"
+          @deleteVisit="deleteVisit(visit.id)"
+          type="job"
+        />
+      </ion-item-group>
 
-    <ion-item button color="primary" @click="addVisit">
-      <ion-icon :icon="add"></ion-icon>
-      <ion-label>Add Visit</ion-label>
-    </ion-item>
-  </ion-list>
+      <ion-item button color="primary" @click="addVisit">
+        <ion-icon :icon="add"></ion-icon>
+        <ion-label>Add Visit</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
 </template>
 
 <script lang="ts">
@@ -46,18 +50,18 @@ import {
 } from "@ionic/vue";
 import { add } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
-import { defineComponent, watch } from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { emptyVisit, Visit } from "@/types";
+import { emptyVisit, sampleVisit1, Splitter, Visit } from "@/types";
 import { dateToString } from "@/helpers";
+
 import VisitItem from "./items/VisitItem.vue";
 
 export default defineComponent({
   name: "Job Visits",
   props: {
-    modelValue: Array,
+    dbRef: String,
   },
-  emits: ["update:modelValue", "openVisit"],
   components: {
     IonIcon,
     IonItem,
@@ -70,39 +74,42 @@ export default defineComponent({
   setup(props: any, { emit }: { emit: any }) {
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
-      // RETRIEVE VISITS ALREADY EXISTING ON THIS DATE/EMPLOYEE
-      visits: [...props.modelValue],
+      // RETRIEVE VISITS using the db ref
+      visits: [sampleVisit1, sampleVisit1],
     });
 
-    const futureVisits = computed(() => {
-      return state.visits.filter(
-        (visit: Visit) => new Date(visit.date) > new Date()
-      );
-    });
+    // Separate visits with splitters
 
-    const pastVisits = computed(() => {
-      return state.visits.filter(
-        (visit: Visit) => new Date(visit.date) <= new Date()
-      );
-    });
+    const splitters: Array<Splitter> = [
+      {
+        name: "Scheduled Visits",
+        filter: (item: Visit) => new Date(item.date) >= new Date(),
+      },
+      {
+        name: "Past Visits",
+        filter: (item: Visit) => new Date(item.date) < new Date(),
+      },
+    ];
 
-    const deleteVisit = (index: number) => {
-      // Delete the visit from the database too...
-      state.visits.splice(index, 1);
+    const scheduledVisits = computed(() =>
+      state.visits.filter(splitters[0].filter)
+    );
+    const pastVisits = computed(() => state.visits.filter(splitters[1].filter));
+
+    const deleteVisit = (id: string) => {
+      // DELETE VISIT FROM DATABASE
+
+      // DELETE VISIT LOCALLY
+      state.visits = state.visits.filter((visit) => visit.id != id);
     };
 
     const addVisit = () => {
       // CREATE NEW VISIT AND ADD TO DATABASE
-      const newVisit = emptyVisit(dateToString(new Date()));
+      const newVisit = emptyVisit({ date: dateToString(new Date()) });
 
+      // Refresh the page
       state.visits.push(newVisit);
-      // PASS THIS VISIT INTO THE EMIT
-      emit("openVisit", newVisit);
     };
-
-    watch(state.visits, (newVisits) => {
-      emit("update:modelValue", newVisits);
-    });
 
     return {
       state,
@@ -110,7 +117,7 @@ export default defineComponent({
       router,
       deleteVisit,
       addVisit,
-      futureVisits,
+      scheduledVisits,
       pastVisits,
     };
   },

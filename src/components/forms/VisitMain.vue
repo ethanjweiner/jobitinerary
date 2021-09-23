@@ -46,7 +46,7 @@
     />
     <!-- Customer Select -->
     <UserSelect
-      v-if="!state.visit.job"
+      v-if="!state.visit.job && !hideCustomerSelect"
       :names="
         store.state.companyState.customers.map((customer) => customer.name)
       "
@@ -82,13 +82,6 @@
       />
     </ion-item>
 
-    <ion-modal :is-open="jobsModalIsOpen" @didDismiss="jobsModalIsOpen = false">
-      <JobsModal
-        @jobSelected="attachJob"
-        @closeModal="jobsModalIsOpen = false"
-      />
-    </ion-modal>
-
     <TimeLogComponent
       v-if="store.state.userType == 'employee'"
       :time="state.visit.time"
@@ -106,6 +99,10 @@
         placeholder="Notes for the visit"
       ></ion-textarea>
     </ion-item>
+
+    <ion-modal :is-open="jobsModalIsOpen" @didDismiss="jobsModalIsOpen = false">
+      <JobsModal @jobSelected="attachJob" @close="jobsModalIsOpen = false" />
+    </ion-modal>
   </div>
 </template>
 
@@ -145,6 +142,7 @@ export default {
   props: {
     modelValue: Object,
     hideEmployeeSelect: Boolean,
+    hideCustomerSelect: Boolean,
     hideJob: Boolean,
   },
   emits: ["update:modelValue"],

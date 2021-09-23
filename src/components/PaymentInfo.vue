@@ -106,7 +106,7 @@
       <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
         <ion-row>
           <ion-card style="width: 100%; height: 300px;">
-            <!-- DB_REF SHOULD BE CONDITIONAL, DEPENDENT ON WHETHER FILTERING UNPAID -->
+            <!-- PASS DATABASE REFERENCE, CONDITION ON PAYMENT STATE -->
             <EmployeeDays
               :employeeName="state.employee.name"
               :hideAdd="true"
@@ -118,7 +118,9 @@
         </ion-row>
         <ion-row>
           <ion-card style="width: 100%; height: 250px;">
-            <Expenses />
+            <Expenses
+              :title="state.filterUnpaid ? 'Unpaid Expenses' : 'All Expenses'"
+            />
           </ion-card>
         </ion-row>
       </ion-col>
@@ -260,9 +262,7 @@ export default {
 ion-chip {
   cursor: default;
 }
-.payment-data {
-  font-weight: bold;
-}
+
 ion-card-content {
   height: 80%;
   padding: 0;

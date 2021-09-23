@@ -55,7 +55,7 @@ import {
 
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import CreateButton from "@/components/buttons/CreateButton.vue";
-import Visits from "@/components/lists/Visits.vue";
+import Visits from "@/components/lists/VisitsInfinite.vue";
 import Jobs from "@/components/lists/Jobs.vue";
 
 export default {

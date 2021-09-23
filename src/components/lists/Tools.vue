@@ -3,9 +3,8 @@
     <Tool
       v-for="(tool, index) in state.tools"
       :key="tool.id"
+      v-model="state.tools[index]"
       @deleteTool="deleteTool(index)"
-      :tool="tool"
-      @updateTool="(newTool) => (state.tools[index] = newTool)"
     />
     <ion-item button color="secondary" @click="addTool">
       <ion-icon :icon="add"></ion-icon>

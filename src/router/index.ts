@@ -89,7 +89,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "visits/:visitID",
         name: "Company Visit",
         props: true,
-        component: () => import("@/views/general/Visit.vue"),
+        component: () => import("@/views/general/VisitView.vue"),
       },
       // NEW DAYS
       {
@@ -156,7 +156,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "visits/:visitID",
         name: "Visit",
         props: true,
-        component: () => import("@/views/general/Visit.vue"),
+        component: () => import("@/views/general/VisitView.vue"),
       },
 
       // SETTINGS

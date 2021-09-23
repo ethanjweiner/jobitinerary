@@ -44,7 +44,7 @@
         >
           <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
             <div class="ion-text-start">
-              <h3 class="text-secondary">Select a {{ capitalize(type) }}</h3>
+              <h3 class="text-secondary">Select {{ capitalize(type) }}</h3>
             </div>
             <UserSelect
               ref="userSelect"
@@ -147,7 +147,6 @@ export default {
     const deleteUser = async () => {
       if (props.type == "customer") {
         await store.deleteCustomer(state.username);
-        router.push({ name: "Customers" });
       } else if (props.type == "employee") {
         await store.deleteEmployee(state.username);
       } else throw Error("No user type was provided");

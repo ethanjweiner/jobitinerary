@@ -54,9 +54,9 @@ import { trashOutline, checkmark } from "ionicons/icons";
 export default {
   name: "Tool",
   props: {
-    tool: Object,
+    modelValue: Object,
   },
-  emits: ["updateTool", "deleteTool"],
+  emits: ["update:modelValue", "deleteTool"],
   components: {
     IonItem,
     IonButtons,
@@ -71,11 +71,11 @@ export default {
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      tool: props.tool,
+      tool: props.modelValue,
     });
 
     watch(state.tool, (newTool) => {
-      emit("updateTool", newTool);
+      emit("update:modelValue", newTool);
     });
 
     return {

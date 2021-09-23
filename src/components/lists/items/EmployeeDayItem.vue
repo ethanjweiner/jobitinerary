@@ -1,6 +1,7 @@
 <template>
   <ion-item>
     <div
+      style="width: 100%;"
       @click="
         router.push({
           name: 'Employee Day',

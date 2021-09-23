@@ -94,6 +94,14 @@ ion-title {
 }
 
 .new-user-modal .modal-wrapper {
-  height: 217px;
+  height: 285px;
   width: 350px;
+}
+
+input {
+  background: white;
+}
+
+.payment-data {
+  font-weight: bold;
 }

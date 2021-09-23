@@ -11,6 +11,13 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <div class="ion-padding">
+        <ion-note
+          >The {{ type }} will receive an email with instructions to setup their
+          account.</ion-note
+        >
+      </div>
+
       <ion-item>
         <ion-label position="stacked">{{ capitalize(type) }} Name</ion-label>
         <ion-input placeholder="name" type="text" v-model="name"></ion-input>
@@ -45,6 +52,7 @@ import {
   IonItem,
   IonLabel,
   IonInput,
+  IonNote,
 } from "@ionic/vue";
 
 import { close } from "ionicons/icons";
@@ -65,6 +73,7 @@ export default {
     IonItem,
     IonLabel,
     IonInput,
+    IonNote,
   },
   props: ["type"],
   emits: ["userAdded", "didDismiss"],
@@ -75,10 +84,15 @@ export default {
     });
 
     const addUser = () => {
-      if (state.name && state.email)
-        // Emit an event to change user select to the new user
+      if (state.name && state.email) {
+        // ADD USER TO DATABASE
+        if (props.type == "employee") console.log("adding employee");
+        // ADD EMPLOYEE
+        else if (props.type == "customer") console.log("adding customer");
+        // ADD CUSTOMER
+        else throw Error("The specified user type is not valid.");
         emit("userAdded", { name: state.name, email: state.email });
-      else throw Error("You must enter a name and email for the new user.");
+      } else throw Error("You must enter a name and email for the new user.");
 
       emit("didDismiss");
     };

@@ -3,7 +3,7 @@ import router from "./router";
 import { auth, storage } from "./main";
 import date from "date-and-time";
 import store from "./store";
-import { Loader } from "./types";
+import { CustomerDay, Loader, sampleVisit1, Visit } from "./types";
 
 const { state } = store;
 
@@ -18,6 +18,15 @@ export function dateToStrings(inputDate: Date): Array<string> {
     date.format(inputDate, "MMMM"),
     date.format(inputDate, "dddd"),
   ];
+}
+
+export function formatTime(fourDigitTime: string): string {
+  const hours24 = parseInt(fourDigitTime.substring(0, 2));
+  const hours = ((hours24 + 11) % 12) + 1;
+  const amPm = hours24 > 11 ? "pm" : "am";
+  const minutes = fourDigitTime.substring(2);
+
+  return hours + ":" + minutes + amPm;
 }
 
 let routeGuardsInitialized = false;
@@ -155,4 +164,11 @@ export async function getImageURL(ref: string) {
     .ref()
     .child(ref)
     .getDownloadURL();
+}
+
+export async function retrieveVisitsOnDay(
+  day: CustomerDay
+): Promise<Array<Visit>> {
+  // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
+  return [sampleVisit1, sampleVisit1];
 }

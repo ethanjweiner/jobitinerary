@@ -22,7 +22,10 @@
         :searchFilter="searchDate"
       >
         <template v-slot:item="itemProps">
-          <DayItem :day="itemProps.item" :showPaidToggle="showPaidToggle" />
+          <EmployeeDayItem
+            :day="itemProps.item"
+            :showPaidToggle="showPaidToggle"
+          />
         </template>
       </InfiniteList>
     </ion-card-content>
@@ -43,13 +46,13 @@ import router from "@/router";
 import { Day, Splitter, sampleDay } from "@/types";
 
 import AddButton from "../buttons/AddButton.vue";
-import DayItem from "./items/EmployeeDayItem.vue";
+import EmployeeDayItem from "./items/EmployeeDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";
 
 export default {
   name: "Employee Days",
   components: {
-    DayItem,
+    EmployeeDayItem,
     IonCardHeader,
     IonInput,
     IonCardTitle,
@@ -59,7 +62,7 @@ export default {
     InfiniteList,
   },
   props: {
-    dbRef: String,
+    dbRef: Object,
     employeeName: String,
     showPaidToggle: Boolean,
     hideAdd: Boolean,

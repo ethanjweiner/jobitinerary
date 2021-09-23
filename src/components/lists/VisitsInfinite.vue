@@ -24,11 +24,12 @@
         <template v-slot:item="itemProps">
           <VisitItem
             :visit="itemProps.item"
-            @click="
-              router.push({
-                name: 'Company Visit',
-                params: { visitID: itemProps.item.id },
-              })
+            :itemAction="
+              () =>
+                router.push({
+                  name: 'Company Visit',
+                  params: { visitID: itemProps.item.id },
+                })
             "
           />
         </template>

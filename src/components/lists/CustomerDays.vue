@@ -22,7 +22,7 @@
         :searchFilter="searchDate"
       >
         <template v-slot:item="itemProps">
-          <DayItem
+          <CustomerDayItem
             :day="itemProps.item"
             @click="
               router.push({
@@ -50,14 +50,13 @@ import router from "@/router";
 
 import { sampleCustomerDay } from "@/types";
 
-import DayItem from "./items/CustomerDayItem.vue";
+import CustomerDayItem from "./items/CustomerDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";
 
 export default {
   name: "Customer Days",
   props: {
     customerName: String,
-    dbRef: String,
   },
   setup() {
     const searchDate = ref<string>("");
@@ -69,7 +68,7 @@ export default {
     };
   },
   components: {
-    DayItem,
+    CustomerDayItem,
     IonCardHeader,
     IonInput,
     IonCardTitle,

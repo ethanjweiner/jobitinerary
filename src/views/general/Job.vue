@@ -36,7 +36,7 @@
             <Tasks v-model="state.job.tasks" />
           </template>
           <template v-slot:visits>
-            <JobVisits v-model="state.visits" @openVisit="openVisit" />
+            <JobVisits />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
@@ -69,7 +69,7 @@
                     </ion-card-title>
                   </ion-card-header>
                   <ion-card-content>
-                    <JobVisits v-model="state.visits" @openVisit="openVisit" />
+                    <JobVisits />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -77,18 +77,6 @@
           </template>
         </Sections>
       </form>
-      <ion-modal
-        v-if="state.selectedVisitIndex != -1"
-        :is-open="state.selectedVisitIndex != -1"
-        @didDismiss="closeModal"
-      >
-        <VisitModal
-          v-model="state.visits[state.selectedVisitIndex]"
-          :isModal="true"
-          :hideJob="true"
-          @close="closeModal"
-        />
-      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
@@ -124,13 +112,12 @@ import {
   ellipsisVertical,
 } from "ionicons/icons";
 
-import { sampleJob, sampleVisit1, SectionsType, Visit } from "@/types";
+import { sampleJob, sampleVisit1, SectionsType } from "@/types";
 
 import Sections from "@/components/Sections.vue";
 import JobMain from "@/components/forms/JobMain.vue";
 import JobVisits from "@/components/lists/JobVisits.vue";
 import Tasks from "@/components/lists/Tasks.vue";
-import VisitModal from "@/views/general/Visit.vue";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 
 export default {
@@ -159,13 +146,11 @@ export default {
       },
     ]);
 
-    // State
     const state = reactive({
       // RETRIEVE JOB WITH CUSTOMER USERNAME AND JOB ID
       job: sampleJob,
-      // RETRIEVE VISITS RELATED TO JOB
+      // RETRIEVE VISITS UPON LOAD
       visits: [sampleVisit1, sampleVisit1],
-      selectedVisitIndex: -1,
     });
 
     // Popover
@@ -181,27 +166,13 @@ export default {
       router.go(-1);
     };
 
-    const openVisit = (visit: Visit) => {
-      state.selectedVisitIndex = state.visits.findIndex(
-        (_visit) => _visit.id == visit.id
-      );
-    };
-
-    const closeModal = () => {
-      console.log("close modal");
-      // Update the visits with the new visit data
-      state.selectedVisitIndex = -1;
-    };
-
     return {
       state,
       sections,
       popoverIsOpen,
       popoverEvent,
       toggleJobSettings,
-      openVisit,
       deleteJob,
-      closeModal,
       icons: {
         ellipsisVertical,
         homeOutline,
@@ -216,7 +187,6 @@ export default {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonModal,
     IonIcon,
     IonButtons,
     IonPopover,
@@ -232,7 +202,6 @@ export default {
     IonRow,
     IonCol,
     JobVisits,
-    VisitModal,
     DeletePopover,
     IonNote,
   },

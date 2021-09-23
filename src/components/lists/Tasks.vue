@@ -11,9 +11,8 @@
       <Task
         v-for="(task, index) in state.tasks"
         :key="task.id"
+        v-model="state.tasks[index]"
         @deleteTask="deleteTask(index)"
-        :task="task"
-        @updateTask="(newTask) => (state.tasks[index] = newTask)"
       />
       <ion-item button color="primary" @click="addTask">
         <ion-icon :icon="add"></ion-icon>

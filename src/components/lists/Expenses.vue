@@ -2,7 +2,7 @@
   <Expense
     v-for="(expense, index) in state.expenses"
     :key="expense.id"
-    :expense="expense"
+    v-model="state.expenses[index]"
     @deleteExpense="state.expenses.splice(index, 1)"
   />
   <ion-item
@@ -17,36 +17,42 @@
 </template>
 
 <script lang="ts">
-// RETRIEVE & UPDATE EXPENSES LOCALLY ON THIS COMPONENT
-import { add } from "ionicons/icons";
-import { reactive } from "@vue/reactivity";
-import { sampleExpense, emptyExpense } from "@/types";
 import { IonItem, IonIcon, IonLabel } from "@ionic/vue";
+import { watch } from "@vue/runtime-core";
+import { reactive } from "@vue/reactivity";
+import { add } from "ionicons/icons";
+
+import { emptyExpense, sampleExpense } from "@/types";
+
 import Expense from "./items/Expense.vue";
+
 export default {
   name: "Expenses",
   props: {
+    dbRef: String,
     date: String,
   },
-  components: { IonItem, IonIcon, IonLabel, Expense },
-  setup() {
+  setup(props: any) {
     const state = reactive({
-      expenses: [sampleExpense],
+      expenses: [sampleExpense, sampleExpense],
     });
-    const deleteExpense = (index: number) => {
-      state.expenses.splice(index, 1);
-    };
+
+    watch(state.expenses, (newExpenses) => {
+      // UPDATE IN DATABASE
+      console.log(props.dbRef, newExpenses);
+    });
+
     const addExpense = () => {
       // Add expense to database & retrieve
       state.expenses.push(emptyExpense(Date.now().toString()));
     };
     return {
       state,
-      deleteExpense,
       addExpense,
       add,
     };
   },
+  components: { IonItem, IonIcon, IonLabel, Expense },
 };
 </script>
 

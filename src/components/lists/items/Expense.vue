@@ -13,29 +13,29 @@
     </div>
 
     <CurrencyInput
-      slot="end"
       v-model="state.expense.cost"
       placeholder="Cost"
       :options="{ currency: 'USD' }"
       :disabled="hideControls"
+      style="margin-right: 10px;"
     />
 
     <ion-buttons slot="end" style="margin: 0;">
       <ion-note style="margin: auto;" v-if="state.expense.paid"
-        ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
+        ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
       >
       <ion-note style="margin: auto;" v-if="!state.expense.paid"
         >Unpaid</ion-note
       >
       <ion-toggle v-model="state.expense.paid" value="paid"></ion-toggle>
       <ion-button @click="$emit('deleteExpense')" v-if="!hideControls">
-        <ion-icon :icon="trashOutline"></ion-icon>
+        <ion-icon :icon="icons.trashOutline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-item>
 </template>
 
-<script>
+<script lang="ts">
 import {
   IonItem,
   IonInput,
@@ -48,15 +48,31 @@ import {
 import { reactive } from "@vue/reactivity";
 import { trashOutline, checkmark } from "ionicons/icons";
 import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
+import { watch } from "@vue/runtime-core";
 
 export default {
   name: "Expense",
   props: {
-    expense: Object,
+    modelValue: Object,
     hideControls: Boolean,
     showDate: Boolean,
   },
-  emits: ["deleteExpense"],
+  emits: ["update:modelValue", "deleteExpense"],
+  setup(props: any, { emit }: { emit: any }) {
+    const state = reactive({
+      expense: props.modelValue,
+    });
+
+    watch(state.expense, (newExpense) => emit("update:modelValue", newExpense));
+
+    return {
+      state,
+      icons: {
+        trashOutline,
+        checkmark,
+      },
+    };
+  },
   components: {
     IonItem,
     IonInput,
@@ -66,16 +82,6 @@ export default {
     IonIcon,
     IonToggle,
     CurrencyInput,
-  },
-  setup(props) {
-    const state = reactive({
-      expense: props.expense,
-    });
-    return {
-      state,
-      trashOutline,
-      checkmark,
-    };
   },
 };
 </script>

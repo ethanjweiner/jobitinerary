@@ -2,12 +2,12 @@
   <Sections :sections="sections" :wrapCards="true">
     <template v-slot:dates>
       <div class="list">
-        <CustomerDays :days="state.days" :customerName="state.customer.name" />
+        <CustomerDays :customerName="state.customer.name" />
       </div>
     </template>
     <template v-slot:jobs>
       <div class="list">
-        <Jobs :jobs="state.jobs" :customerName="state.customer.name" />
+        <Jobs :customerName="state.customer.name" />
       </div>
     </template>
     <template v-slot:customer-info>
@@ -18,17 +18,14 @@
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <CustomerDays
-                :days="state.days"
-                :customerName="state.customer.name"
-              />
+              <CustomerDays :customerName="state.customer.name" />
             </div>
           </ion-card>
         </ion-col>
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <Jobs :jobs="state.jobs" :customerName="state.customer.name" />
+              <Jobs :customerName="state.customer.name" />
             </div>
           </ion-card>
         </ion-col>

@@ -6,12 +6,12 @@
     <ion-row>
       <ion-col size="6">
         <ion-button color="primary" expand="block">
-          <ion-icon :icon="playOutline"></ion-icon>
+          <ion-icon :icon="icons.playOutline"></ion-icon>
         </ion-button>
       </ion-col>
       <ion-col size="6">
         <ion-button color="danger" expand="block">
-          <ion-icon :icon="stopOutline"></ion-icon>
+          <ion-icon :icon="icons.stopOutline"></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>
@@ -27,16 +27,9 @@
         <ion-item>
           <ion-label position="stacked">Start Time</ion-label>
           <ion-datetime
-            @ionChange="
-              $emit('timeChange', {
-                start: $event.detail.value,
-                end: time.end,
-                hours: time.hours,
-              })
-            "
+            v-model="state.time.start"
             display-format="h:mm A"
             picker-format="h:mm A"
-            :value="time.start"
           ></ion-datetime>
         </ion-item>
       </ion-col>
@@ -44,16 +37,9 @@
         <ion-item>
           <ion-label position="stacked">End Time</ion-label>
           <ion-datetime
-            @ionChange="
-              $emit('timeChange', {
-                start: time.start,
-                end: $event.detail.value,
-                hours: time.hours,
-              })
-            "
+            v-model="state.time.end"
             display-format="h:mm A"
             picker-format="h:mm A"
-            :value="time.end"
           ></ion-datetime>
         </ion-item>
       </ion-col>
@@ -61,15 +47,9 @@
         <ion-item>
           <ion-label position="stacked">Total Hours</ion-label>
           <ion-input
-            @ionInput="
-              $emit('timeChange', {
-                start: time.start,
-                end: time.end,
-                hours: parseInt($event.target.value),
-              })
-            "
             type="number"
-            :value="time.hours"
+            inputmode="numeric"
+            v-model="state.time.hours"
           ></ion-input>
         </ion-item>
       </ion-col>
@@ -77,7 +57,7 @@
   </ion-grid>
 </template>
 
-<script>
+<script lang="ts">
 import { playOutline, stopOutline } from "ionicons/icons";
 import {
   IonGrid,
@@ -92,15 +72,30 @@ import {
   IonNote,
   IonDatetime,
 } from "@ionic/vue";
-import { computed } from "@vue/reactivity";
+import { computed, reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 export default {
   name: "Timelog",
-  props: ["time", "title"],
-  setup() {
+  props: {
+    modelValue: Object,
+    title: String,
+  },
+  emits: ["update:modelValue"],
+  setup(props: any, { emit }: { emit: any }) {
+    const state = reactive({
+      time: props.modelValue,
+    });
+
+    watch(state.time, (newTime) => emit("update:modelValue", newTime));
+
     const mismatch = computed(() => true);
+
     return {
-      playOutline,
-      stopOutline,
+      state,
+      icons: {
+        playOutline,
+        stopOutline,
+      },
       mismatch,
     };
   },

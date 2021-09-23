@@ -328,16 +328,16 @@ export interface Visit {
   readByCompany: boolean;
 }
 
-export function emptyVisit(date = ""): Visit {
+export function emptyVisit(options: any): Visit {
   return {
     id: "",
-    employeeName: "",
-    customerName: "",
+    employeeName: options.employeeName ? options.employeeName : "",
+    customerName: options.customerName ? options.customerName : "",
     workType: "",
     plannedStart: "",
     plannedEnd: "",
     job: null,
-    date: date,
+    date: options.date ? options.date : "",
     time: {
       start: "",
       end: "",
@@ -422,14 +422,13 @@ export function emptyDay(date: string, hourlyRate = null): Day {
 export interface CustomerDay {
   date: string;
   customerName: string;
-  employeeHours: Array<{ employeeName: string; hours: number }>;
-  // Vitis and jobs worked aren't needed -- just find upon load
+  visits: Array<Visit>;
 }
 
 export const sampleCustomerDay: CustomerDay = {
   date: "2021-09-12",
   customerName: "Customer 1",
-  employeeHours: [{ employeeName: "Customer 1", hours: 6 }],
+  visits: [],
 };
 
 export interface Job {

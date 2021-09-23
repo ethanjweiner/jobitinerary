@@ -3,10 +3,9 @@
     <DayVisitItem
       v-for="(visit, index) in state.visits"
       :key="visit.id"
+      v-model="state.visits[index]"
       @deleteVisit="deleteVisit(index)"
       @openVisit="$emit('openVisit', visit.id)"
-      :visit="visit"
-      @updateVisit="(newVisit) => (state.visits[index] = newVisit)"
     />
     <ion-item button color="primary" @click="addVisit">
       <ion-icon :icon="add"></ion-icon>
@@ -26,7 +25,10 @@ import { emptyVisit, sampleVisit1 } from "@/types";
 
 export default defineComponent({
   name: "Day Visits",
-  props: ["visits", "date"],
+  props: {
+    dbRef: Object,
+    date: String,
+  },
   emits: ["openVisit", "addVisit"],
   components: {
     IonReorderGroup,
@@ -38,18 +40,20 @@ export default defineComponent({
   setup(props: any, { emit }: { emit: any }) {
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
-      // RETRIEVE VISITS ALREADY EXISTING ON THIS DATE/EMPLOYEE
+      // RETRIEVE VISITS USING DBREF
       visits: [sampleVisit1, sampleVisit1],
     });
 
     const deleteVisit = (index: number) => {
-      // Delete the visit from the database too...
+      // DELETE VISIT FROM DATABASE
       state.visits.splice(index, 1);
     };
 
     const addVisit = () => {
-      // Create a new visit & add to database
-      state.visits.push(emptyVisit(props.date));
+      const visit = emptyVisit({ date: props.date });
+      // ADD VISIT TO DATABASE
+      state.visits.push(visit);
+      // OPEN VISIT WITH CREATED ID
       emit("openVisit", "new_visit_id");
     };
 

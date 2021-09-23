@@ -44,17 +44,18 @@
   </ion-item>
   <ion-item>
     <ion-label>Mark Day as Paid</ion-label>
-    <ion-note style="margin: auto;" v-if="state.day.paid"
-      ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
-    >
-    <ion-note style="margin: auto;" v-if="!state.day.paid">Unpaid</ion-note>
-    <ion-toggle v-model="state.day.paid" value="paid"></ion-toggle>
+    <ion-buttons slot="end">
+      <ion-note style="margin: auto;" v-if="state.day.paid"
+        ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
+      >
+      <ion-note style="margin: auto;" v-if="!state.day.paid">Unpaid</ion-note>
+      <ion-toggle v-model="state.day.paid" value="paid"></ion-toggle>
+    </ion-buttons>
   </ion-item>
-  <TimeLogComponent
+  <TimeLog
     v-if="store.state.userType == 'employee'"
-    :time="state.day.time"
-    :title="'Visit Time Log'"
-    @timeChange="(time) => (state.day.time = time)"
+    v-model="state.day.time"
+    :title="'Track Day Hours'"
   />
   <!-- Additional Notes -->
   <h3 class="ion-text-center">
@@ -68,7 +69,7 @@
 <script lang="ts">
 import { computed, reactive } from "@vue/reactivity";
 import { checkmark } from "ionicons/icons";
-import TimeLogComponent from "@/components/TimeLog.vue";
+import TimeLog from "@/components/TimeLog.vue";
 import {
   IonItem,
   IonGrid,
@@ -82,6 +83,7 @@ import {
   IonInput,
   IonIcon,
   IonText,
+  IonButtons,
 } from "@ionic/vue";
 import { watch } from "@vue/runtime-core";
 import store from "@/store";
@@ -90,9 +92,31 @@ import CurrencyInput from "../inputs/CurrencyInput.vue";
 export default {
   name: "Day Main",
   props: {
-    day: Object,
+    modelValue: Object,
   },
-  emits: ["dayChanged"],
+  emits: ["update:modelValue"],
+  setup(props: any, { emit }: { emit: any }) {
+    const state = reactive({
+      day: props.modelValue,
+    });
+
+    watch(state.day, (newDay) => emit("update:modelValue", newDay));
+
+    const paymentText = computed(() => {
+      if (store.state.userType == "company")
+        return "If no hourly rate is specified, the default rate for this employee will be assumed.";
+      else if (store.state.userType == "employee")
+        return "If no hourly rate is specified, your default hourly rate will be assumed.";
+      else return "";
+    });
+
+    return {
+      store,
+      state,
+      checkmark,
+      paymentText,
+    };
+  },
   components: {
     IonItem,
     IonGrid,
@@ -105,33 +129,10 @@ export default {
     IonTextarea,
     IonInput,
     IonIcon,
-    TimeLogComponent,
+    TimeLog,
     IonText,
     CurrencyInput,
-  },
-  setup(props: any, { emit }: { emit: any }) {
-    const state = reactive({
-      day: props.day,
-    });
-
-    const paymentText = computed(() => {
-      if (store.state.userType == "company")
-        return "If no hourly rate is specified, the default rate for this employee will be assumed.";
-      else if (store.state.userType == "employee")
-        return "If no hourly rate is specified, your default hourly rate will be assumed.";
-      else return "";
-    });
-
-    watch(state.day, (newDay) => {
-      emit("dayChanged", newDay);
-    });
-
-    return {
-      store,
-      state,
-      checkmark,
-      paymentText,
-    };
+    IonButtons,
   },
 };
 </script>

@@ -75,7 +75,7 @@ import { getImageURL } from "@/helpers";
 export default {
   name: "Task",
   props: {
-    task: Object,
+    modelValue: Object,
   },
   components: {
     IonItem,
@@ -92,10 +92,10 @@ export default {
     IonToolbar,
     ImageUploader,
   },
-  emits: ["updateTask", "deleteTask"],
+  emits: ["update:modelValue", "deleteTask"],
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      task: props.task,
+      task: props.modelValue,
       showTextAreas: false,
       imageModalIsOpen: false,
       imageURL: "",
@@ -112,7 +112,7 @@ export default {
       getImageURL(state.task.image.ref).then((url) => (state.imageURL = url));
 
     watch(state.task, (newTask) => {
-      emit("updateTask", newTask);
+      emit("update:modelValue", newTask);
     });
 
     return {

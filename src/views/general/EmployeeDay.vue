@@ -8,7 +8,7 @@
         <ion-title> {{ username }} on {{ date }} </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
-            <ion-icon :icon="ellipsisVertical"></ion-icon>
+            <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -31,32 +31,32 @@
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
-            <DayMain :day="state.day" @dayChanged="updateDay" />
+            <DayMain v-model="state.day" />
           </template>
           <template v-slot:visits>
             <DayVisits :date="state.day.date" @openVisit="openVisitModal" />
           </template>
           <template v-slot:expenses>
-            <Expenses :date="state.day.date" />
+            <Expenses />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
               <ion-col size="6">
                 <ion-row>
                   <ion-card style="width: 100%;">
-                    <DayMain :day="state.day" @dayChanged="updateDay" />
+                    <DayMain v-model="state.day" />
                   </ion-card>
                 </ion-row>
                 <ion-row>
                   <ion-card style="width: 100%;">
                     <ion-card-header class="ion-text-center">
                       <ion-card-title>
-                        <ion-icon :icon="pricetagsOutline"></ion-icon>
+                        <ion-icon :icon="icons.pricetagsOutline"></ion-icon>
                         Expenses
                       </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <Expenses :date="state.day.date" />
+                      <Expenses />
                     </ion-card-content>
                   </ion-card>
                 </ion-row>
@@ -65,7 +65,7 @@
                 <ion-card>
                   <ion-card-header class="ion-text-center">
                     <ion-card-title>
-                      <ion-icon :icon="homeOutline"></ion-icon>
+                      <ion-icon :icon="icons.homeOutline"></ion-icon>
                       Visits
                     </ion-card-title>
                   </ion-card-header>
@@ -117,20 +117,19 @@ import {
   IonCardContent,
   IonBackButton,
 } from "@ionic/vue";
-
 import { ref } from "vue";
+import { reactive } from "@vue/reactivity";
+
+import store from "@/store";
+import router from "@/router";
 
 import { Day, sampleDay, SectionsType } from "@/types";
-import { reactive } from "@vue/reactivity";
 
 import Sections from "@/components/Sections.vue";
 import DayMain from "@/components/forms/DayMain.vue";
 import DayVisits from "@/components/lists/DayVisits.vue";
 import Expenses from "@/components/lists/Expenses.vue";
-
-import store from "@/store";
-import router from "@/router";
-import VisitModal from "@/views/general/Visit.vue";
+import VisitModal from "@/components/modals/VisitModal.vue";
 
 import {
   pricetagsOutline,
@@ -168,6 +167,7 @@ export default {
         id: "expenses",
       },
     ]);
+
     const state = reactive<State>({
       day: sampleDay, // Use the default hourly rate
       selectedVisitID: "",
@@ -213,17 +213,19 @@ export default {
     return {
       store,
       state,
-      updateDay,
       sections,
-      documentTextOutline,
-      homeOutline,
-      pricetagsOutline,
-      ellipsisVertical,
+      router,
+      icons: {
+        documentTextOutline,
+        homeOutline,
+        pricetagsOutline,
+        ellipsisVertical,
+      },
+      updateDay,
       toggleDaySettings,
       popoverIsOpen,
       popoverEvent,
       deleteDay,
-      router,
       openVisitModal,
       visitModalIsOpen,
       changeDate,
