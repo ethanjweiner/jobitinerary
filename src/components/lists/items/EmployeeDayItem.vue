@@ -46,6 +46,7 @@ import { checkmark } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
 import store from "@/store";
 import router from "@/router";
+import { Employee } from "@/types/users";
 
 export default {
   name: "Employee Day Item",
@@ -70,10 +71,12 @@ export default {
 
     const hourlyRate = computed(() => {
       if (state.day.hourlyRate) return state.day.hourlyRate;
-      const employee = store.state.companyState.employees.find(
-        (employee) => state.day.employeeName == employee.name
-      );
-      if (employee) return employee.defaultHourlyRate;
+      const employee = store.state.user
+        ? store.state.user.employees.find(
+            (employee) => state.day.employeeName == employee.data.name
+          )
+        : null;
+      if (employee instanceof Employee) return employee.data.defaultHourlyRate;
       return null;
     });
 

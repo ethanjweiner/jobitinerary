@@ -18,7 +18,10 @@
           <ion-card>
             <div style="height: 500px;">
               <!-- PASS DATABASE REFERENCE -->
-              <EmployeeDays :employeeName="state.employee.name" title="Dates" />
+              <EmployeeDays
+                :employeeName="state.employee.data.name"
+                title="Dates"
+              />
             </div>
           </ion-card>
         </ion-col>
@@ -69,7 +72,9 @@ import {
 
 import store from "@/store";
 
-import { Day, Employee, SectionsType } from "@/types";
+import { Day } from "@/types/work_units";
+import { SectionsType } from "@/types/auxiliary";
+import { Employee } from "@/types/users";
 import Sections from "../Sections.vue";
 
 import EmployeeDays from "@/components/lists/EmployeeDays.vue";
@@ -88,11 +93,18 @@ export default {
   },
   setup(props: any) {
     const state = reactive<State>({
-      employee: store.state.companyState.employees.find(
-        (employee) => employee.name == props.username
-      ),
+      employee: null,
       days: [],
     });
+
+    //
+    if (props.username) {
+      state.employee = store.state.user.employees.find(
+        (employee) => employee.name == props.username
+      );
+    } else {
+      state.employee = store.state.user;
+    }
 
     const sections = ref<SectionsType>([
       {

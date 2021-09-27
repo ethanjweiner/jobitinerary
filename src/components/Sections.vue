@@ -17,14 +17,8 @@
     </ion-segment>
     <!-- Sections -->
     <div v-if="screenWidth < 768 || separateByDefault">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        :class="
-          section.id != selectedSection ? 'ion-hide ' + section.id : section.id
-        "
-      >
-        <slot :name="section.id"></slot>
+      <div v-for="section in sections" :key="section.id" :class="section.id">
+        <slot :name="section.id" v-if="section.id == selectedSection"></slot>
       </div>
     </div>
 

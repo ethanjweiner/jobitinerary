@@ -1,31 +1,31 @@
 <template>
-  <ion-list class="address-input-item">
-    <ion-list-header>Address</ion-list-header>
-    <ion-toolbar id="address-toolbar">
-      <ion-item>
-        <ion-input
-          type="text"
-          id="autocomplete"
-          placeholder="Enter address"
-          ref="autocompleteInput"
-          :value="state.location.address"
-          @input="onInput"
-        ></ion-input>
-      </ion-item>
+  <ion-toolbar id="address-toolbar">
+    <ion-buttons slot="start">
+      <ion-button :disabled="state.location.coordinates ? false : true">
+        <ion-icon
+          :icon="navigateOutline"
+          :color="state.location.coordinates ? 'primary' : 'grey'"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-item>
+      <ion-label position="stacked">Address </ion-label>
 
-      <ion-buttons slot="end">
-        <ion-button v-if="state.location.coordinates">
-          <ion-icon :icon="navigateOutline" color="grey"></ion-icon>
-          <span style="padding-left: 5px;">Directions</span>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-    <ion-card id="suggestions-card">
-      <ion-item v-for="(suggestion, index) in state.suggestions" :key="index">{{
-        suggestion
-      }}</ion-item>
-    </ion-card>
-  </ion-list>
+      <ion-input
+        type="text"
+        id="autocomplete"
+        placeholder="Enter address"
+        ref="autocompleteInput"
+        :value="state.location.address"
+        @input="onInput"
+      ></ion-input>
+    </ion-item>
+  </ion-toolbar>
+  <ion-card id="suggestions-card">
+    <ion-item v-for="(suggestion, index) in state.suggestions" :key="index">{{
+      suggestion
+    }}</ion-item>
+  </ion-card>
 </template>
 
 <script>
@@ -33,12 +33,11 @@ import {
   IonButton,
   IonToolbar,
   IonCard,
-  IonButtons,
   IonItem,
-  IonList,
-  IonListHeader,
   IonInput,
   IonIcon,
+  IonLabel,
+  IonButtons,
 } from "@ionic/vue";
 
 import { reactive } from "@vue/reactivity";
@@ -51,12 +50,11 @@ export default {
     IonButton,
     IonToolbar,
     IonCard,
-    IonButtons,
     IonItem,
-    IonList,
-    IonListHeader,
     IonInput,
     IonIcon,
+    IonLabel,
+    IonButtons,
   },
   props: {
     modelValue: Object,
@@ -110,4 +108,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

@@ -1,24 +1,29 @@
 <template>
-  <ion-card style="width: fit-content;">
-    <ion-toolbar>
-      <ion-buttons slot="start" v-if="!hideUploadOption">
-        <ImageUploader @imageChange="changeImage" />
-      </ion-buttons>
+  <div class="image-container">
+    <ion-card class="ion-text-start">
+      <ion-toolbar>
+        <ion-buttons slot="start" v-if="!hideUploadOption">
+          <ImageUploader @imageChange="changeImage" />
+        </ion-buttons>
 
-      <ion-buttons slot="end">
-        <ion-button @click="$emit('deleteImage')" v-if="!hideClose">
-          <ion-icon :icon="icons.close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-    <!-- Change the src to be the image url -->
-    <img v-if="state.image.ref" :src="state.imageURL" alt="Image" />
-    <ion-textarea
-      v-model="state.image.caption"
-      placeholder="Caption"
-      v-if="!hideCaption"
-    ></ion-textarea>
-  </ion-card>
+        <ion-buttons slot="end">
+          <ion-button @click="$emit('deleteImage')" v-if="!hideClose">
+            <ion-icon :icon="icons.close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <!-- Change the src to be the image url -->
+      <img v-if="state.image.ref" :src="state.imageURL" alt="Image" />
+      <ion-card-content>
+        <ion-textarea
+          v-model="state.image.caption"
+          auto-grow
+          placeholder="Caption"
+          v-if="!hideCaption"
+        ></ion-textarea>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -26,6 +31,7 @@ import { reactive } from "@vue/reactivity";
 import { close, cameraOutline } from "ionicons/icons";
 import {
   IonCard,
+  IonCardContent,
   IonToolbar,
   IonButton,
   IonButtons,
@@ -73,6 +79,7 @@ export default {
   },
   components: {
     IonCard,
+    IonCardContent,
     IonToolbar,
     IonButton,
     IonButtons,
@@ -84,10 +91,19 @@ export default {
 </script>
 
 <style scoped>
+ion-card {
+  width: fit-content;
+  display: inline-block;
+}
 img {
   max-height: 400px;
 }
 ion-textarea {
   margin: 0;
+}
+
+.image-container {
+  padding: 10px;
+  width: fit-content;
 }
 </style>

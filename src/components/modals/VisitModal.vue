@@ -48,7 +48,7 @@ import { reactive, ref } from "@vue/reactivity";
 import { close } from "ionicons/icons";
 
 import Visit from "@/components/units/Visit.vue";
-import { emptyVisit, sampleVisit1 } from "@/types";
+import { emptyVisit, sampleVisit1 } from "@/types/work_units";
 
 export default {
   name: "Visit Modal",

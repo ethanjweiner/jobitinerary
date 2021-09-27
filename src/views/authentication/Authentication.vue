@@ -37,10 +37,6 @@
 </template>
 
 <script lang="ts">
-import { AuthenticationTitleText } from "@/types";
-import LogIn from "@/components/authentication/LogIn.vue";
-import CompanySignUp from "@/components/authentication/CompanySignUp.vue";
-
 import {
   IonContent,
   IonLabel,
@@ -51,8 +47,11 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/vue";
-
 import { defineComponent } from "vue";
+
+import { AuthenticationTitleText } from "@/types/auxiliary";
+import LogIn from "@/components/authentication/LogIn.vue";
+import CompanySignUp from "@/components/authentication/CompanySignUp.vue";
 
 export default defineComponent({
   name: "Authentication",

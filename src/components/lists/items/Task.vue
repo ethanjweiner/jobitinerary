@@ -143,9 +143,11 @@ ion-thumbnail {
 }
 ion-card {
   height: 100%;
+  margin-top: 0;
 }
 .expanded-image {
   margin-top: auto;
+  align-self: center;
   margin-bottom: auto;
   max-width: 100%;
   max-height: 100%;

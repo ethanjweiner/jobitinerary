@@ -112,7 +112,8 @@ import {
   imagesOutline,
 } from "ionicons/icons";
 
-import { SectionsType, Visit } from "@/types";
+import { Visit } from "@/types/work_units";
+import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
 import VisitMain from "@/components/forms/VisitMain.vue";

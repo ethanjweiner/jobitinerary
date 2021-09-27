@@ -21,7 +21,7 @@ import { add } from "ionicons/icons";
 import { reactive } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { emptyVisit, sampleVisit1 } from "@/types";
+import { emptyVisit, sampleVisit1 } from "@/types/work_units";
 
 export default defineComponent({
   name: "Day Visits",

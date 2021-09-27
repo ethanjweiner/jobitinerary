@@ -56,7 +56,7 @@ import {
   IonLabel,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { Splitter } from "@/types";
+import { Splitter } from "@/types/auxiliary";
 
 interface State {
   items: Array<any>;
@@ -81,8 +81,6 @@ export default {
       lists: [],
       offset: 0,
     });
-
-    console.log(props.searchFilter);
 
     // Q: Why query the database directly inside the infinite list component?
     // A: The process of loading more data in the infinite list component is streamlined: Directly query db, instead of emitting

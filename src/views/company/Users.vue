@@ -104,7 +104,10 @@ import store from "@/store";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import Customer from "@/components/units/Customer.vue";
 import Employee from "@/components/units/Employee.vue";
-import { Customer as CustomerType, Employee as EmployeeType } from "@/types";
+import {
+  Customer as CustomerType,
+  Employee as EmployeeType,
+} from "@/types/users";
 
 interface State {
   username: string;
@@ -123,10 +126,8 @@ export default {
       users: [],
     });
 
-    if (props.type == "customer")
-      state.users = store.state.companyState.customers;
-    else if (props.type == "employee")
-      state.users = store.state.companyState.employees;
+    if (props.type == "customer") state.users = store.state.user.customers;
+    else if (props.type == "employee") state.users = store.state.user.employees;
 
     // Popover
     const popoverIsOpen = ref(false);

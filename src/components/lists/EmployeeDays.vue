@@ -43,7 +43,8 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { Day, Splitter, sampleDay } from "@/types";
+import { Day, sampleDay } from "@/types/work_units";
+import { Splitter } from "@/types/auxiliary";
 
 import AddButton from "../buttons/AddButton.vue";
 import EmployeeDayItem from "./items/EmployeeDayItem.vue";

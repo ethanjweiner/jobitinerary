@@ -1,39 +1,36 @@
-// import { db } from "@/main";
-import * as Types from "@/types";
-import store from "@/store";
+import { sampleVisit1, sampleJob, Visit, Job } from "@/types/work_units";
 
 export async function fetchVisits(options?: {
   employeeName?: string;
   customerName?: string;
   limit?: { offset: number; quantity: number };
-}): Promise<Array<Types.Visit>> {
+}): Promise<Array<Visit>> {
   if (options) {
-    if (options.employeeName) return [Types.sampleVisit1, Types.sampleVisit1];
-    else if (options.customerName)
-      return [Types.sampleVisit1, Types.sampleVisit1];
+    if (options.employeeName) return [sampleVisit1, sampleVisit1];
+    else if (options.customerName) return [sampleVisit1, sampleVisit1];
     else if (options.limit) {
       // Fetch the limit
       const arr = [];
       for (let i = 0; i < options.limit.quantity; i++) {
-        arr.push(Types.sampleVisit1);
+        arr.push(sampleVisit1);
       }
       return arr;
     }
   }
   // Fetch all visits for the company
-  return [Types.sampleVisit1, Types.sampleVisit1];
+  return [sampleVisit1, sampleVisit1];
 }
 
-export async function fetchJobs(
-  customerName?: string
-): Promise<Array<Types.Job>> {
+export async function fetchJobs(customerName?: string): Promise<Array<Job>> {
   if (customerName) {
     // Retrieve jobs specific to customer
-    return [Types.sampleJob, Types.sampleJob];
+    return [sampleJob, sampleJob];
   }
   // Retrieve all jobs
-  return [Types.sampleJob, Types.sampleJob];
+  return [sampleJob, sampleJob];
 }
+
+/* BACKLOG
 
 export async function fetchThreads(
   recipientType: "company" | "employee" | "customer",
@@ -43,14 +40,16 @@ export async function fetchThreads(
   switch (recipientType) {
     case "company":
       // Retrieve all threads where company is a user
-      return [Types.sampleThread, Types.sampleThread];
+      return [sampleThread, sampleThread];
     case "employee":
       // Retrieve threads with the given employee _name_
-      return [Types.sampleThread, Types.sampleThread];
+      return [sampleThread, sampleThread];
     case "customer":
       // Retrieve threads with the given customer _name_
-      return [Types.sampleThread, Types.sampleThread];
+      return [sampleThread, sampleThread];
     default:
       break;
   }
 }
+
+*/

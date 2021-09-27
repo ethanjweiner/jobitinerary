@@ -1,7 +1,7 @@
 <template>
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button>
-      <ion-icon :icon="add"></ion-icon>
+      <ion-icon :icon="icons.add"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="end">
       <ion-fab-button
@@ -41,7 +41,7 @@ export default {
   },
   setup() {
     return {
-      add,
+      icons: { add },
       router,
     };
   },
@@ -49,8 +49,10 @@ export default {
 </script>
 
 <style scoped>
+ion-fab {
+  transform: scale(1.3);
+}
 ion-fab-button {
-  transform: scale(1.2);
   margin-left: 10px;
   margin-bottom: 10px;
 }

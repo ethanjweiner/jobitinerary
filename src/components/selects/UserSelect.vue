@@ -27,11 +27,7 @@
       @didDismiss="newUserModalIsOpen = false"
       css-class="new-user-modal"
     >
-      <NewUserModal
-        :type="type"
-        @userAdded="addUser"
-        @didDismiss="newUserModalIsOpen = false"
-      />
+      <NewUserModal :type="type" @didDismiss="newUserModalIsOpen = false" />
     </ion-modal>
   </ion-toolbar>
 </template>
@@ -51,8 +47,6 @@ import {
 } from "@ionic/vue";
 
 import { cartOutline, hammerOutline, add } from "ionicons/icons";
-
-import store from "@/store";
 
 import NewUserModal from "@/components/modals/NewUserModal.vue";
 
@@ -80,12 +74,7 @@ export default defineComponent({
   setup(props: any, { emit }: { emit: any }) {
     const newUserModalIsOpen = ref(false);
 
-    const addUser = async (dets: { name: string; email: string }) => {
-      const { name, email } = dets;
-      if (props.type == "customer") await store.addCustomer(name, email);
-      else if (props.type == "employee") await store.addEmployee(name, email);
-      else throw Error("No user type was provided");
-
+    const addUser = (name: string) => {
       emit("update:modelValue", name);
     };
 

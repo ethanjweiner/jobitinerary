@@ -48,7 +48,7 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { sampleCustomerDay } from "@/types";
+import { sampleCustomerDay } from "@/types/work_units";
 
 import CustomerDayItem from "./items/CustomerDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";

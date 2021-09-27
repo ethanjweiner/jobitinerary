@@ -46,7 +46,7 @@ import {
 
 import { close, sendOutline } from "ionicons/icons";
 import { reactive } from "@vue/reactivity";
-import { emptyMessage, Message, Thread } from "@/types";
+import { emptyMessage, Message, Thread } from "@/types/work_units";
 import ImageWithCaption from "../components/ImageWithCaption.vue";
 import store from "@/store";
 

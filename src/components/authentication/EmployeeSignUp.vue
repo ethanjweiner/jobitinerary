@@ -12,27 +12,6 @@
         ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Your Name</ion-label>
-        <ion-input
-          v-model="name"
-          placeholder="Employee"
-          required
-          @keyup.enter="activate"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked">Phone Number</ion-label>
-        <ion-input
-          v-model="phone"
-          type="tel"
-          inputmode="tel"
-          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-          placeholder="123-123-1234"
-          required
-          @keyup.enter="activate"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
         <ion-label position="stacked">Create a Password</ion-label>
         <ion-input
           v-model="password"
@@ -51,7 +30,8 @@
 import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
 import { ref } from "vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import store from "@/store";
+import { Employee } from "@/types/users";
+import { verifyEmployee } from "@/authentication";
 
 export default {
   name: "Employee Sign Up",
@@ -68,16 +48,18 @@ export default {
   setup(props: any) {
     const credentials = reactive({
       email: props.email,
-      name: null,
-      phone: null,
-      password: null,
+      password: "",
     });
 
     const activationToken = ref("");
 
     const activate = async () => {
       try {
-        await store.activateEmployee(credentials, activationToken.value);
+        const employeeDoc = await verifyEmployee(activationToken.value);
+        if (employeeDoc) {
+          const employee = new Employee(employeeDoc);
+          employee.signUp(credentials.password);
+        }
       } catch (error) {
         console.log(error);
       }

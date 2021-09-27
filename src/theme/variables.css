@@ -105,3 +105,8 @@ input {
 .payment-data {
   font-weight: bold;
 }
+
+ion-card {
+  margin: 0 !important;
+  margin-top: 10px !important;
+}

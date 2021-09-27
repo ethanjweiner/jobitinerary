@@ -107,7 +107,7 @@ import { computed, reactive } from "@vue/reactivity";
 import { retrieveVisitsOnDay } from "@/helpers";
 import { ellipsisVertical } from "ionicons/icons";
 
-import { CustomerDay, emptyVisit, Visit } from "@/types";
+import { CustomerDay, emptyVisit, Visit } from "@/types/work_units";
 import VisitInline from "@/components/units/Visit.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 

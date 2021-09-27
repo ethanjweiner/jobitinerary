@@ -1,6 +1,6 @@
 <template>
-  <ion-chip style="margin-left: 10px;">
-    <ion-icon :icon="add"></ion-icon>
+  <ion-chip style="margin-left: 7px;">
+    <ion-icon :icon="icons.add"></ion-icon>
     <ion-label>{{ title ? title : "Add New" }}</ion-label>
   </ion-chip>
 </template>
@@ -21,7 +21,7 @@ export default {
   },
   setup() {
     return {
-      add,
+      icons: { add },
     };
   },
 };

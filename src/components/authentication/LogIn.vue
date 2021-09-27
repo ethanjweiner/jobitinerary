@@ -43,14 +43,19 @@ export default {
       email: null,
       password: null,
     });
+
+    const resetCredentials = () => {
+      credentials.email = null;
+      credentials.password = null;
+    };
+
     const logIn = async () => {
       try {
         await signIn(credentials.email, credentials.password);
       } catch (error) {
         console.log(error);
       } finally {
-        credentials.email = null;
-        credentials.password = null;
+        resetCredentials();
       }
     };
     return { ...toRefs(credentials), logIn };

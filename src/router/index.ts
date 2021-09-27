@@ -8,13 +8,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     component: () => import("@/views/authentication/Authentication.vue"),
-    // Add route guard to redirect based on authentication
   },
   {
-    path: "/activation/:email", // Access companyID for sign up purposes
+    path: "/activation/:email",
     component: () => import("@/views/authentication/EmployeeActivation.vue"),
     props: true,
-    // Add route guard to redirect for invalid company icuds
   },
   {
     path: "/company/",
@@ -172,9 +170,5 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
-// Problem: The router is trying to access the authentication state before it has been updated
-// Solution: Somehow wait until the user's data is fetched, and THEN supply the route guards?
-// POSSIBILITY: Define route guards INSIDE AUTH STATE CHANGED FUNCTION, but AFTER THE USER DATA IS FETCHED (so that the router guard can use this data...)
 
 export default router;

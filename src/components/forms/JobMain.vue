@@ -75,7 +75,7 @@ import {
 } from "@ionic/vue";
 import { watch } from "@vue/runtime-core";
 
-import { Visit } from "@/types";
+import { Visit } from "@/types/work_units";
 
 export default {
   name: "Job Main",

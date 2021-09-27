@@ -49,7 +49,7 @@
             Default Hourly Rate
           </ion-label>
           <CurrencyInput
-            v-model="state.employee.defaultHourlyRate"
+            v-model="state.employee.data.defaultHourlyRate"
             :options="{ currency: 'USD' }"
           />
         </ion-item>
@@ -108,7 +108,7 @@
           <ion-card style="width: 100%; height: 300px;">
             <!-- PASS DATABASE REFERENCE, CONDITION ON PAYMENT STATE -->
             <EmployeeDays
-              :employeeName="state.employee.name"
+              :employeeName="state.employee.data.name"
               :hideAdd="true"
               :sampleItem="sampleDay"
               :showPaidToggle="true"
@@ -151,7 +151,7 @@ import { timeOutline } from "ionicons/icons";
 
 import store from "@/store";
 
-import { sampleDay, Day, Employee } from "@/types";
+import { sampleDay, Day, Employee } from "@/types/work_units";
 
 import CurrencyInput from "./inputs/CurrencyInput.vue";
 import EmployeeDays from "./lists/EmployeeDays.vue";

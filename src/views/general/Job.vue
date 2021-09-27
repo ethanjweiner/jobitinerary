@@ -93,7 +93,6 @@ import {
   IonPopover,
   IonButton,
   IonBackButton,
-  IonModal,
   IonCard,
   IonCardTitle,
   IonCardHeader,
@@ -112,7 +111,8 @@ import {
   ellipsisVertical,
 } from "ionicons/icons";
 
-import { sampleJob, sampleVisit1, SectionsType } from "@/types";
+import { sampleJob, sampleVisit1 } from "@/types/work_units";
+import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
 import JobMain from "@/components/forms/JobMain.vue";

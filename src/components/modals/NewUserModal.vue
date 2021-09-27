@@ -59,6 +59,8 @@ import { close } from "ionicons/icons";
 
 import { capitalize } from "@/helpers";
 import { reactive, toRefs } from "@vue/reactivity";
+import store from "@/store";
+import { Company } from "@/types/users";
 
 export default {
   name: "New User Modal",
@@ -83,15 +85,25 @@ export default {
       email: "",
     });
 
-    const addUser = () => {
-      if (state.name && state.email) {
+    const addUser = async () => {
+      if (
+        state.name &&
+        state.email &&
+        store.state.user instanceof Company &&
+        store.state.company
+      ) {
         // ADD USER TO DATABASE
-        if (props.type == "employee") console.log("adding employee");
-        // ADD EMPLOYEE
-        else if (props.type == "customer") console.log("adding customer");
-        // ADD CUSTOMER
-        else throw Error("The specified user type is not valid.");
-        emit("userAdded", { name: state.name, email: state.email });
+        if (props.type == "employee") {
+          // Add employee to database
+          store.state.user.addEmployee(state.name, state.email);
+        } else if (props.type == "customer") {
+          // Add customer to database
+          store.state.user.addCustomer(state.name, state.email);
+        } else {
+          throw Error("The specified user type is not valid.");
+        }
+        emit("userAdded", state.name);
+        // Add the user locally
       } else throw Error("You must enter a name and email for the new user.");
 
       emit("didDismiss");

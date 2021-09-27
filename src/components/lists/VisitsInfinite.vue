@@ -48,7 +48,8 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { sampleVisit1, Splitter, Visit } from "@/types";
+import { sampleVisit1, Visit } from "@/types/work_units";
+import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";
 import AddButton from "../buttons/AddButton.vue";

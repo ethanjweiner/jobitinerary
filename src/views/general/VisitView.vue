@@ -62,7 +62,7 @@ import { ellipsisVertical } from "ionicons/icons";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import router from "@/router";
 import Visit from "@/components/units/Visit.vue";
-import { emptyVisit, sampleVisit1 } from "@/types";
+import { emptyVisit, sampleVisit1 } from "@/types/work_units";
 
 export default {
   name: "Visit View",

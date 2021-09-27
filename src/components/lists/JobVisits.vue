@@ -52,7 +52,8 @@ import { add } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { emptyVisit, sampleVisit1, Splitter, Visit } from "@/types";
+import { emptyVisit, sampleVisit1, Visit } from "@/types/work_units";
+import { Splitter } from "@/types/auxiliary";
 import { dateToString } from "@/helpers";
 
 import VisitItem from "./items/VisitItem.vue";
@@ -71,7 +72,7 @@ export default defineComponent({
     IonItemDivider,
     VisitItem,
   },
-  setup(props: any, { emit }: { emit: any }) {
+  setup() {
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
       // RETRIEVE VISITS using the db ref

@@ -3,8 +3,6 @@
 </template>
 
 <script lang="ts">
-import { reactive } from "@vue/reactivity";
-import { sampleThread } from "@/types";
 export default {
   name: "Thread Modal",
   props: {

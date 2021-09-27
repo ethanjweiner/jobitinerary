@@ -22,7 +22,7 @@ import { watch } from "@vue/runtime-core";
 import { reactive } from "@vue/reactivity";
 import { add } from "ionicons/icons";
 
-import { emptyExpense, sampleExpense } from "@/types";
+import { emptyExpense, sampleExpense } from "@/types/auxiliary";
 
 import Expense from "./items/Expense.vue";
 

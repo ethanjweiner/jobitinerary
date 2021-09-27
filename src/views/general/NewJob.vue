@@ -20,9 +20,7 @@
             </div>
             <UserSelect
               :names="
-                store.state.companyState.customers.map(
-                  (customer) => customer.name
-                )
+                store.state.user.customers.map((customer) => customer.name)
               "
               v-model="state.customerName"
               type="customer"

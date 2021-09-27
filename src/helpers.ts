@@ -1,11 +1,48 @@
-import firebase from "firebase/app";
 import router from "./router";
-import { auth, storage } from "./main";
+import { storage } from "./main";
 import date from "date-and-time";
-import store from "./store";
-import { CustomerDay, Loader, sampleVisit1, Visit } from "./types";
+import store from "@/store";
+import { Loader } from "./types/auxiliary";
+import { Company, Customer, Employee } from "./types/users";
+import { CustomerDay, sampleVisit1, Visit } from "./types/work_units";
 
-const { state } = store;
+// ROUTING HELPERS
+
+let routeGuardsInitialized = false;
+
+const initRouteGuards = () => {
+  if (!routeGuardsInitialized) {
+    // This route guard does not actually secure the user out of the route
+    router.beforeEach((to, from, next) => {
+      if (to.meta.requiresAuth && to.fullPath.includes("company/")) {
+        if (store.state.user instanceof Company) next();
+        else router.push("/");
+      } else if (to.meta.requiresAuth && to.fullPath.includes("employee/")) {
+        if (store.state.user instanceof Employee) next();
+        else router.push("/");
+      } else if (to.meta.requiresAuth && to.fullPath.includes("customer/")) {
+        if (store.state.user instanceof Customer) next();
+        else router.push("/");
+      } else next();
+    });
+  }
+
+  routeGuardsInitialized = true;
+};
+
+export function initializeUserRouting(
+  userKind: "employee" | "company" | "customer"
+) {
+  initRouteGuards();
+  if (!router.currentRoute.value.fullPath.startsWith(`/${userKind}`))
+    router.push(`/${userKind}`);
+}
+
+// DATE HELPERS
+
+export function dateToString(date: Date) {
+  return date.toLocaleDateString().replaceAll("/", "-");
+}
 
 export function dateToStrings(inputDate: Date): Array<string> {
   return [
@@ -29,61 +66,7 @@ export function formatTime(fourDigitTime: string): string {
   return hours + ":" + minutes + amPm;
 }
 
-let routeGuardsInitialized = false;
-
-const initRouteGuards = () => {
-  if (!routeGuardsInitialized) {
-    // This route guard does not actually secure the user out of the route
-    router.beforeEach((to, from, next) => {
-      if (to.meta.requiresAuth && to.fullPath.includes("company/")) {
-        if (state.userType == "company") next();
-        else router.push("/");
-      } else if (to.meta.requiresAuth && to.fullPath.includes("employee/")) {
-        if (state.userType == "employee") next();
-        else router.push("/");
-      } else next();
-    });
-  }
-
-  routeGuardsInitialized = true;
-};
-
-// Authentication helpers
-
-export function initializeUserRouting(userKind: "employee" | "company") {
-  initRouteGuards();
-  if (!router.currentRoute.value.fullPath.startsWith(`/${userKind}`))
-    router.push(`/${userKind}`);
-}
-
-export async function signOut() {
-  auth.signOut();
-  store.setUser(null);
-  if (
-    router.currentRoute.value.fullPath.startsWith("/employee") ||
-    router.currentRoute.value.fullPath.startsWith("/company")
-  )
-    router.push("/");
-}
-
-export async function loadUser(user: firebase.User) {
-  if (!(await store.fetchEmployee(user))) {
-    if (!(await store.fetchCompany(user))) {
-      signOut();
-      throw Error("No data could be found for the signed in user.");
-    }
-  }
-}
-
-export async function signIn(email: string, password: string) {
-  try {
-    const { user } = await auth.signInWithEmailAndPassword(email, password);
-    if (user) loadUser(user);
-    else throw Error("User could not be found.");
-  } catch (error) {
-    console.log(error);
-  }
-}
+// STRING MANIPULATION HELPERS
 
 function toWords(input: string): Array<string> {
   const regex = /[A-Z\xC0-\xD6\xD8-\xDE]?[a-z\xDF-\xF6\xF8-\xFF]+|[A-Z\xC0-\xD6\xD8-\xDE]+(?![a-z\xDF-\xF6\xF8-\xFF])|\d+/g;
@@ -137,12 +120,8 @@ export function includeItemInSearch(
   return false;
 }
 
-// Date helpers
-export function dateToString(date: Date) {
-  return date.toLocaleDateString().replaceAll("/", "-");
-}
+// INFINITE SCROLL HELPERS
 
-// Load data on infinite scroll
 export async function loadData(ev: any, loader: Loader, searchFilter?: string) {
   // Attempt to load data
   const status = await loader(searchFilter);
@@ -150,6 +129,8 @@ export async function loadData(ev: any, loader: Loader, searchFilter?: string) {
   if (status == 0) ev.target.complete();
   else ev.target.disabled = true;
 }
+
+// OTHER
 
 export function generateUUID() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
@@ -169,6 +150,7 @@ export async function getImageURL(ref: string) {
 export async function retrieveVisitsOnDay(
   day: CustomerDay
 ): Promise<Array<Visit>> {
+  day;
   // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
   return [sampleVisit1, sampleVisit1];
 }

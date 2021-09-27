@@ -22,7 +22,7 @@
 <script lang="ts">
 import { IonItem, IonLabel, IonText, IonNote } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import { CustomerDay, Visit } from "@/types";
+import { CustomerDay, Visit } from "@/types/work_units";
 import { retrieveVisitsOnDay } from "@/helpers";
 import router from "@/router";
 

@@ -40,7 +40,7 @@ import {
 } from "@ionic/vue";
 import { ref } from "@vue/reactivity";
 
-import { sampleExpense } from "@/types";
+import { sampleExpense } from "@/types/auxiliary";
 
 import InfiniteList from "@/components/lists/InfiniteList.vue";
 import Expense from "./items/Expense.vue";

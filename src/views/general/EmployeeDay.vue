@@ -123,7 +123,8 @@ import { reactive } from "@vue/reactivity";
 import store from "@/store";
 import router from "@/router";
 
-import { Day, sampleDay, SectionsType } from "@/types";
+import { Day, sampleDay } from "@/types/work_units";
+import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
 import DayMain from "@/components/forms/DayMain.vue";

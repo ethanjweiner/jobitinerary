@@ -50,7 +50,7 @@ import {
 
 import MessageItem from "./MessageItem.vue";
 
-import { Thread, Message } from "@/types";
+import { Thread, Message } from "@/types/work_units";
 
 import { computed } from "vue";
 import { auth } from "@/main";

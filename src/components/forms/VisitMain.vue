@@ -39,16 +39,20 @@
     <UserSelect
       v-if="!hideEmployeeSelect"
       :names="
-        store.state.companyState.employees.map((employee) => employee.name)
+        store.state.user
+          ? store.state.user.employees.map((employee) => employee.data.name)
+          : []
       "
       v-model="state.visit.employeeName"
       type="employee"
     />
     <!-- Customer Select -->
     <UserSelect
-      v-if="!state.visit.job && !hideCustomerSelect"
+      v-if="!state.visit.job && !hideCustomerSelect && customerNames.length"
       :names="
-        store.state.companyState.customers.map((customer) => customer.name)
+        store.state.user
+          ? store.state.user.customers.map((customer) => customer.data.name)
+          : []
       "
       v-model="state.visit.customerName"
       type="customer"
@@ -134,7 +138,7 @@ import {
   trashOutline,
 } from "ionicons/icons";
 import store from "@/store";
-import { Job } from "@/types";
+import { Job } from "@/types/work_units";
 import { reactive, ref, watch } from "vue";
 
 export default {
@@ -172,6 +176,10 @@ export default {
       showTextAreas: false,
     });
 
+    watch(state.visit, (newVisit) => {
+      emit("update:modelValue", newVisit);
+    });
+
     setTimeout(() => (state.showTextAreas = true), 250);
 
     const changeDate = (ev: CustomEvent) => {
@@ -185,10 +193,6 @@ export default {
       state.visit.job = { id: job.id, name: job.name };
       state.visit.customerName = job.customerName;
     };
-
-    watch(state.visit, (newVisit) => {
-      emit("update:modelValue", newVisit);
-    });
 
     return {
       state,

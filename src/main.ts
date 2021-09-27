@@ -1,5 +1,5 @@
 import { App as AppType, createApp } from "vue";
-import { signOut } from "./helpers";
+import { signOut } from "./authentication";
 import App from "./App.vue";
 import router from "./router";
 
@@ -33,7 +33,7 @@ import { defineCustomElements } from "@ionic/pwa-elements/loader";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { loadUser } from "./helpers";
+import { loadUser } from "./authentication";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -56,7 +56,7 @@ export const storage = firebase.storage();
 export const companiesCollection = db.collection("companies");
 export const employeesCollection = db.collectionGroup("employees");
 
-// Set the user upon the creation of the app
+// SET UP THE USER UPON ANY AUTH CHANGES
 let app: null | AppType = null;
 
 auth.onAuthStateChanged(async (user) => {

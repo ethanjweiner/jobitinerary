@@ -66,10 +66,15 @@ import {
 } from "ionicons/icons";
 
 import store from "@/store";
-import { SectionsType } from "@/types";
+import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "../Sections.vue";
 import CustomerForm from "../forms/CustomerForm.vue";
+import { Customer } from "@/types/users";
+
+interface State {
+  employee: Customer | undefined;
+}
 
 export default {
   name: "Customer",
@@ -77,11 +82,17 @@ export default {
     username: String,
   },
   setup(props: any) {
-    const state = reactive({
-      customer: store.state.companyState.customers.find(
-        (customer) => customer.name == props.username
-      ),
+    const state = reactive<State>({
+      customer: null,
     });
+
+    if (props.username && store.state.user) {
+      state.customer = store.state.user.customers.find(
+        (customer) => customer.name == props.username
+      );
+    } else {
+      state.customer = store.state.user;
+    }
 
     const sections = ref<SectionsType>([
       {

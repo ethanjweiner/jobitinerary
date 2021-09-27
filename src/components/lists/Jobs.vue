@@ -52,7 +52,8 @@ import {
 import { reactive, ref } from "vue";
 import router from "@/router";
 
-import { Job, sampleJob, Splitter } from "@/types";
+import { Job, sampleJob } from "@/types/work_units";
+import { Splitter } from "@/types/auxiliary";
 
 import JobItem from "./items/JobItem.vue";
 import AddButton from "@/components/buttons/AddButton.vue";

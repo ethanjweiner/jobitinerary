@@ -20,9 +20,7 @@
             </div>
             <UserSelect
               :names="
-                store.state.companyState.employees.map(
-                  (employee) => employee.name
-                )
+                store.state.user.employees.map((employee) => employee.name)
               "
               :selectedName="state.employeeName"
               type="employee"

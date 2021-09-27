@@ -6,7 +6,13 @@
           class="ion-justify-content-center ion-align-items-center"
           style="height: 100%;"
         >
-          <ion-col :size="state.cardSize">
+          <ion-col
+            size-xs="11"
+            size-sm="10"
+            size-md="6"
+            size-lg="5"
+            size-xl="4"
+          >
             <div class="ion-text-start">
               <h3 class="text-secondary">
                 Activate Employee Account for {{ email }}
@@ -21,13 +27,8 @@
 </template>
 
 <script lang="ts">
-// Use this component to actually go ahead and create an authentication mechanism for the employee
-// In essense, activates the employee account
-
-import EmployeeSignUp from "@/components/authentication/EmployeeSignUp.vue";
-
 import { IonContent, IonPage, IonGrid, IonRow, IonCol } from "@ionic/vue";
-
+import EmployeeSignUp from "@/components/authentication/EmployeeSignUp.vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -42,25 +43,6 @@ export default defineComponent({
   },
   props: {
     email: String,
-  },
-  data() {
-    return {
-      state: {
-        cardSize: 6,
-        loading: true,
-      },
-    };
-  },
-  methods: {
-    setCardSize() {
-      this.state.cardSize = Math.min(Math.floor(7000 / window.innerWidth), 12);
-    },
-  },
-  async created() {
-    this.setCardSize();
-    window.addEventListener("resize", () => {
-      this.setCardSize();
-    });
   },
 });
 </script>

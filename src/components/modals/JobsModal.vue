@@ -48,7 +48,7 @@ import {
 import { defineComponent, ref } from "vue";
 import { close } from "ionicons/icons";
 
-import { sampleJob } from "@/types";
+import { sampleJob } from "@/types/work_units";
 
 import InfiniteList from "../lists/InfiniteList.vue";
 import JobItem from "@/components/lists/items/JobItem.vue";
