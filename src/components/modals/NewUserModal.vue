@@ -95,10 +95,10 @@ export default {
         // ADD USER TO DATABASE
         if (props.type == "employee") {
           // Add employee to database
-          store.state.user.addEmployee(state.name, state.email);
+          await store.state.user.addEmployee(state.name, state.email);
         } else if (props.type == "customer") {
           // Add customer to database
-          store.state.user.addCustomer(state.name, state.email);
+          await store.state.user.addCustomer(state.name, state.email);
         } else {
           throw Error("The specified user type is not valid.");
         }

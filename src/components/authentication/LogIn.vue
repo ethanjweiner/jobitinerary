@@ -27,7 +27,7 @@
 <script>
 import { IonItem, IonInput, IonLabel, IonButton, IonCard } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import { signIn } from "@/helpers";
+import { signIn } from "@/authentication";
 
 export default {
   name: "Log In",

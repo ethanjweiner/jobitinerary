@@ -17,6 +17,7 @@
         placeholder="Enter address"
         ref="autocompleteInput"
         :value="state.location.address"
+        :debounce="store.DEBOUNCE_AMOUNT"
         @input="onInput"
       ></ion-input>
     </ion-item>
@@ -44,6 +45,8 @@ import { reactive } from "@vue/reactivity";
 import { onMounted, ref, watch } from "vue";
 import { navigateOutline } from "ionicons/icons";
 
+import store from "@/store";
+
 export default {
   name: "Address",
   components: {
@@ -70,9 +73,10 @@ export default {
       autocomplete: null,
     });
 
-    watch(state.location, (newLocation) =>
-      emit("update:modelValue", newLocation)
-    );
+    watch(state.location, (newLocation) => {
+      emit("update:modelValue", newLocation);
+      console.log("updating");
+    });
 
     const autocompleteInput = ref();
 
@@ -99,6 +103,7 @@ export default {
     };
 
     return {
+      store,
       state,
       autocompleteInput,
       onInput,

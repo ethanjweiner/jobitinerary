@@ -1,31 +1,34 @@
 <template>
-  <Sections :sections="sections" :wrapCards="true">
+  <Sections v-if="state.customer" :sections="sections" :wrapCards="true">
     <template v-slot:dates>
       <div class="list">
-        <CustomerDays :customerName="state.customer.name" />
+        <CustomerDays :customerName="state.customer.data.name" />
       </div>
     </template>
     <template v-slot:jobs>
       <div class="list">
-        <Jobs :customerName="state.customer.name" />
+        <Jobs :customerName="state.customer.data.name" />
       </div>
     </template>
     <template v-slot:customer-info>
-      <CustomerForm v-model="state.customer" />
+      <CustomerForm
+        v-model="state.customer"
+        @update:modelValue="state.customer.save()"
+      />
     </template>
     <template v-slot:sectionsAsGrid>
       <ion-row>
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <CustomerDays :customerName="state.customer.name" />
+              <CustomerDays :customerName="state.customer.data.name" />
             </div>
           </ion-card>
         </ion-col>
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <Jobs :customerName="state.customer.name" />
+              <Jobs :customerName="state.customer.data.name" />
             </div>
           </ion-card>
         </ion-col>
@@ -38,7 +41,10 @@
                 Customer Info
               </ion-card-title>
             </ion-card-header>
-            <CustomerForm v-model="state.customer" />
+            <CustomerForm
+              v-model="state.customer"
+              @update:modelValue="state.customer.save()"
+            />
           </ion-card>
         </ion-col>
       </ion-row>
@@ -70,10 +76,10 @@ import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "../Sections.vue";
 import CustomerForm from "../forms/CustomerForm.vue";
-import { Customer } from "@/types/users";
+import { Company, Customer } from "@/types/users";
 
 interface State {
-  employee: Customer | undefined;
+  customer: Customer | undefined;
 }
 
 export default {
@@ -83,16 +89,21 @@ export default {
   },
   setup(props: any) {
     const state = reactive<State>({
-      customer: null,
+      customer: undefined,
     });
 
-    if (props.username && store.state.user) {
+    // If the user is a Company, assign the customer based on the prop
+    if (props.username && store.state.user instanceof Company) {
       state.customer = store.state.user.customers.find(
-        (customer) => customer.name == props.username
+        (customer) => customer.data.name == props.username
       );
-    } else {
+
+      // Otherwise, use the signed in user
+    } else if (store.state.user instanceof Customer) {
       state.customer = store.state.user;
     }
+
+    console.log(state.customer);
 
     const sections = ref<SectionsType>([
       {

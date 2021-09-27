@@ -13,7 +13,8 @@
                 type="email"
                 disabled
                 placeholder="email"
-                :value="state.employee.data.email"
+                @ionInput="$emit('update:modelValue', state.employee)"
+                v-model="state.employee.data.email"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -28,7 +29,9 @@
                 inputmode="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 placeholder="123-123-1234"
-                :value="state.employee.data.phone"
+                debounce="500"
+                @ionInput="$emit('update:modelValue', state.employee)"
+                v-model="state.employee.data.phone"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -69,14 +72,10 @@ export default {
     modelValue: Object,
   },
   emits: ["update:modelValue"],
-  setup(props: any, { emit }: { emit: any }) {
+  setup(props: any) {
     const state = reactive({
       employee: props.modelValue,
     });
-
-    watch(state.employee, (newEmployee) =>
-      emit("update:modelValue", newEmployee)
-    );
 
     return {
       state,

@@ -12,9 +12,12 @@
         :placeholder="'Select ' + capitalize(type)"
         :key="modelValue"
       >
-        <ion-select-option v-for="name in names" :key="name" :value="name">{{
-          name
-        }}</ion-select-option>
+        <ion-select-option
+          v-for="name in state.names"
+          :key="name"
+          :value="name"
+          >{{ name }}</ion-select-option
+        >
       </ion-select>
       <ion-buttons slot="end">
         <ion-fab-button size="small" @click="newUserModalIsOpen = true">
@@ -27,13 +30,17 @@
       @didDismiss="newUserModalIsOpen = false"
       css-class="new-user-modal"
     >
-      <NewUserModal :type="type" @didDismiss="newUserModalIsOpen = false" />
+      <NewUserModal
+        :type="type"
+        @userAdded="addUser"
+        @didDismiss="newUserModalIsOpen = false"
+      />
     </ion-modal>
   </ion-toolbar>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 
 import {
   IonToolbar,
@@ -51,12 +58,16 @@ import { cartOutline, hammerOutline, add } from "ionicons/icons";
 import NewUserModal from "@/components/modals/NewUserModal.vue";
 
 import { capitalize } from "@/helpers";
+import store from "@/store";
+
+interface State {
+  names: Array<string>;
+}
 
 export default defineComponent({
   name: "User Select",
   props: {
     modelValue: String,
-    names: Array,
     type: String,
   },
   emits: ["update:modelValue", "userAdded"],
@@ -72,13 +83,34 @@ export default defineComponent({
     NewUserModal,
   },
   setup(props: any, { emit }: { emit: any }) {
+    const state = reactive<State>({
+      names: [],
+    });
+
     const newUserModalIsOpen = ref(false);
+
+    const refreshState = () => {
+      console.log("Refreshing");
+      if (props.type == "customer" && store.state.user) {
+        state.names = store.state.user.customers.map(
+          (customer) => customer.data.name
+        );
+      } else if (props.type == "employee" && store.state.user)
+        state.names = store.state.user.employees.map(
+          (employee) => employee.data.name
+        );
+      else throw Error("Could not load users.");
+    };
+
+    refreshState();
 
     const addUser = (name: string) => {
       emit("update:modelValue", name);
+      refreshState();
     };
 
     return {
+      state,
       icons: {
         add,
         cartOutline,

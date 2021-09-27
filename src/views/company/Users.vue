@@ -29,7 +29,6 @@
         <UserSelect
           v-if="state.username"
           ref="userSelect"
-          :names="state.users.map((user) => user.name)"
           v-model="state.username"
           :type="type"
           :key="state.username"
@@ -48,7 +47,6 @@
             </div>
             <UserSelect
               ref="userSelect"
-              :names="state.users.map((user) => user.name)"
               v-model="state.username"
               :type="type"
               :key="state.username"
@@ -104,14 +102,10 @@ import store from "@/store";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import Customer from "@/components/units/Customer.vue";
 import Employee from "@/components/units/Employee.vue";
-import {
-  Customer as CustomerType,
-  Employee as EmployeeType,
-} from "@/types/users";
+import { Company } from "@/types/users";
 
 interface State {
   username: string;
-  users: Array<CustomerType> | Array<EmployeeType>;
 }
 
 export default {
@@ -123,11 +117,7 @@ export default {
   setup(props: any) {
     const state = reactive<State>({
       username: props.username,
-      users: [],
     });
-
-    if (props.type == "customer") state.users = store.state.user.customers;
-    else if (props.type == "employee") state.users = store.state.user.employees;
 
     // Popover
     const popoverIsOpen = ref(false);
@@ -146,13 +136,17 @@ export default {
     };
 
     const deleteUser = async () => {
-      if (props.type == "customer") {
-        await store.deleteCustomer(state.username);
-      } else if (props.type == "employee") {
-        await store.deleteEmployee(state.username);
-      } else throw Error("No user type was provided");
-      state.username = "";
-      toggleUserSettings(false);
+      if (store.state.user instanceof Company) {
+        if (props.type == "customer") {
+          await store.state.user.deleteCustomer(state.username);
+        } else if (props.type == "employee") {
+          await store.state.user.deleteEmployee(state.username);
+        } else throw Error("No user type was provided");
+        state.username = "";
+        toggleUserSettings(false);
+      } else {
+        throw Error("You must be a company to delete a user.");
+      }
     };
 
     return {

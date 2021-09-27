@@ -21,6 +21,7 @@ export default {
   },
   setup(props: any) {
     const { formattedValue, inputRef } = useCurrencyInput(props.options);
+
     return { inputRef, formattedValue };
   },
 };

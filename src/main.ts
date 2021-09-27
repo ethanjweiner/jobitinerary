@@ -76,6 +76,12 @@ auth.onAuthStateChanged(async (user) => {
     }
     app.mount("#app");
   }
+
+  if (user) {
+    await loadUser(user);
+  } else {
+    await signOut();
+  }
 });
 
 router.beforeEach((to) => {

@@ -28,7 +28,7 @@ import {
   IonBackButton,
 } from "@ionic/vue";
 
-import { signOut } from "@/helpers";
+import { signOut } from "@/authentication";
 
 export default {
   name: "Settings",

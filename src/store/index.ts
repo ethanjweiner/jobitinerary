@@ -22,6 +22,8 @@ const store = {
     company: null,
   }),
 
+  DEBOUNCE_AMOUNT: 300,
+
   async setUser(user: Company | Employee | Customer | null) {
     this.state.user = user;
     if (user instanceof Company) {
@@ -33,6 +35,8 @@ const store = {
     } else {
       this.state.userType = null;
     }
+
+    console.log(this.state.user);
   },
 
   async setCompany(companyData: MetaData | null) {
@@ -42,13 +46,15 @@ const store = {
   async loadCompany(email: string): Promise<boolean> {
     console.log("loading company");
     const snapshot = await companiesCollection
-      .where("email", "==", email)
+      .where("data.email", "==", email)
       .limit(1)
       .get();
 
     if (snapshot.docs.length) {
       const doc = snapshot.docs[0].data();
+      console.log();
       const company = new Company(companiesCollection.doc(doc.data.id));
+
       if (await company.init()) {
         this.setUser(company);
         this.setCompany(company.data);
@@ -61,7 +67,7 @@ const store = {
 
   async loadEmployee(email: string): Promise<boolean> {
     const snapshot = await employeesCollection
-      .where("email", "==", email)
+      .where("data.email", "==", email)
       .limit(1)
       .get();
     if (snapshot.docs.length) {

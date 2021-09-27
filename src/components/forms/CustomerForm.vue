@@ -16,7 +16,9 @@
                 type="email"
                 disabled
                 placeholder="email"
-                v-model="state.customer.email"
+                :debounce="store.DEBOUNCE_AMOUNT"
+                v-model="state.customer.data.email"
+                @ionInput="$emit('update:modelValue', state.customer)"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -31,12 +33,17 @@
                 inputmode="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 placeholder="123-123-1234"
-                v-model="state.customer.phone"
+                :debounce="store.DEBOUNCE_AMOUNT"
+                v-model="state.customer.data.phone"
+                @ionInput="$emit('update:modelValue', state.customer)"
               ></ion-input>
             </ion-item>
           </ion-col>
           <ion-col size="12" size-sm="12" size-lg="6">
-            <Address v-model="state.customer.location" />
+            <Address
+              @update:modelValue="$emit('update:modelValue', state.customer)"
+              v-model="state.customer.data.location"
+            />
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -54,7 +61,7 @@
                 v-if="state.showTextAreas"
                 auto-grow
                 placeholder="Notes on customer"
-                v-model="state.customer.customerNotes"
+                v-model="state.customer.data.customerNotes"
               ></ion-textarea>
             </ion-item>
           </ion-col>
@@ -65,7 +72,7 @@
                 v-if="state.showTextAreas"
                 auto-grow
                 placeholder="Notes on property"
-                v-model="state.customer.propertyNotes"
+                v-model="state.customer.data.propertyNotes"
               ></ion-textarea>
             </ion-item>
           </ion-col>
@@ -118,6 +125,8 @@ import AddButton from "@/components/buttons/AddButton.vue";
 import Address from "@/components/Address.vue";
 import ImageWithCaption from "@/components/ImageWithCaption.vue";
 
+import store from "@/store";
+
 export default {
   name: "Customer Form",
   props: {
@@ -130,10 +139,6 @@ export default {
       showTextAreas: false,
     });
 
-    watch(state.customer, (newCustomer) =>
-      emit("update:modelValue", newCustomer)
-    );
-
     setTimeout(() => (state.showTextAreas = true), 250);
 
     const addImage = () => {
@@ -145,6 +150,7 @@ export default {
     };
 
     return {
+      store,
       state,
       addImage,
       deleteImage,

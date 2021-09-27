@@ -26,11 +26,33 @@ export interface CustomerData extends MetaData {
 
 export type UserData = MetaData | EmployeeData | CustomerData;
 
-const emptyUserData: UserData = {
+const emptyUserData: MetaData = {
   id: "",
   email: "",
   name: "",
   phone: "",
+};
+
+const emptyEmployeeData: EmployeeData = {
+  id: "",
+  email: "",
+  name: "",
+  phone: "",
+  defaultHourlyRate: null,
+};
+
+const emptyCustomerData: CustomerData = {
+  id: "",
+  email: "",
+  name: "",
+  phone: "",
+  location: {
+    address: "",
+    coordinates: null,
+  },
+  customerNotes: "",
+  propertyNotes: "",
+  propertyImages: [],
 };
 
 interface UserInterface {
@@ -76,22 +98,26 @@ export class User implements UserInterface {
 
   async create(name: string, email: string, id: string, phone?: string) {
     try {
-      await this.dbRef.set({
-        data: {
-          name,
-          email,
-          id,
-          phone: phone ? phone : "",
-        },
-      });
       this.data.name = name;
       this.data.email = email;
       this.data.id = id;
       this.data.phone = phone ? phone : "";
+
+      await this.save();
+
       return this;
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async save() {
+    setTimeout(async () => {
+      await this.dbRef.set({
+        data: this.data,
+      });
+      return this;
+    }, 500);
   }
 
   async signUp(password: string) {
@@ -105,10 +131,6 @@ export class User implements UserInterface {
   async update(data: UserData) {
     this.data = data;
     await this.save();
-    return this;
-  }
-
-  async save() {
     return this;
   }
 }
@@ -127,21 +149,32 @@ class ChildUser extends User {
 
   async create(name: string, email: string, id: string, phone?: string) {
     try {
-      await this.dbRef.set({
-        data: {
-          name,
-          email,
-          id,
-          phone: phone ? phone : "",
-        },
-        parentCompany: null,
-        activationToken: generateUUID(), // Placeholder activation token
-        activated: false,
-      });
+      this.data.name = name;
+      this.data.email = email;
+      this.data.id = id;
+      this.data.phone = phone ? phone : "";
+      this.parentCompany = null;
+      this.activationToken = generateUUID();
+      this.activated = false;
+
+      await this.save();
+
       return this;
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async save() {
+    setTimeout(async () => {
+      await this.dbRef.set({
+        data: this.data,
+        parentCompany: this.parentCompany,
+        activationToken: this.activationToken, // Placeholder activation token
+        activated: this.activated,
+      });
+      return this;
+    }, 500);
   }
 
   async init() {
@@ -157,9 +190,9 @@ class ChildUser extends User {
 
   async assignCompany(company: MetaData) {
     try {
+      this.parentCompany = company;
       await this.dbRef.update({
-        company,
-        activationToken: company.id + "_" + generateUUID(),
+        parentCompany: company,
       });
     } catch (error) {
       console.log(error);
@@ -178,9 +211,21 @@ class ChildUser extends User {
   }
 }
 
-export class Employee extends ChildUser {}
+export class Employee extends ChildUser {
+  data: EmployeeData;
+  constructor(dbRef: firebase.firestore.DocumentReference) {
+    super(dbRef);
+    this.data = { ...emptyEmployeeData };
+  }
+}
 
-export class Customer extends ChildUser {}
+export class Customer extends ChildUser {
+  data: CustomerData;
+  constructor(dbRef: firebase.firestore.DocumentReference) {
+    super(dbRef);
+    this.data = { ...emptyCustomerData };
+  }
+}
 
 export class Company extends User {
   // Q: Why store employees & customers globally?
@@ -208,11 +253,13 @@ export class Company extends User {
   // Override
   async fetchEmployees() {
     const docs = (await this.dbRef.collection("employees").get()).docs;
-    docs.forEach((doc) =>
-      this.employees.push(
-        new Employee(this.dbRef.collection("employees").doc(doc.id))
-      )
-    );
+    for (const doc of docs) {
+      const employee = new Employee(
+        this.dbRef.collection("employees").doc(doc.id)
+      );
+      await employee.init();
+      this.employees.push(employee);
+    }
   }
 
   async addEmployee(name: string, email: string) {
@@ -242,11 +289,13 @@ export class Company extends User {
   // Override
   async fetchCustomers() {
     const docs = (await this.dbRef.collection("customers").get()).docs;
-    docs.forEach((doc) =>
-      this.customers.push(
-        new Customer(this.dbRef.collection("customers").doc(doc.id))
-      )
-    );
+    for (const doc of docs) {
+      const customer = new Customer(
+        this.dbRef.collection("customers").doc(doc.id)
+      );
+      await customer.init();
+      this.customers.push(customer);
+    }
   }
 
   async addCustomer(name: string, email: string) {
@@ -258,6 +307,7 @@ export class Company extends User {
     await newCustomer.create(name, email, id);
     await newCustomer.assignCompany(this.data);
     // Update local state
+    console.log(newCustomer);
     this.customers.push(newCustomer);
   }
 

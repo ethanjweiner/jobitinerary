@@ -50,6 +50,7 @@
           </ion-label>
           <CurrencyInput
             v-model="state.employee.data.defaultHourlyRate"
+            @update:modelValue="$emit('update:modelValue', state.employee)"
             :options="{ currency: 'USD' }"
           />
         </ion-item>
@@ -151,7 +152,8 @@ import { timeOutline } from "ionicons/icons";
 
 import store from "@/store";
 
-import { sampleDay, Day, Employee } from "@/types/work_units";
+import { sampleDay, Day } from "@/types/work_units";
+import { Employee } from "@/types/users";
 
 import CurrencyInput from "./inputs/CurrencyInput.vue";
 import EmployeeDays from "./lists/EmployeeDays.vue";
@@ -179,10 +181,6 @@ export default {
       filterByDate: false,
       startDate: "",
       endDate: "",
-    });
-
-    watch(state.employee, (newEmployee) => {
-      emit("update:modelValue", newEmployee);
     });
 
     // QUERY ALL UNPAID DAYS, RETRIEVE DATA BASED ON THAT
