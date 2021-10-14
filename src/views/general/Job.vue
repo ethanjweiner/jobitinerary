@@ -1,15 +1,15 @@
 <template>
-  <ion-page>
+  <ion-page v-if="state.job">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-          {{ state.job.name ? state.job.name : "New Job" }}</ion-title
+          {{ state.job.data.name ? state.job.data.name : "New Job" }}</ion-title
         >
         <ion-note style="padding-left: 15px;"
-          >for {{ state.job.customerName }}</ion-note
+          >for {{ state.job.data.customerName }}</ion-note
         >
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleJobSettings(true, $event)">
@@ -33,10 +33,10 @@
             <JobMain v-model="state.job" :visits="state.visits" />
           </template>
           <template v-slot:tasks>
-            <Tasks v-model="state.job.tasks" />
+            <Tasks v-model="state.job.data.tasks" />
           </template>
           <template v-slot:visits>
-            <JobVisits />
+            <JobVisits v-model="state.visits" :job="state.job" />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
@@ -55,7 +55,7 @@
                       </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <Tasks v-model="state.job.tasks" />
+                      <Tasks v-model="state.job.data.tasks" />
                     </ion-card-content>
                   </ion-card>
                 </ion-row>
@@ -69,7 +69,7 @@
                     </ion-card-title>
                   </ion-card-header>
                   <ion-card-content>
-                    <JobVisits />
+                    <JobVisits v-model="state.visits" :job="state.job" />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -111,7 +111,7 @@ import {
   ellipsisVertical,
 } from "ionicons/icons";
 
-import { sampleJob, sampleVisit1 } from "@/types/work_units";
+import { Job, Visit } from "@/types/work_units";
 import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
@@ -119,6 +119,15 @@ import JobMain from "@/components/forms/JobMain.vue";
 import JobVisits from "@/components/lists/JobVisits.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
+import store from "@/store";
+import { nameToID } from "@/helpers";
+import { watch } from "@vue/runtime-core";
+import { companiesCollection } from "@/main";
+
+interface State {
+  job: Job | null;
+  visits: Array<Visit>;
+}
 
 export default {
   name: "Job",
@@ -126,7 +135,7 @@ export default {
     username: String,
     jobID: String,
   },
-  setup() {
+  setup(props: any) {
     // Sections
     const sections = ref<SectionsType>([
       {
@@ -146,12 +155,44 @@ export default {
       },
     ]);
 
-    const state = reactive({
+    const state = reactive<State>({
       // RETRIEVE JOB WITH CUSTOMER USERNAME AND JOB ID
-      job: sampleJob,
+      job: null,
       // RETRIEVE VISITS UPON LOAD
-      visits: [sampleVisit1, sampleVisit1],
+      visits: [],
     });
+
+    // Initialize job
+    const initialize = async () => {
+      if (store.state.company) {
+        const job = new Job(
+          props.jobID,
+          store.state.company.id,
+          nameToID(props.username)
+        );
+        await job.init();
+        state.job = job;
+        const visitDocs = (
+          await companiesCollection
+            .doc(store.state.company.id)
+            .collection("visits")
+            .where("data.jobID", "==", job.id)
+            .get()
+        ).docs;
+        for (const doc of visitDocs) {
+          const visit = new Visit(doc.id, store.state.company.id);
+          await visit.init(doc.data().data);
+          state.visits.push(visit);
+        }
+        watch(state.job.data, () => {
+          if (state.job) state.job.save();
+        });
+      }
+    };
+
+    initialize();
+
+    // Initialize visits
 
     // Popover
     const popoverIsOpen = ref(false);
@@ -161,8 +202,11 @@ export default {
       popoverIsOpen.value = state;
     };
 
-    const deleteJob = () => {
+    const deleteJob = async () => {
       // DELETE JOB FROM DATABASE, THEN ROUTE
+      if (state.job) await state.job.delete();
+
+      // Return to home
       router.go(-1);
     };
 

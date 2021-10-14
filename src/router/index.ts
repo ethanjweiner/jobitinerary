@@ -63,6 +63,7 @@ const routes: Array<RouteRecordRaw> = [
 
       // EMPLOYEES
       {
+        name: "Employees",
         path: "employees",
         props: { type: "employee" },
         component: () => import("@/views/company/Users.vue"),

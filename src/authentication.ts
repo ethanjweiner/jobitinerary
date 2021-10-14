@@ -6,6 +6,7 @@ import store from "./store";
 import firebase from "firebase/app";
 import { Company } from "./types/users";
 import { generateUUID } from "./helpers";
+import { DocRef } from "./types/auxiliary";
 
 export async function signUpCompany(credentials: {
   name: string;
@@ -14,7 +15,7 @@ export async function signUpCompany(credentials: {
   phone?: string;
 }) {
   const companyID = generateUUID();
-  const company = new Company(companiesCollection.doc(companyID));
+  const company = new Company(companyID);
   await company.create(
     credentials.name,
     credentials.email,
@@ -25,9 +26,7 @@ export async function signUpCompany(credentials: {
 }
 
 // verifyEmployee: Verify the _activationToken_, and provide a reference to the new employee
-export async function verifyEmployee(
-  activationToken: string
-): Promise<firebase.firestore.DocumentReference> {
+export async function verifyEmployee(activationToken: string): Promise<DocRef> {
   // SEPARATE ACTIVATION TOKEN
   const tokenParts = activationToken.split("_");
   const companyID = tokenParts[0];

@@ -36,7 +36,7 @@
               ></ion-input>
             </ion-item>
 
-            <ion-button expand="block" color="primary" @click="createJob"
+            <ion-button expand="block" color="primary" @click="create"
               >Create Job</ion-button
             >
             <ion-note
@@ -71,6 +71,8 @@ import router from "@/router";
 import store from "@/store";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import { reactive } from "@vue/reactivity";
+import { createJob } from "@/db";
+import { nameToID } from "@/helpers";
 
 export default {
   name: "Select Date",
@@ -83,21 +85,25 @@ export default {
       jobName: "",
     });
 
-    const createJob = () => {
+    const create = async () => {
       // Create a job with an id
-      if (state.customerName && state.jobName)
+      if (state.customerName && state.jobName) {
+        await createJob(state.jobName, state.customerName);
         router.push({
           name: "Job",
-          params: { username: state.customerName, jobID: "sample_job_id" },
+          params: {
+            username: state.customerName,
+            jobID: nameToID(state.jobName),
+          },
         });
-      else throw Error("Please select a customer and job name.");
+      } else throw Error("Please select a customer and job name.");
     };
 
     return {
       store,
       router,
       state,
-      createJob,
+      create,
     };
   },
   components: {

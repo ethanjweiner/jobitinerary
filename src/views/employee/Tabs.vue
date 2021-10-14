@@ -1,7 +1,8 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>
+      <!-- Reload each route upon load -->
+      <ion-router-outlet :key="route.fullPath"></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="today" href="/employee/today">
           <ion-icon :icon="today" />

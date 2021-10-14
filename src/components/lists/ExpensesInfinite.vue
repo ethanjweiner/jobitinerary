@@ -14,17 +14,13 @@
       <InfiniteList
         :key="searchText"
         :pushQuantity="6"
-        :sampleItem="sampleExpense"
-        :searchParams="['name', 'date', 'cost']"
         :searchFilter="searchText"
+        :dbRef="dbRef"
+        orderByParam="date"
       >
+        <!-- Task: Supply an expense object (rather than document data) to the Expense component -->
         <template v-slot:item="itemProps">
-          <Expense
-            v-model="itemProps.item"
-            :showDate="true"
-            :hideControls="true"
-            @deleteExpense="deleteExpense(itemProps.item.id)"
-          />
+          <ExpenseItem :expense="itemProps.item" :showDate="true" />
         </template>
       </InfiniteList>
     </ion-card-content>
@@ -40,10 +36,8 @@ import {
 } from "@ionic/vue";
 import { ref } from "@vue/reactivity";
 
-import { sampleExpense } from "@/types/auxiliary";
-
 import InfiniteList from "@/components/lists/InfiniteList.vue";
-import Expense from "./items/Expense.vue";
+import ExpenseItem from "./items/ExpenseItem.vue";
 
 export default {
   name: "Expenses Infinite",
@@ -54,18 +48,8 @@ export default {
   setup() {
     const searchText = ref<string>("");
 
-    const deleteExpense = (expenseID: string) => {
-      // DELETE EXPENSE FROM DATABASE
-      console.log("Deleting expense ", expenseID);
-      // Rerender the Infinite List component...
-      searchText.value = " ";
-      searchText.value = "";
-    };
-
     return {
       searchText,
-      sampleExpense,
-      deleteExpense,
     };
   },
   components: {
@@ -74,7 +58,7 @@ export default {
     IonSearchbar,
     IonCardContent,
     InfiniteList,
-    Expense,
+    ExpenseItem,
   },
 };
 </script>

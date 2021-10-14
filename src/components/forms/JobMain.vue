@@ -3,7 +3,9 @@
     <ion-label position="stacked">Job Name</ion-label>
     <ion-input
       type="text"
-      v-model="state.job.name"
+      @ionInput="$emit('update:modelValue', state.job)"
+      :debounce="store.DEBOUNCE_AMOUNT"
+      v-model="state.job.data.name"
       placeholder="Descriptive name for this job"
       class="job-title"
     ></ion-input>
@@ -14,8 +16,9 @@
         <ion-item>
           <ion-label>Estimated Start</ion-label>
           <ion-datetime
+            @ionChange="changeStartDate($event)"
             display-format="MM/DD/YYYY"
-            v-model="state.job.startDate"
+            v-model="state.job.data.startDate"
           ></ion-datetime>
         </ion-item>
       </ion-col>
@@ -23,8 +26,9 @@
         <ion-item>
           <ion-label>Estimated End</ion-label>
           <ion-datetime
+            @ionChange="changeEndDate($event)"
             display-format="MM/DD/YYYY"
-            v-model="state.job.endDate"
+            v-model="state.job.data.endDate"
           ></ion-datetime>
         </ion-item>
       </ion-col>
@@ -33,9 +37,11 @@
   <ion-item>
     <ion-label position="stacked">Job Description</ion-label>
     <ion-textarea
+      @ionInput="$emit('update:modelValue', state.job)"
+      :debounce="store.DEBOUNCE_AMOUNT"
       auto-grow
       type="text"
-      v-model="state.job.description"
+      v-model="state.job.data.description"
       placeholder="Longer description for this job"
     ></ion-textarea>
   </ion-item>
@@ -73,7 +79,7 @@ import {
   IonDatetime,
   IonTextarea,
 } from "@ionic/vue";
-import { watch } from "@vue/runtime-core";
+import store from "@/store";
 
 import { Visit } from "@/types/work_units";
 
@@ -89,11 +95,11 @@ export default {
       job: props.modelValue,
     });
 
-    // Job metrics
+    // JOB METRICS
 
     // Step 1: Extract employees from visits
     const employeeNames = [
-      ...new Set(props.visits.map((visit: Visit) => visit.employeeName)),
+      ...new Set(props.visits.map((visit: Visit) => visit.data.employeeName)),
     ];
 
     // Step 2: For each employee, determine the amount of hours
@@ -102,8 +108,10 @@ export default {
         return {
           employeeName,
           hours: props.visits.reduce((hoursAcc: number, visit: Visit) => {
-            if (visit.employeeName == employeeName)
-              return visit.time.hours + hoursAcc;
+            if (visit.data.employeeName == employeeName)
+              return visit.data.time
+                ? visit.data.time.hours + hoursAcc
+                : hoursAcc;
             return hoursAcc;
           }, 0),
         };
@@ -113,17 +121,29 @@ export default {
     // Step 3: Determine the total number of hours
     const totalHours = computed(() =>
       props.visits.reduce(
-        (hoursAcc: number, visit: Visit) => hoursAcc + visit.time.hours,
+        (hoursAcc: number, visit: Visit) =>
+          visit.data.time ? visit.data.time.hours + hoursAcc : hoursAcc,
         0
       )
     );
 
-    watch(state.job, (newJob) => emit("update:modelValue", newJob));
+    const changeStartDate = (ev: CustomEvent) => {
+      state.job.data.startDate = ev.detail.value.substring(0, 10);
+      emit("update:modelValue", state.job);
+    };
+
+    const changeEndDate = (ev: CustomEvent) => {
+      state.job.data.endDate = ev.detail.value.substring(0, 10);
+      emit("update:modelValue", state.job);
+    };
 
     return {
       state,
+      store,
       totalHours,
       employeeHours,
+      changeStartDate,
+      changeEndDate,
     };
   },
   components: {

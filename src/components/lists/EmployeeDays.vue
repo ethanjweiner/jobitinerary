@@ -16,9 +16,10 @@
     <ion-card-content>
       <InfiniteList
         :key="searchDate"
+        :splitters="splitters"
         :pushQuantity="6"
-        :sampleItem="sampleDay"
-        :searchParams="['date']"
+        :dbRef="dbRef"
+        orderByParam="date"
         :searchFilter="searchDate"
       >
         <template v-slot:item="itemProps">
@@ -43,7 +44,7 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { Day, sampleDay } from "@/types/work_units";
+import { EmployeeDayInterface } from "@/types/work_units";
 import { Splitter } from "@/types/auxiliary";
 
 import AddButton from "../buttons/AddButton.vue";
@@ -75,11 +76,11 @@ export default {
     const splitters = ref<Array<Splitter>>([
       {
         name: "Future Dates",
-        filter: (day: Day) => new Date(day.date) >= new Date(),
+        filter: (day: EmployeeDayInterface) => new Date(day.date) >= new Date(),
       },
       {
         name: "Logged Dates",
-        filter: (day: Day) => new Date(day.date) < new Date(),
+        filter: (day: EmployeeDayInterface) => new Date(day.date) < new Date(),
       },
     ]);
 
@@ -95,7 +96,6 @@ export default {
       createDay,
       searchDate,
       splitters,
-      sampleDay,
     };
   },
 };

@@ -3,7 +3,11 @@
     <template v-slot:dates>
       <div class="list">
         <!-- PASS DATABASE REFERENCE -->
-        <EmployeeDays :employeeName="state.employee.data.name" title="Dates" />
+        <EmployeeDays
+          :employeeName="state.employee.data.name"
+          :dbRef="daysRef"
+          title="Dates"
+        />
       </div>
     </template>
     <template v-slot:pay>
@@ -25,6 +29,7 @@
             <div style="height: 500px;">
               <!-- PASS DATABASE REFERENCE -->
               <EmployeeDays
+                :dbRef="daysRef"
                 :employeeName="state.employee.data.name"
                 title="Dates"
               />
@@ -74,7 +79,7 @@ import {
   IonCardHeader,
   IonCardTitle,
 } from "@ionic/vue";
-import { reactive, ref } from "@vue/reactivity";
+import { computed, reactive, ref } from "@vue/reactivity";
 
 import {
   calendarNumberOutline,
@@ -84,19 +89,18 @@ import {
 
 import store from "@/store";
 
-import { Day } from "@/types/work_units";
-import { SectionsType } from "@/types/auxiliary";
+import { CollectionRef, SectionsType } from "@/types/auxiliary";
 import { Company, Employee } from "@/types/users";
 import Sections from "../Sections.vue";
 
 import EmployeeDays from "@/components/lists/EmployeeDays.vue";
 import PaymentInfo from "@/components/PaymentInfo.vue";
 import EmployeeForm from "@/components/forms/EmployeeForm.vue";
-import { watch } from "@vue/runtime-core";
+import { companiesCollection } from "@/main";
+import { nameToID } from "@/helpers";
 
 interface State {
   employee: Employee | undefined;
-  days: Array<Day>;
 }
 
 export default {
@@ -107,7 +111,21 @@ export default {
   setup(props: any) {
     const state = reactive<State>({
       employee: undefined,
-      days: [],
+    });
+
+    const daysRef = computed<CollectionRef>(() => {
+      if (store.state.company) {
+        const base = companiesCollection
+          .doc(
+            `${store.state.company.id}/employees/${nameToID(props.username)}`
+          )
+          .collection("days");
+
+        // Add time filters...
+
+        return base;
+      }
+      throw Error("No company exists");
     });
 
     // If the user is a Company, assign the employee based on the prop
@@ -143,6 +161,7 @@ export default {
       sections,
       store,
       state,
+      daysRef,
     };
   },
   components: {

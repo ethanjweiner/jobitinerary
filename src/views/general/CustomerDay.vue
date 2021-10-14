@@ -50,25 +50,25 @@
         <ion-row class="ion-justify-content-center ion-margin">
           <AddButton :title="`Add Visit on ${date}`" @click="addVisit" />
         </ion-row>
-        <ion-row v-if="state.day.visits" class="ion-justify-content-around">
+        <ion-row v-if="state.visits" class="ion-justify-content-around">
           <ion-col
             size-xs="12"
             size-sm="12"
             size-md="12"
             size-lg="6"
             size-xl="6"
-            v-for="(visit, index) in state.day.visits"
+            v-for="(visit, index) in state.visits"
             :key="visit.id"
           >
             <ion-card>
               <ion-card-header>
-                <ion-card-title>
-                  Visit by {{ visit.employeeName }}
+                <ion-card-title v-if="visit.data.employeeName">
+                  Visit by {{ visit.data.employeeName }}
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <VisitInline
-                  v-model="state.day.visits[index]"
+                  v-model="state.visits[index]"
                   :separateByDefault="true"
                   :hideCustomerSelect="true"
                 />
@@ -104,15 +104,17 @@ import {
 } from "@ionic/vue";
 
 import { computed, reactive } from "@vue/reactivity";
-import { retrieveVisitsOnDay } from "@/helpers";
 import { ellipsisVertical } from "ionicons/icons";
 
-import { CustomerDay, emptyVisit, Visit } from "@/types/work_units";
+import { CustomerDay, Visit } from "@/types/work_units";
 import VisitInline from "@/components/units/Visit.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
+import { createVisit } from "@/db";
+import { retrieveVisitsOnDay } from "@/helpers";
 
 interface State {
-  day: CustomerDay;
+  day: CustomerDay | null;
+  visits: Array<Visit>;
 }
 
 export default {
@@ -123,48 +125,50 @@ export default {
   },
   setup(props: any) {
     const state = reactive<State>({
-      day: { customerName: props.username, date: props.date, visits: [] },
+      day: null,
+      visits: [],
     });
-    retrieveVisitsOnDay(state.day).then(
-      (visits) => (state.day.visits = visits)
-    );
+
+    const initialize = async () => {
+      // Initialze Visits
+      state.visits = await retrieveVisitsOnDay(props.date, {
+        customerName: props.username,
+      });
+    };
+
+    initialize();
+
     const totalHours = computed(() =>
-      state.day.visits.reduce(
-        (hoursAcc: number, visit: Visit) => hoursAcc + visit.time.hours,
+      state.visits.reduce(
+        (hoursAcc: number, visit: Visit) => hoursAcc + visit.data.time.hours,
         0
       )
     );
 
     const workTypes = computed(() => {
       const types: Array<string> = [];
-      state.day.visits.forEach((visit) => {
-        if (visit.workType && !types.includes(visit.workType))
-          types.push(visit.workType);
+      state.visits.forEach((visit: Visit) => {
+        if (visit.data.workType && !types.includes(visit.data.workType))
+          types.push(visit.data.workType);
       });
-      console.log(types);
       return types;
     });
 
     const employees = computed(() => {
       const names: Array<string> = [];
-      state.day.visits.forEach((visit) => {
-        if (visit.employeeName && !names.includes(visit.employeeName))
-          names.push(visit.employeeName);
+      state.visits.forEach((visit: Visit) => {
+        if (visit.data.employeeName && !names.includes(visit.data.employeeName))
+          names.push(visit.data.employeeName);
       });
       return names;
     });
 
-    const addVisit = () => {
-      // Create an empty visit with the new date
-      const visit = emptyVisit({
-        date: props.date,
-        customerName: props.username,
-      });
-
-      console.log(visit);
-
+    const addVisit = async () => {
       // ADD VISIT TO DATABASE
-      state.day.visits.unshift(visit);
+
+      const visit = await createVisit({ customerName: props.username });
+
+      state.visits.unshift(visit);
     };
 
     return {

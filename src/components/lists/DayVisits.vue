@@ -4,8 +4,7 @@
       v-for="(visit, index) in state.visits"
       :key="visit.id"
       v-model="state.visits[index]"
-      @deleteVisit="deleteVisit(index)"
-      @openVisit="$emit('openVisit', visit.id)"
+      @deleteVisit="deleteVisit(visit)"
     />
     <ion-item button color="primary" @click="addVisit">
       <ion-icon :icon="add"></ion-icon>
@@ -16,45 +15,49 @@
 
 <script lang="ts">
 import { IonReorderGroup, IonIcon, IonItem, IonLabel } from "@ionic/vue";
-import DayVisitItem from "./items/DayVisitItem.vue";
-import { add } from "ionicons/icons";
-import { reactive } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
+import { reactive } from "@vue/reactivity";
 import router from "@/router";
-import { emptyVisit, sampleVisit1 } from "@/types/work_units";
+
+import { add } from "ionicons/icons";
+
+import DayVisitItem from "./items/DayVisitItem.vue";
+import { Visit } from "@/types/work_units";
+import { createVisit } from "@/db";
 
 export default defineComponent({
   name: "Day Visits",
   props: {
-    dbRef: Object,
+    modelValue: Array,
+    employeeName: String,
     date: String,
   },
-  emits: ["openVisit", "addVisit"],
-  components: {
-    IonReorderGroup,
-    IonIcon,
-    IonItem,
-    IonLabel,
-    DayVisitItem,
-  },
+  emits: ["addVisit", "update:modelValue"],
+
   setup(props: any, { emit }: { emit: any }) {
-    // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
       // RETRIEVE VISITS USING DBREF
-      visits: [sampleVisit1, sampleVisit1],
+      visits: props.modelValue,
     });
 
-    const deleteVisit = (index: number) => {
+    const deleteVisit = async (visit: Visit) => {
       // DELETE VISIT FROM DATABASE
-      state.visits.splice(index, 1);
+      await visit.delete();
+      state.visits = state.visits.filter(
+        (_visit: Visit) => visit.id != _visit.id
+      );
+      emit("update:modelValue", state.visits);
     };
 
-    const addVisit = () => {
-      const visit = emptyVisit({ date: props.date });
+    const addVisit = async () => {
       // ADD VISIT TO DATABASE
+      const visit = await createVisit({
+        employeeName: props.employeeName,
+        date: props.date,
+      });
       state.visits.push(visit);
       // OPEN VISIT WITH CREATED ID
-      emit("openVisit", "new_visit_id");
+      emit("update:modelValue", state.visits);
     };
 
     const reorderVisits = (ev: CustomEvent) => {
@@ -62,6 +65,7 @@ export default defineComponent({
       const temp = state.visits[ev.detail.from];
       state.visits[ev.detail.from] = state.visits[ev.detail.to];
       state.visits[ev.detail.to] = temp;
+      emit("update:modelValue", state.visits);
     };
 
     return {
@@ -72,6 +76,13 @@ export default defineComponent({
       reorderVisits,
       addVisit,
     };
+  },
+  components: {
+    IonReorderGroup,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    DayVisitItem,
   },
 });
 </script>

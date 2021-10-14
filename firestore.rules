@@ -1,0 +1,69 @@
+rules_version = '2';
+
+// Description of rules:
+// - Users can only create companies if their uid is that of the company they are trying to create. The company can create employees.
+// - Companies have access to all documents nested under that company (including employee creation).
+// - Employees have access to their document, and all documents nested below.
+// - Employees have read access to customers.
+// - Employees have read access to visits.
+// - Employees have read and write access to company visits they were part of.
+// - Employees have read access to companies
+// - All other actions are forbidden.
+
+service cloud.firestore {
+	// Nested paths
+  match /databases/{database}/documents {
+  	match /{document=**} {
+	  	// Temporary rule for development
+    	allow read, write: if true;
+  	}
+  
+    // Employee documents
+    match /{path=**}/employees/{employeeID} {
+    	// Temporary rule for development
+    	allow read, write: if true;
+    	// Can only create an employee if it's company ID is set to a valid ID
+    	allow read, update, delete: if request.auth.token.email == resource.data.email;
+      
+      match /days/{document} {
+      	allow read, write: if request.auth != null;
+      }
+    }
+
+  	// Company-specific document
+  	match /companies/{companyID} {
+    	// Temporary rule for development
+    	allow read: if true;
+    	// The company user
+    	allow read: if request.auth.uid == companyID;
+      // A user is an employee of the company
+    	allow read: if exists(/databases/$(database)/documents/companies/$(companyID)/employees/$(request.auth.uid));
+      // Only users who are not employees can write to companies
+    	allow write: if request.auth.uid == companyID && !exists(/databases/$(database)/documents/companies/{document}/employees/$(request.auth.uid));
+      
+      // Cascading
+      match /{restOfPath=**} {
+      	allow read, write: if companyID == request.auth.uid;
+      }
+      
+      // Customers and jobs
+      match /customers/{restOfPath=**} {
+      	// Allow reading if the current employee is a member of the company
+        allow read: if exists(/databases/$(database)/documents/companies/$(companyID)/employees/$(request.auth.uid));
+      }
+      
+      // Read access to visits
+      match /visits/{visitID} {
+      	// Allow reading if the current employee is a member of the company
+        allow read: if exists(/databases/$(database)/documents/companies/$(companyID)/employees/$(request.auth.uid));
+      }
+      
+      
+			// Write access to visits
+      match /visits/{visitID} {
+        // Allow employee write access, for visits they were part of
+        allow write: if resource.data.employeeID == request.auth.uid;
+      }
+    }
+  }
+}

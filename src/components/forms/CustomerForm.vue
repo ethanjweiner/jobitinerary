@@ -34,8 +34,8 @@
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 placeholder="123-123-1234"
                 :debounce="store.DEBOUNCE_AMOUNT"
-                v-model="state.customer.data.phone"
                 @ionInput="$emit('update:modelValue', state.customer)"
+                v-model="state.customer.data.phone"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -61,6 +61,8 @@
                 v-if="state.showTextAreas"
                 auto-grow
                 placeholder="Notes on customer"
+                :debounce="store.DEBOUNCE_AMOUNT"
+                @ionInput="$emit('update:modelValue', state.customer)"
                 v-model="state.customer.data.customerNotes"
               ></ion-textarea>
             </ion-item>
@@ -72,6 +74,8 @@
                 v-if="state.showTextAreas"
                 auto-grow
                 placeholder="Notes on property"
+                :debounce="store.DEBOUNCE_AMOUNT"
+                @ionInput="$emit('update:modelValue', state.customer)"
                 v-model="state.customer.data.propertyNotes"
               ></ion-textarea>
             </ion-item>
@@ -90,9 +94,10 @@
       <ion-grid>
         <ion-row class="ion-justify-content-left">
           <ImageWithCaption
-            v-for="(image, index) in state.customer.propertyImages"
+            v-for="(image, index) in state.customer.data.propertyImages"
             :key="image.ref"
-            :modelValue="image"
+            @update:modelValue="$emit('update:modelValue', state.customer)"
+            v-model="state.customer.data.propertyImages[index]"
             :showCaption="true"
             @deleteImage="deleteImage(index)"
           />
@@ -116,16 +121,15 @@ import {
   IonIcon,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
+
+import store from "@/store";
 
 import { mailOutline, callOutline } from "ionicons/icons";
-import { emptyImage } from "@/types/auxiliary";
+import { newImage } from "@/types/auxiliary";
 
 import AddButton from "@/components/buttons/AddButton.vue";
 import Address from "@/components/Address.vue";
 import ImageWithCaption from "@/components/ImageWithCaption.vue";
-
-import store from "@/store";
 
 export default {
   name: "Customer Form",
@@ -142,11 +146,13 @@ export default {
     setTimeout(() => (state.showTextAreas = true), 250);
 
     const addImage = () => {
-      state.customer.propertyImages.unshift(emptyImage(Date.now()));
+      state.customer.data.propertyImages.unshift(newImage(Date.now()));
+      emit("update:modelValue", state.customer);
     };
 
     const deleteImage = (index: number) => {
-      state.customer.propertyImages.splice(index, 1);
+      state.customer.data.propertyImages.splice(index, 1);
+      emit("update:modelValue", state.customer);
     };
 
     return {

@@ -31,7 +31,7 @@
               <h3 class="text-secondary">Select a Date</h3>
             </div>
             <DateSelect v-model="state.date" />
-            <ion-button expand="block" color="primary" @click="createDay"
+            <ion-button expand="block" color="primary" @click="create"
               >Create Day</ion-button
             >
             <ion-note
@@ -67,6 +67,7 @@ import store from "@/store";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import { reactive } from "@vue/reactivity";
 import { dateToString } from "@/helpers";
+import { createEmployeeDay } from "@/db";
 
 export default {
   name: "Select Date",
@@ -95,20 +96,22 @@ export default {
       date: dateToString(new Date()),
     });
 
-    const createDay = () => {
-      if (state.employeeName && state.date)
+    const create = async () => {
+      if (state.employeeName && state.date) {
+        console.log(state.date);
+        await createEmployeeDay(state.date, state.employeeName);
         router.push({
           name: "Employee Day",
           params: { username: state.employeeName, date: state.date },
         });
-      else throw Error("Please select an employee and date.");
+      } else throw Error("Please select an employee and date.");
     };
 
     return {
       router,
       state,
       store,
-      createDay,
+      create,
     };
   },
 };

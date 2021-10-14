@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page v-if="state.day">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -23,6 +23,7 @@
         @deleteDay="deleteDay"
         @changeDate="changeDate"
         @copyDay="copyDay"
+        :currentDate="state.day.data.date"
       />
       <!-- Add Day Popover here -->
     </ion-popover>
@@ -34,10 +35,18 @@
             <DayMain v-model="state.day" />
           </template>
           <template v-slot:visits>
-            <DayVisits :date="state.day.date" @openVisit="openVisitModal" />
+            <DayVisits
+              v-model="state.visits"
+              :employeeName="username"
+              :date="date"
+            />
           </template>
           <template v-slot:expenses>
-            <Expenses />
+            <Expenses
+              v-model="state.expenses"
+              :employeeName="username"
+              :date="date"
+            />
           </template>
           <template v-slot:sectionsAsGrid>
             <ion-row>
@@ -56,7 +65,11 @@
                       </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      <Expenses />
+                      <Expenses
+                        v-model="state.expenses"
+                        :employeeName="username"
+                        :date="date"
+                      />
                     </ion-card-content>
                   </ion-card>
                 </ion-row>
@@ -71,8 +84,9 @@
                   </ion-card-header>
                   <ion-card-content>
                     <DayVisits
-                      :date="state.day.date"
-                      @openVisit="openVisitModal"
+                      v-model="state.visits"
+                      :employeeName="username"
+                      :date="date"
                     />
                   </ion-card-content>
                 </ion-card>
@@ -81,18 +95,6 @@
           </template>
         </Sections>
       </form>
-
-      <ion-modal
-        v-if="visitModalIsOpen"
-        :is-open="visitModalIsOpen"
-        @didDismiss="visitModalIsOpen = false"
-      >
-        <VisitModal
-          :visitID="state.selectedVisitID"
-          :isModal="true"
-          @close="visitModalIsOpen = false"
-        />
-      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
@@ -106,7 +108,6 @@ import {
   IonContent,
   IonIcon,
   IonButtons,
-  IonModal,
   IonPopover,
   IonButton,
   IonCard,
@@ -117,20 +118,19 @@ import {
   IonCardContent,
   IonBackButton,
 } from "@ionic/vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { reactive } from "@vue/reactivity";
 
 import store from "@/store";
 import router from "@/router";
 
-import { Day, sampleDay } from "@/types/work_units";
+import { Expense, EmployeeDay, Visit } from "@/types/work_units";
 import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
 import DayMain from "@/components/forms/DayMain.vue";
 import DayVisits from "@/components/lists/DayVisits.vue";
 import Expenses from "@/components/lists/Expenses.vue";
-import VisitModal from "@/components/modals/VisitModal.vue";
 
 import {
   pricetagsOutline,
@@ -139,10 +139,13 @@ import {
   homeOutline,
 } from "ionicons/icons";
 import DayPopover from "@/components/popovers/DayPopover.vue";
+import { nameToID, retrieveVisitsOnDay } from "@/helpers";
+import { companiesCollection } from "@/main";
 
 interface State {
-  day: Day;
-  selectedVisitID: string;
+  day: EmployeeDay | null;
+  visits: Array<Visit>;
+  expenses: Array<Expense>;
 }
 export default {
   name: "Employee Day",
@@ -150,7 +153,7 @@ export default {
     username: String,
     date: String,
   },
-  setup() {
+  setup(props: any) {
     const sections = ref<SectionsType>([
       {
         name: "Main",
@@ -170,9 +173,52 @@ export default {
     ]);
 
     const state = reactive<State>({
-      day: sampleDay, // Use the default hourly rate
-      selectedVisitID: "",
+      day: null, // Use the default hourly rate
+      visits: [],
+      expenses: [],
     });
+
+    // Retrieve the day
+    const initialize = async () => {
+      if (store.state.company) {
+        // Initialize Day
+        const day = new EmployeeDay(
+          props.date,
+          store.state.company.id,
+          nameToID(props.username)
+        );
+        await day.init();
+        state.day = day;
+        // Initialze Visits
+        state.visits = await retrieveVisitsOnDay(props.date, {
+          employeeName: props.username,
+        });
+        // Initialize Expenses
+        const expenseDocs = (
+          await companiesCollection
+            .doc(
+              `${store.state.company.id}/employees/${nameToID(props.username)}`
+            )
+            .collection("expenses")
+            .where("data.date", "==", props.date)
+            .get()
+        ).docs;
+        for (const doc of expenseDocs) {
+          const expense = new Expense(
+            doc.id,
+            store.state.company.id,
+            nameToID(props.username)
+          );
+          await expense.init(doc.data().data);
+          state.expenses.push(expense);
+        }
+        watch(state.day.data, () => {
+          if (state.day) state.day.save();
+        });
+      }
+    };
+
+    initialize();
 
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
@@ -181,34 +227,43 @@ export default {
       popoverIsOpen.value = state;
     };
 
-    const updateDay = (newDay: Day) => {
-      console.log(newDay);
-      state.day = newDay;
+    const deleteDay = async () => {
+      if (state.day) await state.day.delete();
+      router.push({ name: "Employee", params: { username: props.username } });
     };
 
-    const deleteDay = () => {
-      popoverIsOpen.value = false;
-      // Delete visit from database
-      // Return to home
-      router.go(-1);
+    const changeDate = async (date: string) => {
+      if (state.day) {
+        state.day = await state.day.changeDate(date);
+        for (const visit of state.visits) {
+          await visit.changeDate(date);
+        }
+        for (const expense of state.expenses) {
+          await expense.changeDate(date);
+        }
 
-      // Update the state
+        await router.push({
+          name: "Employee Day",
+          params: { employee: props.username, date },
+        });
+
+        router.go(0);
+      }
     };
 
-    const changeDate = () => {
-      console.log("Changing date");
-    };
-
-    const copyDay = () => {
-      console.log("Copying day");
-    };
-
-    const visitModalIsOpen = ref(false);
-
-    const openVisitModal = (visitID: string) => {
-      console.log("opening visit modal");
-      visitModalIsOpen.value = true;
-      state.selectedVisitID = visitID;
+    const copyDay = async (employeeName: string) => {
+      if (state.day) {
+        const copiedDay = new EmployeeDay(
+          state.day.data.date,
+          state.day.data.companyID,
+          nameToID(employeeName)
+        );
+        const copiedData = { ...state.day.data };
+        copiedData.employeeName = employeeName;
+        copiedData.readByCompany = false;
+        copiedData.readByEmployee = false;
+        await copiedDay.create(state.day.data);
+      }
     };
 
     return {
@@ -222,13 +277,10 @@ export default {
         pricetagsOutline,
         ellipsisVertical,
       },
-      updateDay,
       toggleDaySettings,
       popoverIsOpen,
       popoverEvent,
       deleteDay,
-      openVisitModal,
-      visitModalIsOpen,
       changeDate,
       copyDay,
     };
@@ -242,7 +294,6 @@ export default {
     Sections,
     IonIcon,
     IonButtons,
-    IonModal,
     IonPopover,
     IonButton,
     DayMain,
@@ -255,7 +306,6 @@ export default {
     IonCardTitle,
     IonCardContent,
     IonBackButton,
-    VisitModal,
     DayPopover,
   },
 };

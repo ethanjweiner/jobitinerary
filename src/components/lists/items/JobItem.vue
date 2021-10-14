@@ -1,5 +1,15 @@
 <template>
-  <ion-item>
+  <ion-item
+    @click="
+      router.push({
+        name: 'Job',
+        params: {
+          username: job.customerName,
+          jobID: job.id,
+        },
+      })
+    "
+  >
     <div>
       <ion-label>{{ job.name }} </ion-label>
       <ion-note v-if="showCustomer">for {{ job.customerName }}</ion-note>
@@ -17,10 +27,19 @@
 
 <script lang="ts">
 import { IonItem, IonLabel, IonNote } from "@ionic/vue";
+import router from "@/router";
 
 export default {
-  name: "Visit Item",
-  props: ["job", "showCustomer"],
+  name: "Job Item",
+  props: {
+    job: Object,
+    showCustomer: Boolean,
+  },
+  setup() {
+    return {
+      router,
+    };
+  },
   components: {
     IonItem,
     IonLabel,

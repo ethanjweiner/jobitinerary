@@ -1,24 +1,21 @@
 <template>
   <ion-item-sliding>
-    <ion-item-options
-      side="start"
-      @ionSwipe="state.tool.returned = !state.tool.returned"
-    >
-      <ion-item-option
-        color="secondary"
-        expandable
-        @click="state.tool.returned = !state.tool.returned"
-        >{{
-          state.tool.returned ? "Unmark as Returned" : "Mark as Returned"
-        }}</ion-item-option
-      >
+    <ion-item-options side="start" @ionSwipe="toggleReturned">
+      <ion-item-option color="secondary" expandable @click="toggleReturned">{{
+        state.tool.returned ? "Unmark as Returned" : "Mark as Returned"
+      }}</ion-item-option>
     </ion-item-options>
 
     <ion-item>
       <ion-buttons slot="start">
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
-      <ion-input placeholder="Enter tool" v-model="state.tool.name"></ion-input>
+      <ion-input
+        placeholder="Enter tool"
+        v-model="state.tool.name"
+        @ionInput="$emit('update:modelValue', state.tool)"
+        :debounce="store.DEBOUNCE_AMOUNT"
+      ></ion-input>
       <ion-buttons slot="end">
         <ion-note v-if="state.tool.returned">
           <ion-icon :icon="checkmark"></ion-icon>
@@ -34,9 +31,6 @@
 </template>
 
 <script lang="ts">
-import { reactive } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
-
 import {
   IonItem,
   IonButtons,
@@ -49,6 +43,8 @@ import {
   IonItemOption,
   IonNote,
 } from "@ionic/vue";
+import { reactive } from "@vue/reactivity";
+import store from "@/store";
 import { trashOutline, checkmark } from "ionicons/icons";
 
 export default {
@@ -74,12 +70,15 @@ export default {
       tool: props.modelValue,
     });
 
-    watch(state.tool, (newTool) => {
-      emit("update:modelValue", newTool);
-    });
+    const toggleReturned = () => {
+      state.tool.returned = !state.tool.returned;
+      emit("update:modelValue", state.tool);
+    };
 
     return {
       state,
+      store,
+      toggleReturned,
       trashOutline,
       checkmark,
     };

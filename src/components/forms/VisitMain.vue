@@ -5,7 +5,7 @@
       <ion-label style="margin-left: 7px;">Date of Visit </ion-label>
       <ion-datetime
         display-format="MM/DD/YYYY"
-        v-model="state.visit.date"
+        v-model="state.visit.data.date"
         @ionChange="changeDate($event)"
       ></ion-datetime>
     </ion-item>
@@ -15,9 +15,10 @@
           <ion-item>
             <ion-label position="stacked">Planned Start</ion-label>
             <ion-datetime
-              v-model="state.visit.plannedStart"
+              v-model="state.visit.data.plannedStart"
               display-format="h:mm A"
               picker-format="h:mm A"
+              @ionChange="$emit('update:modelValue', state.visit)"
             ></ion-datetime>
           </ion-item>
         </ion-col>
@@ -25,9 +26,10 @@
           <ion-item>
             <ion-label position="stacked">Planned End</ion-label>
             <ion-datetime
-              v-model="state.visit.plannedEnd"
+              v-model="state.visit.data.plannedEnd"
               display-format="h:mm A"
               picker-format="h:mm A"
+              @ionChange="$emit('update:modelValue', state.visit)"
             ></ion-datetime>
           </ion-item>
         </ion-col>
@@ -38,34 +40,30 @@
 
     <UserSelect
       v-if="!hideEmployeeSelect"
-      :names="
-        store.state.user
-          ? store.state.user.employees.map((employee) => employee.data.name)
-          : []
-      "
-      v-model="state.visit.employeeName"
+      v-model="state.visit.data.employeeName"
       type="employee"
     />
     <!-- Customer Select -->
     <UserSelect
-      v-if="!state.visit.job && !hideCustomerSelect && customerNames.length"
-      :names="
-        store.state.user
-          ? store.state.user.customers.map((customer) => customer.data.name)
-          : []
-      "
-      v-model="state.visit.customerName"
+      v-if="!state.visit.data.job && !hideCustomerSelect"
+      v-model="state.visit.data.customerName"
       type="customer"
     />
     <!-- Job Attacher -->
     <ion-item v-if="!hideJob">
       <ion-toolbar>
         <ion-note>Attach a Job</ion-note>
-        <ion-label v-if="state.visit.job"
-          >"{{ state.visit.job.name }}"</ion-label
-        >
+        <ion-label v-if="state.jobData">"{{ state.jobData.name }}"</ion-label>
         <ion-buttons slot="end">
-          <ion-chip v-if="state.visit.job" @click="state.visit.job = null">
+          <ion-chip
+            v-if="state.jobData"
+            @click="
+              () => {
+                state.visit.data.jobID = null;
+                state.jobData = null;
+              }
+            "
+          >
             <ion-icon :icon="icons.trashOutline"></ion-icon>
             <ion-label>Clear Job</ion-label>
           </ion-chip>
@@ -81,16 +79,18 @@
       <ion-label position="stacked">Type of Work</ion-label>
       <ion-input
         type="text"
-        v-model="state.visit.workType"
+        v-model="state.visit.data.workType"
         placeholder="Describe the type of work being done at this visit"
+        @ionInput="$emit('update:modelValue', state.visit)"
+        :debounce="store.DEBOUNCE_AMOUNT"
       />
     </ion-item>
 
     <TimeLogComponent
       v-if="store.state.userType == 'employee'"
-      :time="state.visit.time"
-      :title="'Visit Time Log'"
-      @timeChange="(time) => (state.visit.time = time)"
+      title="Visit Time Log"
+      v-model="state.visit.data.time"
+      @update:modelValue="$emit('update:modelValue', state.visit)"
     />
     <!-- Additional Notes -->
     <h3 class="ion-text-center">
@@ -99,13 +99,19 @@
     <ion-item v-if="state.showTextAreas">
       <ion-textarea
         auto-grow
-        v-model="state.visit.notes"
+        v-model="state.visit.data.notes"
         placeholder="Notes for the visit"
+        @ionInput="$emit('update:modelValue', state.visit)"
+        :debounce="store.DEBOUNCE_AMOUNT"
       ></ion-textarea>
     </ion-item>
 
     <ion-modal :is-open="jobsModalIsOpen" @didDismiss="jobsModalIsOpen = false">
-      <JobsModal @jobSelected="attachJob" @close="jobsModalIsOpen = false" />
+      <JobsModal
+        @jobSelected="attachJob"
+        @close="jobsModalIsOpen = false"
+        :dbRef="jobsRef"
+      />
     </ion-modal>
   </div>
 </template>
@@ -129,17 +135,28 @@ import {
   IonCol,
 } from "@ionic/vue";
 
-import JobsModal from "@/components/modals/JobsModal.vue";
-import UserSelect from "@/components/selects/UserSelect.vue";
-import TimeLogComponent from "@/components/TimeLog.vue";
+import { computed, reactive, ref } from "vue";
+import store from "@/store";
+
 import {
   calendarNumberOutline,
   calendarOutline,
   trashOutline,
 } from "ionicons/icons";
-import store from "@/store";
-import { Job } from "@/types/work_units";
-import { reactive, ref, watch } from "vue";
+
+import { JobInterface, Visit } from "@/types/work_units";
+
+import JobsModal from "@/components/modals/JobsModal.vue";
+import UserSelect from "@/components/selects/UserSelect.vue";
+import TimeLogComponent from "@/components/TimeLog.vue";
+import { companiesCollection, db } from "@/main";
+import { nameToID } from "@/helpers";
+
+interface State {
+  visit: Visit;
+  jobData: JobInterface | null;
+  showTextAreas: boolean;
+}
 
 export default {
   name: "Visit Main",
@@ -171,32 +188,67 @@ export default {
     IonCol,
   },
   setup(props: any, { emit }: { emit: any }) {
-    const state = reactive({
+    const state = reactive<State>({
       visit: props.modelValue,
+      jobData: null,
       showTextAreas: false,
     });
 
-    watch(state.visit, (newVisit) => {
-      emit("update:modelValue", newVisit);
+    const initialize = async () => {
+      if (state.visit.data.jobID) {
+        const docs = (
+          await db
+            .collectionGroup("jobs")
+            .where("data.id", "==", state.visit.data.jobID)
+            .get()
+        ).docs;
+        if (docs) {
+          state.jobData = docs[0].data().data as JobInterface;
+        }
+      }
+    };
+
+    initialize();
+
+    const jobsRef = computed(() => {
+      if (store.state.company) {
+        if (state.visit.data.customerName) {
+          return companiesCollection
+            .doc(
+              `${store.state.company.id}/customers/${nameToID(
+                state.visit.data.customerName
+              )}`
+            )
+            .collection("jobs");
+        }
+        return db
+          .collectionGroup("jobs")
+          .where("data.companyID", "==", store.state.company.id);
+      }
+      return null;
     });
 
     setTimeout(() => (state.showTextAreas = true), 250);
 
     const changeDate = (ev: CustomEvent) => {
-      state.visit.date = ev.detail.value.substring(0, 10);
+      state.visit.data.date = ev.detail.value.substring(0, 10);
+      emit("update:modelValue", state.visit);
     };
 
     const jobsModalIsOpen = ref(false);
 
-    const attachJob = (job: Job) => {
+    const attachJob = (jobData: JobInterface) => {
       jobsModalIsOpen.value = false;
-      state.visit.job = { id: job.id, name: job.name };
-      state.visit.customerName = job.customerName;
+      state.jobData = jobData;
+      state.visit.data.jobID = jobData.id;
+      state.visit.data.customerName = jobData.customerName;
+      emit("update:modelValue", state.visit);
     };
 
     return {
       state,
       store,
+      jobsRef,
       icons: {
         calendarNumberOutline,
         calendarOutline,

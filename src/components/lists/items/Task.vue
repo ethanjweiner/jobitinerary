@@ -2,10 +2,15 @@
   <ion-reorder>
     <ion-item>
       <ion-buttons slot="start">
-        <ion-checkbox v-model="state.task.complete"></ion-checkbox>
+        <ion-checkbox
+          @ionInput="$emit('update:modelValue', state.task)"
+          v-model="state.task.complete"
+        ></ion-checkbox>
       </ion-buttons>
       <ion-input
         placeholder="General name"
+        @ionInput="$emit('update:modelValue', state.task)"
+        :debounce="store.DEBOUNCE_AMOUNT"
         v-model="state.task.header"
         type="text"
       >
@@ -29,6 +34,8 @@
         placeholder="Task-specific notes"
         auto-grow
         rows="1"
+        @ionInput="$emit('update:modelValue', state.task)"
+        :debounce="store.DEBOUNCE_AMOUNT"
         v-model="state.task.notes"
       ></ion-textarea>
     </ion-item>
@@ -66,11 +73,13 @@ import {
   IonCard,
   IonToolbar,
 } from "@ionic/vue";
-import { trashOutline, cameraOutline, close } from "ionicons/icons";
 import { reactive } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
-import ImageUploader from "@/components/ImageUploader.vue";
+import store from "@/store";
+
+import { trashOutline, cameraOutline, close } from "ionicons/icons";
+
 import { getImageURL } from "@/helpers";
+import ImageUploader from "@/components/ImageUploader.vue";
 
 export default {
   name: "Task",
@@ -105,18 +114,16 @@ export default {
 
     const changeImage = async (imageRef: string) => {
       state.task.image.ref = imageRef;
+      emit("update:modelValue", state.task);
       state.imageURL = await getImageURL(imageRef);
     };
 
     if (state.task.image.ref)
       getImageURL(state.task.image.ref).then((url) => (state.imageURL = url));
 
-    watch(state.task, (newTask) => {
-      emit("update:modelValue", newTask);
-    });
-
     return {
       state,
+      store,
       changeImage,
       icons: { trashOutline, cameraOutline, close },
     };

@@ -5,7 +5,10 @@
       @click="
         router.push({
           name: 'Employee Day',
-          params: { username: state.day.employeeName, date: state.day.date },
+          params: {
+            username: state.day.employeeName,
+            date: state.day.date,
+          },
         })
       "
     >
@@ -15,7 +18,7 @@
         </ion-text>
       </ion-label>
       <ion-note v-if="state.day.time.hours">
-        {{ state.day.time.hours }} hours @ ${{ hourlyRate }}/hr
+        {{ state.day.time.hours }} total hours @ ${{ hourlyRate }}/hr
       </ion-note>
     </div>
     <ion-buttons slot="end" v-if="showPaidToggle">
@@ -24,9 +27,9 @@
       >
       <ion-note style="margin: auto;" v-if="!state.day.paid">Unpaid</ion-note>
       <ion-toggle
-        v-model="state.day.paid"
+        :checked="state.day.paid"
         value="paid"
-        @ionChange="$emit('togglePaid')"
+        @ionChange="togglePaid"
       ></ion-toggle>
     </ion-buttons>
   </ion-item>
@@ -42,11 +45,16 @@ import {
   IonIcon,
   IonToggle,
 } from "@ionic/vue";
-import { checkmark } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
 import store from "@/store";
 import router from "@/router";
-import { Employee } from "@/types/users";
+
+import { checkmark } from "ionicons/icons";
+
+import { Company, Customer, Employee } from "@/types/users";
+import { companiesCollection } from "@/main";
+import { EmployeeDayInterface } from "@/types/work_units";
+import { nameToID } from "@/helpers";
 
 export default {
   name: "Employee Day Item",
@@ -65,18 +73,31 @@ export default {
   },
   emits: ["togglePaid"],
   setup(props: any) {
-    const state = reactive({
+    const state = reactive<{ day: EmployeeDayInterface }>({
       day: props.day,
     });
 
+    const togglePaid = async () => {
+      state.day.paid = !state.day.paid;
+      await companiesCollection
+        .doc(
+          `${state.day.companyID}/employees/${nameToID(
+            state.day.employeeName
+          )}/days/${state.day.date}`
+        )
+        .update({ "data.paid": state.day.paid });
+    };
+
     const hourlyRate = computed(() => {
       if (state.day.hourlyRate) return state.day.hourlyRate;
-      const employee = store.state.user
-        ? store.state.user.employees.find(
-            (employee) => state.day.employeeName == employee.data.name
-          )
-        : null;
-      if (employee instanceof Employee) return employee.data.defaultHourlyRate;
+      if (store.state.user instanceof Employee)
+        return store.state.user.data.defaultHourlyRate;
+      else if (store.state.user instanceof Company) {
+        const employee = store.state.user.employees.find(
+          (employee) => state.day.employeeName == employee.data.name
+        );
+        if (employee) return employee.data.defaultHourlyRate;
+      } else if (store.state.user instanceof Customer) return null;
       return null;
     });
 
@@ -85,6 +106,7 @@ export default {
       state,
       hourlyRate,
       router,
+      togglePaid,
     };
   },
 };

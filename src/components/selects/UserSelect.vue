@@ -90,7 +90,6 @@ export default defineComponent({
     const newUserModalIsOpen = ref(false);
 
     const refreshState = () => {
-      console.log("Refreshing");
       if (props.type == "customer" && store.state.user) {
         state.names = store.state.user.customers.map(
           (customer) => customer.data.name

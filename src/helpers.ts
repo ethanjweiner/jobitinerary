@@ -1,27 +1,24 @@
 import router from "./router";
-import { storage } from "./main";
+import { companiesCollection, storage } from "./main";
 import date from "date-and-time";
-import store from "@/store";
 import { Loader } from "./types/auxiliary";
-import { Company, Customer, Employee } from "./types/users";
-import { CustomerDay, sampleVisit1, Visit } from "./types/work_units";
+import { Visit } from "./types/work_units";
+import store from "./store";
 
 // ROUTING HELPERS
 
 let routeGuardsInitialized = false;
 
-const initRouteGuards = () => {
+const initRouteGuards = (userKind: "employee" | "company" | "customer") => {
   if (!routeGuardsInitialized) {
     // This route guard does not actually secure the user out of the route
     router.beforeEach((to, from, next) => {
-      if (to.meta.requiresAuth && to.fullPath.includes("company/")) {
-        if (store.state.user instanceof Company) next();
-        else router.push("/");
-      } else if (to.meta.requiresAuth && to.fullPath.includes("employee/")) {
-        if (store.state.user instanceof Employee) next();
-        else router.push("/");
-      } else if (to.meta.requiresAuth && to.fullPath.includes("customer/")) {
-        if (store.state.user instanceof Customer) next();
+      if (to.meta.requiresAuth) {
+        if (to.fullPath.includes("company/") && userKind == "company") next();
+        else if (to.fullPath.includes("employee/") && userKind == "employee")
+          next();
+        else if (to.fullPath.includes("customer/") && userKind == "customer")
+          next();
         else router.push("/");
       } else next();
     });
@@ -33,19 +30,19 @@ const initRouteGuards = () => {
 export function initializeUserRouting(
   userKind: "employee" | "company" | "customer"
 ) {
-  initRouteGuards();
+  initRouteGuards(userKind);
   if (!router.currentRoute.value.fullPath.startsWith(`/${userKind}`))
     router.push(`/${userKind}`);
 }
 
 // DATE HELPERS
 
-export function dateToString(date: Date) {
-  return date.toLocaleDateString().replaceAll("/", "-");
+export function dateToString(inputDate: Date) {
+  return date.format(inputDate, "YYYY-MM-DD");
 }
 
 export function dateToStrings(inputDate: Date): Array<string> {
-  return [
+  const strs = [
     inputDate.toString(),
     inputDate.toDateString(),
     inputDate.toISOString(),
@@ -55,15 +52,13 @@ export function dateToStrings(inputDate: Date): Array<string> {
     date.format(inputDate, "MMMM"),
     date.format(inputDate, "dddd"),
   ];
+
+  console.log(strs);
+  return strs;
 }
 
-export function formatTime(fourDigitTime: string): string {
-  const hours24 = parseInt(fourDigitTime.substring(0, 2));
-  const hours = ((hours24 + 11) % 12) + 1;
-  const amPm = hours24 > 11 ? "pm" : "am";
-  const minutes = fourDigitTime.substring(2);
-
-  return hours + ":" + minutes + amPm;
+export function formatTime(inputDate: string): string {
+  return date.format(new Date(inputDate), "hh:mm A");
 }
 
 // STRING MANIPULATION HELPERS
@@ -90,34 +85,16 @@ export function capitalize(input: string) {
   return input.charAt(0).toUpperCase() + input.slice(1);
 }
 
-function stringsOverlap(str1: string, str2: string): boolean {
-  return str1.includes(str2) || str2.includes(str1);
-}
-
-export function includeItemInSearch(
-  item: any,
-  searchText: string,
-  parameters: Array<string>
-): boolean {
-  searchText = searchText.trim().toLowerCase();
-  for (const param of parameters) {
-    const itemProperty = item[param];
-    if (itemProperty) {
-      if (param.toLowerCase().includes("date")) {
-        if (
-          dateToStrings(new Date(itemProperty)).find((dateString: string) =>
-            dateString.toLowerCase().includes(searchText)
-          )
-        )
-          return true;
-      } else if (typeof itemProperty == "string") {
-        if (stringsOverlap(searchText, itemProperty.toLowerCase())) return true;
-      } else if (typeof itemProperty == "number") {
-        if (stringsOverlap(searchText, itemProperty.toString())) return true;
-      } else return false;
+export function explode(str: any): Array<string> {
+  const explosion: Array<string> = [];
+  const strs = str.split(" ");
+  strs.push(str);
+  strs.forEach((str: string) => {
+    for (let i = 1; i < str.length + 1; i++) {
+      explosion.push(str.substring(0, i));
     }
-  }
-  return false;
+  });
+  return explosion;
 }
 
 // INFINITE SCROLL HELPERS
@@ -148,9 +125,40 @@ export async function getImageURL(ref: string) {
 }
 
 export async function retrieveVisitsOnDay(
-  day: CustomerDay
+  date: string,
+  options: { customerName?: string; employeeName?: string }
 ): Promise<Array<Visit>> {
-  day;
-  // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
-  return [sampleVisit1, sampleVisit1];
+  const visits: Array<Visit> = [];
+  if (store.state.company) {
+    // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
+    let ref = companiesCollection
+      .doc(store.state.company.id)
+      .collection("visits")
+      .where("data.date", "==", date);
+    if (options.customerName)
+      ref = ref.where("data.customerName", "==", options.customerName);
+    if (options.employeeName)
+      ref = ref.where("data.employeeName", "==", options.employeeName);
+
+    const visitDocs = (await ref.get()).docs;
+    for (const doc of visitDocs) {
+      const visit = new Visit(doc.id, store.state.company.id);
+      await visit.init(doc.data().data);
+      visits.push(visit);
+    }
+  }
+
+  visits.sort(
+    (a: Visit, b: Visit) =>
+      new Date(a.data.plannedStart).getTime() -
+      new Date(b.data.plannedStart).getTime()
+  );
+  return visits;
+}
+
+// `PropertyKey` is short for "string | number | symbol"
+// since an object key can be any of those types, our key can too
+// in TS 3.0+, putting just "string" raises an error
+export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
+  return key in obj;
 }

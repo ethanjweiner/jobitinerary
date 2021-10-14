@@ -3,31 +3,34 @@
     @click="
       router.push({
         name: 'Customer Day',
-        params: { username: state.day.customerName, date: state.day.date },
+        params: {
+          username: state.day.data.customerName,
+          date: state.day.data.date,
+        },
       })
     "
   >
     <div>
       <ion-label>
         <ion-text>
-          <!-- Add more information about day here (e.g. total hours worked) -->
-          {{ state.day.date }}
+          {{ state.day.data.date }}
         </ion-text>
       </ion-label>
-      <ion-note> {{ totalHours }} hours worked total </ion-note>
     </div>
   </ion-item>
 </template>
 
 <script lang="ts">
-import { IonItem, IonLabel, IonText, IonNote } from "@ionic/vue";
-import { computed, reactive } from "@vue/reactivity";
+import { IonItem, IonLabel, IonText } from "@ionic/vue";
+import { reactive } from "@vue/reactivity";
+import router from "@/router";
+
 import { CustomerDay, Visit } from "@/types/work_units";
 import { retrieveVisitsOnDay } from "@/helpers";
-import router from "@/router";
 
 interface State {
   day: CustomerDay;
+  visits: Array<Visit>;
 }
 
 export default {
@@ -38,27 +41,24 @@ export default {
   setup(props: any) {
     const state = reactive<State>({
       day: props.day,
+      visits: [],
     });
 
-    retrieveVisitsOnDay(state.day).then(
-      (visits) => (state.day.visits = visits)
-    );
+    const initialize = async () => {
+      // Initialze Visits
+      state.visits = await retrieveVisitsOnDay(props.date, {
+        customerName: props.day.customerName,
+      });
+    };
 
-    const totalHours = computed(() => {
-      if (props.day.visits) {
-        return props.day.visits.reduce(
-          (hoursAcc: number, visit: Visit) => hoursAcc + visit.time.hours,
-          0
-        );
-      } else return 0;
-    });
-    return { router, state, totalHours };
+    initialize();
+
+    return { router, state };
   },
   components: {
     IonItem,
     IonLabel,
     IonText,
-    IonNote,
   },
 };
 </script>

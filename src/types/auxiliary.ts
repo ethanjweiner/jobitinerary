@@ -1,4 +1,4 @@
-import { dateToString } from "../helpers";
+import firebase from "firebase/app";
 
 // Auxiliary
 export interface SectionType {
@@ -28,7 +28,7 @@ export interface ImageWithCaption {
   caption: string;
 }
 
-export const emptyImage = (id: number): ImageWithCaption => {
+export const newImage = (id: number): ImageWithCaption => {
   return {
     id,
     ref: "",
@@ -96,32 +96,6 @@ export const sampleTimeLog: TimeLog = {
   hours: 8,
 };
 
-export interface Expense {
-  id: string;
-  name: string;
-  date: string;
-  cost: number;
-  paid: boolean;
-}
-
-export const sampleExpense: Expense = {
-  id: "expense id",
-  name: "Expense",
-  date: "2020-01-01",
-  cost: 1,
-  paid: true,
-};
-
-export function emptyExpense(id: string): Expense {
-  return {
-    id,
-    name: "",
-    date: dateToString(new Date()),
-    cost: 0,
-    paid: false,
-  };
-}
-
 export enum AuthenticationTitleText {
   LogIn = "Log in to JobItinerary",
   CompanySignUp = "Sign up your company for JobItinerary",
@@ -135,6 +109,14 @@ export type Loader = (searchFilter?: string) => Promise<0 | 1>;
 type Filter = (item: any) => boolean;
 
 export type Splitter = { name: string; filter: Filter };
+
+// Database References
+
+export type DocRef = firebase.firestore.DocumentReference;
+export type CollectionRef = firebase.firestore.CollectionReference;
+export type DocSnapshot = firebase.firestore.DocumentSnapshot;
+export type DocData = firebase.firestore.DocumentData;
+export type Query = firebase.firestore.Query;
 
 /* BACKLOG
 

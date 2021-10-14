@@ -4,41 +4,36 @@
       <ion-input
         type="text"
         placeholder="Name"
-        v-model="state.expense.data.name"
-        @ionInput="$emit('update:modelValue', state.expense)"
+        :value="state.expense.name"
         :debounce="store.DEBOUNCE_AMOUNT"
-        :disabled="hideControls"
+        disabled
       ></ion-input>
       <ion-note style="margin: 0;" v-if="showDate">
-        {{ state.expense.data.date }}
+        {{ state.expense.date }}
       </ion-note>
     </div>
 
     <CurrencyInput
-      v-model="state.expense.data.cost"
-      @update:modelValue="$emit('update:modelValue', state.expense)"
+      :value="state.expense.cost"
       :debounce="store.DEBOUNCE_AMOUNT"
       placeholder="Cost"
       :options="{ currency: 'USD' }"
-      :disabled="hideControls"
+      disabled
       style="margin-right: 10px;"
     />
 
     <ion-buttons slot="end" style="margin: 0;">
-      <ion-note style="margin: auto;" v-if="state.expense.data.paid"
+      <ion-note style="margin: auto;" v-if="state.expense.paid"
         ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
       >
-      <ion-note style="margin: auto;" v-if="!state.expense.data.paid"
+      <ion-note style="margin: auto;" v-if="!state.expense.paid"
         >Unpaid</ion-note
       >
       <ion-toggle
-        @ionInput="$emit('update:modelValue', state.expense)"
-        v-model="state.expense.data.paid"
+        :checked="state.expense.paid"
+        @ionChange="togglePaid"
         value="paid"
       ></ion-toggle>
-      <ion-button @click="$emit('deleteExpense')" v-if="!hideControls">
-        <ion-icon :icon="icons.trashOutline"></ion-icon>
-      </ion-button>
     </ion-buttons>
   </ion-item>
 </template>
@@ -47,36 +42,45 @@
 import {
   IonItem,
   IonInput,
-  IonButton,
   IonButtons,
   IonNote,
   IonIcon,
   IonToggle,
 } from "@ionic/vue";
-import { reactive } from "@vue/reactivity";
 import { trashOutline, checkmark } from "ionicons/icons";
 import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
-import { watch } from "@vue/runtime-core";
 import store from "@/store";
+import { companiesCollection } from "@/main";
+import { reactive } from "@vue/reactivity";
+import { ExpenseInterface } from "@/types/work_units";
+import { nameToID } from "@/helpers";
 
 export default {
   name: "Expense",
   props: {
-    modelValue: Object,
-    hideControls: Boolean,
+    expense: Object,
     showDate: Boolean,
   },
-  emits: ["update:modelValue", "deleteExpense"],
   setup(props: any) {
-    const state = reactive({
-      expense: props.modelValue,
+    const state = reactive<{ expense: ExpenseInterface }>({
+      expense: props.expense,
     });
 
-    watch(state.expense.data, () => state.expense.save());
+    const togglePaid = async () => {
+      state.expense.paid = !state.expense.paid;
+      await companiesCollection
+        .doc(
+          `${state.expense.companyID}/employees/${nameToID(
+            state.expense.employeeName
+          )}/expenses/${state.expense.id}`
+        )
+        .update({ "data.paid": state.expense.paid });
+    };
 
     return {
       state,
       store,
+      togglePaid,
       icons: {
         trashOutline,
         checkmark,
@@ -86,7 +90,6 @@ export default {
   components: {
     IonItem,
     IonInput,
-    IonButton,
     IonButtons,
     IonNote,
     IonIcon,

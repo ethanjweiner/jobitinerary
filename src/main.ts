@@ -53,6 +53,14 @@ firebase.analytics();
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const storage = firebase.storage();
+
+// Set up emulators in localhost environments
+if (location.hostname === "localhost") {
+  db.useEmulator("localhost", 8080);
+  auth.useEmulator("http://localhost:9099");
+  storage.useEmulator("localhost", 9199);
+}
+
 export const companiesCollection = db.collection("companies");
 export const employeesCollection = db.collectionGroup("employees");
 
@@ -84,6 +92,7 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
+// Global route guards
 router.beforeEach((to) => {
   if (to.meta.requiresAuth && !auth.currentUser) {
     router.push("/");

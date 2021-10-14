@@ -13,6 +13,7 @@
                 type="email"
                 disabled
                 placeholder="email"
+                :debounce="store.DEBOUNCE_AMOUNT"
                 @ionInput="$emit('update:modelValue', state.employee)"
                 v-model="state.employee.data.email"
               ></ion-input>
@@ -29,7 +30,7 @@
                 inputmode="tel"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 placeholder="123-123-1234"
-                debounce="500"
+                :debounce="store.DEBOUNCE_AMOUNT"
                 @ionInput="$emit('update:modelValue', state.employee)"
                 v-model="state.employee.data.phone"
               ></ion-input>
@@ -53,7 +54,8 @@ import {
   IonIcon,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
+import store from "@/store";
+
 import { mailOutline, callOutline } from "ionicons/icons";
 
 export default {
@@ -79,6 +81,7 @@ export default {
 
     return {
       state,
+      store,
       icons: {
         mailOutline,
         callOutline,

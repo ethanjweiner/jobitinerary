@@ -2,7 +2,7 @@
   <div style="height: 100%;">
     <ion-card-header>
       <ion-card-title>
-        Days
+        {{ title }}
       </ion-card-title>
 
       <ion-item>
@@ -16,9 +16,10 @@
     <ion-card-content>
       <InfiniteList
         :key="searchDate"
+        :splitters="splitters"
         :pushQuantity="6"
-        :sampleItem="sampleCustomerDay"
-        :searchParams="['date']"
+        :dbRef="dbRef"
+        orderByParam="date"
         :searchFilter="searchDate"
       >
         <template v-slot:item="itemProps">
@@ -48,33 +49,47 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { sampleCustomerDay } from "@/types/work_units";
+import { CustomerDayInterface } from "@/types/work_units";
+import { Splitter } from "@/types/auxiliary";
 
 import CustomerDayItem from "./items/CustomerDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";
 
 export default {
-  name: "Customer Days",
-  props: {
-    customerName: String,
-  },
-  setup() {
-    const searchDate = ref<string>("");
-
-    return {
-      searchDate,
-      sampleCustomerDay,
-      router,
-    };
-  },
+  name: "Employee Days",
   components: {
     CustomerDayItem,
     IonCardHeader,
     IonInput,
     IonCardTitle,
     IonCardContent,
-    InfiniteList,
     IonItem,
+    InfiniteList,
+  },
+  props: {
+    dbRef: Object,
+    customerName: String,
+    title: String,
+  },
+  setup() {
+    const searchDate = ref<string>("");
+
+    const splitters = ref<Array<Splitter>>([
+      {
+        name: "Future Dates",
+        filter: (day: CustomerDayInterface) => new Date(day.date) >= new Date(),
+      },
+      {
+        name: "Logged Dates",
+        filter: (day: CustomerDayInterface) => new Date(day.date) < new Date(),
+      },
+    ]);
+
+    return {
+      router,
+      searchDate,
+      splitters,
+    };
   },
 };
 </script>

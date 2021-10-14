@@ -1,9 +1,9 @@
 <template>
-  <Expense
+  <ExpenseComponent
     v-for="(expense, index) in state.expenses"
     :key="expense.id"
     v-model="state.expenses[index]"
-    @deleteExpense="state.expenses.splice(index, 1)"
+    @deleteExpense="deleteExpense(expense)"
   />
   <ion-item
     style="margin-top: 10px;"
@@ -18,41 +18,51 @@
 
 <script lang="ts">
 import { IonItem, IonIcon, IonLabel } from "@ionic/vue";
-import { watch } from "@vue/runtime-core";
 import { reactive } from "@vue/reactivity";
 import { add } from "ionicons/icons";
 
-import { emptyExpense, sampleExpense } from "@/types/auxiliary";
-
-import Expense from "./items/Expense.vue";
+import ExpenseComponent from "./items/Expense.vue";
+import { createExpense } from "@/db";
+import { Expense } from "@/types/work_units";
 
 export default {
   name: "Expenses",
   props: {
-    dbRef: String,
+    modelValue: Array,
     date: String,
+    employeeName: String,
   },
-  setup(props: any) {
+  setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      expenses: [sampleExpense, sampleExpense],
+      expenses: props.modelValue,
     });
 
-    watch(state.expenses, (newExpenses) => {
-      // UPDATE IN DATABASE
-      console.log(props.dbRef, newExpenses);
-    });
-
-    const addExpense = () => {
+    const addExpense = async () => {
       // Add expense to database & retrieve
-      state.expenses.push(emptyExpense(Date.now().toString()));
+      const expense = await createExpense(props.employeeName, {
+        date: props.date,
+      });
+      state.expenses.push(expense);
+      emit("update:modelValue", state.expenses);
     };
+
+    const deleteExpense = async (expense: Expense) => {
+      // DELETE VISIT FROM DATABASE
+      await expense.delete();
+      state.expenses = state.expenses.filter(
+        (_expense: Expense) => expense.id != _expense.id
+      );
+      emit("update:modelValue", state.expenses);
+    };
+
     return {
       state,
       addExpense,
+      deleteExpense,
       add,
     };
   },
-  components: { IonItem, IonIcon, IonLabel, Expense },
+  components: { IonItem, IonIcon, IonLabel, ExpenseComponent },
 };
 </script>
 

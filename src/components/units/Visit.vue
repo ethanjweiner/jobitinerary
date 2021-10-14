@@ -14,13 +14,13 @@
         />
       </template>
       <template v-slot:tasks>
-        <Tasks v-model="state.visit.tasks" />
+        <Tasks v-model="state.visit.data.tasks" />
       </template>
       <template v-slot:tools>
-        <Tools v-model="state.visit.tools" />
+        <Tools v-model="state.visit.data.tools" />
       </template>
       <template v-slot:images>
-        <Images v-model="state.visit.images" />
+        <Images v-model="state.visit.data.images" />
       </template>
       <template v-slot:sectionsAsGrid>
         <ion-row>
@@ -48,7 +48,7 @@
                   </ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
-                  <Images v-model="state.visit.images" />
+                  <Images v-model="state.visit.data.images" />
                 </ion-card-content>
               </ion-card>
             </ion-row>
@@ -62,7 +62,7 @@
                 >
               </ion-card-header>
               <ion-card-content>
-                <Tasks v-model="state.visit.tasks" />
+                <Tasks v-model="state.visit.data.tasks" />
               </ion-card-content>
             </ion-card>
 
@@ -79,7 +79,7 @@
                 >
               </ion-card-header>
               <ion-card-content>
-                <Tools v-model="state.visit.tools" />
+                <Tools v-model="state.visit.data.tools" />
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -112,7 +112,6 @@ import {
   imagesOutline,
 } from "ionicons/icons";
 
-import { Visit } from "@/types/work_units";
 import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
@@ -131,7 +130,7 @@ export default {
     hideCustomerSelect: Boolean,
   },
   emits: ["update:modelValue"],
-  setup(props: any, { emit }: { emit: any }) {
+  setup(props: any) {
     const sections = ref<SectionsType>([
       {
         // Includes date, employee, customer, notes, & messaging
@@ -158,38 +157,11 @@ export default {
 
     const state = reactive({
       visit: props.modelValue,
+      enableSave: true,
     });
 
     // AUTO-SAVING FUNCTIONALITY
-
-    const saveVisit = (newVisit: Visit) => {
-      // SAVE VISIT DIRECTLY TO DATABASE
-    };
-
-    watch(state.visit, (newVisit) => {
-      emit("update:modelValue", newVisit); // Keep things in sync (if necessary)
-      saveVisit(newVisit as Visit); // Autosave visit
-    });
-
-    // REPLACE THIS WITH A LISTENER TO THE CREATED VISITS DOCUMENT
-    // UPDATE THE ASSOCIATED CUSTOMER DAY UPON THE PROPER CHANGES
-    // UNSUBSCRIBE FROM THIS LISTENER UPON COMPLETION
-    watch(
-      ref(state.visit.customerName),
-      (newCustomerName: string, oldCustomerName: string) => {
-        if (state.visit.date) {
-          // SAVE THE DATE UNDER THE NEW CUSTOMER
-          // DELETE THE DATE FROIM THE OLD CUSTOMER
-        }
-      }
-    );
-
-    watch(ref(state.visit.date), (newDate: string, oldDate: string) => {
-      if (state.visit.customerName) {
-        // SAVE THE DATE UNDER THE NEW CUSTOMER
-        // DELETE THE DATE FROM THE OLD CUSTOMER
-      }
-    });
+    watch(state.visit.data, () => state.visit.save());
 
     return {
       sections,

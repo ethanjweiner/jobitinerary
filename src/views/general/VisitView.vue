@@ -1,22 +1,22 @@
 <template>
   <!-- Different depending on render type -->
-  <ion-page>
+  <ion-page v-if="state.visit">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title style="padding-inline-end: 5px;"
-          >Visit<span v-if="state.visit.date"> on </span
-          >{{ state.visit.date }}</ion-title
+          >Visit<span v-if="state.visit.data.date"> on </span
+          >{{ state.visit.data.date }}</ion-title
         >
 
         <div style="padding-left: 20px;">
-          <ion-note v-if="state.visit.customerName"
-            >for {{ state.visit.customerName }} |
+          <ion-note v-if="state.visit.data.customerName"
+            >for {{ state.visit.data.customerName }} |
           </ion-note>
-          <ion-note v-if="state.visit.employeeName"
-            >by {{ state.visit.employeeName }}</ion-note
+          <ion-note v-if="state.visit.data.employeeName"
+            >by {{ state.visit.data.employeeName }}</ion-note
           >
         </div>
         <ion-buttons :collapse="true" slot="end">
@@ -36,7 +36,7 @@
     </ion-popover>
 
     <ion-content :fullscreen="true">
-      <Visit v-model="state.visit" />
+      <VisitComponent v-model="state.visit" />
     </ion-content>
   </ion-page>
 </template>
@@ -61,21 +61,39 @@ import { ellipsisVertical } from "ionicons/icons";
 
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import router from "@/router";
-import Visit from "@/components/units/Visit.vue";
-import { emptyVisit, sampleVisit1 } from "@/types/work_units";
+import VisitComponent from "@/components/units/Visit.vue";
+import { createVisit } from "@/db";
+import { Visit } from "@/types/work_units";
+import store from "@/store";
+
+interface State {
+  visit: Visit | null;
+}
 
 export default {
   name: "Visit View",
   props: {
     visitID: String,
   },
-  setup() {
-    const state = reactive({
-      visit: emptyVisit({}),
+  setup(props: any) {
+    const state = reactive<State>({
+      visit: null,
     });
 
-    // RETRIEVE VISIT WITH VISIT ID
-    state.visit = sampleVisit1;
+    const initialize = async () => {
+      // ADD NEW VISIT
+      if (props.visitID == "new") {
+        // Generate a random id for now...
+        const visit = await createVisit();
+        state.visit = visit;
+      } else if (store.state.company) {
+        const visit = new Visit(props.visitID, store.state.company.id);
+        await visit.init();
+        state.visit = visit;
+      } else throw Error("Could not create or find visit");
+    };
+
+    initialize();
 
     // Popover
     const popoverIsOpen = ref(false);
@@ -85,8 +103,9 @@ export default {
       popoverIsOpen.value = state;
     };
 
-    const deleteVisit = () => {
+    const deleteVisit = async () => {
       // DELETE VISIT FROM DATABASE
+      if (state.visit) await state.visit.delete();
 
       // Return to home
       router.go(-1);
@@ -116,7 +135,7 @@ export default {
     DeletePopover,
     IonBackButton,
     IonPage,
-    Visit,
+    VisitComponent,
   },
 };
 </script>

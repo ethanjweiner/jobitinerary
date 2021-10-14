@@ -3,7 +3,9 @@
     <ion-label position="stacked">Start Location</ion-label>
     <ion-input
       type="text"
-      v-model="state.day.startLocation"
+      v-model="state.day.data.startLocation"
+      :debounce="store.DEBOUNCE_AMOUNT"
+      @ionInput="$emit('update:modelValue', state.day)"
       placeholder="Meeting location at the start of the day"
     />
   </ion-item>
@@ -13,7 +15,8 @@
         <ion-item>
           <ion-label position="stacked">Planned Start</ion-label>
           <ion-datetime
-            v-model="state.day.plannedStart"
+            @ionInput="$emit('update:modelValue', state.day)"
+            v-model="state.day.data.plannedStart"
             display-format="h:mm A"
             picker-format="h:mm A"
           ></ion-datetime>
@@ -23,7 +26,8 @@
         <ion-item>
           <ion-label position="stacked">Planned End</ion-label>
           <ion-datetime
-            v-model="state.day.plannedEnd"
+            @ionInput="$emit('update:modelValue', state.day)"
+            v-model="state.day.data.plannedEnd"
             display-format="h:mm A"
             picker-format="h:mm A"
           ></ion-datetime>
@@ -37,7 +41,8 @@
       <ion-note>{{ paymentText }}</ion-note>
     </div>
     <CurrencyInput
-      v-model="state.day.hourlyRate"
+      @ionInput="$emit('update:modelValue', state.day)"
+      v-model="state.day.data.hourlyRate"
       :options="{ currency: 'USD' }"
       placeholder="$/hr"
     />
@@ -45,16 +50,20 @@
   <ion-item>
     <ion-label>Mark Day as Paid</ion-label>
     <ion-buttons slot="end">
-      <ion-note style="margin: auto;" v-if="state.day.paid"
+      <ion-note style="margin: auto;" v-if="state.day.data.paid"
         ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
       >
-      <ion-note style="margin: auto;" v-if="!state.day.paid">Unpaid</ion-note>
-      <ion-toggle v-model="state.day.paid" value="paid"></ion-toggle>
+      <ion-note style="margin: auto;" v-else>Unpaid</ion-note>
+      <ion-toggle
+        @ionInput="$emit('update:modelValue', state.day)"
+        v-model="state.day.data.paid"
+        value="paid"
+      ></ion-toggle>
     </ion-buttons>
   </ion-item>
   <TimeLog
-    v-if="store.state.userType == 'employee'"
-    v-model="state.day.time"
+    @update:modelValue="$emit('update:modelValue', state.day)"
+    v-model="state.day.data.time"
     :title="'Track Day Hours'"
   />
   <!-- Additional Notes -->
@@ -62,7 +71,12 @@
     <ion-text>Notes on the Day</ion-text>
   </h3>
   <ion-item>
-    <ion-textarea auto-grow v-model="state.day.notes"></ion-textarea>
+    <ion-textarea
+      auto-grow
+      :debounce="store.DEBOUNCE_AMOUNT"
+      @ionInput="$emit('update:modelValue', state.day)"
+      v-model="state.day.data.notes"
+    ></ion-textarea>
   </ion-item>
 </template>
 
@@ -85,8 +99,8 @@ import {
   IonText,
   IonButtons,
 } from "@ionic/vue";
-import { watch } from "@vue/runtime-core";
 import store from "@/store";
+
 import CurrencyInput from "../inputs/CurrencyInput.vue";
 
 export default {
@@ -95,12 +109,10 @@ export default {
     modelValue: Object,
   },
   emits: ["update:modelValue"],
-  setup(props: any, { emit }: { emit: any }) {
+  setup(props: any) {
     const state = reactive({
       day: props.modelValue,
     });
-
-    watch(state.day, (newDay) => emit("update:modelValue", newDay));
 
     const paymentText = computed(() => {
       if (store.state.userType == "company")

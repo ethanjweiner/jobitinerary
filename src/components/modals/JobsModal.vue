@@ -17,10 +17,11 @@
     <!-- PASS A DATABASE REFERENCE TO ALL JOBS UNDER THE SELECTED CUSTOMER -->
     <InfiniteList
       :key="searchText"
+      :splitters="splitters"
       :searchFilter="searchText"
-      :sampleItem="sampleJob"
+      :dbRef="dbRef"
       :pushQuantity="10"
-      :searchParams="['name', 'customer', 'startDate', 'description']"
+      orderByParam="startDate"
     >
       <template v-slot:item="itemProps">
         <JobItem
@@ -28,7 +29,7 @@
           :key="itemProps.item.id"
           :job="itemProps.item"
           :showCustomer="true"
-          @click="$emit('selectJob', itemProps.item)"
+          @click="$emit('jobSelected', itemProps.item)"
         />
       </template>
     </InfiniteList>
@@ -48,10 +49,10 @@ import {
 import { defineComponent, ref } from "vue";
 import { close } from "ionicons/icons";
 
-import { sampleJob } from "@/types/work_units";
-
 import InfiniteList from "../lists/InfiniteList.vue";
 import JobItem from "@/components/lists/items/JobItem.vue";
+import { Splitter } from "@/types/auxiliary";
+import { JobInterface } from "@/types/work_units";
 
 export default defineComponent({
   name: "Jobs",
@@ -73,9 +74,30 @@ export default defineComponent({
   setup() {
     const searchText = ref("");
 
+    const splitters = ref<Array<Splitter>>([
+      {
+        name: "Unscheduled Jobs",
+        filter: (item: JobInterface) => !item.startDate,
+      },
+      {
+        name: "Scheduled Jobs",
+        filter: (item: JobInterface) => new Date(item.startDate) > new Date(),
+      },
+      {
+        name: "Current Jobs",
+        filter: (item: JobInterface) =>
+          new Date(item.startDate) <= new Date() &&
+          new Date(item.endDate) >= new Date(),
+      },
+      {
+        name: "Past Jobs",
+        filter: (item: JobInterface) => new Date(item.endDate) < new Date(),
+      },
+    ]);
+
     return {
       searchText,
-      sampleJob,
+      splitters,
       icons: { close },
     };
   },

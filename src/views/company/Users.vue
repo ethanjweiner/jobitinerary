@@ -187,6 +187,9 @@ ion-grid,
 ion-row {
   height: 100%;
 }
+#user-container {
+  height: fit-content;
+}
 #select-user-toolbar {
   max-width: 300px;
   margin-top: 10px;

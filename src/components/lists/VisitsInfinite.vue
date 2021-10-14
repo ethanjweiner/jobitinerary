@@ -16,9 +16,9 @@
       <InfiniteList
         :key="searchText"
         :splitters="splitters"
-        :pushQuantity="10"
-        :sampleItem="sampleVisit1"
-        :searchParams="['customer', 'employee', 'date']"
+        :pushQuantity="8"
+        :dbRef="dbRef"
+        orderByParam="date"
         :searchFilter="searchText"
       >
         <template v-slot:item="itemProps">
@@ -48,7 +48,7 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { sampleVisit1, Visit } from "@/types/work_units";
+import { VisitInterface } from "@/types/work_units";
 import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";
@@ -70,16 +70,18 @@ export default {
     dbRef: Object, // Determine database query in parent component
   },
   setup() {
+    // Temporary: Add a visit to the database
+
     const searchText = ref<string>("");
 
     const splitters = ref<Array<Splitter>>([
       {
         name: "Scheduled Visits",
-        filter: (item: Visit) => new Date(item.date) >= new Date(),
+        filter: (item: VisitInterface) => new Date(item.date) >= new Date(),
       },
       {
         name: "Past Visits",
-        filter: (item: Visit) => new Date(item.date) < new Date(),
+        filter: (item: VisitInterface) => new Date(item.date) < new Date(),
       },
     ]);
 
@@ -96,7 +98,6 @@ export default {
       router,
       searchText,
       splitters,
-      sampleVisit1,
       createVisit,
     };
   },

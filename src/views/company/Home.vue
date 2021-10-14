@@ -18,7 +18,7 @@
             class="visits-column"
           >
             <ion-card>
-              <Visits />
+              <Visits :dbRef="visitsRef" />
             </ion-card>
           </ion-col>
           <ion-col
@@ -30,7 +30,7 @@
             class="jobs-column"
           >
             <ion-card>
-              <Jobs />
+              <Jobs :dbRef="jobsRef" />
             </ion-card>
           </ion-col>
         </ion-row>
@@ -57,9 +57,33 @@ import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import CreateButton from "@/components/buttons/CreateButton.vue";
 import Visits from "@/components/lists/VisitsInfinite.vue";
 import Jobs from "@/components/lists/Jobs.vue";
+import store from "@/store";
+import { companiesCollection, db } from "@/main";
 
 export default {
   name: "Home",
+  setup() {
+    let visitsRef, jobsRef;
+    if (store.state.company) {
+      visitsRef = companiesCollection
+        .doc(store.state.company.id)
+        .collection("visits");
+      jobsRef = db
+        .collectionGroup("jobs")
+        .where("data.companyID", "==", store.state.company.id);
+    } else {
+      throw Error("The company does not exist");
+    }
+
+    // Force Reload
+
+    // Reload the visits component on any changes
+
+    return {
+      visitsRef,
+      jobsRef,
+    };
+  },
   components: {
     IonPage,
     IonHeader,

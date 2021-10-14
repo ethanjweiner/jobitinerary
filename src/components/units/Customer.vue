@@ -7,7 +7,7 @@
     </template>
     <template v-slot:jobs>
       <div class="list">
-        <Jobs :customerName="state.customer.data.name" />
+        <Jobs :customerName="state.customer.data.name" :dbRef="jobsRef" />
       </div>
     </template>
     <template v-slot:customer-info>
@@ -28,7 +28,7 @@
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <Jobs :customerName="state.customer.data.name" />
+              <Jobs :customerName="state.customer.data.name" :dbRef="jobsRef" />
             </div>
           </ion-card>
         </ion-col>
@@ -77,6 +77,8 @@ import { SectionsType } from "@/types/auxiliary";
 import Sections from "../Sections.vue";
 import CustomerForm from "../forms/CustomerForm.vue";
 import { Company, Customer } from "@/types/users";
+import { companiesCollection } from "@/main";
+import { nameToID } from "@/helpers";
 
 interface State {
   customer: Customer | undefined;
@@ -92,6 +94,13 @@ export default {
       customer: undefined,
     });
 
+    let jobsRef;
+    if (store.state.company) {
+      jobsRef = companiesCollection
+        .doc(`${store.state.company.id}/customers/${nameToID(props.username)}`)
+        .collection("jobs");
+    }
+
     // If the user is a Company, assign the customer based on the prop
     if (props.username && store.state.user instanceof Company) {
       state.customer = store.state.user.customers.find(
@@ -102,8 +111,6 @@ export default {
     } else if (store.state.user instanceof Customer) {
       state.customer = store.state.user;
     }
-
-    console.log(state.customer);
 
     const sections = ref<SectionsType>([
       {
@@ -126,6 +133,7 @@ export default {
     return {
       sections,
       state,
+      jobsRef,
     };
   },
   components: {

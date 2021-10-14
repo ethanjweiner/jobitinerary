@@ -1,6 +1,5 @@
-import firebase from "firebase/app";
-import { auth } from "@/main";
-import { ImageWithCaption, Location } from "@/types/auxiliary";
+import { auth, companiesCollection } from "@/main";
+import { DocData, DocRef, ImageWithCaption, Location } from "@/types/auxiliary";
 import { generateUUID, nameToID } from "@/helpers";
 import { loadUser } from "@/authentication";
 
@@ -57,9 +56,9 @@ const emptyCustomerData: CustomerData = {
 
 interface UserInterface {
   data: UserData;
-  dbRef: firebase.firestore.DocumentReference;
+  dbRef: DocRef;
   // init: Attempt to retrieve the document associated with the employee. If unable to find, return false.
-  init: () => Promise<firebase.firestore.DocumentData | false>;
+  init: () => Promise<DocData | false>;
   update: (data: UserData) => Promise<ThisParameterType<UserInterface>>;
   save: () => Promise<ThisParameterType<UserInterface>>;
   create: (
@@ -69,17 +68,18 @@ interface UserInterface {
     phone?: string
   ) => Promise<ThisParameterType<UserInterface>>;
   signUp: (password: string) => void;
+
   employees: Array<Employee>;
   customers: Array<Customer>;
 }
 
 export class User implements UserInterface {
-  dbRef: firebase.firestore.DocumentReference;
+  dbRef: DocRef;
   data: UserData;
   employees: Array<Employee>;
   customers: Array<Customer>;
 
-  constructor(dbRef: firebase.firestore.DocumentReference) {
+  constructor(dbRef: DocRef) {
     this.dbRef = dbRef;
     // Temporary empty values
     this.data = { ...emptyUserData };
@@ -88,10 +88,10 @@ export class User implements UserInterface {
   }
 
   async init() {
-    const doc = (await this.dbRef.get()).data();
-    if (doc) {
-      this.data = doc.data;
-      return doc;
+    const user = (await this.dbRef.get()).data();
+    if (user) {
+      this.data = user.data;
+      return user;
     }
     return false;
   }
@@ -140,7 +140,7 @@ class ChildUser extends User {
   activationToken: string | null;
   activated: boolean;
 
-  constructor(dbRef: firebase.firestore.DocumentReference) {
+  constructor(dbRef: DocRef) {
     super(dbRef);
     this.parentCompany = null;
     this.activationToken = null;
@@ -166,24 +166,21 @@ class ChildUser extends User {
   }
 
   async save() {
-    setTimeout(async () => {
-      await this.dbRef.set({
-        data: this.data,
-        parentCompany: this.parentCompany,
-        activationToken: this.activationToken, // Placeholder activation token
-        activated: this.activated,
-      });
-      return this;
-    }, 500);
+    await this.dbRef.set({
+      data: this.data,
+      parentCompany: this.parentCompany,
+      activationToken: this.activationToken, // Placeholder activation token
+      activated: this.activated,
+    });
   }
 
   async init() {
-    const doc = await super.init();
-    if (doc) {
-      this.parentCompany = doc.parentCompany;
-      this.activationToken = doc.activationToken;
-      this.activated = doc.activated;
-      return doc;
+    const user = await super.init();
+    if (user) {
+      this.parentCompany = user.parentCompany;
+      this.activationToken = user.activationToken;
+      this.activated = user.activated;
+      return user;
     }
     return false;
   }
@@ -213,15 +210,25 @@ class ChildUser extends User {
 
 export class Employee extends ChildUser {
   data: EmployeeData;
-  constructor(dbRef: firebase.firestore.DocumentReference) {
+
+  constructor(dbRef: DocRef) {
     super(dbRef);
     this.data = { ...emptyEmployeeData };
+  }
+  getVisitsRef() {
+    if (this.parentCompany)
+      return companiesCollection
+        .doc(this.parentCompany.id)
+        .collection("visits");
+    throw Error(
+      "Visits can not be found, since the user does not have a parent company"
+    );
   }
 }
 
 export class Customer extends ChildUser {
   data: CustomerData;
-  constructor(dbRef: firebase.firestore.DocumentReference) {
+  constructor(dbRef: DocRef) {
     super(dbRef);
     this.data = { ...emptyCustomerData };
   }
@@ -230,22 +237,18 @@ export class Customer extends ChildUser {
 export class Company extends User {
   // Q: Why store employees & customers globally?
   // A: We access them in disconnected components (e.g. in the "user select" component)
-  employees: Array<Employee>;
-  customers: Array<Customer>;
 
-  constructor(dbRef: firebase.firestore.DocumentReference) {
-    super(dbRef);
-    this.employees = [];
-    this.customers = [];
+  constructor(id: string) {
+    super(companiesCollection.doc(id));
   }
 
   async init() {
-    const doc = await super.init();
+    const user = await super.init();
     // Retrieve child employees and customers
-    if (doc) {
+    if (user) {
       await this.fetchEmployees();
       await this.fetchCustomers();
-      return doc;
+      return user;
     }
     return false;
   }

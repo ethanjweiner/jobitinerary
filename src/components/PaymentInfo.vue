@@ -4,7 +4,10 @@
       <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
         <ion-item>
           <ion-label>Filter Data by Time Period?</ion-label>
-          <ion-toggle v-model="state.filterByDate"></ion-toggle>
+          <ion-toggle
+            v-model="state.filterByDate"
+            @ionChange="clearDates"
+          ></ion-toggle>
         </ion-item>
         <ion-grid v-if="state.filterByDate">
           <ion-row>
@@ -29,7 +32,10 @@
           </ion-row>
         </ion-grid>
 
-        <ion-radio-group v-model="state.filterUnpaid">
+        <ion-radio-group
+          :value="state.filterUnpaid"
+          @ionChange="state.filterUnpaid = !state.filterUnpaid"
+        >
           <ion-item>
             <ion-label>Include All Hours and Expenses</ion-label>
             <ion-radio slot="end" :value="false"></ion-radio>
@@ -54,64 +60,21 @@
             :options="{ currency: 'USD' }"
           />
         </ion-item>
-
-        <div style="width: 100%; margin-top: 10px;">
-          <h2>
-            <ion-text class="ion-text-center">Payment Data</ion-text>
-          </h2>
-          <div class="ion-text-left ion-padding">
-            <ion-note
-              >Note: The data displayed is only as accurated as the hours and
-              expenses logged by the company or employee.</ion-note
-            >
-          </div>
-        </div>
-        <ion-grid>
-          <ion-chip>
-            <ion-label
-              ><span class="payment-data">{{ unpaidDays }}</span>
-              <span v-if="state.filterUnpaid">&nbsp;Unpaid </span>
-              Work Days</ion-label
-            >
-          </ion-chip>
-          <ion-chip>
-            <ion-label
-              ><span class="payment-data">{{ hours }} </span>
-              <span v-if="state.filterUnpaid">&nbsp;Unpaid </span>
-              Work Hours</ion-label
-            >
-          </ion-chip>
-          <ion-chip>
-            <ion-label
-              ><span class="payment-data">${{ hoursAmount }} </span>
-              <span v-if="state.filterUnpaid">&nbsp;Owed in Work Hours</span>
-              <span v-else>&nbsp;Made from Hours Worked</span>
-            </ion-label>
-          </ion-chip>
-          <ion-chip v-if="state.filterUnpaid">
-            <ion-label
-              ><span class="payment-data">${{ expensesAmount }}</span>
-              Owed in Expenses
-            </ion-label>
-            <!-- Highlight this chip -->
-          </ion-chip>
-          <ion-chip>
-            <ion-label
-              ><span class="payment-data">${{ totalAmount }} </span>
-              <span v-if="state.filterUnpaid">&nbsp;Owed Total</span>
-              <span v-else>&nbsp;Paid Total</span>
-            </ion-label>
-          </ion-chip>
-        </ion-grid>
+        <PaymentData
+          :key="daysRef"
+          :daysRef="daysRef"
+          :expensesRef="expensesRef"
+          :filterUnpaid="state.filterUnpaid"
+        />
       </ion-col>
       <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
         <ion-row>
           <ion-card style="width: 100%; height: 300px;">
-            <!-- PASS DATABASE REFERENCE, CONDITION ON PAYMENT STATE -->
             <EmployeeDays
+              :key="daysRef"
+              :dbRef="daysRef"
               :employeeName="state.employee.data.name"
               :hideAdd="true"
-              :sampleItem="sampleDay"
               :showPaidToggle="true"
               :title="state.filterUnpaid ? 'Unpaid Dates' : 'All Dates'"
             />
@@ -120,7 +83,9 @@
         <ion-row>
           <ion-card style="width: 100%; height: 250px;">
             <Expenses
+              :key="expensesRef"
               :title="state.filterUnpaid ? 'Unpaid Expenses' : 'All Expenses'"
+              :dbRef="expensesRef"
             />
           </ion-card>
         </ion-row>
@@ -135,94 +100,126 @@ import {
   IonRow,
   IonCol,
   IonItem,
-  IonChip,
   IonLabel,
   IonRadioGroup,
   IonRadio,
   IonIcon,
-  IonNote,
   IonDatetime,
   IonToggle,
   IonCard,
-  IonText,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
 import { timeOutline } from "ionicons/icons";
 
 import store from "@/store";
 
-import { sampleDay, Day } from "@/types/work_units";
 import { Employee } from "@/types/users";
 
 import CurrencyInput from "./inputs/CurrencyInput.vue";
 import EmployeeDays from "./lists/EmployeeDays.vue";
 import Expenses from "./lists/ExpensesInfinite.vue";
+import { companiesCollection } from "@/main";
+import { nameToID } from "@/helpers";
+import { CollectionRef, Query } from "@/types/auxiliary";
+import PaymentData from "./PaymentData.vue";
 
 interface State {
   employee: Employee;
-  filterUnpaid: boolean;
   filterByDate: boolean;
   startDate: string;
   endDate: string;
+  filterUnpaid: true;
 }
 
 export default {
   name: "Payment Info",
+  emits: ["toggleUnpaid", "update:modelValue"],
   props: {
     modelValue: Object,
   },
-  emits: ["update:modelValue"],
-  setup(props: any, { emit }: { emit: any }) {
+  setup(props: any) {
     // Set hourly rate dependent on whether employee is given
     const state = reactive<State>({
       employee: props.modelValue,
-      filterUnpaid: true,
       filterByDate: false,
       startDate: "",
       endDate: "",
+      filterUnpaid: true,
     });
 
-    // QUERY ALL UNPAID DAYS, RETRIEVE DATA BASED ON THAT
+    const daysRef = computed<Query>(() => {
+      if (store.state.company) {
+        let ref: CollectionRef | Query = companiesCollection
+          .doc(
+            `${store.state.company.id}/employees/${nameToID(
+              state.employee.data.name
+            )}`
+          )
+          .collection("days");
 
-    const unpaidDays = computed(() => {
-      return 0;
+        // Filter by paid status
+        if (state.filterUnpaid) {
+          ref = ref.where("data.paid", "==", false);
+        }
+
+        // Filter by time
+        if (state.startDate && state.endDate) {
+          ref = ref
+            .where("data.date", ">=", state.startDate)
+            .where("data.date", "<=", state.endDate);
+        } else if (state.startDate) {
+          ref = ref.where("data.date", ">=", state.startDate);
+        } else if (state.endDate) {
+          ref = ref.where("data.date", "<=", state.endDate);
+        }
+
+        return ref;
+      }
+      throw Error("No company exists.");
     });
 
-    const hours = computed(() => {
-      return 0;
+    const expensesRef = computed<Query>(() => {
+      if (store.state.company) {
+        let ref: CollectionRef | Query = companiesCollection
+          .doc(
+            `${store.state.company.id}/employees/${nameToID(
+              state.employee.data.name
+            )}`
+          )
+          .collection("expenses");
+
+        // Filter by paid status
+        if (state.filterUnpaid) {
+          ref = ref.where("data.paid", "==", false);
+        }
+        // Filter by time
+        if (state.startDate && state.endDate) {
+          ref = ref
+            .where("data.date", ">=", state.startDate)
+            .where("data.date", "<=", state.endDate);
+        } else if (state.startDate) {
+          ref = ref.where("data.date", ">=", state.startDate);
+        } else if (state.endDate) {
+          ref = ref.where("data.date", "<=", state.endDate);
+        }
+
+        return ref;
+      }
+      throw Error("No company exists");
     });
 
-    const hoursAmount = computed(() => {
-      // Filter through unpaid days
-      return 0;
-    });
-
-    const expensesAmount = computed(() => {
-      // Filter through unpaid expenses
-      return 0;
-    });
-
-    const totalAmount = computed(
-      () => hoursAmount.value + expensesAmount.value
-    );
-
-    const togglePaid = (day: Day) => {
-      // UPDATE PAID ATTRIBUTE
-      console.log("Toggling paid for ", day);
+    const clearDates = () => {
+      state.startDate = "";
+      state.endDate = "";
     };
 
     return {
       store,
       state,
-      unpaidDays,
-      hours,
-      hoursAmount,
-      expensesAmount,
-      totalAmount,
       timeOutline,
-      togglePaid,
-      sampleDay,
+      daysRef,
+      expensesRef,
+      clearDates,
     };
   },
   components: {
@@ -231,18 +228,16 @@ export default {
     IonRow,
     IonCol,
     IonItem,
-    IonChip,
     IonLabel,
     IonRadioGroup,
     IonRadio,
     IonIcon,
-    IonNote,
     IonDatetime,
     IonToggle,
     IonCard,
     EmployeeDays,
     Expenses,
-    IonText,
+    PaymentData,
   },
 };
 </script>

@@ -56,12 +56,13 @@ import {
   IonLabel,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { Splitter } from "@/types/auxiliary";
+import { CollectionRef, DocSnapshot, Splitter } from "@/types/auxiliary";
+import { search } from "@/db";
 
 interface State {
   items: Array<any>;
   lists: Array<{ name: string; items: Array<any> }>;
-  offset: number;
+  endDoc: DocSnapshot | null;
 }
 
 // NOTE: THIS COMPONENT RERENDERS AND RELOADS DATA UPON ANY SEARCH CHANGE
@@ -70,16 +71,17 @@ export default {
   props: {
     splitters: Array,
     pushQuantity: Number,
-    dbRef: Object,
-    sampleItem: Object, // TEMPORARY: A sample item used in replacement of real document retrievals
-    searchParams: Array,
+    dbRef: {
+      type: Object as () => CollectionRef,
+    },
+    orderByParam: String,
     searchFilter: String,
   },
   setup(props: any) {
     const state = reactive<State>({
       items: [],
       lists: [],
-      offset: 0,
+      endDoc: null,
     });
 
     // Q: Why query the database directly inside the infinite list component?
@@ -88,27 +90,23 @@ export default {
     // pushItems : Retrieves more items and pushes to the parent list _items_
     // A return value of 0 represents success
     // A return value of 1 indicates that query limit has been reached
-    const pushItems = async (): Promise<0 | 1> => {
-      const max = state.items.length + props.pushQuantity;
-      const min = max - props.pushQuantity;
+    const pushItems = async (): Promise<Array<object>> => {
+      // QUERY DATABASE WITH FILTERS AS NECESSARY, UNTIL _props.pushQuantity RESULTS ARE RETRIEVED
+      const docsToPush = await search(
+        props.dbRef,
+        props.pushQuantity,
+        props.orderByParam,
+        props.searchFilter,
+        state.endDoc
+      );
 
-      const newItems = [];
-
-      // QUERY DATABASE WITH FILTERS AS NECESSARY, UNTIL _STATE.OFFSET_ RESULTS ARE RETRIEVED
-
-      // TEMPORARY: Just push _pushQuantity_ items
-      for (let i = min; i < max; i++) {
-        newItems.push(props.sampleItem);
-      }
-
-      state.items = state.items.concat(newItems);
-
-      // Stop scrolling if no queries were retrieved
-      if (state.offset >= 30) return 1;
-
-      state.offset += props.pushQuantity;
-
-      return 0;
+      const items = docsToPush.map((doc: DocSnapshot) => {
+        const docData = doc.data();
+        if (docData) return docData.data;
+        else return null;
+      });
+      if (docsToPush.length) state.endDoc = docsToPush[docsToPush.length - 1];
+      return items;
     };
 
     const refreshLists = () => {
@@ -125,15 +123,19 @@ export default {
       }
     };
 
-    // Add items on load
-    pushItems().then(refreshLists);
+    if (props.dbRef) {
+      // Add items on load
+      pushItems()
+        .then((items) => (state.items = state.items.concat(items)))
+        .then(refreshLists);
+    }
 
     // Load more items on scroll
     const loadMore = async (ev: any) => {
-      const status = await pushItems();
+      const items = await pushItems();
       refreshLists();
       // Query limit reached
-      if (status == 0) ev.target.complete();
+      if (!items.length) ev.target.complete();
       else ev.target.disabled = true;
     };
 

@@ -9,9 +9,10 @@
         <VisitItem
           v-for="visit in scheduledVisits"
           :key="visit.id"
-          :visit="visit"
+          :visit="visit.data"
+          @detachVisit="detachVisit(visit)"
+          @deleteVisit="deleteVisit(visit)"
           :itemAction="(state) => (state.modalIsOpen = true)"
-          @deleteVisit="deleteVisit(visit.id)"
           type="job"
         />
       </ion-item-group>
@@ -24,9 +25,10 @@
         <VisitItem
           v-for="visit in pastVisits"
           :key="visit.id"
-          :visit="visit"
+          :visit="visit.data"
+          @detachVisit="detachVisit(visit)"
+          @deleteVisit="deleteVisit(visit)"
           :itemAction="(state) => (state.modalIsOpen = true)"
-          @deleteVisit="deleteVisit(visit.id)"
           type="job"
         />
       </ion-item-group>
@@ -52,16 +54,17 @@ import { add } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { emptyVisit, sampleVisit1, Visit } from "@/types/work_units";
+import { Visit } from "@/types/work_units";
 import { Splitter } from "@/types/auxiliary";
-import { dateToString } from "@/helpers";
 
 import VisitItem from "./items/VisitItem.vue";
+import { createVisit } from "@/db";
 
 export default defineComponent({
   name: "Job Visits",
   props: {
-    dbRef: String,
+    modelValue: Array,
+    job: Object,
   },
   components: {
     IonIcon,
@@ -72,11 +75,12 @@ export default defineComponent({
     IonItemDivider,
     VisitItem,
   },
-  setup() {
+  emits: ["update:modelValue"],
+  setup(props: any, { emit }: { emit: any }) {
     // RETRIEVE & UPDATE VISITS LOCALLY ON THIS COMPONENT
     const state = reactive({
       // RETRIEVE VISITS using the db ref
-      visits: [sampleVisit1, sampleVisit1],
+      visits: props.modelValue,
     });
 
     // Separate visits with splitters
@@ -84,38 +88,56 @@ export default defineComponent({
     const splitters: Array<Splitter> = [
       {
         name: "Scheduled Visits",
-        filter: (item: Visit) => new Date(item.date) >= new Date(),
+        filter: (item: Visit) => new Date(item.data.date) >= new Date(),
       },
       {
         name: "Past Visits",
-        filter: (item: Visit) => new Date(item.date) < new Date(),
+        filter: (item: Visit) => new Date(item.data.date) < new Date(),
       },
     ];
 
     const scheduledVisits = computed(() =>
       state.visits.filter(splitters[0].filter)
     );
+
     const pastVisits = computed(() => state.visits.filter(splitters[1].filter));
 
-    const deleteVisit = (id: string) => {
-      // DELETE VISIT FROM DATABASE
+    const addVisit = async () => {
+      // CREATE NEW VISIT AND ADD TO DATABASE
+      const visit = await createVisit({
+        jobID: props.job.id,
+        customerName: props.job.data.customerName,
+      });
 
-      // DELETE VISIT LOCALLY
-      state.visits = state.visits.filter((visit) => visit.id != id);
+      state.visits.push(visit);
+      emit("update:modelValue", state.visits);
+      // Open modal associated with visit
     };
 
-    const addVisit = () => {
-      // CREATE NEW VISIT AND ADD TO DATABASE
-      const newVisit = emptyVisit({ date: dateToString(new Date()) });
+    const removeVisit = (visit: Visit) => {
+      state.visits = state.visits.filter(
+        (_visit: Visit) => visit.id != _visit.id
+      );
+      emit("update:modelValue", state.visits);
+    };
 
-      // Refresh the page
-      state.visits.push(newVisit);
+    const detachVisit = async (visit: Visit) => {
+      // DELETE VISIT FROM DATABASE
+      visit.data.jobID = "";
+      await visit.save();
+      removeVisit(visit);
+    };
+
+    const deleteVisit = async (visit: Visit) => {
+      await visit.delete();
+      removeVisit(visit);
     };
 
     return {
       state,
       add,
       router,
+      detachVisit,
       deleteVisit,
       addVisit,
       scheduledVisits,

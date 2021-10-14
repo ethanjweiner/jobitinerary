@@ -8,10 +8,12 @@
         <ion-label v-if="type == 'job'" style="margin: 0 !important;">{{
           visit.date
         }}</ion-label>
-        <ion-label v-else style="margin: 0 !important"
+        <ion-label v-else-if="visit.customerName" style="margin: 0 !important"
           >For <span style="font-weight: bold;">{{ visit.customerName }}</span>
         </ion-label>
-        <ion-note>by {{ visit.employeeName }}</ion-note>
+        <ion-note v-if="visit.employeeName"
+          >by {{ visit.employeeName }}</ion-note
+        >
       </div>
 
       <div slot="end">
@@ -24,7 +26,7 @@
         <ion-note v-if="visit.workType">{{ visit.workType }}</ion-note>
       </div>
       <ion-buttons slot="end" v-if="type == 'job'">
-        <ion-button @click="$emit('deleteVisit')">
+        <ion-button @click="$emit('detachVisit')">
           <ion-icon :icon="icons.trashOutline"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -36,10 +38,16 @@
     @didDismiss="state.modalIsOpen = false"
   >
     <VisitModal
-      :visitID="visit.id"
+      :visitData="visit"
       :isModal="true"
       :hideJob="type == 'job' ? true : false"
       @close="state.modalIsOpen = false"
+      @deleteVisit="
+        () => {
+          state.modalIsOpen = false;
+          $emit('deleteVisit');
+        }
+      "
     />
   </ion-modal>
 </template>
@@ -63,13 +71,11 @@ import VisitModal from "@/components/modals/VisitModal.vue";
 export default {
   name: "Visit Item",
   props: {
-    // KEEP BOTH THE VISIT AND THE DB REF (just use the ref for updating database purposes...)
     visit: Object,
-    dbRef: String,
     type: String,
     itemAction: Function,
   },
-  emits: ["deleteVisit"],
+  emits: ["deleteVisit", "detachVisit"],
   setup() {
     const state = reactive({
       modalIsOpen: false,
