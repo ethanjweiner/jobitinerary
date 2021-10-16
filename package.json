@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "emulate": "firebase emulators:start --import ./emulators --export-on-exit ./emulators",
     "serve": "vue-cli-service serve --skip-plugins @vue/cli-plugin-eslint",
+    "develop": "npm run emulate & ionic serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
