@@ -5,7 +5,7 @@
         <ion-buttons slot="start" :collapse="true">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>New Day</ion-title>
+        <ion-title>Plan a Day</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true" style="height: 100%;">

@@ -53,7 +53,6 @@ export function dateToStrings(inputDate: Date): Array<string> {
     date.format(inputDate, "dddd"),
   ];
 
-  console.log(strs);
   return strs;
 }
 
@@ -131,16 +130,16 @@ export async function retrieveVisitsOnDay(
   const visits: Array<Visit> = [];
   if (store.state.company) {
     // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
-    let ref = companiesCollection
+    let query = companiesCollection
       .doc(store.state.company.id)
       .collection("visits")
       .where("data.date", "==", date);
     if (options.customerName)
-      ref = ref.where("data.customerName", "==", options.customerName);
+      query = query.where("data.customerName", "==", options.customerName);
     if (options.employeeName)
-      ref = ref.where("data.employeeName", "==", options.employeeName);
+      query = query.where("data.employeeName", "==", options.employeeName);
 
-    const visitDocs = (await ref.get()).docs;
+    const visitDocs = (await query.get()).docs;
     for (const doc of visitDocs) {
       const visit = new Visit(doc.id, store.state.company.id);
       await visit.init(doc.data().data);
