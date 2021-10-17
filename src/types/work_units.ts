@@ -154,10 +154,23 @@ export function newJobInterface(
 }
 
 export interface CustomerDayInterface {
-  customerName: string;
   date: string;
   companyID: string;
-  hours: number;
+  customerName: string;
+  notes: string;
+}
+
+export function newCustomerDayInterface(
+  date: string,
+  companyID: string,
+  options: any
+): CustomerDayInterface {
+  return {
+    date,
+    companyID,
+    customerName: options.customerName ? options.customerName : "",
+    notes: "",
+  };
 }
 
 // CLASSES
@@ -305,52 +318,30 @@ export class EmployeeDay extends DBUnit<EmployeeDayInterface> {
 }
 
 export class CustomerDay extends DBUnit<CustomerDayInterface> {
-  visits: Array<Visit>;
   constructor(date: string, companyID: string, customerID: string) {
     super(
       date,
       companiesCollection.doc(
         `${companyID}/customers/${customerID}/days/${date}`
       ),
-      ["date", "customerName", "hours"]
+      ["date", "customerName"]
     );
-    this.visits = [];
   }
-  async init(data?: CustomerDayInterface) {
-    super.init(data);
-    // Fetch visits
+
+  async changeDate(date: string) {
+    await this.delete();
+    this.dbRef = companiesCollection.doc(
+      `${this.data.companyID}/customers/${nameToID(
+        this.data.customerName
+      )}/days/${date}`
+    );
+    // Initialize with existing data
+    this.data.date = date;
+    this.exists = true;
+
+    await this.create(this.data);
 
     return this;
-  }
-  async fetchVisits() {
-    const docs = (
-      await companiesCollection
-        .doc(`${this.data.companyID}`)
-        .collection("visits")
-        .where("data.date", "==", this.data.date)
-        .get()
-    ).docs;
-    // Initialize visits here
-    for (const doc of docs) {
-      const visit = new Visit(doc.id, this.data.companyID);
-      await visit.init(doc.data().data);
-      this.visits.push(visit);
-    }
-  }
-  // Peform all actions based on visit updates
-  addVisit(visit: Visit) {
-    this.visits.push(visit);
-    this.computeHours();
-    // Update total hours
-  }
-  deleteVisit(visitID: string) {
-    this.visits = this.visits.filter((visit) => visit.id != visitID);
-  }
-  computeHours() {
-    this.data.hours = this.visits.reduce(
-      (hoursAcc: number, visit: Visit) => hoursAcc + visit.data.time.hours,
-      0
-    );
   }
 }
 
