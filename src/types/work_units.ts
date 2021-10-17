@@ -97,6 +97,7 @@ export interface EmployeeDayInterface {
   readByEmployee: boolean;
   readByCompany: boolean;
   hourlyRate: number;
+  visitIDs: Array<string>;
 }
 
 export function newEmployeeDayInterface(
@@ -121,6 +122,7 @@ export function newEmployeeDayInterface(
     hourlyRate: options.hourlyRate ? options.hourlyRate : null,
     readByEmployee: false,
     readByCompany: false,
+    visitIDs: [],
   };
 }
 
@@ -158,6 +160,7 @@ export interface CustomerDayInterface {
   companyID: string;
   customerName: string;
   notes: string;
+  visitIDs: Array<string>;
 }
 
 export function newCustomerDayInterface(
@@ -170,6 +173,7 @@ export function newCustomerDayInterface(
     companyID,
     customerName: options.customerName ? options.customerName : "",
     notes: "",
+    visitIDs: [],
   };
 }
 

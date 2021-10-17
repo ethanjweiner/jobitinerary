@@ -202,7 +202,10 @@ export default {
     const addVisit = async () => {
       // ADD VISIT TO DATABASE
 
-      const visit = await createVisit({ customerName: props.username });
+      const visit = await createVisit({
+        customerName: props.username,
+        date: props.date,
+      });
 
       state.visits.unshift(visit);
     };
