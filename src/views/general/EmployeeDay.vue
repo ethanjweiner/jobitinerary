@@ -36,6 +36,7 @@
           </template>
           <template v-slot:visits>
             <DayVisits
+              :key="state.visits.length"
               v-model="state.visits"
               :employeeName="username"
               :date="date"
@@ -84,6 +85,7 @@
                   </ion-card-header>
                   <ion-card-content>
                     <DayVisits
+                      :key="state.visits.length"
                       v-model="state.visits"
                       :employeeName="username"
                       :date="date"

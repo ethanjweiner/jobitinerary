@@ -4,8 +4,8 @@
       router.push({
         name: 'Customer Day',
         params: {
-          username: state.day.data.customerName,
-          date: state.day.data.date,
+          username: state.day.customerName,
+          date: state.day.date,
         },
       })
     "
@@ -13,16 +13,19 @@
     <div>
       <ion-label>
         <ion-text>
-          {{ state.day.data.date }}
+          {{ state.day.date }}
         </ion-text>
       </ion-label>
+      <ion-note v-if="propertyHours">
+        {{ propertyHours }} total hours on property
+      </ion-note>
     </div>
   </ion-item>
 </template>
 
 <script lang="ts">
-import { IonItem, IonLabel, IonText } from "@ionic/vue";
-import { reactive } from "@vue/reactivity";
+import { IonItem, IonLabel, IonText, IonNote } from "@ionic/vue";
+import { computed, reactive } from "@vue/reactivity";
 import router from "@/router";
 
 import { CustomerDay, Visit } from "@/types/work_units";
@@ -45,20 +48,25 @@ export default {
     });
 
     const initialize = async () => {
-      // Initialze Visits
-      state.visits = await retrieveVisitsOnDay(props.date, {
+      // Initialze Visits (for purposes of hour computing)
+      state.visits = await retrieveVisitsOnDay(props.day.date, {
         customerName: props.day.customerName,
       });
     };
 
     initialize();
 
-    return { router, state };
+    const propertyHours = computed(() =>
+      state.visits.reduce((hours, visit) => hours + visit.data.time.hours, 0)
+    );
+
+    return { router, state, propertyHours };
   },
   components: {
     IonItem,
     IonLabel,
     IonText,
+    IonNote,
   },
 };
 </script>

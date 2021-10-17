@@ -192,8 +192,6 @@ export default {
 
     initialize();
 
-    // Initialize visits
-
     // Popover
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();

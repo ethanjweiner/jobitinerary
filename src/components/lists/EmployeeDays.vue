@@ -3,7 +3,7 @@
     <ion-card-header>
       <ion-card-title>
         {{ title }}
-        <AddButton v-if="!hideAdd" @click="createDay" />
+        <AddButton v-if="!hideAdd" @click="createDay" title="Plan or Log" />
       </ion-card-title>
       <ion-item>
         <ion-input
@@ -86,7 +86,7 @@ export default {
 
     const createDay = async () => {
       router.push({
-        name: "New Day",
+        name: "New Employee Day",
         params: { employeeName: props.employeeName },
       });
     };

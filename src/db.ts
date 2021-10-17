@@ -11,6 +11,8 @@ import {
   newEmployeeDayInterface,
   Expense,
   newExpenseInterface,
+  CustomerDay,
+  newCustomerDayInterface,
 } from "./types/work_units";
 
 // search: Retrieve a maximum of _limit_ docs from _dbRef_, ordered by _orderByParam_,
@@ -105,6 +107,23 @@ export async function createEmployeeDay(date: string, employeeName: string) {
         hourlyRate,
         employeeName,
       })
+    );
+    return day;
+  } else
+    throw Error(
+      "Missing company: Could not create a database reference for days."
+    );
+}
+
+export async function createCustomerDay(date: string, customerName: string) {
+  if (store.state.company) {
+    const day = new CustomerDay(
+      date,
+      store.state.company.id,
+      nameToID(customerName)
+    );
+    await day.create(
+      newCustomerDayInterface(date, store.state.company.id, { customerName })
     );
     return day;
   } else

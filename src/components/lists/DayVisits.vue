@@ -6,6 +6,7 @@
       v-model="state.visits[index]"
       @deleteVisit="deleteVisit(visit)"
     />
+
     <ion-item button color="primary" @click="addVisit">
       <ion-icon :icon="add"></ion-icon>
       <ion-label>Add Visit</ion-label>
@@ -15,7 +16,6 @@
 
 <script lang="ts">
 import { IonReorderGroup, IonIcon, IonItem, IonLabel } from "@ionic/vue";
-import { defineComponent } from "@vue/runtime-core";
 import { reactive } from "@vue/reactivity";
 import router from "@/router";
 
@@ -25,7 +25,7 @@ import DayVisitItem from "./items/DayVisitItem.vue";
 import { Visit } from "@/types/work_units";
 import { createVisit } from "@/db";
 
-export default defineComponent({
+export default {
   name: "Day Visits",
   props: {
     modelValue: Array,
@@ -84,7 +84,7 @@ export default defineComponent({
     IonLabel,
     DayVisitItem,
   },
-});
+};
 </script>
 
 <style></style>

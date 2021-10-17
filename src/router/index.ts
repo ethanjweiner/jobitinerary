@@ -92,10 +92,16 @@ const routes: Array<RouteRecordRaw> = [
       },
       // NEW DAYS
       {
-        path: "new-day/:employeeName",
-        name: "New Day",
+        path: "new-employee-day/:employeeName",
+        name: "New Employee Day",
         props: true,
-        component: () => import("@/views/general/NewDay.vue"),
+        component: () => import("@/views/general/NewEmployeeDay.vue"),
+      },
+      {
+        path: "new-customer-day/:customerName",
+        name: "New Customer Day",
+        props: true,
+        component: () => import("@/views/general/NewCustomerDay.vue"),
       },
       // NEW JOBS
       {

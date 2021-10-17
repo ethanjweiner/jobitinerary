@@ -22,7 +22,7 @@ const store = {
     company: null,
   }),
 
-  DEBOUNCE_AMOUNT: 400,
+  DEBOUNCE_AMOUNT: 600,
   PUSH_QUANTITY: 10,
 
   async setUser(user: Company | Employee | Customer | null) {

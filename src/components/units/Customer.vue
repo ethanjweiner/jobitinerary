@@ -2,7 +2,11 @@
   <Sections v-if="state.customer" :sections="sections" :wrapCards="true">
     <template v-slot:dates>
       <div class="list">
-        <CustomerDays :customerName="state.customer.data.name" />
+        <CustomerDays
+          :customerName="state.customer.data.name"
+          title="Dates"
+          :dbRef="daysRef"
+        />
       </div>
     </template>
     <template v-slot:jobs>
@@ -21,7 +25,11 @@
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <CustomerDays :customerName="state.customer.data.name" />
+              <CustomerDays
+                :customerName="state.customer.data.name"
+                title="Dates"
+                :dbRef="daysRef"
+              />
             </div>
           </ion-card>
         </ion-col>
@@ -63,7 +71,7 @@ import {
   IonCardHeader,
   IonCardTitle,
 } from "@ionic/vue";
-import { reactive, ref } from "@vue/reactivity";
+import { computed, reactive, ref } from "@vue/reactivity";
 
 import {
   calendarOutline,
@@ -72,7 +80,7 @@ import {
 } from "ionicons/icons";
 
 import store from "@/store";
-import { SectionsType } from "@/types/auxiliary";
+import { CollectionRef, SectionsType } from "@/types/auxiliary";
 
 import Sections from "../Sections.vue";
 import CustomerForm from "../forms/CustomerForm.vue";
@@ -94,12 +102,31 @@ export default {
       customer: undefined,
     });
 
-    let jobsRef;
-    if (store.state.company) {
-      jobsRef = companiesCollection
-        .doc(`${store.state.company.id}/customers/${nameToID(props.username)}`)
-        .collection("jobs");
-    }
+    const daysRef = computed<CollectionRef>(() => {
+      if (store.state.company) {
+        const base = companiesCollection
+          .doc(
+            `${store.state.company.id}/customers/${nameToID(props.username)}`
+          )
+          .collection("days");
+
+        return base;
+      }
+      throw Error("No company exists");
+    });
+
+    const jobsRef = computed<CollectionRef>(() => {
+      if (store.state.company) {
+        const base = companiesCollection
+          .doc(
+            `${store.state.company.id}/customers/${nameToID(props.username)}`
+          )
+          .collection("jobs");
+
+        return base;
+      }
+      throw Error("No company exists");
+    });
 
     // If the user is a Company, assign the customer based on the prop
     if (props.username && store.state.user instanceof Company) {
@@ -133,6 +160,7 @@ export default {
     return {
       sections,
       state,
+      daysRef,
       jobsRef,
     };
   },

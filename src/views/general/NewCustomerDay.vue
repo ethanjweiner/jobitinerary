@@ -5,7 +5,7 @@
         <ion-buttons slot="start" :collapse="true">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>New Day</ion-title>
+        <ion-title>Plan a Day</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true" style="height: 100%;">
@@ -16,16 +16,16 @@
         >
           <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
             <div class="ion-text-start">
-              <h3 class="text-secondary">Select an Employee</h3>
+              <h3 class="text-secondary">Select a Customer</h3>
             </div>
             <UserSelect
               :names="
-                store.state.user.employees.map((employee) => employee.name)
+                store.state.user.customers.map((customer) => customer.name)
               "
-              :selectedName="state.employeeName"
-              type="employee"
-              :key="state.employeeName"
-              v-model="state.employeeName"
+              :selectedName="state.customerName"
+              type="customer"
+              :key="state.customerName"
+              v-model="state.customerName"
             />
             <div class="ion-text-start">
               <h3 class="text-secondary">Select a Date</h3>
@@ -35,7 +35,7 @@
               >Create Day</ion-button
             >
             <ion-note
-              >Note: You won't be able to change the date or employee
+              >Note: You won't be able to change the date or customer
               later.</ion-note
             >
           </ion-col>
@@ -67,7 +67,7 @@ import store from "@/store";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import { reactive } from "@vue/reactivity";
 import { dateToString } from "@/helpers";
-import { createEmployeeDay } from "@/db";
+import { createCustomerDay } from "@/db";
 
 export default {
   name: "Select Date",
@@ -88,23 +88,22 @@ export default {
     IonNote,
   },
   props: {
-    employeeName: String,
+    customerName: String,
   },
   setup(props: any) {
     const state = reactive({
-      employeeName: props.employeeName == "new" ? "" : props.employeeName,
+      customerName: props.customerName == "new" ? "" : props.customerName,
       date: dateToString(new Date()),
     });
 
     const create = async () => {
-      if (state.employeeName && state.date) {
-        console.log(state.date);
-        await createEmployeeDay(state.date, state.employeeName);
+      if (state.customerName && state.date) {
+        await createCustomerDay(state.date, state.customerName);
         router.push({
-          name: "Employee Day",
-          params: { username: state.employeeName, date: state.date },
+          name: "Customer Day",
+          params: { username: state.customerName, date: state.date },
         });
-      } else throw Error("Please select an employee and date.");
+      } else throw Error("Please select an customer and date.");
     };
 
     return {
