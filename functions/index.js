@@ -1,5 +1,21 @@
 /* eslint-disable */
 
+/* Tests
+
+Create visit from main page, should create new day
+
+Update date
+
+Update employee/customer
+
+Remove visit from main page, should:
+- Delete day if day is empty
+- Keep day if day is not empty
+
+Repeat for both employee days and customer days
+
+*/
+
 // The Cloud Functions for Firebase SDK to create Cloud Functions and set up triggers.
 const functions = require("firebase-functions");
 
@@ -97,9 +113,10 @@ const addVisitToCustomerDay = async (date, companyID, customerID, visitID) => {
 // Check for conditions that indicate that no work was, or is being performed on that day (i.e. that the day shouldn't be searchable)
 const employeeDayIsEmpty = (dayDoc) => {
   const data = dayDoc.data().data;
+  functions.logger.log(data);
 
   return (
-    !data.visitIDs.length &&
+    !data.visitIDs.length <= 1 &&
     !data.notes &&
     !data.plannedEnd &&
     !data.startLocation &&
@@ -112,7 +129,7 @@ const employeeDayIsEmpty = (dayDoc) => {
 const customerDayIsEmpty = (dayDoc) => {
   const data = dayDoc.data().data;
 
-  return !data.visitIDs.length && !data.notes;
+  return !data.visitIDs.length <= 1 && !data.notes;
 };
 
 const removeVisitFromEmployeeDay = async (
