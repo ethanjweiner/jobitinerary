@@ -26,6 +26,15 @@
           <JobItem
             :job="itemProps.item"
             :showCustomer="customerName ? false : true"
+            @click="
+              router.push({
+                name: 'Job',
+                params: {
+                  username: itemProps.item.customerName,
+                  jobID: itemProps.item.id,
+                },
+              })
+            "
           />
         </template>
       </InfiniteList>

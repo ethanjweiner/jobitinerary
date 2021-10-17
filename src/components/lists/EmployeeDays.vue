@@ -86,7 +86,7 @@ export default {
 
     const createDay = async () => {
       router.push({
-        name: "New Day",
+        name: "New Employee Day",
         params: { employeeName: props.employeeName },
       });
     };

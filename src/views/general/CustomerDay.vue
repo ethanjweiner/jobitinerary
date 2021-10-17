@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page v-if="state.day">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -15,39 +15,58 @@
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-grid class="ion-padding">
-        <ion-row class="ion-justify-content-primary customer-day-info">
-          <ion-chip>
-            <ion-label>
-              <span style="font-weight: bold;">{{ totalHours }}</span> hours
-              worked on this date
-            </ion-label>
-          </ion-chip>
-          <ion-chip v-if="workTypes.length">
-            <ion-label>
-              Types of Work:
-              <span
-                v-for="(type, index) in workTypes"
-                :key="index"
-                style="font-weight: bold;"
-              >
-                {{ type }}<span v-if="index != workTypes.length - 1">, </span>
-              </span>
-            </ion-label>
-          </ion-chip>
-          <ion-chip v-if="employees.length">
-            <ion-label>
-              Employees Working:
-              <span
-                v-for="(name, index) in employees"
-                :key="index"
-                style="font-weight: bold;"
-              >
-                {{ name }}<span v-if="index != employees.length - 1">, </span>
-              </span>
-            </ion-label>
-          </ion-chip>
+        <ion-row>
+          <ion-card>
+            <ion-card-content>
+              <ion-chip>
+                <ion-label>
+                  <span style="font-weight: bold;">{{ totalHours }}</span> hours
+                  worked on this date
+                </ion-label>
+              </ion-chip>
+              <ion-chip v-if="workTypes.length">
+                <ion-label>
+                  Types of Work:
+                  <span
+                    v-for="(type, index) in workTypes"
+                    :key="index"
+                    style="font-weight: bold;"
+                  >
+                    {{ type
+                    }}<span v-if="index != workTypes.length - 1">, </span>
+                  </span>
+                </ion-label>
+              </ion-chip>
+              <ion-chip v-if="employees.length">
+                <ion-label>
+                  Employees Working:
+                  <span
+                    v-for="(name, index) in employees"
+                    :key="index"
+                    style="font-weight: bold;"
+                  >
+                    {{ name
+                    }}<span v-if="index != employees.length - 1">, </span>
+                  </span>
+                </ion-label>
+              </ion-chip>
+              <ion-item>
+                <ion-label position="stacked">Notes</ion-label>
+                <ion-textarea
+                  placeholder="Notes on this day"
+                  v-model="state.day.data.notes"
+                >
+                </ion-textarea>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
         </ion-row>
-        <ion-row class="ion-justify-content-center ion-margin">
+
+        <hr />
+        <ion-row class="ion-justify-content-center ">
+          <h3>Visits</h3>
+        </ion-row>
+        <ion-row class="ion-justify-content-center">
           <AddButton :title="`Add Visit on ${date}`" @click="addVisit" />
         </ion-row>
         <ion-row v-if="state.visits" class="ion-justify-content-around">
@@ -66,7 +85,7 @@
                   Visit by {{ visit.data.employeeName }}
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content v-if="state.visits.length">
                 <VisitInline
                   v-model="state.visits[index]"
                   :separateByDefault="true"
@@ -101,6 +120,8 @@ import {
   IonButton,
   IonButtons,
   IonBackButton,
+  IonTextarea,
+  IonItem,
 } from "@ionic/vue";
 
 import { computed, reactive } from "@vue/reactivity";
@@ -110,7 +131,9 @@ import { CustomerDay, Visit } from "@/types/work_units";
 import VisitInline from "@/components/units/Visit.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import { createVisit } from "@/db";
-import { retrieveVisitsOnDay } from "@/helpers";
+import { nameToID, retrieveVisitsOnDay } from "@/helpers";
+import store from "@/store";
+import { watch } from "@vue/runtime-core";
 
 interface State {
   day: CustomerDay | null;
@@ -130,10 +153,23 @@ export default {
     });
 
     const initialize = async () => {
-      // Initialze Visits
-      state.visits = await retrieveVisitsOnDay(props.date, {
-        customerName: props.username,
-      });
+      if (store.state.company) {
+        // Initialze Visits
+        const day = new CustomerDay(
+          props.date,
+          store.state.company.id,
+          nameToID(props.username)
+        );
+        await day.init();
+        state.day = day;
+
+        state.visits = await retrieveVisitsOnDay(props.date, {
+          customerName: props.username,
+        });
+        watch(state.day.data, () => {
+          if (state.day) state.day.save();
+        });
+      }
     };
 
     initialize();
@@ -201,11 +237,10 @@ export default {
     IonButtons,
     IonBackButton,
     AddButton,
+    IonTextarea,
+    IonItem,
   },
 };
 </script>
 
-<style scoped>
-.customer-day-info {
-}
-</style>
+<style scoped></style>

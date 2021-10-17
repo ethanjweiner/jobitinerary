@@ -1,15 +1,5 @@
 <template>
-  <ion-item
-    @click="
-      router.push({
-        name: 'Job',
-        params: {
-          username: job.customerName,
-          jobID: job.id,
-        },
-      })
-    "
-  >
+  <ion-item>
     <div>
       <ion-label>{{ job.name }} </ion-label>
       <ion-note v-if="showCustomer">for {{ job.customerName }}</ion-note>

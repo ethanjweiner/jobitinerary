@@ -121,8 +121,6 @@ export default {
           )
           .collection("days");
 
-        // Add time filters...
-
         return base;
       }
       throw Error("No company exists");

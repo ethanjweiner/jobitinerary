@@ -3,8 +3,8 @@
     <ion-card-header>
       <ion-card-title>
         {{ title }}
+        <AddButton v-if="!hideAdd" @click="createDay" title="Plan or Log" />
       </ion-card-title>
-
       <ion-item>
         <ion-input
           type="date"
@@ -23,15 +23,7 @@
         :searchFilter="searchDate"
       >
         <template v-slot:item="itemProps">
-          <CustomerDayItem
-            :day="itemProps.item"
-            @click="
-              router.push({
-                name: 'Customer Day',
-                params: { username: customerName, date: itemProps.item.date },
-              })
-            "
-          />
+          <CustomerDayItem :day="itemProps.item" />
         </template>
       </InfiniteList>
     </ion-card-content>
@@ -52,6 +44,7 @@ import router from "@/router";
 import { CustomerDayInterface } from "@/types/work_units";
 import { Splitter } from "@/types/auxiliary";
 
+import AddButton from "../buttons/AddButton.vue";
 import CustomerDayItem from "./items/CustomerDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";
 
@@ -64,14 +57,16 @@ export default {
     IonCardTitle,
     IonCardContent,
     IonItem,
+    AddButton,
     InfiniteList,
   },
   props: {
     dbRef: Object,
     customerName: String,
+    hideAdd: Boolean,
     title: String,
   },
-  setup() {
+  setup(props: any) {
     const searchDate = ref<string>("");
 
     const splitters = ref<Array<Splitter>>([
@@ -85,8 +80,16 @@ export default {
       },
     ]);
 
+    const createDay = async () => {
+      router.push({
+        name: "New Customer Day",
+        params: { customerName: props.customerName },
+      });
+    };
+
     return {
       router,
+      createDay,
       searchDate,
       splitters,
     };
