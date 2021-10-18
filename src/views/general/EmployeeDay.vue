@@ -23,6 +23,8 @@
         @deleteDay="deleteDay"
         @changeDate="changeDate"
         @copyDay="copyDay"
+        type="employee"
+        :employeeName="username"
         :currentDate="state.day.data.date"
       />
       <!-- Add Day Popover here -->
@@ -143,6 +145,7 @@ import {
 import DayPopover from "@/components/popovers/DayPopover.vue";
 import { nameToID, retrieveVisitsOnDay } from "@/helpers";
 import { companiesCollection } from "@/main";
+import { copyVisit } from "@/db.ts";
 
 interface State {
   day: EmployeeDay | null;
@@ -230,7 +233,13 @@ export default {
     };
 
     const deleteDay = async () => {
-      if (state.day) await state.day.delete();
+      if (state.day) {
+        await state.day.delete();
+
+        for (const visit of state.visits) {
+          await visit.delete();
+        }
+      }
       router.push({ name: "Employee", params: { username: props.username } });
     };
 
@@ -253,6 +262,12 @@ export default {
       }
     };
 
+    const copyVisits = async (employeeName: string) => {
+      for (const visit of state.visits) {
+        await copyVisit(visit, employeeName);
+      }
+    };
+
     const copyDay = async (employeeName: string) => {
       if (state.day) {
         const copiedDay = new EmployeeDay(
@@ -264,7 +279,10 @@ export default {
         copiedData.employeeName = employeeName;
         copiedData.readByCompany = false;
         copiedData.readByEmployee = false;
-        await copiedDay.create(state.day.data);
+        copiedData.hourlyRate = null;
+        await copiedDay.create(copiedData);
+        await copyVisits(employeeName);
+        popoverIsOpen.value = false;
       }
     };
 

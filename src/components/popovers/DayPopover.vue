@@ -21,7 +21,7 @@
       ></ion-datetime>
     </ion-item>
 
-    <ion-item>
+    <ion-item v-if="type == 'employee'">
       <ion-label color="tertiary">
         <ion-icon :icon="icons.copyOutline" color="tertiary"></ion-icon>
         Copy to Employee
@@ -34,6 +34,12 @@
           >{{ name }}</ion-select-option
         >
       </ion-select>
+    </ion-item>
+
+    <ion-item v-if="type == 'employee'">
+      <ion-text>
+        <ion-note>Note: This function does not copy any expenses.</ion-note>
+      </ion-text>
     </ion-item>
   </ion-list>
 </template>
@@ -56,7 +62,9 @@ import store from "@/store";
 export default {
   name: "Visit Popover",
   props: {
+    type: String,
     currentDate: String,
+    employeeName: String,
   },
   components: {
     IonList,
@@ -75,11 +83,13 @@ export default {
       names: [],
     });
 
+    console.log(props.employeeName);
+
     if (store.state.user)
-      state.names = store.state.user.employees.map(
-        (employee) => employee.data.name
-      );
-    else throw Error("Could not load employees");
+      if (props.type == "employee")
+        state.names = store.state.user.employees
+          .map((employee) => employee.data.name)
+          .filter((employeeName) => employeeName != props.employeeName);
 
     const date = ref(props.currentDate);
     return {

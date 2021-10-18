@@ -13,6 +13,21 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
+
+    <ion-popover
+      :is-open="popoverIsOpen"
+      :translucent="true"
+      :event="popoverEvent"
+      @didDismiss="toggleDaySettings(false)"
+    >
+      <DayPopover
+        @deleteDay="deleteDay"
+        @changeDate="changeDate"
+        type="customer"
+        :currentDate="state.day.data.date"
+      />
+      <!-- Add Day Popover here -->
+    </ion-popover>
     <ion-content :fullscreen="true">
       <ion-grid class="ion-padding">
         <ion-row>
@@ -122,9 +137,10 @@ import {
   IonBackButton,
   IonTextarea,
   IonItem,
+  IonPopover,
 } from "@ionic/vue";
 
-import { computed, reactive } from "@vue/reactivity";
+import { computed, reactive, ref } from "@vue/reactivity";
 import { ellipsisVertical } from "ionicons/icons";
 
 import { CustomerDay, Visit } from "@/types/work_units";
@@ -134,6 +150,9 @@ import { createVisit } from "@/db";
 import { nameToID, retrieveVisitsOnDay } from "@/helpers";
 import store from "@/store";
 import { watch } from "@vue/runtime-core";
+import router from "@/router";
+
+import DayPopover from "@/components/popovers/DayPopover.vue";
 
 interface State {
   day: CustomerDay | null;
@@ -174,6 +193,13 @@ export default {
 
     initialize();
 
+    const popoverIsOpen = ref(false);
+    const popoverEvent = ref();
+    const toggleDaySettings = (state: boolean, ev?: Event) => {
+      popoverEvent.value = ev;
+      popoverIsOpen.value = state;
+    };
+
     const totalHours = computed(() =>
       state.visits.reduce(
         (hoursAcc: number, visit: Visit) => hoursAcc + visit.data.time.hours,
@@ -210,6 +236,32 @@ export default {
       state.visits.unshift(visit);
     };
 
+    const deleteDay = async () => {
+      if (state.day) {
+        await state.day.delete();
+        for (const visit of state.visits) {
+          await visit.delete();
+        }
+      }
+      router.push({ name: "Customer", params: { username: props.username } });
+    };
+
+    const changeDate = async (date: string) => {
+      if (state.day) {
+        state.day = await state.day.changeDate(date);
+        for (const visit of state.visits) {
+          await visit.changeDate(date);
+        }
+
+        await router.push({
+          name: "Customer Day",
+          params: { employee: props.username, date },
+        });
+
+        router.go(0);
+      }
+    };
+
     return {
       state,
       icons: { ellipsisVertical },
@@ -217,6 +269,11 @@ export default {
       workTypes,
       employees,
       addVisit,
+      deleteDay,
+      changeDate,
+      toggleDaySettings,
+      popoverIsOpen,
+      popoverEvent,
     };
   },
   components: {
@@ -242,6 +299,8 @@ export default {
     AddButton,
     IonTextarea,
     IonItem,
+    IonPopover,
+    DayPopover,
   },
 };
 </script>

@@ -132,6 +132,18 @@ export async function createCustomerDay(date: string, customerName: string) {
     );
 }
 
+export async function copyVisit(visit: Visit, employeeName: string) {
+  const id = generateUUID();
+  const copiedVisit = new Visit(id, visit.data.companyID);
+
+  const copiedData = { ...visit.data };
+  copiedData.id = id;
+  copiedData.employeeName = employeeName;
+  copiedData.readByCompany = false;
+
+  await copiedVisit.create(copiedData);
+}
+
 /* BACKLOG
 
 export async function fetchThreads(
