@@ -256,7 +256,6 @@ export class DBUnit<T> {
 
   async save() {
     // Change to only update keywords on saves in which a search_param is changed
-    console.log("saving");
     if (this.exists) {
       this.updateKeywords();
       await this.dbRef.set({ data: this.data, keywords: this.keywords });
