@@ -5,12 +5,12 @@
     </h3>
     <ion-row>
       <ion-col size="6">
-        <ion-button color="primary" expand="block">
+        <ion-button color="primary" expand="block" @click="setStartTime">
           <ion-icon :icon="icons.playOutline"></ion-icon>
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="danger" expand="block">
+        <ion-button color="danger" expand="block" @click="setEndTime">
           <ion-icon :icon="icons.stopOutline"></ion-icon>
         </ion-button>
       </ion-col>
@@ -46,11 +46,19 @@
       <ion-col size="12" size-lg="4">
         <ion-item>
           <ion-label position="stacked">Total Hours</ion-label>
+
           <ion-input
             type="number"
             inputmode="numeric"
             v-model="state.time.hours"
           ></ion-input>
+          <ion-button
+            color="secondary"
+            size="small"
+            expand="block"
+            @click="refreshHours"
+            >Auto-Calculate</ion-button
+          >
         </ion-item>
       </ion-col>
     </ion-row>
@@ -86,8 +94,34 @@ export default {
       time: props.modelValue,
     });
 
+    const refreshHours = () => {
+      const hours =
+        (new Date(state.time.end).getTime() -
+          new Date(state.time.start).getTime()) /
+        (1000 * 60 * 60);
+
+      state.time.hours = Math.round(hours * 10) / 10;
+    };
+
+    const setStartTime = () => {
+      state.time.start = new Date().toISOString();
+      if (state.time.start && state.time.end) refreshHours();
+    };
+
+    const setEndTime = () => {
+      state.time.end = new Date().toISOString();
+      if (state.time.start && state.time.end) refreshHours();
+    };
+
     watch(state.time, (newTime) => emit("update:modelValue", newTime));
 
+    // Create a ticking clock animation if only start time exists
+    const isTicking = computed(() => {
+      const afterStart = new Date() > new Date(state.time.start);
+      return state.time.start && !state.time.end && afterStart;
+    });
+
+    // Do the start and end times match the hours?
     const mismatch = computed(() => true);
 
     return {
@@ -97,6 +131,10 @@ export default {
         stopOutline,
       },
       mismatch,
+      isTicking,
+      setStartTime,
+      setEndTime,
+      refreshHours,
     };
   },
   components: {
