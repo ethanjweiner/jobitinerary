@@ -6,7 +6,10 @@
     <ion-fab-list side="end">
       <ion-fab-button
         @click="
-          router.push({ name: 'New Day', params: { employeeName: 'new' } })
+          router.push({
+            name: 'New Employee Day',
+            params: { employeeName: 'new' },
+          })
         "
         >Day</ion-fab-button
       >
