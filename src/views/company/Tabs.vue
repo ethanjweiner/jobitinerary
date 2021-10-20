@@ -2,7 +2,7 @@
   <ion-page>
     <ion-tabs>
       <!-- Reload each route upon load -->
-      <ion-router-outlet :key="route.fullPath"></ion-router-outlet>
+      <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home" href="/company/home">
           <ion-icon :icon="icons.home" />
@@ -34,7 +34,6 @@ import {
   IonRouterOutlet,
 } from "@ionic/vue";
 import { home, cart, hammer } from "ionicons/icons";
-import { useRoute } from "vue-router";
 
 export default {
   name: "Tabs",
@@ -48,9 +47,7 @@ export default {
     IonRouterOutlet,
   },
   setup() {
-    const route = useRoute();
     return {
-      route,
       icons: { home, cart, hammer },
     };
   },

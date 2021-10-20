@@ -70,10 +70,6 @@ export default {
       .collectionGroup("jobs")
       .where("data.companyID", "==", store.state.companyID);
 
-    // Force Reload
-
-    // Reload the visits component on any changes
-
     return {
       visitsRef,
       jobsRef,
