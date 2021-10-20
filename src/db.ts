@@ -38,50 +38,41 @@ export async function search(
 
 export async function createVisit(options?: any) {
   const visitID = generateUUID();
-  if (store.state.company) {
-    const visit = new Visit(visitID, store.state.company.id);
-    // Input empty data
-    await visit.create(
-      newVisitInterface(visitID, store.state.company.id, options ? options : {})
-    );
+  const visit = new Visit(visitID, store.state.companyID);
+  // Input empty data
+  await visit.create(
+    newVisitInterface(visitID, store.state.companyID, options ? options : {})
+  );
 
-    return visit;
-  } else throw Error("Could not create a database reference for visits.");
+  return visit;
 }
 
 export async function createExpense(employeeName: string, options?: any) {
   const expenseID = generateUUID();
-  if (store.state.company) {
-    const expense = new Expense(
+  const expense = new Expense(
+    expenseID,
+    store.state.companyID,
+    nameToID(employeeName)
+  );
+  await expense.create(
+    newExpenseInterface(
       expenseID,
-      store.state.company.id,
-      nameToID(employeeName)
-    );
-    await expense.create(
-      newExpenseInterface(
-        expenseID,
-        store.state.company.id,
-        nameToID(employeeName),
-        options ? options : {}
-      )
-    );
-    return expense;
-  } else throw Error("Could not create a database reference for expenses.");
+      store.state.companyID,
+      nameToID(employeeName),
+      options ? options : {}
+    )
+  );
+  return expense;
 }
 
 export async function createJob(jobName: string, customerName: string) {
   const jobID = nameToID(jobName);
 
-  if (store.state.company) {
-    const job = new Job(jobID, store.state.company.id, nameToID(customerName));
-    await job.create(
-      newJobInterface(jobID, store.state.company.id, jobName, customerName)
-    );
-    return job;
-  } else
-    throw Error(
-      "Missing company: Could not create a database reference for jobs."
-    );
+  const job = new Job(jobID, store.state.companyID, nameToID(customerName));
+  await job.create(
+    newJobInterface(jobID, store.state.companyID, jobName, customerName)
+  );
+  return job;
 }
 
 export async function createEmployeeDay(date: string, employeeName: string) {
@@ -96,40 +87,30 @@ export async function createEmployeeDay(date: string, employeeName: string) {
     if (employee) hourlyRate = employee.data.defaultHourlyRate;
   }
 
-  if (store.state.company) {
-    const day = new EmployeeDay(
-      date,
-      store.state.company.id,
-      nameToID(employeeName)
-    );
-    await day.create(
-      newEmployeeDayInterface(date, store.state.company.id, {
-        hourlyRate,
-        employeeName,
-      })
-    );
-    return day;
-  } else
-    throw Error(
-      "Missing company: Could not create a database reference for days."
-    );
+  const day = new EmployeeDay(
+    date,
+    store.state.companyID,
+    nameToID(employeeName)
+  );
+  await day.create(
+    newEmployeeDayInterface(date, store.state.companyID, {
+      hourlyRate,
+      employeeName,
+    })
+  );
+  return day;
 }
 
 export async function createCustomerDay(date: string, customerName: string) {
-  if (store.state.company) {
-    const day = new CustomerDay(
-      date,
-      store.state.company.id,
-      nameToID(customerName)
-    );
-    await day.create(
-      newCustomerDayInterface(date, store.state.company.id, { customerName })
-    );
-    return day;
-  } else
-    throw Error(
-      "Missing company: Could not create a database reference for days."
-    );
+  const day = new CustomerDay(
+    date,
+    store.state.companyID,
+    nameToID(customerName)
+  );
+  await day.create(
+    newCustomerDayInterface(date, store.state.companyID, { customerName })
+  );
+  return day;
 }
 
 export async function copyVisit(visit: Visit, employeeName: string) {

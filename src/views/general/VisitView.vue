@@ -86,11 +86,11 @@ export default {
         // Generate a random id for now...
         const visit = await createVisit();
         state.visit = visit;
-      } else if (store.state.company) {
-        const visit = new Visit(props.visitID, store.state.company.id);
+      } else {
+        const visit = new Visit(props.visitID, store.state.companyID);
         await visit.init();
         state.visit = visit;
-      } else throw Error("Could not create or find visit");
+      }
     };
 
     initialize();

@@ -85,8 +85,8 @@ export default {
     });
 
     const initialize = async () => {
-      if (store.state.company && props.visitData) {
-        const visit = new Visit(props.visitData.id, store.state.company.id);
+      if (props.visitData) {
+        const visit = new Visit(props.visitData.id, store.state.companyID);
         await visit.init(props.visitData);
         state.visit = visit;
       } else throw Error("Could not find visit");

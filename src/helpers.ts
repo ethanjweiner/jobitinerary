@@ -128,23 +128,21 @@ export async function retrieveVisitsOnDay(
   options: { customerName?: string; employeeName?: string }
 ): Promise<Array<Visit>> {
   const visits: Array<Visit> = [];
-  if (store.state.company) {
-    // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
-    let query = companiesCollection
-      .doc(store.state.company.id)
-      .collection("visits")
-      .where("data.date", "==", date);
-    if (options.customerName)
-      query = query.where("data.customerName", "==", options.customerName);
-    if (options.employeeName)
-      query = query.where("data.employeeName", "==", options.employeeName);
+  // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
+  let query = companiesCollection
+    .doc(store.state.companyID)
+    .collection("visits")
+    .where("data.date", "==", date);
+  if (options.customerName)
+    query = query.where("data.customerName", "==", options.customerName);
+  if (options.employeeName)
+    query = query.where("data.employeeName", "==", options.employeeName);
 
-    const visitDocs = (await query.get()).docs;
-    for (const doc of visitDocs) {
-      const visit = new Visit(doc.id, store.state.company.id);
-      await visit.init(doc.data().data);
-      visits.push(visit);
-    }
+  const visitDocs = (await query.get()).docs;
+  for (const doc of visitDocs) {
+    const visit = new Visit(doc.id, store.state.companyID);
+    await visit.init(doc.data().data);
+    visits.push(visit);
   }
 
   visits.sort(

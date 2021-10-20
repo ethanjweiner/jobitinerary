@@ -86,12 +86,7 @@ export default {
     });
 
     const addUser = async () => {
-      if (
-        state.name &&
-        state.email &&
-        store.state.user instanceof Company &&
-        store.state.company
-      ) {
+      if (state.name && state.email && store.state.user instanceof Company) {
         // ADD USER TO DATABASE
         if (props.type == "employee") {
           // Add employee to database

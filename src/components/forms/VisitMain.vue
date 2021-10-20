@@ -211,21 +211,18 @@ export default {
     initialize();
 
     const jobsRef = computed(() => {
-      if (store.state.company) {
-        if (state.visit.data.customerName) {
-          return companiesCollection
-            .doc(
-              `${store.state.company.id}/customers/${nameToID(
-                state.visit.data.customerName
-              )}`
-            )
-            .collection("jobs");
-        }
-        return db
-          .collectionGroup("jobs")
-          .where("data.companyID", "==", store.state.company.id);
+      if (state.visit.data.customerName) {
+        return companiesCollection
+          .doc(
+            `${store.state.companyID}/customers/${nameToID(
+              state.visit.data.customerName
+            )}`
+          )
+          .collection("jobs");
       }
-      return null;
+      return db
+        .collectionGroup("jobs")
+        .where("data.companyID", "==", store.state.companyID);
     });
 
     setTimeout(() => (state.showTextAreas = true), 250);

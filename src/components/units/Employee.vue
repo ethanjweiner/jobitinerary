@@ -114,16 +114,11 @@ export default {
     });
 
     const daysRef = computed<CollectionRef>(() => {
-      if (store.state.company) {
-        const base = companiesCollection
-          .doc(
-            `${store.state.company.id}/employees/${nameToID(props.username)}`
-          )
-          .collection("days");
+      const base = companiesCollection
+        .doc(`${store.state.companyID}/employees/${nameToID(props.username)}`)
+        .collection("days");
 
-        return base;
-      }
-      throw Error("No company exists");
+      return base;
     });
 
     // If the user is a Company, assign the employee based on the prop

@@ -34,11 +34,7 @@ export default {
       });
 
       if (image && image.base64String) {
-        if (!store.state.company)
-          throw new Error(
-            "The image could not be stored, because the user is not associated with a company."
-          );
-        const filePath = `${store.state.company.id}/images/${generateUUID()}.${
+        const filePath = `${store.state.companyID}/images/${generateUUID()}.${
           image.format
         }`;
         const storageRef = storage.ref();

@@ -172,23 +172,21 @@ export default {
     });
 
     const initialize = async () => {
-      if (store.state.company) {
-        // Initialze Visits
-        const day = new CustomerDay(
-          props.date,
-          store.state.company.id,
-          nameToID(props.username)
-        );
-        await day.init();
-        state.day = day;
+      // Initialze Visits
+      const day = new CustomerDay(
+        props.date,
+        store.state.companyID,
+        nameToID(props.username)
+      );
+      await day.init();
+      state.day = day;
 
-        state.visits = await retrieveVisitsOnDay(props.date, {
-          customerName: props.username,
-        });
-        watch(state.day.data, () => {
-          if (state.day) state.day.save();
-        });
-      }
+      state.visits = await retrieveVisitsOnDay(props.date, {
+        customerName: props.username,
+      });
+      watch(state.day.data, () => {
+        if (state.day) state.day.save();
+      });
     };
 
     initialize();

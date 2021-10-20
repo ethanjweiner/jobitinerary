@@ -164,30 +164,28 @@ export default {
 
     // Initialize job
     const initialize = async () => {
-      if (store.state.company) {
-        const job = new Job(
-          props.jobID,
-          store.state.company.id,
-          nameToID(props.username)
-        );
-        await job.init();
-        state.job = job;
-        const visitDocs = (
-          await companiesCollection
-            .doc(store.state.company.id)
-            .collection("visits")
-            .where("data.jobID", "==", job.id)
-            .get()
-        ).docs;
-        for (const doc of visitDocs) {
-          const visit = new Visit(doc.id, store.state.company.id);
-          await visit.init(doc.data().data);
-          state.visits.push(visit);
-        }
-        watch(state.job.data, () => {
-          if (state.job) state.job.save();
-        });
+      const job = new Job(
+        props.jobID,
+        store.state.companyID,
+        nameToID(props.username)
+      );
+      await job.init();
+      state.job = job;
+      const visitDocs = (
+        await companiesCollection
+          .doc(store.state.companyID)
+          .collection("visits")
+          .where("data.jobID", "==", job.id)
+          .get()
+      ).docs;
+      for (const doc of visitDocs) {
+        const visit = new Visit(doc.id, store.state.companyID);
+        await visit.init(doc.data().data);
+        state.visits.push(visit);
       }
+      watch(state.job.data, () => {
+        if (state.job) state.job.save();
+      });
     };
 
     initialize();

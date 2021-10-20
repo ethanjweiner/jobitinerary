@@ -148,64 +148,58 @@ export default {
     });
 
     const daysRef = computed<Query>(() => {
-      if (store.state.company) {
-        let ref: CollectionRef | Query = companiesCollection
-          .doc(
-            `${store.state.company.id}/employees/${nameToID(
-              state.employee.data.name
-            )}`
-          )
-          .collection("days");
+      let ref: CollectionRef | Query = companiesCollection
+        .doc(
+          `${store.state.companyID}/employees/${nameToID(
+            state.employee.data.name
+          )}`
+        )
+        .collection("days");
 
-        // Filter by paid status
-        if (state.filterUnpaid) {
-          ref = ref.where("data.paid", "==", false);
-        }
-
-        // Filter by time
-        if (state.startDate && state.endDate) {
-          ref = ref
-            .where("data.date", ">=", state.startDate)
-            .where("data.date", "<=", state.endDate);
-        } else if (state.startDate) {
-          ref = ref.where("data.date", ">=", state.startDate);
-        } else if (state.endDate) {
-          ref = ref.where("data.date", "<=", state.endDate);
-        }
-
-        return ref;
+      // Filter by paid status
+      if (state.filterUnpaid) {
+        ref = ref.where("data.paid", "==", false);
       }
-      throw Error("No company exists.");
+
+      // Filter by time
+      if (state.startDate && state.endDate) {
+        ref = ref
+          .where("data.date", ">=", state.startDate)
+          .where("data.date", "<=", state.endDate);
+      } else if (state.startDate) {
+        ref = ref.where("data.date", ">=", state.startDate);
+      } else if (state.endDate) {
+        ref = ref.where("data.date", "<=", state.endDate);
+      }
+
+      return ref;
     });
 
     const expensesRef = computed<Query>(() => {
-      if (store.state.company) {
-        let ref: CollectionRef | Query = companiesCollection
-          .doc(
-            `${store.state.company.id}/employees/${nameToID(
-              state.employee.data.name
-            )}`
-          )
-          .collection("expenses");
+      let ref: CollectionRef | Query = companiesCollection
+        .doc(
+          `${store.state.companyID}/employees/${nameToID(
+            state.employee.data.name
+          )}`
+        )
+        .collection("expenses");
 
-        // Filter by paid status
-        if (state.filterUnpaid) {
-          ref = ref.where("data.paid", "==", false);
-        }
-        // Filter by time
-        if (state.startDate && state.endDate) {
-          ref = ref
-            .where("data.date", ">=", state.startDate)
-            .where("data.date", "<=", state.endDate);
-        } else if (state.startDate) {
-          ref = ref.where("data.date", ">=", state.startDate);
-        } else if (state.endDate) {
-          ref = ref.where("data.date", "<=", state.endDate);
-        }
-
-        return ref;
+      // Filter by paid status
+      if (state.filterUnpaid) {
+        ref = ref.where("data.paid", "==", false);
       }
-      throw Error("No company exists");
+      // Filter by time
+      if (state.startDate && state.endDate) {
+        ref = ref
+          .where("data.date", ">=", state.startDate)
+          .where("data.date", "<=", state.endDate);
+      } else if (state.startDate) {
+        ref = ref.where("data.date", ">=", state.startDate);
+      } else if (state.endDate) {
+        ref = ref.where("data.date", "<=", state.endDate);
+      }
+
+      return ref;
     });
 
     const clearDates = () => {

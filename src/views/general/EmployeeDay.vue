@@ -145,7 +145,7 @@ import {
 import DayPopover from "@/components/popovers/DayPopover.vue";
 import { nameToID, retrieveVisitsOnDay } from "@/helpers";
 import { companiesCollection } from "@/main";
-import { copyVisit } from "@/db.ts";
+import { copyVisit } from "@/db";
 
 interface State {
   day: EmployeeDay | null;
@@ -185,42 +185,38 @@ export default {
 
     // Retrieve the day
     const initialize = async () => {
-      if (store.state.company) {
-        // Initialize Day
-        const day = new EmployeeDay(
-          props.date,
-          store.state.company.id,
+      // Initialize Day
+      const day = new EmployeeDay(
+        props.date,
+        store.state.companyID,
+        nameToID(props.username)
+      );
+      await day.init();
+      state.day = day;
+      // Initialze Visits
+      state.visits = await retrieveVisitsOnDay(props.date, {
+        employeeName: props.username,
+      });
+      // Initialize Expenses
+      const expenseDocs = (
+        await companiesCollection
+          .doc(`${store.state.companyID}/employees/${nameToID(props.username)}`)
+          .collection("expenses")
+          .where("data.date", "==", props.date)
+          .get()
+      ).docs;
+      for (const doc of expenseDocs) {
+        const expense = new Expense(
+          doc.id,
+          store.state.companyID,
           nameToID(props.username)
         );
-        await day.init();
-        state.day = day;
-        // Initialze Visits
-        state.visits = await retrieveVisitsOnDay(props.date, {
-          employeeName: props.username,
-        });
-        // Initialize Expenses
-        const expenseDocs = (
-          await companiesCollection
-            .doc(
-              `${store.state.company.id}/employees/${nameToID(props.username)}`
-            )
-            .collection("expenses")
-            .where("data.date", "==", props.date)
-            .get()
-        ).docs;
-        for (const doc of expenseDocs) {
-          const expense = new Expense(
-            doc.id,
-            store.state.company.id,
-            nameToID(props.username)
-          );
-          await expense.init(doc.data().data);
-          state.expenses.push(expense);
-        }
-        watch(state.day.data, () => {
-          if (state.day) state.day.save();
-        });
+        await expense.init(doc.data().data);
+        state.expenses.push(expense);
       }
+      watch(state.day.data, () => {
+        if (state.day) state.day.save();
+      });
     };
 
     initialize();
@@ -279,7 +275,7 @@ export default {
         copiedData.employeeName = employeeName;
         copiedData.readByCompany = false;
         copiedData.readByEmployee = false;
-        copiedData.hourlyRate = null;
+        copiedData.hourlyRate = 0;
         await copiedDay.create(copiedData);
         await copyVisits(employeeName);
         popoverIsOpen.value = false;

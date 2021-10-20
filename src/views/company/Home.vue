@@ -63,17 +63,12 @@ import { companiesCollection, db } from "@/main";
 export default {
   name: "Home",
   setup() {
-    let visitsRef, jobsRef;
-    if (store.state.company) {
-      visitsRef = companiesCollection
-        .doc(store.state.company.id)
-        .collection("visits");
-      jobsRef = db
-        .collectionGroup("jobs")
-        .where("data.companyID", "==", store.state.company.id);
-    } else {
-      throw Error("The company does not exist");
-    }
+    const visitsRef = companiesCollection
+      .doc(store.state.companyID)
+      .collection("visits");
+    const jobsRef = db
+      .collectionGroup("jobs")
+      .where("data.companyID", "==", store.state.companyID);
 
     // Force Reload
 

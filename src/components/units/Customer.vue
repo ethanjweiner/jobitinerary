@@ -103,29 +103,19 @@ export default {
     });
 
     const daysRef = computed<CollectionRef>(() => {
-      if (store.state.company) {
-        const base = companiesCollection
-          .doc(
-            `${store.state.company.id}/customers/${nameToID(props.username)}`
-          )
-          .collection("days");
+      const base = companiesCollection
+        .doc(`${store.state.companyID}/customers/${nameToID(props.username)}`)
+        .collection("days");
 
-        return base;
-      }
-      throw Error("No company exists");
+      return base;
     });
 
     const jobsRef = computed<CollectionRef>(() => {
-      if (store.state.company) {
-        const base = companiesCollection
-          .doc(
-            `${store.state.company.id}/customers/${nameToID(props.username)}`
-          )
-          .collection("jobs");
+      const base = companiesCollection
+        .doc(`${store.state.companyID}/customers/${nameToID(props.username)}`)
+        .collection("jobs");
 
-        return base;
-      }
-      throw Error("No company exists");
+      return base;
     });
 
     // If the user is a Company, assign the customer based on the prop
