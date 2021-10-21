@@ -89,7 +89,7 @@ export default {
       // Create a job with an id
       if (state.customerName && state.jobName) {
         await createJob(state.jobName, state.customerName);
-        router.push({
+        router.replace({
           name: "Job",
           params: {
             username: state.customerName,

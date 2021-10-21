@@ -99,7 +99,7 @@ export default {
     const create = async () => {
       if (state.customerName && state.date) {
         await createCustomerDay(state.date, state.customerName);
-        router.push({
+        router.replace({
           name: "Customer Day",
           params: { username: state.customerName, date: state.date },
         });

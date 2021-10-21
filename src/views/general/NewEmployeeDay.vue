@@ -100,7 +100,7 @@ export default {
       if (state.employeeName && state.date) {
         console.log(state.date);
         await createEmployeeDay(state.date, state.employeeName);
-        router.push({
+        router.replace({
           name: "Employee Day",
           params: { username: state.employeeName, date: state.date },
         });
