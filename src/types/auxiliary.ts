@@ -117,6 +117,7 @@ export type CollectionRef = firebase.firestore.CollectionReference;
 export type DocSnapshot = firebase.firestore.DocumentSnapshot;
 export type DocData = firebase.firestore.DocumentData;
 export type Query = firebase.firestore.Query;
+export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 
 /* BACKLOG
 
