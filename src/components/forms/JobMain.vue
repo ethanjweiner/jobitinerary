@@ -59,7 +59,7 @@
     </ion-label>
     <ion-chip v-for="(employeeHour, index) in employeeHours" :key="index">
       <ion-label style="margin: auto;"
-        >{{ employeeHour.employeeName }}:
+        >{{ employeeHour.employeeID }}:
         {{ employeeHour.hours }} hours</ion-label
       >
     </ion-chip>
@@ -98,17 +98,17 @@ export default {
     // JOB METRICS
 
     // Step 1: Extract employees from visits
-    const employeeNames = [
-      ...new Set(props.visits.map((visit: Visit) => visit.data.employeeName)),
+    const employeeIDs = [
+      ...new Set(props.visits.map((visit: Visit) => visit.data.employeeID)),
     ];
 
     // Step 2: For each employee, determine the amount of hours
     const employeeHours = computed(() => {
-      return employeeNames.map((employeeName) => {
+      return employeeIDs.map((employeeID) => {
         return {
-          employeeName,
+          employeeID,
           hours: props.visits.reduce((hoursAcc: number, visit: Visit) => {
-            if (visit.data.employeeName == employeeName)
+            if (visit.data.employeeID == employeeID)
               return visit.data.time
                 ? visit.data.time.hours + hoursAcc
                 : hoursAcc;

@@ -112,12 +112,10 @@ export class User implements UserInterface {
   }
 
   async save() {
-    setTimeout(async () => {
-      await this.dbRef.set({
-        data: this.data,
-      });
-      return this;
-    }, 500);
+    console.log("Saving...");
+    await this.dbRef.set({
+      data: this.data,
+    });
   }
 
   async signUp(password: string) {
@@ -129,6 +127,7 @@ export class User implements UserInterface {
   }
 
   async update(data: UserData) {
+    console.log("updating");
     this.data = data;
     await this.save();
     return this;
@@ -166,6 +165,8 @@ class ChildUser extends User {
   }
 
   async save() {
+    console.log("Saving...");
+
     await this.dbRef.set({
       data: this.data,
       parentCompany: this.parentCompany,
@@ -277,15 +278,13 @@ export class Company extends User {
     this.employees.push(newEmployee);
   }
 
-  async deleteEmployee(name: string) {
+  async deleteEmployee(id: string) {
     // Delete from database
-    const employee = this.employees.find(
-      (employee) => employee.data.name == name
-    );
+    const employee = this.employees.find((employee) => employee.data.id == id);
     if (employee) await employee.delete();
     // Delete locally
     this.employees = this.employees.filter(
-      (employee) => employee.data.name != name
+      (employee) => employee.data.id != id
     );
   }
 
@@ -314,15 +313,13 @@ export class Company extends User {
     this.customers.push(newCustomer);
   }
 
-  async deleteCustomer(name: string) {
+  async deleteCustomer(id: string) {
     // Delete from database
-    const customer = this.customers.find(
-      (customer) => customer.data.name == name
-    );
+    const customer = this.customers.find((customer) => customer.data.id == id);
     if (customer) await customer.delete();
     // Delete locally
     this.customers = this.customers.filter(
-      (customer) => customer.data.name != name
+      (customer) => customer.data.id != id
     );
   }
 }

@@ -64,7 +64,8 @@ const addVisitToEmployeeDay = async (date, companyID, employeeID, visitID) => {
       data: {
         date,
         companyID,
-        employeeName: idToName(employeeID),
+        employeeID,
+        employeeID,
         startLocation: "",
         plannedStart: "",
         plannedEnd: "",
@@ -101,7 +102,7 @@ const addVisitToCustomerDay = async (date, companyID, customerID, visitID) => {
       data: {
         date,
         companyID,
-        customerName: idToName(customerID),
+        customerID,
         notes: "",
         visitIDs: [visitID],
       },
@@ -178,35 +179,35 @@ const removeVisitFromCustomerDay = async (
 
 const handleDateChanges = async (newVisit, oldVisit, companyID, visitID) => {
   if (newVisit.data.date !== oldVisit.data.date) {
-    if (newVisit.data.employeeName) {
+    if (newVisit.data.employeeID) {
       // Update the employee day, and create if nonexistent
       await addVisitToEmployeeDay(
         newVisit.data.date,
         companyID,
-        nameToID(newVisit.data.employeeName),
+        newVisit.data.employeeID,
         visitID
       );
       // Remove the visit from the old day
       await removeVisitFromEmployeeDay(
         oldVisit.data.date,
         companyID,
-        nameToID(newVisit.data.employeeName),
+        newVisit.data.employeeID,
         visitID
       );
     }
-    if (newVisit.data.customerName) {
+    if (newVisit.data.customerID) {
       // Update the customer day, and create if nonexistent
       await addVisitToCustomerDay(
         newVisit.data.date,
         companyID,
-        nameToID(newVisit.data.customerName),
+        newVisit.data.customerID,
         visitID
       );
       // Remove the visit from the old day
       await removeVisitFromCustomerDay(
         oldVisit.data.date,
         companyID,
-        nameToID(newVisit.data.customerName),
+        newVisit.data.customerID,
         visitID
       );
     }
@@ -220,24 +221,24 @@ const handleEmployeeChanges = async (
   visitID
 ) => {
   if (
-    newVisit.data.employeeName != oldVisit.data.employeeName &&
+    newVisit.data.employeeID != oldVisit.data.employeeID &&
     newVisit.data.date
   ) {
     // Update the employee day, and create if nonexistent
-    if (newVisit.data.employeeName) {
+    if (newVisit.data.employeeID) {
       await addVisitToEmployeeDay(
         newVisit.data.date,
         companyID,
-        nameToID(newVisit.data.employeeName),
+        newVisit.data.employeeID,
         visitID
       );
     }
 
-    if (oldVisit.data.employeeName) {
+    if (oldVisit.data.employeeID) {
       await removeVisitFromEmployeeDay(
         newVisit.data.date,
         companyID,
-        nameToID(oldVisit.data.employeeName),
+        oldVisit.data.employeeID,
         visitID
       );
     }
@@ -250,25 +251,25 @@ const handleCustomerChanges = async (
   visitID
 ) => {
   if (
-    newVisit.data.customerName != oldVisit.data.customerName &&
+    newVisit.data.customerID != oldVisit.data.customerID &&
     newVisit.data.date
   ) {
     // Update the customer day, and create if nonexistent
     // Update the employee day, and create if nonexistent
-    if (newVisit.data.customerName) {
+    if (newVisit.data.customerID) {
       await addVisitToCustomerDay(
         newVisit.data.date,
         companyID,
-        nameToID(newVisit.data.customerName),
+        newVisit.data.customerID,
         visitID
       );
     }
 
-    if (oldVisit.data.customerName) {
+    if (oldVisit.data.customerID) {
       await removeVisitFromCustomerDay(
         newVisit.data.date,
         companyID,
-        nameToID(oldVisit.data.customerName),
+        oldVisit.data.customerID,
         visitID
       );
     }
@@ -307,18 +308,18 @@ exports.onVisitCreate = functions.firestore
     const visitID = context.params.visitID;
 
     return new Promise((resolve) => {
-      if (visit.data.employeeName && visit.data.date) {
+      if (visit.data.employeeID && visit.data.date) {
         addVisitToEmployeeDay(
           visit.data.date,
           companyID,
-          nameToID(visit.data.employeeName),
+          visit.data.employeeID,
           visitID
         ).then(resolve);
-      } else if (visit.data.customerName && visit.data.date) {
+      } else if (visit.data.customerID && visit.data.date) {
         addVisitToCustomerDay(
           visit.data.date,
           companyID,
-          nameToID(visit.data.customerName),
+          visit.data.customerID,
           visitID
         ).then(resolve);
       }
@@ -337,19 +338,19 @@ exports.onVisitDelete = functions.firestore
     const visitID = context.params.visitID;
 
     return new Promise((resolve) => {
-      if (visit.data.date && visit.data.employeeName) {
+      if (visit.data.date && visit.data.employeeID) {
         removeVisitFromEmployeeDay(
           visit.data.date,
           companyID,
-          nameToID(visit.data.employeeName),
+          visit.data.employeeID,
           visitID
         ).then(resolve);
       }
-      if (visit.data.date && visit.data.customerName) {
+      if (visit.data.date && visit.data.customerID) {
         removeVisitFromCustomerDay(
           visit.data.date,
           companyID,
-          nameToID(visit.data.customerName),
+          visit.data.customerID,
           visitID
         ).then(resolve);
       }

@@ -73,7 +73,7 @@
             <EmployeeDays
               :key="daysRef"
               :dbRef="daysRef"
-              :employeeName="state.employee.data.name"
+              :employeeID="state.employee.data.id"
               :hideAdd="true"
               :showPaidToggle="true"
               :title="state.filterUnpaid ? 'Unpaid Dates' : 'All Dates'"
@@ -151,7 +151,7 @@ export default {
       let ref: CollectionRef | Query = companiesCollection
         .doc(
           `${store.state.companyID}/employees/${nameToID(
-            state.employee.data.name
+            state.employee.data.id
           )}`
         )
         .collection("days");
@@ -179,7 +179,7 @@ export default {
       let ref: CollectionRef | Query = companiesCollection
         .doc(
           `${store.state.companyID}/employees/${nameToID(
-            state.employee.data.name
+            state.employee.data.id
           )}`
         )
         .collection("expenses");

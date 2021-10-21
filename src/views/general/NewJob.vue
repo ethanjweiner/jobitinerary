@@ -22,7 +22,7 @@
               :names="
                 store.state.user.customers.map((customer) => customer.name)
               "
-              v-model="state.customerName"
+              v-model="state.customerID"
               type="customer"
             />
             <div class="ion-text-start">
@@ -77,22 +77,22 @@ import { nameToID } from "@/helpers";
 export default {
   name: "Select Date",
   props: {
-    customerName: String,
+    customerID: String,
   },
   setup(props: any) {
     const state = reactive({
-      customerName: props.customerName == "new" ? "" : props.customerName,
+      customerID: props.customerID == "new" ? "" : props.customerID,
       jobName: "",
     });
 
     const create = async () => {
       // Create a job with an id
-      if (state.customerName && state.jobName) {
-        await createJob(state.jobName, state.customerName);
+      if (state.customerID && state.jobName) {
+        await createJob(state.jobName, state.customerID);
         router.replace({
           name: "Job",
           params: {
-            username: state.customerName,
+            userID: state.customerID,
             jobID: nameToID(state.jobName),
           },
         });

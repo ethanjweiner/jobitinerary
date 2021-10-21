@@ -30,7 +30,7 @@ export default {
   props: {
     modelValue: Array,
     date: String,
-    employeeName: String,
+    employeeID: String,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
@@ -39,7 +39,7 @@ export default {
 
     const addExpense = async () => {
       // Add expense to database & retrieve
-      const expense = await createExpense(props.employeeName, {
+      const expense = await createExpense(props.employeeID, {
         date: props.date,
       });
       state.expenses.push(expense);

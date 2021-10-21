@@ -40,22 +40,22 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/company/Users.vue"),
       },
       {
-        path: "customers/:username",
+        path: "customers/:userID",
         name: "Customer",
         props: (route) => ({
           type: "customer",
-          username: route.params.username,
+          userID: route.params.userID,
         }),
         component: () => import("@/views/company/Users.vue"),
       },
       {
-        path: "customers/:username/customer-day/:date",
+        path: "customers/:userID/customer-day/:date",
         name: "Customer Day",
         props: true,
         component: () => import("@/views/general/CustomerDay.vue"),
       },
       {
-        path: "customers/:username/jobs/:jobID",
+        path: "customers/:userID/jobs/:jobID",
         name: "Job",
         props: true,
         component: () => import("@/views/general/Job.vue"),
@@ -69,16 +69,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/company/Users.vue"),
       },
       {
-        path: "employees/:username",
+        path: "employees/:userID",
         name: "Employee",
         props: (route) => ({
           type: "employee",
-          username: route.params.username,
+          userID: route.params.userID,
         }),
         component: () => import("@/views/company/Users.vue"),
       },
       {
-        path: "employees/:username/days/:date",
+        path: "employees/:userID/days/:date",
         name: "Employee Day",
         props: true,
         component: () => import("@/views/general/EmployeeDay.vue"),
@@ -92,20 +92,20 @@ const routes: Array<RouteRecordRaw> = [
       },
       // NEW DAYS
       {
-        path: "new-employee-day/:employeeName",
+        path: "new-employee-day/:employeeID",
         name: "New Employee Day",
         props: true,
         component: () => import("@/views/general/NewEmployeeDay.vue"),
       },
       {
-        path: "new-customer-day/:customerName",
+        path: "new-customer-day/:customerID",
         name: "New Customer Day",
         props: true,
         component: () => import("@/views/general/NewCustomerDay.vue"),
       },
       // NEW JOBS
       {
-        path: "new-job/:customerName",
+        path: "new-job/:customerID",
         name: "New Job",
         props: true,
         component: () => import("@/views/general/NewJob.vue"),

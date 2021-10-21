@@ -22,10 +22,10 @@
               :names="
                 store.state.user.employees.map((employee) => employee.name)
               "
-              :selectedName="state.employeeName"
+              :selectedName="state.employeeID"
               type="employee"
-              :key="state.employeeName"
-              v-model="state.employeeName"
+              :key="state.employeeID"
+              v-model="state.employeeID"
             />
             <div class="ion-text-start">
               <h3 class="text-secondary">Select a Date</h3>
@@ -88,21 +88,21 @@ export default {
     IonNote,
   },
   props: {
-    employeeName: String,
+    employeeID: String,
   },
   setup(props: any) {
     const state = reactive({
-      employeeName: props.employeeName == "new" ? "" : props.employeeName,
+      employeeID: props.employeeID == "new" ? "" : props.employeeID,
       date: dateToString(new Date()),
     });
 
     const create = async () => {
-      if (state.employeeName && state.date) {
+      if (state.employeeID && state.date) {
         console.log(state.date);
-        await createEmployeeDay(state.date, state.employeeName);
+        await createEmployeeDay(state.date, state.employeeID);
         router.replace({
           name: "Employee Day",
-          params: { username: state.employeeName, date: state.date },
+          params: { userID: state.employeeID, date: state.date },
         });
       } else throw Error("Please select an employee and date.");
     };

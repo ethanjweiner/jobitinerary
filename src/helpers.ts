@@ -125,7 +125,7 @@ export async function getImageURL(ref: string) {
 
 export async function retrieveVisitsOnDay(
   date: string,
-  options: { customerName?: string; employeeName?: string }
+  options: { customerID?: string; employeeID?: string }
 ): Promise<Array<Visit>> {
   const visits: Array<Visit> = [];
   // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
@@ -133,12 +133,13 @@ export async function retrieveVisitsOnDay(
     .doc(store.state.companyID)
     .collection("visits")
     .where("data.date", "==", date);
-  if (options.customerName)
-    query = query.where("data.customerName", "==", options.customerName);
-  if (options.employeeName)
-    query = query.where("data.employeeName", "==", options.employeeName);
+  if (options.customerID)
+    query = query.where("data.customerID", "==", options.customerID);
+  if (options.employeeID)
+    query = query.where("data.employeeID", "==", options.employeeID);
 
   const visitDocs = (await query.get()).docs;
+  console.log(query, visitDocs);
   for (const doc of visitDocs) {
     const visit = new Visit(doc.id, store.state.companyID);
     await visit.init(doc.data().data);

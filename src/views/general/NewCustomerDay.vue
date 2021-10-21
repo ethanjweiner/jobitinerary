@@ -22,10 +22,10 @@
               :names="
                 store.state.user.customers.map((customer) => customer.name)
               "
-              :selectedName="state.customerName"
+              :selectedName="state.customerID"
               type="customer"
-              :key="state.customerName"
-              v-model="state.customerName"
+              :key="state.customerID"
+              v-model="state.customerID"
             />
             <div class="ion-text-start">
               <h3 class="text-secondary">Select a Date</h3>
@@ -88,20 +88,20 @@ export default {
     IonNote,
   },
   props: {
-    customerName: String,
+    customerID: String,
   },
   setup(props: any) {
     const state = reactive({
-      customerName: props.customerName == "new" ? "" : props.customerName,
+      customerID: props.customerID == "new" ? "" : props.customerID,
       date: dateToString(new Date()),
     });
 
     const create = async () => {
-      if (state.customerName && state.date) {
-        await createCustomerDay(state.date, state.customerName);
+      if (state.customerID && state.date) {
+        await createCustomerDay(state.date, state.customerID);
         router.replace({
           name: "Customer Day",
-          params: { username: state.customerName, date: state.date },
+          params: { userID: state.customerID, date: state.date },
         });
       } else throw Error("Please select an customer and date.");
     };

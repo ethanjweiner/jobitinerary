@@ -4,23 +4,17 @@
       <div class="list">
         <!-- PASS DATABASE REFERENCE -->
         <EmployeeDays
-          :employeeName="state.employee.data.name"
+          :employeeID="state.employee.data.id"
           :dbRef="daysRef"
           title="Dates"
         />
       </div>
     </template>
     <template v-slot:pay>
-      <PaymentInfo
-        v-model="state.employee"
-        @update:modelValue="state.employee.save()"
-      />
+      <PaymentInfo v-model="state.employee" />
     </template>
     <template v-slot:employee-info>
-      <EmployeeForm
-        v-model="state.employee"
-        @update:modelValue="state.employee.save()"
-      />
+      <EmployeeForm v-model="state.employee" />
     </template>
     <template v-slot:sectionsAsGrid>
       <ion-row>
@@ -30,7 +24,7 @@
               <!-- PASS DATABASE REFERENCE -->
               <EmployeeDays
                 :dbRef="daysRef"
-                :employeeName="state.employee.data.name"
+                :employeeID="state.employee.data.id"
                 title="Dates"
               />
             </div>
@@ -44,10 +38,7 @@
                   Employee Info
                 </ion-card-title>
               </ion-card-header>
-              <EmployeeForm
-                v-model="state.employee"
-                @update:modelValue="state.employee.save()"
-              />
+              <EmployeeForm v-model="state.employee" />
             </ion-card>
           </ion-row>
         </ion-col>
@@ -60,10 +51,7 @@
                 Payment Info
               </ion-card-title>
             </ion-card-header>
-            <PaymentInfo
-              v-model="state.employee"
-              @update:modelValue="state.employee.save()"
-            />
+            <PaymentInfo v-model="state.employee" />
           </ion-card>
         </ion-col>
       </ion-row>
@@ -97,7 +85,7 @@ import EmployeeDays from "@/components/lists/EmployeeDays.vue";
 import PaymentInfo from "@/components/PaymentInfo.vue";
 import EmployeeForm from "@/components/forms/EmployeeForm.vue";
 import { companiesCollection } from "@/main";
-import { nameToID } from "@/helpers";
+import { watch } from "@vue/runtime-core";
 
 interface State {
   employee: Employee | undefined;
@@ -106,7 +94,7 @@ interface State {
 export default {
   name: "Employee",
   props: {
-    username: String,
+    userID: String,
   },
   setup(props: any) {
     const state = reactive<State>({
@@ -115,16 +103,16 @@ export default {
 
     const daysRef = computed<CollectionRef>(() => {
       const base = companiesCollection
-        .doc(`${store.state.companyID}/employees/${nameToID(props.username)}`)
+        .doc(`${store.state.companyID}/employees/${props.userID}`)
         .collection("days");
 
       return base;
     });
 
     // If the user is a Company, assign the employee based on the prop
-    if (props.username && store.state.user instanceof Company) {
+    if (props.userID && store.state.user instanceof Company) {
       state.employee = store.state.user.employees.find(
-        (employee) => employee.data.name == props.username
+        (employee) => employee.data.id == props.userID
       );
       // Otherwise, just use the signed in user
     } else if (store.state.user instanceof Employee) {
@@ -148,6 +136,8 @@ export default {
         id: "employee-info",
       },
     ]);
+
+    if (state.employee) watch(state.employee.data, () => state.employee.save());
 
     // Retrieve employee-specific data (dates, messages)
     return {

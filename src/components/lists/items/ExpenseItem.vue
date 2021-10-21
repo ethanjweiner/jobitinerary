@@ -53,7 +53,6 @@ import store from "@/store";
 import { companiesCollection } from "@/main";
 import { reactive } from "@vue/reactivity";
 import { ExpenseInterface } from "@/types/work_units";
-import { nameToID } from "@/helpers";
 
 export default {
   name: "Expense",
@@ -70,9 +69,7 @@ export default {
       state.expense.paid = !state.expense.paid;
       await companiesCollection
         .doc(
-          `${state.expense.companyID}/employees/${nameToID(
-            state.expense.employeeName
-          )}/expenses/${state.expense.id}`
+          `${state.expense.companyID}/employees/${state.expense.employeeID}/expenses/${state.expense.id}`
         )
         .update({ "data.paid": state.expense.paid });
     };

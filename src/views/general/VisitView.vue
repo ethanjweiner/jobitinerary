@@ -12,11 +12,11 @@
         >
 
         <div style="padding-left: 20px;">
-          <ion-note v-if="state.visit.data.customerName"
-            >for {{ state.visit.data.customerName }} |
+          <ion-note v-if="state.visit.data.customerID"
+            >for {{ state.visit.data.customerID }} |
           </ion-note>
-          <ion-note v-if="state.visit.data.employeeName"
-            >by {{ state.visit.data.employeeName }}</ion-note
+          <ion-note v-if="state.visit.data.employeeID"
+            >by {{ state.visit.data.employeeID }}</ion-note
           >
         </div>
         <ion-buttons :collapse="true" slot="end">

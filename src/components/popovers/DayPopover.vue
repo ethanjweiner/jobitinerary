@@ -64,7 +64,7 @@ export default {
   props: {
     type: String,
     currentDate: String,
-    employeeName: String,
+    employeeID: String,
   },
   components: {
     IonList,
@@ -83,13 +83,13 @@ export default {
       names: [],
     });
 
-    console.log(props.employeeName);
+    console.log(props.employeeID);
 
     if (store.state.user)
       if (props.type == "employee")
         state.names = store.state.user.employees
-          .map((employee) => employee.data.name)
-          .filter((employeeName) => employeeName != props.employeeName);
+          .map((employee) => employee.data.id)
+          .filter((employeeID) => employeeID != props.employeeID);
 
     const date = ref(props.currentDate);
     return {

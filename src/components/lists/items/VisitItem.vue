@@ -8,11 +8,14 @@
         <ion-label v-if="type == 'job'" style="margin: 0 !important;">{{
           visit.date
         }}</ion-label>
-        <ion-label v-else-if="visit.customerName" style="margin: 0 !important"
-          >For <span style="font-weight: bold;">{{ visit.customerName }}</span>
+        <ion-label v-else-if="visit.customerID" style="margin: 0 !important"
+          >For
+          <span style="font-weight: bold;">{{
+            idToName(visit.customerID)
+          }}</span>
         </ion-label>
-        <ion-note v-if="visit.employeeName"
-          >by {{ visit.employeeName }}</ion-note
+        <ion-note v-if="visit.employeeID"
+          >by {{ idToName(visit.employeeID) }}</ion-note
         >
       </div>
 
@@ -68,6 +71,8 @@ import { reactive } from "@vue/reactivity";
 import { trashOutline } from "ionicons/icons";
 import VisitModal from "@/components/modals/VisitModal.vue";
 
+import { idToName } from "@/helpers";
+
 export default {
   name: "Visit Item",
   props: {
@@ -83,6 +88,7 @@ export default {
     return {
       icons: { trashOutline },
       state,
+      idToName,
     };
   },
   components: {

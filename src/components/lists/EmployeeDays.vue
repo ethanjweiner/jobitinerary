@@ -65,7 +65,7 @@ export default {
   },
   props: {
     dbRef: Object,
-    employeeName: String,
+    employeeID: String,
     showPaidToggle: Boolean,
     hideAdd: Boolean,
     title: String,
@@ -87,7 +87,7 @@ export default {
     const createDay = async () => {
       router.push({
         name: "New Employee Day",
-        params: { employeeName: props.employeeName },
+        params: { employeeID: props.employeeID },
       });
     };
 

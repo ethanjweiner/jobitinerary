@@ -106,7 +106,7 @@ export default defineComponent({
       // CREATE NEW VISIT AND ADD TO DATABASE
       const visit = await createVisit({
         jobID: props.job.id,
-        customerName: props.job.data.customerName,
+        customerID: props.job.data.customerID,
       });
 
       state.visits.push(visit);

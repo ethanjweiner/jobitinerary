@@ -24,7 +24,7 @@
         <!-- Use "slot props" so that the data from the infinite list is rendered into the item -->
         <slot
           name="item"
-          v-for="(item, index) in state.items"
+          v-for="(item, index) in state.infiniteList.list.items"
           :key="index"
           :item="item"
         ></slot>
@@ -56,12 +56,12 @@ import {
   IonLabel,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import { CollectionRef } from "@/types/auxiliary";
+import { CollectionRef, Splitter } from "@/types/auxiliary";
 import { InfiniteList } from "@/db";
+import { onDeactivated } from "@vue/runtime-core";
 
 interface State {
   infiniteList: InfiniteList;
-  lists: Array<{ name: string; items: Array<any> }>;
 }
 
 // NOTE: THIS COMPONENT RERENDERS AND RELOADS DATA UPON ANY SEARCH CHANGE
@@ -88,12 +88,14 @@ export default {
 
     const lists = computed(() => {
       if (state.infiniteList.list.items.length) {
-        return props.splitters.map((splitter) => {
-          return {
-            name: splitter.name,
-            items: state.infiniteList.list.items.filter(splitter.filter),
-          };
-        });
+        if (props.splitters) {
+          return props.splitters.map((splitter: Splitter) => {
+            return {
+              name: splitter.name,
+              items: state.infiniteList.list.items.filter(splitter.filter),
+            };
+          });
+        }
       }
       return [];
     });
@@ -102,7 +104,7 @@ export default {
       await state.infiniteList.init();
     };
 
-    const loadMore = async (ev: CustomEvent) => {
+    const loadMore = async (ev: any) => {
       const status = await state.infiniteList.loadNewBatch();
       if (status == 0) {
         ev.target.complete();

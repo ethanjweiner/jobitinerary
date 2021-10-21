@@ -9,7 +9,7 @@
           {{ state.job.data.name ? state.job.data.name : "New Job" }}</ion-title
         >
         <ion-note style="padding-left: 15px;"
-          >for {{ state.job.data.customerName }}</ion-note
+          >for {{ idToName(state.job.data.customerID) }}</ion-note
         >
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleJobSettings(true, $event)">
@@ -120,9 +120,9 @@ import JobVisits from "@/components/lists/JobVisits.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import store from "@/store";
-import { nameToID } from "@/helpers";
 import { watch } from "@vue/runtime-core";
 import { companiesCollection } from "@/main";
+import { idToName } from "@/helpers";
 
 interface State {
   job: Job | null;
@@ -132,7 +132,7 @@ interface State {
 export default {
   name: "Job",
   props: {
-    username: String,
+    userID: String,
     jobID: String,
   },
   setup(props: any) {
@@ -156,19 +156,13 @@ export default {
     ]);
 
     const state = reactive<State>({
-      // RETRIEVE JOB WITH CUSTOMER USERNAME AND JOB ID
       job: null,
-      // RETRIEVE VISITS UPON LOAD
       visits: [],
     });
 
     // Initialize job
     const initialize = async () => {
-      const job = new Job(
-        props.jobID,
-        store.state.companyID,
-        nameToID(props.username)
-      );
+      const job = new Job(props.jobID, store.state.companyID, props.userID);
       await job.init();
       state.job = job;
       const visitDocs = (
@@ -213,6 +207,7 @@ export default {
       popoverEvent,
       toggleJobSettings,
       deleteJob,
+      idToName,
       icons: {
         ellipsisVertical,
         homeOutline,

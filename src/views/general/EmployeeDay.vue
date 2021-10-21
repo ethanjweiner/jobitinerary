@@ -5,7 +5,7 @@
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title> {{ username }} on {{ date }} </ion-title>
+        <ion-title> {{ idToName(userID) }} on {{ date }} </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
@@ -24,7 +24,7 @@
         @changeDate="changeDate"
         @copyDay="copyDay"
         type="employee"
-        :employeeName="username"
+        :employeeID="userID"
         :currentDate="state.day.data.date"
       />
       <!-- Add Day Popover here -->
@@ -40,14 +40,14 @@
             <DayVisits
               :key="state.visits.length"
               v-model="state.visits"
-              :employeeName="username"
+              :employeeID="userID"
               :date="date"
             />
           </template>
           <template v-slot:expenses>
             <Expenses
               v-model="state.expenses"
-              :employeeName="username"
+              :employeeID="userID"
               :date="date"
             />
           </template>
@@ -70,7 +70,7 @@
                     <ion-card-content>
                       <Expenses
                         v-model="state.expenses"
-                        :employeeName="username"
+                        :employeeID="userID"
                         :date="date"
                       />
                     </ion-card-content>
@@ -89,7 +89,7 @@
                     <DayVisits
                       :key="state.visits.length"
                       v-model="state.visits"
-                      :employeeName="username"
+                      :employeeID="userID"
                       :date="date"
                     />
                   </ion-card-content>
@@ -143,7 +143,7 @@ import {
   homeOutline,
 } from "ionicons/icons";
 import DayPopover from "@/components/popovers/DayPopover.vue";
-import { nameToID, retrieveVisitsOnDay } from "@/helpers";
+import { retrieveVisitsOnDay, idToName } from "@/helpers";
 import { companiesCollection } from "@/main";
 import { copyVisit } from "@/db";
 
@@ -155,7 +155,7 @@ interface State {
 export default {
   name: "Employee Day",
   props: {
-    username: String,
+    userID: String,
     date: String,
   },
   setup(props: any) {
@@ -189,18 +189,18 @@ export default {
       const day = new EmployeeDay(
         props.date,
         store.state.companyID,
-        nameToID(props.username)
+        props.userID
       );
       await day.init();
       state.day = day;
       // Initialze Visits
       state.visits = await retrieveVisitsOnDay(props.date, {
-        employeeName: props.username,
+        employeeID: props.userID,
       });
       // Initialize Expenses
       const expenseDocs = (
         await companiesCollection
-          .doc(`${store.state.companyID}/employees/${nameToID(props.username)}`)
+          .doc(`${store.state.companyID}/employees/${props.userID}`)
           .collection("expenses")
           .where("data.date", "==", props.date)
           .get()
@@ -209,7 +209,7 @@ export default {
         const expense = new Expense(
           doc.id,
           store.state.companyID,
-          nameToID(props.username)
+          props.userID
         );
         await expense.init(doc.data().data);
         state.expenses.push(expense);
@@ -236,7 +236,7 @@ export default {
           await visit.delete();
         }
       }
-      router.push({ name: "Employee", params: { username: props.username } });
+      router.push({ name: "Employee", params: { userID: props.userID } });
     };
 
     const changeDate = async (date: string) => {
@@ -251,33 +251,33 @@ export default {
 
         await router.push({
           name: "Employee Day",
-          params: { employee: props.username, date },
+          params: { employee: props.userID, date },
         });
 
         router.go(0);
       }
     };
 
-    const copyVisits = async (employeeName: string) => {
+    const copyVisits = async (employeeID: string) => {
       for (const visit of state.visits) {
-        await copyVisit(visit, employeeName);
+        await copyVisit(visit, employeeID);
       }
     };
 
-    const copyDay = async (employeeName: string) => {
+    const copyDay = async (employeeID: string) => {
       if (state.day) {
         const copiedDay = new EmployeeDay(
           state.day.data.date,
           state.day.data.companyID,
-          nameToID(employeeName)
+          employeeID
         );
         const copiedData = { ...state.day.data };
-        copiedData.employeeName = employeeName;
+        copiedData.employeeID = employeeID;
         copiedData.readByCompany = false;
         copiedData.readByEmployee = false;
         copiedData.hourlyRate = 0;
         await copiedDay.create(copiedData);
-        await copyVisits(employeeName);
+        await copyVisits(employeeID);
         popoverIsOpen.value = false;
       }
     };
@@ -299,6 +299,7 @@ export default {
       deleteDay,
       changeDate,
       copyDay,
+      idToName,
     };
   },
   components: {

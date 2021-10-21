@@ -40,13 +40,13 @@
 
     <UserSelect
       v-if="!hideEmployeeSelect"
-      v-model="state.visit.data.employeeName"
+      v-model="state.visit.data.employeeID"
       type="employee"
     />
     <!-- Customer Select -->
     <UserSelect
       v-if="!state.visit.data.job && !hideCustomerSelect"
-      v-model="state.visit.data.customerName"
+      v-model="state.visit.data.customerID"
       type="customer"
     />
     <!-- Job Attacher -->
@@ -150,7 +150,6 @@ import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
 import { companiesCollection, db } from "@/main";
-import { nameToID } from "@/helpers";
 
 interface State {
   visit: Visit;
@@ -211,12 +210,10 @@ export default {
     initialize();
 
     const jobsRef = computed(() => {
-      if (state.visit.data.customerName) {
+      if (state.visit.data.customerID) {
         return companiesCollection
           .doc(
-            `${store.state.companyID}/customers/${nameToID(
-              state.visit.data.customerName
-            )}`
+            `${store.state.companyID}/customers/${state.visit.data.customerID}`
           )
           .collection("jobs");
       }
@@ -238,7 +235,7 @@ export default {
       jobsModalIsOpen.value = false;
       state.jobData = jobData;
       state.visit.data.jobID = jobData.id;
-      state.visit.data.customerName = jobData.customerName;
+      state.visit.data.customerID = jobData.customerID;
       emit("update:modelValue", state.visit);
     };
 

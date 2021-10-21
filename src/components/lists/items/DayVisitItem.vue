@@ -5,7 +5,7 @@
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
       <div @click="state.modalIsOpen = true" style="width: 100%; height: 50%;">
-        <ion-label>{{ state.visit.data.customerName }}</ion-label>
+        <ion-label>{{ state.visit.data.customerID }}</ion-label>
       </div>
 
       <div v-if="store.state.userType == 'company'" slot="end">

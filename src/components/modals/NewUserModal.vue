@@ -57,7 +57,7 @@ import {
 
 import { close } from "ionicons/icons";
 
-import { capitalize } from "@/helpers";
+import { capitalize, nameToID } from "@/helpers";
 import { reactive, toRefs } from "@vue/reactivity";
 import store from "@/store";
 import { Company } from "@/types/users";
@@ -97,7 +97,7 @@ export default {
         } else {
           throw Error("The specified user type is not valid.");
         }
-        emit("userAdded", state.name);
+        emit("userAdded", nameToID(state.name));
         // Add the user locally
       } else throw Error("You must enter a name and email for the new user.");
 

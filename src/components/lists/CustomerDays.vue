@@ -62,7 +62,7 @@ export default {
   },
   props: {
     dbRef: Object,
-    customerName: String,
+    customerID: String,
     hideAdd: Boolean,
     title: String,
   },
@@ -83,7 +83,7 @@ export default {
     const createDay = async () => {
       router.push({
         name: "New Customer Day",
-        params: { customerName: props.customerName },
+        params: { customerID: props.customerID },
       });
     };
 

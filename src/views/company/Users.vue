@@ -2,14 +2,14 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start" v-if="state.username">
+        <ion-buttons slot="start" v-if="state.userID">
           <ion-button @click="toggleUserSettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
 
         <ion-title>{{
-          state.username ? state.username : capitalize(type) + "s"
+          state.userID ? idToName(state.userID) : capitalize(type) + "s"
         }}</ion-title>
 
         <SettingsButton />
@@ -25,13 +25,13 @@
     </ion-popover>
     <ion-content :fullscreen="true">
       <!-- On select, route to the users page w/ a prop -->
-      <ion-toolbar id="select-user-toolbar" v-if="state.username">
+      <ion-toolbar id="select-user-toolbar" v-if="state.userID">
         <UserSelect
-          v-if="state.username"
+          v-if="state.userID"
           ref="userSelect"
-          v-model="state.username"
+          v-model="state.userID"
           :type="type"
-          :key="state.username"
+          :key="state.userID"
           @update:modelValue="changeUser"
         />
       </ion-toolbar>
@@ -47,25 +47,25 @@
             </div>
             <UserSelect
               ref="userSelect"
-              v-model="state.username"
+              v-model="state.userID"
               :type="type"
-              :key="state.username"
+              :key="state.userID"
               @update:modelValue="changeUser"
             />
           </ion-col>
         </ion-row>
       </ion-grid>
 
-      <div id="user-container" class="ion-text-center" v-if="state.username">
+      <div id="user-container" class="ion-text-center" v-if="state.userID">
         <Customer
           v-if="type == 'customer'"
-          :key="state.username"
-          :username="state.username"
+          :key="state.userID"
+          :userID="state.userID"
         />
         <Employee
           v-else-if="type == 'employee'"
-          :key="state.username"
-          :username="state.username"
+          :key="state.userID"
+          :userID="state.userID"
         />
         <div v-else>No user type was defined.</div>
       </div>
@@ -103,20 +103,21 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import Customer from "@/components/units/Customer.vue";
 import Employee from "@/components/units/Employee.vue";
 import { Company } from "@/types/users";
+import { idToName } from "@/helpers";
 
 interface State {
-  username: string;
+  userID: string;
 }
 
 export default {
   name: "Users",
   props: {
-    username: String,
+    userID: String,
     type: String,
   },
   setup(props: any) {
     const state = reactive<State>({
-      username: props.username,
+      userID: props.userID,
     });
 
     // Popover
@@ -127,22 +128,22 @@ export default {
       popoverIsOpen.value = state;
     };
 
-    const changeUser = (name: string) => {
+    const changeUser = (id: string) => {
       router.push({
         name: capitalize(props.type),
-        params: { username: name, type: props.type },
+        params: { userID: id, type: props.type },
       });
-      state.username = name;
+      state.userID = id;
     };
 
     const deleteUser = async () => {
       if (store.state.user instanceof Company) {
         if (props.type == "customer") {
-          await store.state.user.deleteCustomer(state.username);
+          await store.state.user.deleteCustomer(state.userID);
         } else if (props.type == "employee") {
-          await store.state.user.deleteEmployee(state.username);
+          await store.state.user.deleteEmployee(state.userID);
         } else throw Error("No user type was provided");
-        state.username = "";
+        state.userID = "";
         toggleUserSettings(false);
       } else {
         throw Error("You must be a company to delete a user.");
@@ -158,6 +159,7 @@ export default {
       capitalize,
       popoverIsOpen,
       popoverEvent,
+      idToName,
     };
   },
   components: {

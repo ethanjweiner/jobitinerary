@@ -25,12 +25,12 @@
         <template v-slot:item="itemProps">
           <JobItem
             :job="itemProps.item"
-            :showCustomer="customerName ? false : true"
+            :showCustomer="customerID ? false : true"
             @click="
               router.push({
                 name: 'Job',
                 params: {
-                  username: itemProps.item.customerName,
+                  userID: itemProps.item.customerID,
                   jobID: itemProps.item.id,
                 },
               })
@@ -63,14 +63,14 @@ export default {
   name: "Jobs",
   props: {
     dbRef: Object, // Determine database query in parent component
-    customerName: String,
+    customerID: String,
   },
   setup(props: any) {
     // TEMPORARY: Add a job
     const searchText = ref<string>("");
 
     const state = reactive({
-      customerName: props.customerName ? props.customerName : "new",
+      customerID: props.customerID ? props.customerID : "new",
     });
 
     const splitters = ref<Array<Splitter>>([
@@ -97,7 +97,7 @@ export default {
     const createJob = async () => {
       router.push({
         name: "New Job",
-        params: { customerName: state.customerName },
+        params: { customerID: state.customerID },
       });
     };
 

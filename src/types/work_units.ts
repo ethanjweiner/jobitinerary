@@ -1,12 +1,6 @@
 // Units
 
-import {
-  dateToString,
-  dateToStrings,
-  explode,
-  hasKey,
-  nameToID,
-} from "@/helpers";
+import { dateToString, dateToStrings, explode, hasKey } from "@/helpers";
 import { companiesCollection } from "@/main";
 
 import { DocRef, ImageWithCaption, Task, TimeLog, Tool } from "./auxiliary";
@@ -14,7 +8,7 @@ import { DocRef, ImageWithCaption, Task, TimeLog, Tool } from "./auxiliary";
 export interface ExpenseInterface {
   id: string;
   companyID: string;
-  employeeName: string;
+  employeeID: string;
   name: string;
   date: string;
   cost: number;
@@ -24,13 +18,13 @@ export interface ExpenseInterface {
 export function newExpenseInterface(
   id: string,
   companyID: string,
-  employeeName: string,
+  employeeID: string,
   options: any
 ): ExpenseInterface {
   return {
     id,
     companyID,
-    employeeName,
+    employeeID,
     date: options.date ? options.date : "",
     name: "",
     cost: 0,
@@ -41,8 +35,8 @@ export function newExpenseInterface(
 export interface VisitInterface {
   id: string;
   companyID: string;
-  employeeName: string;
-  customerName: string;
+  employeeID: string;
+  customerID: string;
   workType: string;
   plannedStart: string;
   plannedEnd: string;
@@ -64,8 +58,8 @@ export function newVisitInterface(
   return {
     id,
     companyID,
-    employeeName: options.employeeName ? options.employeeName : "",
-    customerName: options.customerName ? options.customerName : "",
+    employeeID: options.employeeID ? options.employeeID : "",
+    customerID: options.customerID ? options.customerID : "",
     workType: "",
     plannedStart: "",
     plannedEnd: "",
@@ -87,7 +81,7 @@ export function newVisitInterface(
 export interface EmployeeDayInterface {
   date: string;
   companyID: string;
-  employeeName: string;
+  employeeID: string;
   startLocation: string;
   plannedStart: string;
   plannedEnd: string;
@@ -108,7 +102,7 @@ export function newEmployeeDayInterface(
   return {
     date,
     companyID,
-    employeeName: options.employeeName ? options.employeeName : null,
+    employeeID: options.employeeID ? options.employeeID : null,
     startLocation: "",
     plannedStart: "",
     plannedEnd: "",
@@ -130,7 +124,7 @@ export interface JobInterface {
   id: string;
   companyID: string;
   name: string;
-  customerName: string;
+  customerID: string;
   description: string;
   startDate: string;
   endDate: string;
@@ -141,13 +135,13 @@ export function newJobInterface(
   id: string,
   companyID: string,
   name: string,
-  customerName: string
+  customerID: string
 ): JobInterface {
   return {
     id,
     name,
     companyID,
-    customerName,
+    customerID,
     description: "",
     startDate: "", // Must manually select start date
     endDate: "",
@@ -158,7 +152,7 @@ export function newJobInterface(
 export interface CustomerDayInterface {
   date: string;
   companyID: string;
-  customerName: string;
+  customerID: string;
   notes: string;
   visitIDs: Array<string>;
 }
@@ -171,7 +165,7 @@ export function newCustomerDayInterface(
   return {
     date,
     companyID,
-    customerName: options.customerName ? options.customerName : "",
+    customerID: options.customerID ? options.customerID : "",
     notes: "",
     visitIDs: [],
   };
@@ -255,7 +249,7 @@ export class DBUnit<T> {
   }
 
   async save() {
-    // Change to only update keywords on saves in which a search_param is changed
+    console.log("Saving...");
     if (this.exists) {
       this.updateKeywords();
       await this.dbRef.set({ data: this.data, keywords: this.keywords });
@@ -267,8 +261,8 @@ export class Visit extends DBUnit<VisitInterface> {
   constructor(visitID: string, companyID: string) {
     super(visitID, companiesCollection.doc(`${companyID}/visits/${visitID}`), [
       "date",
-      "customerName",
-      "employeeName",
+      "customerID",
+      "employeeID",
       "notes",
     ]);
   }
@@ -287,7 +281,7 @@ export class Job extends DBUnit<JobInterface> {
       companiesCollection.doc(
         `${companyID}/customers/${customerID}/jobs/${jobID}`
       ),
-      ["name", "customerName", "employeeName", "startDate"]
+      ["name", "customerID", "employeeID", "startDate"]
     );
   }
 }
@@ -299,16 +293,14 @@ export class EmployeeDay extends DBUnit<EmployeeDayInterface> {
       companiesCollection.doc(
         `${companyID}/employees/${employeeID}/days/${date}`
       ),
-      ["date", "employeeName"]
+      ["date", "employeeID"]
     );
   }
 
   async changeDate(date: string) {
     await this.delete();
     this.dbRef = companiesCollection.doc(
-      `${this.data.companyID}/employees/${nameToID(
-        this.data.employeeName
-      )}/days/${date}`
+      `${this.data.companyID}/employees/${this.data.employeeID}/days/${date}`
     );
     // Initialize with existing data
     this.data.date = date;
@@ -327,16 +319,14 @@ export class CustomerDay extends DBUnit<CustomerDayInterface> {
       companiesCollection.doc(
         `${companyID}/customers/${customerID}/days/${date}`
       ),
-      ["date", "customerName"]
+      ["date", "customerID"]
     );
   }
 
   async changeDate(date: string) {
     await this.delete();
     this.dbRef = companiesCollection.doc(
-      `${this.data.companyID}/customers/${nameToID(
-        this.data.customerName
-      )}/days/${date}`
+      `${this.data.companyID}/customers/${this.data.customerID}/days/${date}`
     );
     // Initialize with existing data
     this.data.date = date;
@@ -355,7 +345,7 @@ export class Expense extends DBUnit<ExpenseInterface> {
       companiesCollection.doc(
         `${companyID}/employees/${employeeID}/expenses/${id}`
       ),
-      ["name", "date", "employeeName"]
+      ["name", "date", "employeeID"]
     );
   }
   async changeDate(date: string) {

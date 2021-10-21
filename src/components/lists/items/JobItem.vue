@@ -2,7 +2,7 @@
   <ion-item>
     <div>
       <ion-label>{{ job.name }} </ion-label>
-      <ion-note v-if="showCustomer">for {{ job.customerName }}</ion-note>
+      <ion-note v-if="showCustomer">for {{ job.customerID }}</ion-note>
     </div>
     <div slot="end">
       <div style="padding: 0;">

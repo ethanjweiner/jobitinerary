@@ -29,7 +29,7 @@ export default {
   name: "Day Visits",
   props: {
     modelValue: Array,
-    employeeName: String,
+    employeeID: String,
     date: String,
   },
   emits: ["addVisit", "update:modelValue"],
@@ -52,7 +52,7 @@ export default {
     const addVisit = async () => {
       // ADD VISIT TO DATABASE
       const visit = await createVisit({
-        employeeName: props.employeeName,
+        employeeID: props.employeeID,
         date: props.date,
       });
       state.visits.push(visit);

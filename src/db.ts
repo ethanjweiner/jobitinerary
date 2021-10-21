@@ -57,23 +57,23 @@ export class InfiniteList {
 
     const listener = query.onSnapshot((snapshot: QuerySnapshot) => {
       // Update the list upon any snapshot (make reactive)
-      if (snapshot.empty) {
-        console.log("No more");
-        return 1;
-      }
+      if (snapshot.empty) return 1;
 
       snapshot.docChanges().forEach((change) => {
         switch (change.type) {
           case "added":
+            console.log("added");
             if (!this.initialized) this.list.items.push(change.doc.data().data);
             else this.list.items.unshift(change.doc.data().data);
             break;
           case "removed":
+            console.log("removed");
             this.list.items = this.list.items.filter(
               (item) => item.id != change.doc.id
             );
             break;
           case "modified":
+            console.log("modified");
             this.list.items[
               this.list.items.findIndex((item) => item.id == change.doc.id)
             ] = change.doc.data().data;
@@ -129,79 +129,67 @@ export async function createVisit(options?: any) {
   return visit;
 }
 
-export async function createExpense(employeeName: string, options?: any) {
+export async function createExpense(employeeID: string, options?: any) {
   const expenseID = generateUUID();
-  const expense = new Expense(
-    expenseID,
-    store.state.companyID,
-    nameToID(employeeName)
-  );
+  const expense = new Expense(expenseID, store.state.companyID, employeeID);
   await expense.create(
     newExpenseInterface(
       expenseID,
       store.state.companyID,
-      nameToID(employeeName),
+      employeeID,
       options ? options : {}
     )
   );
   return expense;
 }
 
-export async function createJob(jobName: string, customerName: string) {
+export async function createJob(jobName: string, customerID: string) {
   const jobID = nameToID(jobName);
 
-  const job = new Job(jobID, store.state.companyID, nameToID(customerName));
+  const job = new Job(jobID, store.state.companyID, customerID);
   await job.create(
-    newJobInterface(jobID, store.state.companyID, jobName, customerName)
+    newJobInterface(jobID, store.state.companyID, jobName, customerID)
   );
   return job;
 }
 
-export async function createEmployeeDay(date: string, employeeName: string) {
+export async function createEmployeeDay(date: string, employeeID: string) {
   // Determine hourly rate
   let hourlyRate;
   if (store.state.user instanceof Employee) {
     hourlyRate = store.state.user.data.defaultHourlyRate;
   } else if (store.state.user instanceof Company) {
     const employee = store.state.user.employees.find(
-      (employee) => employee.data.id == nameToID(employeeName)
+      (employee) => employee.data.id == employeeID
     );
     if (employee) hourlyRate = employee.data.defaultHourlyRate;
   }
 
-  const day = new EmployeeDay(
-    date,
-    store.state.companyID,
-    nameToID(employeeName)
-  );
+  const day = new EmployeeDay(date, store.state.companyID, employeeID);
   await day.create(
     newEmployeeDayInterface(date, store.state.companyID, {
       hourlyRate,
-      employeeName,
+      employeeID,
     })
   );
   return day;
 }
 
-export async function createCustomerDay(date: string, customerName: string) {
-  const day = new CustomerDay(
-    date,
-    store.state.companyID,
-    nameToID(customerName)
-  );
+export async function createCustomerDay(date: string, customerID: string) {
+  const day = new CustomerDay(date, store.state.companyID, customerID);
   await day.create(
-    newCustomerDayInterface(date, store.state.companyID, { customerName })
+    newCustomerDayInterface(date, store.state.companyID, { customerID })
   );
   return day;
 }
 
-export async function copyVisit(visit: Visit, employeeName: string) {
+export async function copyVisit(visit: Visit, employeeID: string) {
   const id = generateUUID();
   const copiedVisit = new Visit(id, visit.data.companyID);
 
   const copiedData = { ...visit.data };
   copiedData.id = id;
-  copiedData.employeeName = employeeName;
+  copiedData.employeeID = employeeID;
   copiedData.readByCompany = false;
 
   await copiedVisit.create(copiedData);
@@ -221,7 +209,7 @@ export async function copyVisit(visit: Visit, employeeName: string) {
 
 // setTimeout(() => {
 //   for (let i = 0; i < 60; i++) {
-//     createVisit({ employeeName: i.toString() });
+//     createVisit({ employeeID: i.toString() });
 //   }
 // }, 1000);
 

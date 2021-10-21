@@ -4,7 +4,7 @@
       router.push({
         name: 'Customer Day',
         params: {
-          username: state.day.customerName,
+          userID: state.day.customerID,
           date: state.day.date,
         },
       })
@@ -50,7 +50,7 @@ export default {
     const initialize = async () => {
       // Initialze Visits (for purposes of hour computing)
       state.visits = await retrieveVisitsOnDay(props.day.date, {
-        customerName: props.day.customerName,
+        customerID: props.day.customerID,
       });
     };
 

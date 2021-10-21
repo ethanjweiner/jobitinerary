@@ -13,11 +13,11 @@
         >
 
         <div style="padding-left: 20px;">
-          <ion-note v-if="state.visit.data.customerName"
-            >for {{ state.visit.data.customerName }} |
+          <ion-note v-if="state.visit.data.customerID"
+            >for {{ idToName(state.visit.data.customerID) }} |
           </ion-note>
-          <ion-note v-if="state.visit.data.employeeName"
-            >by {{ state.visit.data.employeeName }}</ion-note
+          <ion-note v-if="state.visit.data.employeeID"
+            >by {{ idToName(state.visit.data.employeeID) }}</ion-note
           >
         </div>
         <ion-buttons :collapse="true" slot="end">
@@ -65,6 +65,7 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import VisitComponent from "@/components/units/Visit.vue";
 import { Visit, VisitInterface } from "@/types/work_units";
 import store from "@/store";
+import { idToName } from "@/helpers";
 
 interface State {
   visit: Visit | null;
@@ -111,6 +112,7 @@ export default {
         close,
         ellipsisVertical,
       },
+      idToName,
     };
   },
   components: {

@@ -12,12 +12,9 @@
         :placeholder="'Select ' + capitalize(type)"
         :key="modelValue"
       >
-        <ion-select-option
-          v-for="name in state.names"
-          :key="name"
-          :value="name"
-          >{{ name }}</ion-select-option
-        >
+        <ion-select-option v-for="id in state.ids" :key="id" :value="id">{{
+          idToName(id)
+        }}</ion-select-option>
       </ion-select>
       <ion-buttons slot="end">
         <ion-fab-button size="small" @click="newUserModalIsOpen = true">
@@ -57,15 +54,15 @@ import { cartOutline, hammerOutline, add } from "ionicons/icons";
 
 import NewUserModal from "@/components/modals/NewUserModal.vue";
 
-import { capitalize } from "@/helpers";
+import { capitalize, idToName } from "@/helpers";
 import store from "@/store";
 
 interface State {
-  names: Array<string>;
+  ids: Array<string>;
 }
 
 export default defineComponent({
-  name: "User Select",
+  id: "User Select",
   props: {
     modelValue: String,
     type: String,
@@ -84,27 +81,27 @@ export default defineComponent({
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive<State>({
-      names: [],
+      ids: [],
     });
 
     const newUserModalIsOpen = ref(false);
 
     const refreshState = () => {
       if (props.type == "customer" && store.state.user) {
-        state.names = store.state.user.customers.map(
-          (customer) => customer.data.name
+        state.ids = store.state.user.customers.map(
+          (customer) => customer.data.id
         );
       } else if (props.type == "employee" && store.state.user)
-        state.names = store.state.user.employees.map(
-          (employee) => employee.data.name
+        state.ids = store.state.user.employees.map(
+          (employee) => employee.data.id
         );
       else throw Error("Could not load users.");
     };
 
     refreshState();
 
-    const addUser = (name: string) => {
-      emit("update:modelValue", name);
+    const addUser = (id: string) => {
+      emit("update:modelValue", id);
       refreshState();
     };
 
@@ -117,6 +114,7 @@ export default defineComponent({
       },
       addUser,
       capitalize,
+      idToName,
       newUserModalIsOpen,
     };
   },

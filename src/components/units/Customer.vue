@@ -3,7 +3,7 @@
     <template v-slot:dates>
       <div class="list">
         <CustomerDays
-          :customerName="state.customer.data.name"
+          :customerID="state.customer.data.id"
           title="Dates"
           :dbRef="daysRef"
         />
@@ -11,14 +11,11 @@
     </template>
     <template v-slot:jobs>
       <div class="list">
-        <Jobs :customerName="state.customer.data.name" :dbRef="jobsRef" />
+        <Jobs :customerID="state.customer.data.id" :dbRef="jobsRef" />
       </div>
     </template>
     <template v-slot:customer-info>
-      <CustomerForm
-        v-model="state.customer"
-        @update:modelValue="state.customer.save()"
-      />
+      <CustomerForm v-model="state.customer" />
     </template>
     <template v-slot:sectionsAsGrid>
       <ion-row>
@@ -26,7 +23,7 @@
           <ion-card>
             <div class="list">
               <CustomerDays
-                :customerName="state.customer.data.name"
+                :customerID="state.customer.data.id"
                 title="Dates"
                 :dbRef="daysRef"
               />
@@ -36,7 +33,7 @@
         <ion-col size="6">
           <ion-card>
             <div class="list">
-              <Jobs :customerName="state.customer.data.name" :dbRef="jobsRef" />
+              <Jobs :customerID="state.customer.data.id" :dbRef="jobsRef" />
             </div>
           </ion-card>
         </ion-col>
@@ -49,10 +46,7 @@
                 Customer Info
               </ion-card-title>
             </ion-card-header>
-            <CustomerForm
-              v-model="state.customer"
-              @update:modelValue="state.customer.save()"
-            />
+            <CustomerForm v-model="state.customer" />
           </ion-card>
         </ion-col>
       </ion-row>
@@ -86,7 +80,7 @@ import Sections from "../Sections.vue";
 import CustomerForm from "../forms/CustomerForm.vue";
 import { Company, Customer } from "@/types/users";
 import { companiesCollection } from "@/main";
-import { nameToID } from "@/helpers";
+import { watch } from "@vue/runtime-core";
 
 interface State {
   customer: Customer | undefined;
@@ -95,7 +89,7 @@ interface State {
 export default {
   name: "Customer",
   props: {
-    username: String,
+    userID: String,
   },
   setup(props: any) {
     const state = reactive<State>({
@@ -104,7 +98,7 @@ export default {
 
     const daysRef = computed<CollectionRef>(() => {
       const base = companiesCollection
-        .doc(`${store.state.companyID}/customers/${nameToID(props.username)}`)
+        .doc(`${store.state.companyID}/customers/${props.userID}`)
         .collection("days");
 
       return base;
@@ -112,16 +106,16 @@ export default {
 
     const jobsRef = computed<CollectionRef>(() => {
       const base = companiesCollection
-        .doc(`${store.state.companyID}/customers/${nameToID(props.username)}`)
+        .doc(`${store.state.companyID}/customers/${props.userID}`)
         .collection("jobs");
 
       return base;
     });
 
     // If the user is a Company, assign the customer based on the prop
-    if (props.username && store.state.user instanceof Company) {
+    if (props.userID && store.state.user instanceof Company) {
       state.customer = store.state.user.customers.find(
-        (customer) => customer.data.name == props.username
+        (customer) => customer.data.id == props.userID
       );
 
       // Otherwise, use the signed in user
@@ -146,6 +140,8 @@ export default {
         id: "customer-info",
       },
     ]);
+
+    if (state.customer) watch(state.customer.data, () => state.customer.save());
 
     return {
       sections,

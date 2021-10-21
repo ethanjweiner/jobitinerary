@@ -5,7 +5,7 @@
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title> {{ username }} on {{ date }} </ion-title>
+        <ion-title> {{ idToName(userID) }} on {{ date }} </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
@@ -96,8 +96,8 @@
           >
             <ion-card>
               <ion-card-header>
-                <ion-card-title v-if="visit.data.employeeName">
-                  Visit by {{ visit.data.employeeName }}
+                <ion-card-title v-if="visit.data.employeeID">
+                  Visit by {{ visit.data.employeeID }}
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content v-if="state.visits.length">
@@ -147,7 +147,7 @@ import { CustomerDay, Visit } from "@/types/work_units";
 import VisitInline from "@/components/units/Visit.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import { createVisit } from "@/db";
-import { nameToID, retrieveVisitsOnDay } from "@/helpers";
+import { retrieveVisitsOnDay, idToName } from "@/helpers";
 import store from "@/store";
 import { watch } from "@vue/runtime-core";
 import router from "@/router";
@@ -162,7 +162,7 @@ interface State {
 export default {
   name: "Customer Day",
   props: {
-    username: String,
+    userID: String,
     date: String,
   },
   setup(props: any) {
@@ -176,13 +176,13 @@ export default {
       const day = new CustomerDay(
         props.date,
         store.state.companyID,
-        nameToID(props.username)
+        props.userID
       );
       await day.init();
       state.day = day;
 
       state.visits = await retrieveVisitsOnDay(props.date, {
-        customerName: props.username,
+        customerID: props.userID,
       });
       watch(state.day.data, () => {
         if (state.day) state.day.save();
@@ -217,8 +217,8 @@ export default {
     const employees = computed(() => {
       const names: Array<string> = [];
       state.visits.forEach((visit: Visit) => {
-        if (visit.data.employeeName && !names.includes(visit.data.employeeName))
-          names.push(visit.data.employeeName);
+        if (visit.data.employeeID && !names.includes(visit.data.employeeID))
+          names.push(visit.data.employeeID);
       });
       return names;
     });
@@ -227,7 +227,7 @@ export default {
       // ADD VISIT TO DATABASE
 
       const visit = await createVisit({
-        customerName: props.username,
+        customerID: props.userID,
         date: props.date,
       });
 
@@ -241,7 +241,7 @@ export default {
           await visit.delete();
         }
       }
-      router.push({ name: "Customer", params: { username: props.username } });
+      router.push({ name: "Customer", params: { userID: props.userID } });
     };
 
     const changeDate = async (date: string) => {
@@ -253,7 +253,7 @@ export default {
 
         await router.push({
           name: "Customer Day",
-          params: { employee: props.username, date },
+          params: { employee: props.userID, date },
         });
 
         router.go(0);
@@ -272,6 +272,7 @@ export default {
       toggleDaySettings,
       popoverIsOpen,
       popoverEvent,
+      idToName,
     };
   },
   components: {

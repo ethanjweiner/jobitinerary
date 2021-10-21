@@ -6,7 +6,7 @@
         router.push({
           name: 'Employee Day',
           params: {
-            username: state.day.employeeName,
+            userID: state.day.employeeID,
             date: state.day.date,
           },
         })
@@ -54,7 +54,6 @@ import { checkmark } from "ionicons/icons";
 import { Company, Customer, Employee } from "@/types/users";
 import { companiesCollection } from "@/main";
 import { EmployeeDayInterface } from "@/types/work_units";
-import { nameToID } from "@/helpers";
 
 export default {
   name: "Employee Day Item",
@@ -81,9 +80,7 @@ export default {
       state.day.paid = !state.day.paid;
       await companiesCollection
         .doc(
-          `${state.day.companyID}/employees/${nameToID(
-            state.day.employeeName
-          )}/days/${state.day.date}`
+          `${state.day.companyID}/employees/${state.day.employeeID}/days/${state.day.date}`
         )
         .update({ "data.paid": state.day.paid });
     };
@@ -94,7 +91,7 @@ export default {
         return store.state.user.data.defaultHourlyRate;
       else if (store.state.user instanceof Company) {
         const employee = store.state.user.employees.find(
-          (employee) => state.day.employeeName == employee.data.name
+          (employee) => state.day.employeeID == employee.data.id
         );
         if (employee) return employee.data.defaultHourlyRate;
       } else if (store.state.user instanceof Customer) return null;
