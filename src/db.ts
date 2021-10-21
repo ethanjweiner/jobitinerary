@@ -1,6 +1,11 @@
 import { generateUUID, nameToID } from "./helpers";
 import store from "./store";
-import { CollectionRef, DocSnapshot, Query } from "./types/auxiliary";
+import {
+  CollectionRef,
+  DocSnapshot,
+  QuerySnapshot,
+  Query,
+} from "./types/auxiliary";
 import { Company, Employee } from "./types/users";
 import {
   newVisitInterface,
@@ -14,6 +19,83 @@ import {
   CustomerDay,
   newCustomerDayInterface,
 } from "./types/work_units";
+
+import { reactive } from "@vue/reactivity";
+
+export class InfiniteList {
+  query: Query;
+  list: { items: Array<any> };
+  listeners: Array<Function>;
+  bufferEnd: DocSnapshot | null;
+  bufferSize: number;
+  initialized: boolean;
+
+  constructor(
+    dbRef: CollectionRef,
+    bufferSize: number,
+    orderByParam: string,
+    searchFilter: string
+  ) {
+    this.query = dbRef
+      .limit(bufferSize)
+      .orderBy("data." + orderByParam, "desc")
+      .where("keywords", "array-contains", searchFilter.toLowerCase().trim());
+    this.list = reactive<{ items: Array<any> }>({ items: [] }); // Make reactive for computed purposes
+    this.listeners = [];
+    this.bufferEnd = null;
+    this.bufferSize = bufferSize;
+    this.initialized = false;
+  }
+
+  async init() {
+    await this.loadNewBatch();
+  }
+
+  async loadNewBatch(): Promise<0 | 1> {
+    let query = this.query;
+    if (this.bufferEnd) query = query.startAfter(this.bufferEnd);
+
+    const listener = query.onSnapshot((snapshot: QuerySnapshot) => {
+      // Update the list upon any snapshot (make reactive)
+      if (snapshot.empty) {
+        console.log("No more");
+        return 1;
+      }
+
+      snapshot.docChanges().forEach((change) => {
+        switch (change.type) {
+          case "added":
+            if (!this.initialized) this.list.items.push(change.doc.data().data);
+            else this.list.items.unshift(change.doc.data().data);
+            break;
+          case "removed":
+            this.list.items = this.list.items.filter(
+              (item) => item.id != change.doc.id
+            );
+            break;
+          case "modified":
+            this.list.items[
+              this.list.items.findIndex((item) => item.id == change.doc.id)
+            ] = change.doc.data().data;
+            break;
+          default:
+            break;
+        }
+      });
+
+      this.listeners.push(listener);
+      this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
+      this.initialized = true;
+    });
+    return 0;
+  }
+
+  async destroy() {
+    // Unsubscribe from each listener
+    if (this.listeners) this.listeners.forEach((listener) => listener());
+    this.list.items = [];
+  }
+}
 
 // search: Retrieve a maximum of _limit_ docs from _dbRef_, ordered by _orderByParam_,
 // and starting after _startAfterDoc_ and filtered by _searchFilter_
@@ -124,6 +206,33 @@ export async function copyVisit(visit: Visit, employeeName: string) {
 
   await copiedVisit.create(copiedData);
 }
+
+// Testing
+
+// const visitsList = new InfiniteList(
+//   companiesCollection
+//     .doc("b4d8b6c4-afe9-4a6b-b0f9-136df2f4680a")
+//     .collection("visits"),
+//   10,
+//   20,
+//   "date",
+//   ""
+// );
+
+// setTimeout(() => {
+//   for (let i = 0; i < 60; i++) {
+//     createVisit({ employeeName: i.toString() });
+//   }
+// }, 1000);
+
+// visitsList.init().then(() => {
+//   visitsList.loadMore().then(() => {
+//     visitsList.loadMore().then(() => {
+//       console.log(visitsList.buffer);
+//       console.log(visitsList.list);
+//     });
+//   });
+// });
 
 /* BACKLOG
 
