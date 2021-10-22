@@ -358,4 +358,31 @@ exports.onVisitDelete = functions.firestore
     });
   });
 
+exports.onJobDelete = functions.firestore
+  .document("/companies/{companyID}/customers/{customerID}/jobs/{jobID}")
+  .onDelete((snapshot, context) => {
+    const companyID = context.params.companyID;
+    const jobID = context.params.jobID;
+
+    return new Promise((resolve) => {
+      db.collection("companies")
+        .doc(companyID)
+        .collection("visits")
+        .where("data.jobID", "==", jobID)
+        .get()
+        .then((snapshot) => {
+          if (!snapshot.docs.length) resolve();
+          snapshot.docs.forEach((doc, index) => {
+            db.doc(`companies/${companyID}/visits/${doc.id}`)
+              .update({
+                "data.jobID": "",
+              })
+              .then(() => {
+                if (index == snapshot.docs.length - 1) resolve();
+              });
+          });
+        });
+    });
+  });
+
 // Perform regular sanitization of days?
