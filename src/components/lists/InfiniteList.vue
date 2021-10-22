@@ -58,7 +58,7 @@ import {
 import { computed, reactive } from "@vue/reactivity";
 import { CollectionRef, Splitter } from "@/types/auxiliary";
 import { InfiniteList } from "@/db";
-import { onDeactivated } from "@vue/runtime-core";
+import { watch } from "@vue/runtime-core";
 
 interface State {
   infiniteList: InfiniteList;
@@ -98,6 +98,10 @@ export default {
         }
       }
       return [];
+    });
+
+    watch(state.infiniteList.list, (newList) => {
+      console.log("New List: ", newList);
     });
 
     const initialize = async () => {

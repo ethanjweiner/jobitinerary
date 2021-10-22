@@ -141,7 +141,10 @@ export default {
       },
     ]);
 
-    if (state.customer) watch(state.customer.data, () => state.customer.save());
+    if (state.customer)
+      watch(state.customer.data, () => {
+        if (state.customer) state.customer.save();
+      });
 
     return {
       sections,

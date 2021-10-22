@@ -79,6 +79,7 @@ export function newVisitInterface(
 }
 
 export interface EmployeeDayInterface {
+  id: string;
   date: string;
   companyID: string;
   employeeID: string;
@@ -100,6 +101,7 @@ export function newEmployeeDayInterface(
   options: any
 ): EmployeeDayInterface {
   return {
+    id: date,
     date,
     companyID,
     employeeID: options.employeeID ? options.employeeID : null,
@@ -150,6 +152,7 @@ export function newJobInterface(
 }
 
 export interface CustomerDayInterface {
+  id: string;
   date: string;
   companyID: string;
   customerID: string;
@@ -163,6 +166,7 @@ export function newCustomerDayInterface(
   options: any
 ): CustomerDayInterface {
   return {
+    id: date,
     date,
     companyID,
     customerID: options.customerID ? options.customerID : "",

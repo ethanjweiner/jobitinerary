@@ -57,23 +57,19 @@ export class InfiniteList {
 
     const listener = query.onSnapshot((snapshot: QuerySnapshot) => {
       // Update the list upon any snapshot (make reactive)
-      if (snapshot.empty) return 1;
 
       snapshot.docChanges().forEach((change) => {
         switch (change.type) {
           case "added":
-            console.log("added");
             if (!this.initialized) this.list.items.push(change.doc.data().data);
             else this.list.items.unshift(change.doc.data().data);
             break;
           case "removed":
-            console.log("removed");
             this.list.items = this.list.items.filter(
               (item) => item.id != change.doc.id
             );
             break;
           case "modified":
-            console.log("modified");
             this.list.items[
               this.list.items.findIndex((item) => item.id == change.doc.id)
             ] = change.doc.data().data;
@@ -82,11 +78,12 @@ export class InfiniteList {
             break;
         }
       });
-
-      this.listeners.push(listener);
+      if (snapshot.empty) return 1;
       this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
-      this.initialized = true;
     });
+
+    this.listeners.push(listener);
+    this.initialized = true;
     return 0;
   }
 

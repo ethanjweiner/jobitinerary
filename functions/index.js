@@ -62,6 +62,7 @@ const addVisitToEmployeeDay = async (date, companyID, employeeID, visitID) => {
     // Initialize a new day
     await dayRef.set({
       data: {
+        id: date,
         date,
         companyID,
         employeeID,
@@ -100,6 +101,7 @@ const addVisitToCustomerDay = async (date, companyID, customerID, visitID) => {
     // Initialize a new day
     await dayRef.set({
       data: {
+        id: date,
         date,
         companyID,
         customerID,
@@ -117,7 +119,7 @@ const employeeDayIsEmpty = (dayDoc) => {
   functions.logger.log(data);
 
   return (
-    !data.visitIDs.length <= 1 &&
+    data.visitIDs.length <= 1 &&
     !data.notes &&
     !data.plannedEnd &&
     !data.startLocation &&
@@ -130,7 +132,7 @@ const employeeDayIsEmpty = (dayDoc) => {
 const customerDayIsEmpty = (dayDoc) => {
   const data = dayDoc.data().data;
 
-  return !data.visitIDs.length <= 1 && !data.notes;
+  return data.visitIDs.length <= 1 && !data.notes;
 };
 
 const removeVisitFromEmployeeDay = async (

@@ -193,22 +193,6 @@ export default {
       showTextAreas: false,
     });
 
-    const initialize = async () => {
-      if (state.visit.data.jobID) {
-        const docs = (
-          await db
-            .collectionGroup("jobs")
-            .where("data.id", "==", state.visit.data.jobID)
-            .get()
-        ).docs;
-        if (docs) {
-          state.jobData = docs[0].data().data as JobInterface;
-        }
-      }
-    };
-
-    initialize();
-
     const jobsRef = computed(() => {
       if (state.visit.data.customerID) {
         return companiesCollection
@@ -238,6 +222,22 @@ export default {
       state.visit.data.customerID = jobData.customerID;
       emit("update:modelValue", state.visit);
     };
+
+    const initialize = async () => {
+      if (state.visit.data.jobID) {
+        const docs = (
+          await db
+            .collectionGroup("jobs")
+            .where("data.id", "==", state.visit.data.jobID)
+            .get()
+        ).docs;
+        if (docs) {
+          state.jobData = docs[0].data().data as JobInterface;
+        }
+      }
+    };
+
+    initialize();
 
     return {
       state,

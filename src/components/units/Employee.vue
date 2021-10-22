@@ -137,7 +137,10 @@ export default {
       },
     ]);
 
-    if (state.employee) watch(state.employee.data, () => state.employee.save());
+    if (state.employee)
+      watch(state.employee.data, () => {
+        if (state.employee) state.employee.save();
+      });
 
     // Retrieve employee-specific data (dates, messages)
     return {
