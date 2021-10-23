@@ -18,10 +18,13 @@
       <ion-datetime
         v-model="date"
         @ionChange="$emit('changeDate', $event.detail.value.substring(0, 10))"
+        display-format="YYYY-MM-DD"
       ></ion-datetime>
     </ion-item>
 
-    <ion-item v-if="type == 'employee'">
+    <ion-item
+      v-if="type == 'employee' && store.state.user.employees.length > 1"
+    >
       <ion-label color="tertiary">
         <ion-icon :icon="icons.copyOutline" color="tertiary"></ion-icon>
         Copy to Employee
@@ -59,6 +62,7 @@ import {
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
 import store from "@/store";
+import { Employee } from "@/types/users";
 export default {
   name: "Visit Popover",
   props: {
@@ -83,16 +87,15 @@ export default {
       names: [],
     });
 
-    console.log(props.employeeID);
-
     if (store.state.user)
       if (props.type == "employee")
         state.names = store.state.user.employees
-          .map((employee) => employee.data.id)
-          .filter((employeeID) => employeeID != props.employeeID);
+          .filter((employee: Employee) => employee.data.id != props.employeeID)
+          .map((employee) => employee.data.name);
 
     const date = ref(props.currentDate);
     return {
+      store,
       state,
       icons: { trash, calendarNumberOutline, copyOutline },
       date,
