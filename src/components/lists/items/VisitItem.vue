@@ -1,10 +1,20 @@
 <template>
-  <div style="margin: 0; padding: 0;">
+  <div @click="itemAction(state)" style="margin: 0; padding: 0;">
     <ion-item :color="visit.readByCompany ? '' : 'light'">
       <div style="width: 20px;">
         <span class="dot" v-if="!visit.readByCompany"></span>
       </div>
-      <div @click="itemAction(state)" style="width: 100%;">
+      <div>
+        <ion-text v-if="type == 'job'" color="dark" style="display: block;"
+          >{{ visit.time.hours }} hours</ion-text
+        >
+        <ion-text v-else color="dark" style="display: block;">{{
+          visit.date
+        }}</ion-text>
+        <ion-note v-if="visit.workType">{{ visit.workType }}</ion-note>
+      </div>
+
+      <div slot="end">
         <ion-label v-if="type == 'job'" style="margin: 0 !important;">{{
           visit.date
         }}</ion-label>
@@ -15,21 +25,11 @@
           }}</span>
         </ion-label>
         <ion-note v-if="visit.employeeID"
-          >by {{ idToName(visit.employeeID) }}</ion-note
+          >By {{ idToName(visit.employeeID) }}</ion-note
         >
-      </div>
-
-      <div slot="end">
-        <ion-text v-if="type == 'job'" color="dark" style="display: block;"
-          >{{ visit.time.hours }} hours</ion-text
-        >
-        <ion-text v-else color="dark" style="display: block;">{{
-          visit.date
-        }}</ion-text>
-        <ion-note v-if="visit.workType">{{ visit.workType }}</ion-note>
       </div>
       <ion-buttons slot="end" v-if="type == 'job'">
-        <ion-button @click="$emit('detachVisit')">
+        <ion-button @click.stop="$emit('detachVisit')">
           <ion-icon :icon="icons.trashOutline"></ion-icon>
         </ion-button>
       </ion-buttons>

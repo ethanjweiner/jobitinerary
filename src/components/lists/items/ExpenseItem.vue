@@ -1,25 +1,17 @@
 <template>
   <ion-item>
     <div slot="start">
-      <ion-input
-        type="text"
-        placeholder="Name"
-        :value="state.expense.name"
-        :debounce="store.DEBOUNCE_AMOUNT"
-        disabled
-      ></ion-input>
-      <ion-note style="margin: 0;" v-if="showDate">
+      <ion-label>{{ state.expense.name }}</ion-label>
+      <ion-note v-if="showDate">
         {{ state.expense.date }}
       </ion-note>
     </div>
 
     <CurrencyInput
-      :value="state.expense.cost"
-      :debounce="store.DEBOUNCE_AMOUNT"
+      v-model="state.expense.cost"
       placeholder="Cost"
       :options="{ currency: 'USD' }"
       disabled
-      style="margin-right: 10px;"
     />
 
     <ion-buttons slot="end" style="margin: 0;">
@@ -41,11 +33,11 @@
 <script lang="ts">
 import {
   IonItem,
-  IonInput,
   IonButtons,
   IonNote,
   IonIcon,
   IonToggle,
+  IonLabel,
 } from "@ionic/vue";
 import { trashOutline, checkmark } from "ionicons/icons";
 import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
@@ -86,12 +78,12 @@ export default {
   },
   components: {
     IonItem,
-    IonInput,
     IonButtons,
     IonNote,
     IonIcon,
     IonToggle,
     CurrencyInput,
+    IonLabel,
   },
 };
 </script>

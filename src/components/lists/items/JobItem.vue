@@ -5,10 +5,10 @@
       <ion-note v-if="showCustomer">for {{ job.customerID }}</ion-note>
     </div>
     <div slot="end">
-      <div style="padding: 0;">
+      <div style="padding: 0;" v-if="job.startDate">
         <ion-note color="dark">Start: {{ job.startDate }}</ion-note>
       </div>
-      <div style="padding: 0;">
+      <div style="padding: 0;" v-if="job.endDate">
         <ion-note color="dark">End: {{ job.endDate }}</ion-note>
       </div>
     </div>

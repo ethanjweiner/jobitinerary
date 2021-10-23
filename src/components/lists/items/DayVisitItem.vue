@@ -1,10 +1,10 @@
 <template>
   <div>
-    <ion-item>
-      <ion-buttons slot="start">
+    <ion-item @click="state.modalIsOpen = true">
+      <ion-buttons slot="start" @click.stop>
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
-      <div @click="state.modalIsOpen = true" style="width: 100%; height: 50%;">
+      <div style="width: 100%; height: 50%;">
         <ion-label>{{ state.visit.data.customerID }}</ion-label>
       </div>
 
@@ -26,7 +26,7 @@
       </div>
 
       <ion-buttons slot="end">
-        <ion-button @click="$emit('deleteVisit')">
+        <ion-button @click.stop="$emit('deleteVisit')">
           <ion-icon :icon="icons.trashOutline"></ion-icon>
         </ion-button>
       </ion-buttons>

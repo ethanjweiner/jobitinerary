@@ -46,12 +46,10 @@ import {
   IonToggle,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import store from "@/store";
 import router from "@/router";
 
 import { checkmark } from "ionicons/icons";
 
-import { Company, Customer, Employee } from "@/types/users";
 import { companiesCollection } from "@/main";
 import { EmployeeDayInterface } from "@/types/work_units";
 
@@ -77,6 +75,7 @@ export default {
     });
 
     const togglePaid = async () => {
+      console.log("Toggle Paid");
       state.day.paid = !state.day.paid;
       await companiesCollection
         .doc(
@@ -87,14 +86,7 @@ export default {
 
     const hourlyRate = computed(() => {
       if (state.day.hourlyRate) return state.day.hourlyRate;
-      if (store.state.user instanceof Employee)
-        return store.state.user.data.defaultHourlyRate;
-      else if (store.state.user instanceof Company) {
-        const employee = store.state.user.employees.find(
-          (employee) => state.day.employeeID == employee.data.id
-        );
-        if (employee) return employee.data.defaultHourlyRate;
-      } else if (store.state.user instanceof Customer) return null;
+
       return null;
     });
 
