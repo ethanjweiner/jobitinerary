@@ -80,6 +80,8 @@ export default {
     });
 
     const initialize = async () => {
+      // Set up day and expense snapshots
+
       const dayDocs = (await props.daysRef.get()).docs;
       if (dayDocs) {
         state.days = dayDocs.map(
