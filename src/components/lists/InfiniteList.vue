@@ -1,33 +1,23 @@
 <template>
   <ion-content>
     <ion-list>
-      <div v-if="lists.length > 1">
+      <div v-if="lists.length >= 1">
         <!-- Create an item group for each list -->
-        <ion-item-group v-for="list in lists" :key="list.name">
+        <ion-item-group v-for="(list, index) in lists" :key="index">
           <div v-if="list.items.length">
-            <ion-item-divider>
+            <ion-item-divider v-if="list.name">
               <ion-label>
                 {{ list.name }}
               </ion-label>
             </ion-item-divider>
             <slot
               name="item"
-              v-for="(item, index) in list.items"
-              :key="index"
+              v-for="item in list.items"
+              :key="item.id"
               :item="item"
             ></slot>
           </div>
         </ion-item-group>
-      </div>
-      <div v-else>
-        <!-- Regular list type -->
-        <!-- Use "slot props" so that the data from the infinite list is rendered into the item -->
-        <slot
-          name="item"
-          v-for="(item, index) in state.infiniteList.list.items"
-          :key="index"
-          :item="item"
-        ></slot>
       </div>
     </ion-list>
 
@@ -58,7 +48,7 @@ import {
 import { computed, reactive } from "@vue/reactivity";
 import { CollectionRef, Splitter } from "@/types/auxiliary";
 import { InfiniteList } from "@/db";
-import { watch } from "@vue/runtime-core";
+import { onUnmounted } from "@vue/runtime-core";
 
 interface State {
   infiniteList: InfiniteList;
@@ -96,12 +86,9 @@ export default {
             };
           });
         }
+        return [{ items: state.infiniteList.list.items }];
       }
       return [];
-    });
-
-    watch(state.infiniteList.list, (newList) => {
-      console.log("New List: ", newList);
     });
 
     const initialize = async () => {
@@ -121,6 +108,11 @@ export default {
     if (props.dbRef) {
       initialize();
     }
+
+    // Deactivate listeners
+    onUnmounted(() => {
+      state.infiniteList.destroy();
+    });
 
     return {
       state,
