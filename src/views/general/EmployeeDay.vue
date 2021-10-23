@@ -143,7 +143,7 @@ import {
   homeOutline,
 } from "ionicons/icons";
 import DayPopover from "@/components/popovers/DayPopover.vue";
-import { retrieveVisitsOnDay, idToName } from "@/helpers";
+import { retrieveVisitsOnDay, idToName, nameToID } from "@/helpers";
 import { companiesCollection } from "@/main";
 import { copyVisit } from "@/db";
 
@@ -264,7 +264,9 @@ export default {
       }
     };
 
-    const copyDay = async (employeeID: string) => {
+    const copyDay = async (employeeName: string) => {
+      const employeeID = nameToID(employeeName);
+
       if (state.day) {
         const copiedDay = new EmployeeDay(
           state.day.data.date,
@@ -275,7 +277,7 @@ export default {
         copiedData.employeeID = employeeID;
         copiedData.readByCompany = false;
         copiedData.readByEmployee = false;
-        copiedData.hourlyRate = 0;
+        copiedData.hourlyRate = null;
         await copiedDay.create(copiedData);
         await copyVisits(employeeID);
         popoverIsOpen.value = false;

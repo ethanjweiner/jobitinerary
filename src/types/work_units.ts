@@ -308,11 +308,25 @@ export class EmployeeDay extends DBUnit<EmployeeDayInterface> {
     );
     // Initialize with existing data
     this.data.date = date;
+    this.data.id = date;
     this.exists = true;
 
     await this.create(this.data);
 
     return this;
+  }
+
+  async create(docData: EmployeeDayInterface) {
+    if (!docData.hourlyRate) {
+      const employeeData = (
+        await companiesCollection
+          .doc(`${docData.companyID}/employees/${docData.employeeID}`)
+          .get()
+      ).data();
+      if (employeeData)
+        docData.hourlyRate = employeeData.data.defaultHourlyRate;
+    }
+    return super.create(docData);
   }
 }
 
