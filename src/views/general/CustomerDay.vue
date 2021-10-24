@@ -241,7 +241,9 @@ export default {
           await visit.delete();
         }
       }
+
       router.push({ name: "Customer", params: { userID: props.userID } });
+      popoverIsOpen.value = false;
     };
 
     const changeDate = async (date: string) => {

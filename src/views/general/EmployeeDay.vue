@@ -237,6 +237,7 @@ export default {
         }
       }
       router.push({ name: "Employee", params: { userID: props.userID } });
+      popoverIsOpen.value = false;
     };
 
     const changeDate = async (date: string) => {
