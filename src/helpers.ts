@@ -2,7 +2,7 @@ import router from "./router";
 import { companiesCollection, storage } from "./main";
 import date from "date-and-time";
 import { Loader } from "./types/auxiliary";
-import { Visit } from "./types/work_units";
+import { Visit } from "./types/units";
 import store from "./store";
 
 // ROUTING HELPERS
@@ -70,7 +70,8 @@ function toWords(input: string): Array<string> {
 
 export function nameToID(name: string): string {
   const words = toWords(name);
-  return words.map((word) => word.toLowerCase()).join("_");
+  if (words.length) return words.map((word) => word.toLowerCase()).join("_");
+  return name.toLowerCase();
 }
 
 export function idToName(id: string): string {

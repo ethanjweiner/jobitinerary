@@ -1,7 +1,7 @@
 <template>
   <!-- Different depending on render type -->
-  <ion-page v-if="state.visit">
-    <ion-header>
+  <ion-page>
+    <ion-header v-if="state.visit">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
@@ -13,10 +13,10 @@
 
         <div style="padding-left: 20px;">
           <ion-note v-if="state.visit.data.customerID"
-            >for {{ state.visit.data.customerID }} |
+            >for {{ idToName(state.visit.data.customerID) }} |
           </ion-note>
           <ion-note v-if="state.visit.data.employeeID"
-            >by {{ state.visit.data.employeeID }}</ion-note
+            >by {{ idToName(state.visit.data.employeeID) }}</ion-note
           >
         </div>
         <ion-buttons :collapse="true" slot="end">
@@ -35,7 +35,7 @@
       <DeletePopover unitName="Visit" @delete="deleteVisit" />
     </ion-popover>
 
-    <ion-content :fullscreen="true">
+    <ion-content v-if="state.visit" :fullscreen="true">
       <VisitComponent v-model="state.visit" />
     </ion-content>
   </ion-page>
@@ -63,8 +63,9 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import router from "@/router";
 import VisitComponent from "@/components/units/Visit.vue";
 import { createVisit } from "@/db";
-import { Visit } from "@/types/work_units";
+import { Visit } from "@/types/units";
 import store from "@/store";
+import { idToName } from "@/helpers";
 
 interface State {
   visit: Visit | null;
@@ -108,7 +109,8 @@ export default {
       if (state.visit) await state.visit.delete();
 
       // Return to home
-      router.go(-1);
+      router.push({ name: "Home" });
+      popoverIsOpen.value = false;
     };
 
     return {
@@ -117,6 +119,7 @@ export default {
       deleteVisit,
       popoverIsOpen,
       popoverEvent,
+      idToName,
       icons: {
         ellipsisVertical,
       },

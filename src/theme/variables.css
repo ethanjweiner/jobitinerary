@@ -93,9 +93,14 @@ ion-title {
   padding-inline-end: 25px;
 }
 
-.new-user-modal .modal-wrapper {
+.small-modal .modal-wrapper {
   height: 285px;
   width: 350px;
+}
+
+.medium-modal .modal-wrapper {
+  height: 400px;
+  width: 500px;
 }
 
 input {

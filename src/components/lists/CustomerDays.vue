@@ -41,7 +41,7 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { CustomerDayInterface } from "@/types/work_units";
+import { CustomerDayInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import AddButton from "../buttons/AddButton.vue";

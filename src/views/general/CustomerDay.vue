@@ -1,6 +1,6 @@
 <template>
-  <ion-page v-if="state.day">
-    <ion-header>
+  <ion-page>
+    <ion-header v-if="state.day">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
@@ -28,7 +28,7 @@
       />
       <!-- Add Day Popover here -->
     </ion-popover>
-    <ion-content :fullscreen="true">
+    <ion-content v-if="state.day" :fullscreen="true">
       <ion-grid class="ion-padding">
         <ion-row>
           <ion-card>
@@ -143,7 +143,7 @@ import {
 import { computed, reactive, ref } from "@vue/reactivity";
 import { ellipsisVertical } from "ionicons/icons";
 
-import { CustomerDay, Visit } from "@/types/work_units";
+import { CustomerDay, Visit } from "@/types/units";
 import VisitInline from "@/components/units/Visit.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import { createVisit } from "@/db";

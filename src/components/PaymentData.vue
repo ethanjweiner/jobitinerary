@@ -55,7 +55,7 @@ import { IonText, IonNote, IonChip, IonLabel, IonGrid } from "@ionic/vue";
 
 import { computed, reactive } from "@vue/reactivity";
 import { CollectionRef } from "@/types/auxiliary";
-import { EmployeeDayInterface, ExpenseInterface } from "@/types/work_units";
+import { EmployeeDayInterface, ExpenseInterface } from "@/types/units";
 
 interface State {
   days: Array<EmployeeDayInterface>;

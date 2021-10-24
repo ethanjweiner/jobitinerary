@@ -94,13 +94,18 @@ export default {
       time: props.modelValue,
     });
 
-    const refreshHours = () => {
+    const retrieveHours = (): number => {
       const hours =
         (new Date(state.time.end).getTime() -
           new Date(state.time.start).getTime()) /
         (1000 * 60 * 60);
 
-      state.time.hours = Math.round(hours * 10) / 10;
+      if (hours) return Math.round(hours * 10) / 10;
+      return 0;
+    };
+
+    const refreshHours = () => {
+      state.time.hours = retrieveHours();
     };
 
     const setStartTime = () => {
@@ -122,7 +127,7 @@ export default {
     });
 
     // Do the start and end times match the hours?
-    const mismatch = computed(() => true);
+    const mismatch = computed(() => state.time.hours != retrieveHours());
 
     return {
       state,

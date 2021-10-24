@@ -33,6 +33,7 @@
                 type="text"
                 placeholder="Descriptive name for the job"
                 v-model="state.jobName"
+                @keyup.enter="create"
               ></ion-input>
             </ion-item>
 

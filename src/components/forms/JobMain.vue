@@ -53,7 +53,7 @@
       <ion-label style="margin: auto;">{{ totalHours }} hours</ion-label>
     </ion-chip>
   </ion-item>
-  <ion-item>
+  <ion-item v-if="employeeHours.length">
     <ion-label>
       Time Spent per Employee
     </ion-label>
@@ -81,7 +81,7 @@ import {
 } from "@ionic/vue";
 import store from "@/store";
 
-import { Visit } from "@/types/work_units";
+import { Visit } from "@/types/units";
 
 export default {
   name: "Job Main",

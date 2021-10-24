@@ -1,6 +1,6 @@
 <template>
-  <ion-page v-if="state.day">
-    <ion-header>
+  <ion-page>
+    <ion-header v-if="state.day">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
@@ -30,7 +30,7 @@
       <!-- Add Day Popover here -->
     </ion-popover>
 
-    <ion-content :fullscreen="true">
+    <ion-content v-if="state.day" :fullscreen="true">
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
@@ -128,7 +128,7 @@ import { reactive } from "@vue/reactivity";
 import store from "@/store";
 import router from "@/router";
 
-import { Expense, EmployeeDay, Visit } from "@/types/work_units";
+import { Expense, EmployeeDay, Visit } from "@/types/units";
 import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";

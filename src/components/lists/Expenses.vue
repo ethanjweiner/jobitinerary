@@ -23,7 +23,7 @@ import { add } from "ionicons/icons";
 
 import ExpenseComponent from "./items/Expense.vue";
 import { createExpense } from "@/db";
-import { Expense } from "@/types/work_units";
+import { Expense } from "@/types/units";
 
 export default {
   name: "Expenses",

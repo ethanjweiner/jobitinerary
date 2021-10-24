@@ -2,7 +2,9 @@
   <ion-item>
     <div>
       <ion-label>{{ job.name }} </ion-label>
-      <ion-note v-if="showCustomer">for {{ job.customerID }}</ion-note>
+      <ion-note v-if="showCustomer"
+        >for {{ idToName(job.customerID) }}</ion-note
+      >
     </div>
     <div slot="end">
       <div style="padding: 0;" v-if="job.startDate">
@@ -18,6 +20,7 @@
 <script lang="ts">
 import { IonItem, IonLabel, IonNote } from "@ionic/vue";
 import router from "@/router";
+import { idToName } from "@/helpers";
 
 export default {
   name: "Job Item",
@@ -28,6 +31,7 @@ export default {
   setup() {
     return {
       router,
+      idToName,
     };
   },
   components: {

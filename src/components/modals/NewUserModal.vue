@@ -20,7 +20,12 @@
 
       <ion-item>
         <ion-label position="stacked">{{ capitalize(type) }} Name</ion-label>
-        <ion-input placeholder="name" type="text" v-model="name"></ion-input>
+        <ion-input
+          placeholder="name"
+          type="text"
+          v-model="name"
+          @keyup.enter="addUser"
+        ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ capitalize(type) }} Email</ion-label>
@@ -29,6 +34,7 @@
           type="email"
           inputmode="email"
           v-model="email"
+          @keyup.enter="addUser"
         ></ion-input>
       </ion-item>
       <ion-item button @click="addUser">

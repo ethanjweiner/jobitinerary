@@ -7,6 +7,7 @@
         :icon="icons.hammerOutline"
       ></ion-icon>
       <ion-select
+        v-if="state.ids.length"
         @ionChange="$emit('update:modelValue', $event.detail.value)"
         :value="modelValue"
         :placeholder="'Select ' + capitalize(type)"
@@ -16,7 +17,15 @@
           idToName(id)
         }}</ion-select-option>
       </ion-select>
-      <ion-buttons slot="end">
+      <ion-button
+        v-else
+        size="default"
+        style="margin-left: 10px;"
+        @click="newUserModalIsOpen = true"
+      >
+        Create {{ capitalize(type) }}
+      </ion-button>
+      <ion-buttons slot="end" v-if="state.ids.length">
         <ion-fab-button size="small" @click="newUserModalIsOpen = true">
           <ion-icon :icon="icons.add"></ion-icon>
         </ion-fab-button>
@@ -25,7 +34,7 @@
     <ion-modal
       :is-open="newUserModalIsOpen"
       @didDismiss="newUserModalIsOpen = false"
-      css-class="new-user-modal"
+      css-class="small-modal"
     >
       <NewUserModal
         :type="type"
@@ -46,6 +55,7 @@ import {
   IonSelectOption,
   IonIcon,
   IonFabButton,
+  IonButton,
   IonButtons,
   IonModal,
 } from "@ionic/vue";
@@ -75,6 +85,7 @@ export default defineComponent({
     IonSelectOption,
     IonIcon,
     IonFabButton,
+    IonButton,
     IonButtons,
     IonModal,
     NewUserModal,

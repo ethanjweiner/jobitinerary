@@ -13,12 +13,7 @@
         "
         >Day</ion-fab-button
       >
-      <ion-fab-button
-        @click="
-          router.push({ name: 'Company Visit', params: { visitID: 'new' } })
-        "
-        >Visit</ion-fab-button
-      >
+      <ion-fab-button @click="newVisit">Visit</ion-fab-button>
       <ion-fab-button
         @click="router.push({ name: 'New Job', params: { customerID: 'new' } })"
         >Job</ion-fab-button
@@ -31,6 +26,7 @@
 import { IonFab, IonFabButton, IonIcon, IonFabList } from "@ionic/vue";
 import { add } from "ionicons/icons";
 import router from "@/router";
+import { createVisit } from "@/db";
 
 export default {
   name: "Create Button",
@@ -41,7 +37,12 @@ export default {
     IonIcon,
   },
   setup() {
+    const newVisit = async () => {
+      const visit = await createVisit();
+      router.push({ name: "Company Visit", params: { visitID: visit.id } });
+    };
     return {
+      newVisit,
       icons: { add },
       router,
     };

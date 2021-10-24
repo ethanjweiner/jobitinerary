@@ -51,7 +51,7 @@ import router from "@/router";
 import { checkmark } from "ionicons/icons";
 
 import { companiesCollection } from "@/main";
-import { EmployeeDayInterface } from "@/types/work_units";
+import { EmployeeDayInterface } from "@/types/units";
 
 export default {
   name: "Employee Day Item",

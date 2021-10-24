@@ -22,7 +22,7 @@ import router from "@/router";
 import { add } from "ionicons/icons";
 
 import DayVisitItem from "./items/DayVisitItem.vue";
-import { Visit } from "@/types/work_units";
+import { Visit } from "@/types/units";
 import { createVisit } from "@/db";
 
 export default {

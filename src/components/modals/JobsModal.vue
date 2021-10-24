@@ -9,10 +9,7 @@
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <ion-searchbar
-        v-model="searchText"
-        placeholder="Search by job name, customer, start date, description, etc."
-      ></ion-searchbar>
+      <ion-searchbar v-model="searchText"></ion-searchbar>
     </ion-header>
     <!-- PASS A DATABASE REFERENCE TO ALL JOBS UNDER THE SELECTED CUSTOMER -->
     <InfiniteList
@@ -52,7 +49,7 @@ import { close } from "ionicons/icons";
 import InfiniteList from "../lists/InfiniteList.vue";
 import JobItem from "@/components/lists/items/JobItem.vue";
 import { Splitter } from "@/types/auxiliary";
-import { JobInterface } from "@/types/work_units";
+import { JobInterface } from "@/types/units";
 
 export default defineComponent({
   name: "Jobs",

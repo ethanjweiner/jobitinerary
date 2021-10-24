@@ -18,7 +18,7 @@ import {
   newExpenseInterface,
   CustomerDay,
   newCustomerDayInterface,
-} from "./types/work_units";
+} from "./types/units";
 
 import { reactive } from "@vue/reactivity";
 

@@ -52,7 +52,7 @@ import {
 import { reactive, ref } from "vue";
 import router from "@/router";
 
-import { JobInterface } from "@/types/work_units";
+import { JobInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import JobItem from "./items/JobItem.vue";

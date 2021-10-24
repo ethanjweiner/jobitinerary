@@ -2,7 +2,7 @@
   <ion-card-header>
     <ion-card-title>
       Visits
-      <AddButton @click="createVisit" />
+      <AddButton @click="newVisit" />
     </ion-card-title>
 
     <ion-searchbar
@@ -46,12 +46,13 @@ import {
 import { ref } from "vue";
 import router from "@/router";
 
-import { VisitInterface } from "@/types/work_units";
+import { VisitInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";
 import AddButton from "../buttons/AddButton.vue";
 import InfiniteList from "./InfiniteList.vue";
+import { createVisit } from "@/db";
 
 export default {
   name: "Visits",
@@ -83,20 +84,16 @@ export default {
       },
     ]);
 
-    const createVisit = async () => {
-      // CREATE VISIT
-      // Route to the newly created visit
-      router.push({
-        name: "Company Visit",
-        params: { visitID: "new" },
-      });
+    const newVisit = async () => {
+      const visit = await createVisit();
+      router.push({ name: "Company Visit", params: { visitID: visit.id } });
     };
 
     return {
       router,
       searchText,
       splitters,
-      createVisit,
+      newVisit,
     };
   },
 };

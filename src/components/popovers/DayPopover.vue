@@ -39,9 +39,11 @@
       </ion-select>
     </ion-item>
 
-    <ion-item v-if="type == 'employee'">
+    <ion-item
+      v-if="type == 'employee' && store.state.user.employees.length > 1"
+    >
       <ion-text>
-        <ion-note>Note: This function does not copy any expenses.</ion-note>
+        <ion-note>Note: Copying does not copy expenses.</ion-note>
       </ion-text>
     </ion-item>
   </ion-list>

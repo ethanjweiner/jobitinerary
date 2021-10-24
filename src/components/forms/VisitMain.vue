@@ -48,6 +48,7 @@
       v-if="!state.visit.data.job && !hideCustomerSelect"
       v-model="state.visit.data.customerID"
       type="customer"
+      @update:modelValue="clearJob"
     />
     <!-- Job Attacher -->
     <ion-item v-if="!hideJob">
@@ -55,15 +56,7 @@
         <ion-note>Attach a Job</ion-note>
         <ion-label v-if="state.jobData">"{{ state.jobData.name }}"</ion-label>
         <ion-buttons slot="end">
-          <ion-chip
-            v-if="state.jobData"
-            @click="
-              () => {
-                state.visit.data.jobID = null;
-                state.jobData = null;
-              }
-            "
-          >
+          <ion-chip v-if="state.jobData" @click="clearJob">
             <ion-icon :icon="icons.trashOutline"></ion-icon>
             <ion-label>Clear Job</ion-label>
           </ion-chip>
@@ -106,7 +99,11 @@
       ></ion-textarea>
     </ion-item>
 
-    <ion-modal :is-open="jobsModalIsOpen" @didDismiss="jobsModalIsOpen = false">
+    <ion-modal
+      :is-open="jobsModalIsOpen"
+      @didDismiss="jobsModalIsOpen = false"
+      css-class="medium-modal"
+    >
       <JobsModal
         @jobSelected="attachJob"
         @close="jobsModalIsOpen = false"
@@ -144,7 +141,7 @@ import {
   trashOutline,
 } from "ionicons/icons";
 
-import { JobInterface, Visit } from "@/types/work_units";
+import { JobInterface, Visit } from "@/types/units";
 
 import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
@@ -223,6 +220,12 @@ export default {
       emit("update:modelValue", state.visit);
     };
 
+    const clearJob = () => {
+      state.visit.data.jobID = null;
+      state.jobData = null;
+      emit("update:modelValue", state.visit);
+    };
+
     const initialize = async () => {
       if (state.visit.data.jobID) {
         const docs = (
@@ -243,6 +246,7 @@ export default {
       state,
       store,
       jobsRef,
+      clearJob,
       icons: {
         calendarNumberOutline,
         calendarOutline,

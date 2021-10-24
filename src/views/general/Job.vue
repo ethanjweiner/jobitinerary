@@ -1,6 +1,6 @@
 <template>
-  <ion-page v-if="state.job">
-    <ion-header>
+  <ion-page>
+    <ion-header v-if="state.job">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
@@ -26,7 +26,7 @@
     >
       <DeletePopover unitName="Job" @delete="deleteJob" />
     </ion-popover>
-    <ion-content :fullscreen="true">
+    <ion-content v-if="state.job" :fullscreen="true">
       <form>
         <Sections :sections="sections" wrapCards>
           <template v-slot:main>
@@ -111,7 +111,7 @@ import {
   ellipsisVertical,
 } from "ionicons/icons";
 
-import { Job, Visit } from "@/types/work_units";
+import { Job, Visit } from "@/types/units";
 import { SectionsType } from "@/types/auxiliary";
 
 import Sections from "@/components/Sections.vue";
@@ -197,7 +197,8 @@ export default {
       if (state.job) await state.job.delete();
 
       // Return to home
-      router.go(-1);
+      router.push({ name: "Home" });
+      popoverIsOpen.value = false;
     };
 
     return {

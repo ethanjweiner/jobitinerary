@@ -7,6 +7,7 @@
     <ion-reorder-group
       @ionItemReorder="reorderTasks($event)"
       :disabled="!state.enableReorder"
+      @click="state.enableReorder = false"
     >
       <Task
         v-for="(task, index) in state.tasks"

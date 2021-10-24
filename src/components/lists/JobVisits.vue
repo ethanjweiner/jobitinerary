@@ -54,7 +54,7 @@ import { add } from "ionicons/icons";
 import { computed, reactive } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { Visit } from "@/types/work_units";
+import { Visit } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";

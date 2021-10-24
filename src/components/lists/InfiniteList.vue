@@ -1,27 +1,35 @@
 <template>
   <ion-content>
-    <ion-list>
-      <div v-if="lists.length >= 1">
-        <!-- Create an item group for each list -->
-        <ion-item-group v-for="(list, index) in lists" :key="index">
-          <div v-if="list.items.length">
-            <ion-item-divider v-if="list.name">
-              <ion-label>
-                {{ list.name }}
-              </ion-label>
-            </ion-item-divider>
-            <slot
-              name="item"
-              v-for="item in list.items"
-              :key="item.id"
-              :item="item"
-            ></slot>
-          </div>
-        </ion-item-group>
-      </div>
+    <div
+      class="empty-list-container ion-text-center ion-padding"
+      v-if="lists.length == 0 || lists[0].length == 0"
+    >
+      <ion-title>
+        Add Something to Get Started!
+      </ion-title>
+    </div>
+    <ion-list v-else-if="lists.length >= 1">
+      <ion-item-group v-for="(list, index) in lists" :key="index">
+        <div v-if="list.items.length">
+          <ion-item-divider v-if="list.name">
+            <ion-label>
+              {{ list.name }}
+            </ion-label>
+          </ion-item-divider>
+          <slot
+            name="item"
+            v-for="item in list.items"
+            :key="item.id"
+            :item="item"
+          ></slot>
+        </div>
+      </ion-item-group>
     </ion-list>
 
+    <div v-else>List doesn't exist!</div>
+
     <ion-infinite-scroll
+      v-if="lists.length >= 1 && lists[0].length"
       @ionInfinite="loadMore($event)"
       threshold="100px"
       id="infinite-scroll"
@@ -44,6 +52,7 @@ import {
   IonItemGroup,
   IonItemDivider,
   IonLabel,
+  IonTitle,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { CollectionRef, Splitter } from "@/types/auxiliary";
@@ -128,8 +137,15 @@ export default {
     IonItemGroup,
     IonItemDivider,
     IonLabel,
+    IonTitle,
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.empty-list-container {
+  height: 100%;
+  background: rgb(235, 235, 235);
+  border: 3px dashed grey;
+}
+</style>

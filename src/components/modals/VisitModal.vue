@@ -63,7 +63,7 @@ import { close, ellipsisVertical } from "ionicons/icons";
 
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import VisitComponent from "@/components/units/Visit.vue";
-import { Visit, VisitInterface } from "@/types/work_units";
+import { Visit, VisitInterface } from "@/types/units";
 import store from "@/store";
 import { idToName } from "@/helpers";
 

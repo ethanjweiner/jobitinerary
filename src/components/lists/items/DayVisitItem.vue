@@ -5,7 +5,7 @@
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
       <div style="width: 100%; height: 50%;">
-        <ion-label>{{ state.visit.data.customerID }}</ion-label>
+        <ion-label>{{ idToName(state.visit.data.customerID) }}</ion-label>
       </div>
 
       <div v-if="store.state.userType == 'company'" slot="end">
@@ -73,7 +73,7 @@ import store from "@/store";
 
 import { trashOutline } from "ionicons/icons";
 
-import { formatTime } from "@/helpers";
+import { formatTime, idToName } from "@/helpers";
 
 import TimeLog from "@/components/TimeLog.vue";
 import VisitModal from "@/components/modals/VisitModal.vue";
@@ -98,6 +98,7 @@ export default {
       router,
       store,
       formatTime,
+      idToName,
       icons: { trashOutline },
     };
   },

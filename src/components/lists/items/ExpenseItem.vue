@@ -44,7 +44,7 @@ import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
 import store from "@/store";
 import { companiesCollection } from "@/main";
 import { reactive } from "@vue/reactivity";
-import { ExpenseInterface } from "@/types/work_units";
+import { ExpenseInterface } from "@/types/units";
 
 export default {
   name: "Expense",

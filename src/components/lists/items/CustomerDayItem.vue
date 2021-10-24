@@ -28,7 +28,7 @@ import { IonItem, IonLabel, IonText, IonNote } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import router from "@/router";
 
-import { CustomerDay, Visit } from "@/types/work_units";
+import { CustomerDay, Visit } from "@/types/units";
 import { retrieveVisitsOnDay } from "@/helpers";
 
 interface State {
