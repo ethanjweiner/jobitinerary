@@ -52,39 +52,42 @@ export class InfiniteList {
   }
 
   async loadNewBatch(): Promise<0 | 1> {
-    let query = this.query;
-    if (this.bufferEnd) query = query.startAfter(this.bufferEnd);
+    return new Promise((resolve) => {
+      let query = this.query;
+      if (this.bufferEnd) query = query.startAfter(this.bufferEnd);
 
-    const listener = query.onSnapshot((snapshot: QuerySnapshot) => {
-      // Update the list upon any snapshot (make reactive)
+      const listener = query.onSnapshot((snapshot: QuerySnapshot) => {
+        // Update the list upon any snapshot (make reactive)
 
-      snapshot.docChanges().forEach((change) => {
-        switch (change.type) {
-          case "added":
-            if (!this.initialized) this.list.items.push(change.doc.data().data);
-            else this.list.items.unshift(change.doc.data().data);
-            break;
-          case "removed":
-            this.list.items = this.list.items.filter(
-              (item) => item.id != change.doc.id
-            );
-            break;
-          case "modified":
-            this.list.items[
-              this.list.items.findIndex((item) => item.id == change.doc.id)
-            ] = change.doc.data().data;
-            break;
-          default:
-            break;
-        }
+        snapshot.docChanges().forEach((change) => {
+          switch (change.type) {
+            case "added":
+              if (!this.initialized)
+                this.list.items.push(change.doc.data().data);
+              else this.list.items.unshift(change.doc.data().data);
+              break;
+            case "removed":
+              this.list.items = this.list.items.filter(
+                (item) => item.id != change.doc.id
+              );
+              break;
+            case "modified":
+              this.list.items[
+                this.list.items.findIndex((item) => item.id == change.doc.id)
+              ] = change.doc.data().data;
+              break;
+            default:
+              break;
+          }
+        });
+        if (snapshot.empty) resolve(1);
+        this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
       });
-      if (snapshot.empty) return 1;
-      this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
-    });
 
-    this.listeners.push(listener);
-    this.initialized = true;
-    return 0;
+      this.listeners.push(listener);
+      this.initialized = true;
+      resolve(0);
+    });
   }
 
   async destroy() {
