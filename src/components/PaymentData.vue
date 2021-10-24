@@ -102,8 +102,7 @@ export default {
 
     const numHours = computed(() =>
       state.days.reduce(
-        (acc: number, day: EmployeeDayInterface) =>
-          acc + parseInt(day.time.hours),
+        (acc: number, day: EmployeeDayInterface) => acc + day.time.hours * 1,
         0
       )
     );

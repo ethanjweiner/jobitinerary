@@ -116,7 +116,7 @@ ion-col {
   }
 }
 
-.ios > ion-col {
+ion-col {
   margin-top: 0px;
 }
 ion-card {

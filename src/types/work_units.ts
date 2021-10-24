@@ -91,7 +91,7 @@ export interface EmployeeDayInterface {
   paid: boolean;
   readByEmployee: boolean;
   readByCompany: boolean;
-  hourlyRate: number;
+  hourlyRate: number | null;
   visitIDs: Array<string>;
 }
 
