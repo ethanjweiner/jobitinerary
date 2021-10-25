@@ -67,6 +67,12 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-tint: #f5f6f9;
 }
 
+ion-split-pane {
+  --side-width: 50%;
+  --side-min-width: 50%;
+  --side-max-width: 50%;
+}
+
 .dot {
   background-color: rgb(0, 102, 255);
   height: 7px;

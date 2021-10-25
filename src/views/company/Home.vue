@@ -1,64 +1,67 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Home</ion-title>
-        <SettingsButton />
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-grid>
-        <ion-row class="ion-justify-content-around">
-          <ion-col
-            size-xs="12"
-            size-sm="12"
-            size-md="6"
-            size-lg="6"
-            size-xl="6"
-            class="visits-column"
+    <ion-split-pane when="sm" content-id="main">
+      <ion-content content-id="main">
+        <ion-list>
+          <ion-item v-for="item in items" :key="item">
+            <ion-label>{{ item }}</ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll
+          @ionInfinite="loadData($event)"
+          threshold="100px"
+          id="infinite-scroll"
+          :disabled="isDisabled"
+        >
+          <ion-infinite-scroll-content
+            loading-spinner="bubbles"
+            loading-text="Loading more data..."
           >
-            <ion-card>
-              <Visits :dbRef="visitsRef" />
-            </ion-card>
-          </ion-col>
-          <ion-col
-            size-xs="12"
-            size-sm="12"
-            size-md="6"
-            size-lg="6"
-            size-xl="6"
-            class="jobs-column"
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+      <ion-content id="main">
+        <ion-list>
+          <ion-item v-for="item in items" :key="item">
+            <ion-label>{{ item }}</ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll
+          @ionInfinite="loadData($event)"
+          threshold="150px"
+          id="infinite-scroll"
+          :disabled="isDisabled"
+        >
+          <ion-infinite-scroll-content
+            loading-spinner="bubbles"
+            loading-text="Loading more data..."
           >
-            <ion-card>
-              <Jobs :dbRef="jobsRef" />
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <CreateButton />
-    </ion-content>
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </ion-split-pane>
+    <CreateButton />
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  IonSplitPane,
   IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from "@ionic/vue";
 
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import CreateButton from "@/components/buttons/CreateButton.vue";
-import Visits from "@/components/lists/VisitsInfinite.vue";
-import Jobs from "@/components/lists/Jobs.vue";
 import store from "@/store";
 import { companiesCollection, db } from "@/main";
+import { ref } from "@vue/reactivity";
 
 export default {
   name: "Home",
@@ -70,25 +73,54 @@ export default {
       .collectionGroup("jobs")
       .where("data.companyID", "==", store.state.companyID);
 
+    const isDisabled = ref(false);
+    const toggleInfiniteScroll = () => {
+      isDisabled.value = !isDisabled.value;
+    };
+    const items = ref([]);
+    const pushData = () => {
+      const max = items.value.length + 20;
+      const min = max - 20;
+      for (let i = min; i < max; i++) {
+        items.value.push(i);
+      }
+    };
+
+    const loadData = (ev: CustomEvent) => {
+      setTimeout(() => {
+        pushData();
+        console.log("Loaded data");
+        ev.target.complete();
+
+        // App logic to determine if all data is loaded
+        // and disable the infinite scroll
+        if (items.value.length == 1000) {
+          ev.target.disabled = true;
+        }
+      }, 500);
+    };
+
+    pushData();
+
     return {
       visitsRef,
       jobsRef,
+      isDisabled,
+      toggleInfiniteScroll,
+      loadData,
+      items,
     };
   },
   components: {
     IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    SettingsButton,
     CreateButton,
-    Visits,
-    IonGrid,
-    IonRow,
-    IonCol,
-    Jobs,
-    IonCard,
+    IonSplitPane,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
   },
 };
 </script>
