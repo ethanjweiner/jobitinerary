@@ -6,59 +6,35 @@
         <SettingsButton />
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-grid>
-        <ion-row class="ion-justify-content-around">
-          <ion-col
-            size-xs="12"
-            size-sm="12"
-            size-md="6"
-            size-lg="6"
-            size-xl="6"
-            class="visits-column"
-          >
-            <ion-card>
-              <Visits :dbRef="visitsRef" />
-            </ion-card>
-          </ion-col>
-          <ion-col
-            size-xs="12"
-            size-sm="12"
-            size-md="6"
-            size-lg="6"
-            size-xl="6"
-            class="jobs-column"
-          >
-            <ion-card>
-              <Jobs :dbRef="jobsRef" />
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <CreateButton />
-    </ion-content>
+    <ion-split-pane when="xs" content-id="main">
+      <ion-content class="ion-padding">
+        <Visits :dbRef="visitsRef" />
+      </ion-content>
+      <ion-content class="ion-padding" id="main">
+        <Jobs :dbRef="jobsRef" />
+      </ion-content>
+    </ion-split-pane>
+    <CreateButton />
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
   IonPage,
-  IonHeader,
+  IonSplitPane,
+  IonContent,
   IonToolbar,
   IonTitle,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
+  IonHeader,
 } from "@ionic/vue";
 
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import CreateButton from "@/components/buttons/CreateButton.vue";
-import Visits from "@/components/lists/VisitsInfinite.vue";
-import Jobs from "@/components/lists/Jobs.vue";
+import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import store from "@/store";
 import { companiesCollection, db } from "@/main";
+import { ref } from "@vue/reactivity";
+import Visits from "@/components/lists/VisitsInfinite.vue";
+import Jobs from "@/components/lists/Jobs.vue";
 
 export default {
   name: "Home",
@@ -70,25 +46,55 @@ export default {
       .collectionGroup("jobs")
       .where("data.companyID", "==", store.state.companyID);
 
+    const isDisabled = ref(false);
+    const toggleInfiniteScroll = () => {
+      isDisabled.value = !isDisabled.value;
+    };
+    const items = ref([]);
+    const pushData = () => {
+      const max = items.value.length + 20;
+      const min = max - 20;
+      for (let i = min; i < max; i++) {
+        items.value.push(i);
+      }
+    };
+
+    const loadData = (ev: any) => {
+      setTimeout(() => {
+        pushData();
+        console.log("Loaded data");
+        ev.target.complete();
+
+        // App logic to determine if all data is loaded
+        // and disable the infinite scroll
+        if (items.value.length == 1000) {
+          ev.target.disabled = true;
+        }
+      }, 500);
+    };
+
+    pushData();
+
     return {
       visitsRef,
       jobsRef,
+      isDisabled,
+      toggleInfiniteScroll,
+      loadData,
+      items,
     };
   },
   components: {
     IonPage,
-    IonHeader,
+    CreateButton,
+    IonSplitPane,
+    IonContent,
     IonToolbar,
     IonTitle,
-    IonContent,
     SettingsButton,
-    CreateButton,
+    IonHeader,
     Visits,
-    IonGrid,
-    IonRow,
-    IonCol,
     Jobs,
-    IonCard,
   },
 };
 </script>

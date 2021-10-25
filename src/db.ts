@@ -28,7 +28,6 @@ export class InfiniteList {
   listeners: Array<Function>;
   bufferEnd: DocSnapshot | null;
   bufferSize: number;
-  initialized: boolean;
 
   constructor(
     dbRef: CollectionRef,
@@ -44,49 +43,50 @@ export class InfiniteList {
     this.listeners = [];
     this.bufferEnd = null;
     this.bufferSize = bufferSize;
-    this.initialized = false;
   }
 
   async init() {
     await this.loadNewBatch();
   }
 
-  async loadNewBatch(): Promise<0 | 1> {
-    return new Promise((resolve) => {
+  async loadNewBatch() {
+    return new Promise((resolve, reject) => {
       let query = this.query;
       if (this.bufferEnd) query = query.startAfter(this.bufferEnd);
 
-      const listener = query.onSnapshot((snapshot: QuerySnapshot) => {
-        // Update the list upon any snapshot (make reactive)
+      this.listeners.push(
+        query.onSnapshot((snapshot: QuerySnapshot) => {
+          // Update the list upon any snapshot (make reactive)
 
-        snapshot.docChanges().forEach((change) => {
-          switch (change.type) {
-            case "added":
-              if (!this.initialized)
-                this.list.items.push(change.doc.data().data);
-              else this.list.items.unshift(change.doc.data().data);
-              break;
-            case "removed":
-              this.list.items = this.list.items.filter(
-                (item) => item.id != change.doc.id
-              );
-              break;
-            case "modified":
-              this.list.items[
-                this.list.items.findIndex((item) => item.id == change.doc.id)
-              ] = change.doc.data().data;
-              break;
-            default:
-              break;
+          snapshot.docChanges().forEach((change) => {
+            switch (change.type) {
+              case "added":
+                // Temporary solution
+                if (snapshot.docs.length == 1)
+                  this.list.items.unshift(change.doc.data().data);
+                else this.list.items.push(change.doc.data().data);
+                break;
+              case "removed":
+                this.list.items = this.list.items.filter(
+                  (item) => item.id != change.doc.id
+                );
+                break;
+              case "modified":
+                this.list.items[
+                  this.list.items.findIndex((item) => item.id == change.doc.id)
+                ] = change.doc.data().data;
+                break;
+              default:
+                break;
+            }
+          });
+          if (snapshot.empty) reject();
+          else {
+            this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
+            resolve(0);
           }
-        });
-        if (snapshot.empty) resolve(1);
-        this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
-      });
-
-      this.listeners.push(listener);
-      this.initialized = true;
-      resolve(0);
+        })
+      );
     });
   }
 
