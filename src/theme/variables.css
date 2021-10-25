@@ -82,6 +82,7 @@ ion-split-pane {
   --side-width: 50%;
   --side-min-width: 50%;
   --side-max-width: 50%;
+  --border: ;
 }
 
 .dot {
