@@ -109,7 +109,6 @@ export default {
       if (status == 0) {
         ev.target.complete();
       } else {
-        console.log("Limit reached!");
         ev.target.disabled = true;
       }
     };

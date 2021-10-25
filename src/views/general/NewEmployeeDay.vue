@@ -98,7 +98,6 @@ export default {
 
     const create = async () => {
       if (state.employeeID && state.date) {
-        console.log(state.date);
         await createEmployeeDay(state.date, state.employeeID);
         router.replace({
           name: "Employee Day",

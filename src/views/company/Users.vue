@@ -120,7 +120,7 @@ export default {
       userID: props.userID,
     });
 
-    // Popover
+    // POPOVER
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
     const toggleUserSettings = (state: boolean, ev?: Event) => {

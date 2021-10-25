@@ -140,7 +140,6 @@ export async function retrieveVisitsOnDay(
     query = query.where("data.employeeID", "==", options.employeeID);
 
   const visitDocs = (await query.get()).docs;
-  console.log(query, visitDocs);
   for (const doc of visitDocs) {
     const visit = new Visit(doc.id, store.state.companyID);
     await visit.init(doc.data().data);

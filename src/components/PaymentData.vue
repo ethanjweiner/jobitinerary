@@ -110,7 +110,7 @@ export default {
     const hoursAmount = computed(() =>
       state.days.reduce(
         (acc: number, day: EmployeeDayInterface) =>
-          acc + day.time.hours * day.hourlyRate,
+          acc + day.time.hours * day.hourlyRate ? day.hourlyRate : 0,
         0
       )
     );

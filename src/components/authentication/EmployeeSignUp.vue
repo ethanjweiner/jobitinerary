@@ -56,7 +56,6 @@ export default {
     const activate = async () => {
       try {
         const employeeDoc = await verifyEmployee(activationToken.value);
-        console.log(employeeDoc);
         if (employeeDoc) {
           const employee = new Employee(employeeDoc);
           if (await employee.init()) employee.signUp(credentials.password);

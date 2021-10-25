@@ -221,7 +221,7 @@ export default {
     };
 
     const clearJob = () => {
-      state.visit.data.jobID = null;
+      state.visit.data.jobID = "";
       state.jobData = null;
       emit("update:modelValue", state.visit);
     };

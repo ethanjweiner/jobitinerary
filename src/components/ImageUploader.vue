@@ -25,8 +25,6 @@ export default {
   },
   setup(props: any, { emit }: { emit: any }) {
     const uploadImage = async () => {
-      console.log("Uploading image...");
-
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: true,

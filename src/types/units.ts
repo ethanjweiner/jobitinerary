@@ -253,7 +253,6 @@ export class DBUnit<T> {
   }
 
   async save() {
-    console.log("Saving...");
     if (this.exists) {
       this.updateKeywords();
       await this.dbRef.set({ data: this.data, keywords: this.keywords });

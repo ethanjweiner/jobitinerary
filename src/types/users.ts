@@ -112,7 +112,6 @@ export class User implements UserInterface {
   }
 
   async save() {
-    console.log("Saving...");
     await this.dbRef.set({
       data: this.data,
     });
@@ -127,7 +126,6 @@ export class User implements UserInterface {
   }
 
   async update(data: UserData) {
-    console.log("updating");
     this.data = data;
     await this.save();
     return this;
@@ -165,8 +163,6 @@ class ChildUser extends User {
   }
 
   async save() {
-    console.log("Saving...");
-
     await this.dbRef.set({
       data: this.data,
       parentCompany: this.parentCompany,
@@ -309,7 +305,6 @@ export class Company extends User {
     await newCustomer.create(name, email, id);
     await newCustomer.assignCompany(this.data);
     // Update local state
-    console.log(newCustomer);
     this.customers.push(newCustomer);
   }
 

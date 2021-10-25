@@ -75,7 +75,6 @@ export default {
     });
 
     const togglePaid = async () => {
-      console.log("Toggle Paid");
       state.day.paid = !state.day.paid;
       await companiesCollection
         .doc(

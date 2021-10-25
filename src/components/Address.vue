@@ -75,7 +75,6 @@ export default {
 
     watch(state.location, (newLocation) => {
       emit("update:modelValue", newLocation);
-      console.log("updating");
     });
 
     const autocompleteInput = ref();
