@@ -1,54 +1,41 @@
 <template>
-  <div style="height: 100%;">
-    <ion-card-header>
-      <ion-card-title>
-        Jobs
-        <AddButton @click="createJob" />
-      </ion-card-title>
-
-      <ion-searchbar
-        class="ion-text-start"
-        v-model="searchText"
-        placeholder="Search by job name, customer, start date, description, etc."
-      ></ion-searchbar>
-    </ion-card-header>
-
-    <ion-card-content>
-      <InfiniteList
-        :key="searchText"
-        :splitters="splitters"
-        :pushQuantity="8"
-        :dbRef="dbRef"
-        orderByParam="startDate"
-        :searchFilter="searchText"
-      >
-        <template v-slot:item="itemProps">
-          <JobItem
-            :job="itemProps.item"
-            :showCustomer="customerID ? false : true"
-            @click="
-              router.push({
-                name: 'Job',
-                params: {
-                  userID: itemProps.item.customerID,
-                  jobID: itemProps.item.id,
-                },
-              })
-            "
-          />
-        </template>
-      </InfiniteList>
-    </ion-card-content>
+  <div slot="fixed" class="ion-padding list-header">
+    <ion-title>
+      Jobs
+      <AddButton @click="createJob" />
+    </ion-title>
+    <ion-searchbar class="ion-text-start" v-model="searchText"></ion-searchbar>
   </div>
+  <div style="margin-top: 130px;"></div>
+
+  <InfiniteList
+    :key="searchText"
+    :splitters="splitters"
+    :pushQuantity="10"
+    :dbRef="dbRef"
+    orderByParam="startDate"
+    :searchFilter="searchText"
+  >
+    <template v-slot:item="itemProps">
+      <JobItem
+        :job="itemProps.item"
+        :showCustomer="customerID ? false : true"
+        @click="
+          router.push({
+            name: 'Job',
+            params: {
+              userID: itemProps.item.customerID,
+              jobID: itemProps.item.id,
+            },
+          })
+        "
+      />
+    </template>
+  </InfiniteList>
 </template>
 
 <script lang="ts">
-import {
-  IonCardHeader,
-  IonSearchbar,
-  IonCardTitle,
-  IonCardContent,
-} from "@ionic/vue";
+import { IonSearchbar, IonTitle } from "@ionic/vue";
 import { reactive, ref } from "vue";
 import router from "@/router";
 
@@ -111,10 +98,8 @@ export default {
   },
   components: {
     JobItem,
-    IonCardHeader,
     IonSearchbar,
-    IonCardTitle,
-    IonCardContent,
+    IonTitle,
     AddButton,
     InfiniteList,
   },
@@ -131,9 +116,5 @@ ion-card-content {
 }
 ion-card-header {
   border-bottom: 1px solid green;
-}
-ion-searchbar {
-  padding-left: 0;
-  padding-bottom: 0;
 }
 </style>

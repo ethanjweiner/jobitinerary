@@ -1,8 +1,16 @@
 <template>
+  <div slot="fixed" class="ion-padding list-header">
+    <ion-title>
+      Visits
+      <AddButton @click="newVisit" />
+    </ion-title>
+    <ion-searchbar class="ion-text-start" v-model="searchText"></ion-searchbar>
+  </div>
+  <div style="margin-top: 130px;"></div>
   <InfiniteList
     :key="searchText"
     :splitters="splitters"
-    :pushQuantity="5"
+    :pushQuantity="10"
     :dbRef="dbRef"
     orderByParam="date"
     :searchFilter="searchText"
@@ -25,12 +33,15 @@
 <script lang="ts">
 import { ref } from "vue";
 import router from "@/router";
+import { IonTitle, IonSearchbar } from "@ionic/vue";
 
 import { VisitInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";
 import InfiniteList from "./InfiniteList.vue";
+import AddButton from "@/components/buttons/AddButton.vue";
+
 import { createVisit } from "@/db";
 
 export default {
@@ -38,6 +49,9 @@ export default {
   components: {
     VisitItem,
     InfiniteList,
+    IonSearchbar,
+    IonTitle,
+    AddButton,
   },
   props: {
     dbRef: Object, // Determine database query in parent component

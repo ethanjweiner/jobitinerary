@@ -1,45 +1,17 @@
 <template>
   <ion-page>
-    <ion-split-pane when="sm" content-id="main">
-      <ion-content content-id="main">
-        <ion-list>
-          <ion-item v-for="item in items" :key="item">
-            <ion-label>{{ item }}</ion-label>
-          </ion-item>
-        </ion-list>
-
-        <ion-infinite-scroll
-          @ionInfinite="loadData($event)"
-          threshold="100px"
-          id="infinite-scroll"
-          :disabled="isDisabled"
-        >
-          <ion-infinite-scroll-content
-            loading-spinner="bubbles"
-            loading-text="Loading more data..."
-          >
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Home</ion-title>
+        <SettingsButton />
+      </ion-toolbar>
+    </ion-header>
+    <ion-split-pane when="xs" content-id="main">
+      <ion-content class="ion-padding">
+        <Visits :dbRef="visitsRef" />
       </ion-content>
-      <ion-content id="main">
-        <ion-list>
-          <ion-item v-for="item in items" :key="item">
-            <ion-label>{{ item }}</ion-label>
-          </ion-item>
-        </ion-list>
-
-        <ion-infinite-scroll
-          @ionInfinite="loadData($event)"
-          threshold="150px"
-          id="infinite-scroll"
-          :disabled="isDisabled"
-        >
-          <ion-infinite-scroll-content
-            loading-spinner="bubbles"
-            loading-text="Loading more data..."
-          >
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
+      <ion-content class="ion-padding" id="main">
+        <Jobs :dbRef="jobsRef" />
       </ion-content>
     </ion-split-pane>
     <CreateButton />
@@ -51,17 +23,18 @@ import {
   IonPage,
   IonSplitPane,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
+  IonToolbar,
+  IonTitle,
+  IonHeader,
 } from "@ionic/vue";
 
 import CreateButton from "@/components/buttons/CreateButton.vue";
+import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import store from "@/store";
 import { companiesCollection, db } from "@/main";
 import { ref } from "@vue/reactivity";
+import Visits from "@/components/lists/VisitsInfinite.vue";
+import Jobs from "@/components/lists/Jobs.vue";
 
 export default {
   name: "Home",
@@ -86,7 +59,7 @@ export default {
       }
     };
 
-    const loadData = (ev: CustomEvent) => {
+    const loadData = (ev: any) => {
       setTimeout(() => {
         pushData();
         console.log("Loaded data");
@@ -116,11 +89,12 @@ export default {
     CreateButton,
     IonSplitPane,
     IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
+    IonToolbar,
+    IonTitle,
+    SettingsButton,
+    IonHeader,
+    Visits,
+    Jobs,
   },
 };
 </script>

@@ -67,7 +67,18 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-tint: #f5f6f9;
 }
 
+ion-searchbar {
+  max-width: 400px;
+}
+
+.list-header {
+  background: white;
+  width: 100%;
+  border-bottom: 1px solid grey;
+}
+
 ion-split-pane {
+  margin-top: 56px;
   --side-width: 50%;
   --side-min-width: 50%;
   --side-max-width: 50%;
