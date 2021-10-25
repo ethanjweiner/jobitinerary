@@ -25,13 +25,11 @@
     </ion-item-group>
   </ion-list>
 
-  <div v-else>List doesn't exist!</div>
-
   <ion-infinite-scroll
-    v-if="lists.length >= 1 && lists[0].length"
     @ionInfinite="loadMore($event)"
     threshold="100px"
     id="infinite-scroll"
+    :disabled="false"
   >
     <ion-infinite-scroll-content
       loading-spinner="bubbles"
@@ -101,13 +99,16 @@ export default {
       await state.infiniteList.init();
     };
 
-    const loadMore = async (ev: any) => {
-      const status = await state.infiniteList.loadNewBatch();
-      if (status == 0) {
-        ev.target.complete();
-      } else {
-        ev.target.disabled = true;
-      }
+    const loadMore = async (ev: CustomEvent) => {
+      setTimeout(() => {
+        state.infiniteList
+          .loadNewBatch()
+          .then(() => ev.target.complete())
+          .catch(() => {
+            ev.target.complete();
+            ev.target.disabled = true;
+          });
+      }, 500);
     };
 
     if (props.dbRef) {
