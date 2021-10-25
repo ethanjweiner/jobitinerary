@@ -143,7 +143,7 @@ import {
   homeOutline,
 } from "ionicons/icons";
 import DayPopover from "@/components/popovers/DayPopover.vue";
-import { retrieveVisitsOnDay, idToName, nameToID } from "@/helpers";
+import { retrieveVisitsOnDate, idToName, nameToID } from "@/helpers";
 import { companiesCollection } from "@/main";
 import { copyVisit } from "@/db";
 
@@ -159,6 +159,7 @@ export default {
     date: String,
   },
   setup(props: any) {
+    // SETUP
     const sections = ref<SectionsType>([
       {
         name: "Main",
@@ -194,7 +195,7 @@ export default {
       await day.init();
       state.day = day;
       // Initialze Visits
-      state.visits = await retrieveVisitsOnDay(props.date, {
+      state.visits = await retrieveVisitsOnDate(props.date, {
         employeeID: props.userID,
       });
       // Initialize Expenses

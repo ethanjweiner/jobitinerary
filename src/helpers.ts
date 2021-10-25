@@ -124,7 +124,7 @@ export async function getImageURL(ref: string) {
     .getDownloadURL();
 }
 
-export async function retrieveVisitsOnDay(
+export async function retrieveVisitsOnDate(
   date: string,
   options: { customerID?: string; employeeID?: string }
 ): Promise<Array<Visit>> {

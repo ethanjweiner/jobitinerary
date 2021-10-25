@@ -29,7 +29,7 @@ import { computed, reactive } from "@vue/reactivity";
 import router from "@/router";
 
 import { CustomerDay, Visit } from "@/types/units";
-import { retrieveVisitsOnDay } from "@/helpers";
+import { retrieveVisitsOnDate } from "@/helpers";
 
 interface State {
   day: CustomerDay;
@@ -49,7 +49,7 @@ export default {
 
     const initialize = async () => {
       // Initialze Visits (for purposes of hour computing)
-      state.visits = await retrieveVisitsOnDay(props.day.date, {
+      state.visits = await retrieveVisitsOnDate(props.day.date, {
         customerID: props.day.customerID,
       });
     };

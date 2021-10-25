@@ -97,9 +97,13 @@
             <ion-card>
               <ion-card-header>
                 <ion-card-title v-if="visit.data.employeeID">
-                  Visit by {{ visit.data.employeeID }}
+                  Visit by {{ idToName(visit.data.employeeID) }}
+                  <ion-button @click="deleteVisit(visit)">
+                    <ion-icon :icon="icons.trashOutline"></ion-icon>
+                  </ion-button>
                 </ion-card-title>
               </ion-card-header>
+
               <ion-card-content v-if="state.visits.length">
                 <VisitInline
                   v-model="state.visits[index]"
@@ -141,13 +145,13 @@ import {
 } from "@ionic/vue";
 
 import { computed, reactive, ref } from "@vue/reactivity";
-import { ellipsisVertical } from "ionicons/icons";
+import { ellipsisVertical, trashOutline } from "ionicons/icons";
 
 import { CustomerDay, Visit } from "@/types/units";
 import VisitInline from "@/components/units/Visit.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import { createVisit } from "@/db";
-import { retrieveVisitsOnDay, idToName } from "@/helpers";
+import { idToName, retrieveVisitsOnDate } from "@/helpers";
 import store from "@/store";
 import { watch } from "@vue/runtime-core";
 import router from "@/router";
@@ -171,6 +175,8 @@ export default {
       visits: [],
     });
 
+    // SETUP
+
     const initialize = async () => {
       // Initialze Visits
       const day = new CustomerDay(
@@ -181,7 +187,7 @@ export default {
       await day.init();
       state.day = day;
 
-      state.visits = await retrieveVisitsOnDay(props.date, {
+      state.visits = await retrieveVisitsOnDate(props.date, {
         customerID: props.userID,
       });
       watch(state.day.data, () => {
@@ -191,6 +197,7 @@ export default {
 
     initialize();
 
+    // POPOVER
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
     const toggleDaySettings = (state: boolean, ev?: Event) => {
@@ -198,6 +205,7 @@ export default {
       popoverIsOpen.value = state;
     };
 
+    // DATA
     const totalHours = computed(() =>
       state.visits.reduce(
         (hoursAcc: number, visit: Visit) => hoursAcc + visit.data.time.hours,
@@ -223,9 +231,8 @@ export default {
       return names;
     });
 
+    // METHODS
     const addVisit = async () => {
-      // ADD VISIT TO DATABASE
-
       const visit = await createVisit({
         customerID: props.userID,
         date: props.date,
@@ -262,15 +269,24 @@ export default {
       }
     };
 
+    const deleteVisit = async (visit: Visit) => {
+      // DELETE VISIT FROM DATABASE
+      await visit.delete();
+      state.visits = state.visits.filter(
+        (_visit: Visit) => visit.id != _visit.id
+      );
+    };
+
     return {
       state,
-      icons: { ellipsisVertical },
+      icons: { ellipsisVertical, trashOutline },
       totalHours,
       workTypes,
       employees,
       addVisit,
       deleteDay,
       changeDate,
+      deleteVisit,
       toggleDaySettings,
       popoverIsOpen,
       popoverEvent,

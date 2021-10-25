@@ -6,7 +6,7 @@
       </h2>
       <div class="ion-text-left ion-padding">
         <ion-note
-          >Note: The data displayed is only as accurated as the numHours and
+          >Note: The data displayed is only as accurated as the hours and
           expenses logged by the company or employee.</ion-note
         >
       </div>
@@ -110,7 +110,7 @@ export default {
     const hoursAmount = computed(() =>
       state.days.reduce(
         (acc: number, day: EmployeeDayInterface) =>
-          acc + day.time.hours * day.hourlyRate ? day.hourlyRate : 0,
+          acc + day.time.hours * (day.hourlyRate ? day.hourlyRate : 0),
         0
       )
     );
