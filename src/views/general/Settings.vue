@@ -9,7 +9,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-button color="danger" expand="fill" @click="signOut"
+      <ion-button color="tertiary" expand="fill" @click="signOut"
         >Logout</ion-button
       >
     </ion-content>

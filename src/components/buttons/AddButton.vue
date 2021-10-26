@@ -1,7 +1,7 @@
 <template>
-  <ion-chip style="margin-left: 7px;">
+  <ion-chip outline color="light">
     <ion-icon :icon="icons.add"></ion-icon>
-    <ion-label>{{ title ? title : "Add New" }}</ion-label>
+    <ion-label class="ion-text-center">{{ title ? title : "Add" }}</ion-label>
   </ion-chip>
 </template>
 
@@ -27,4 +27,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-chip {
+  min-width: 80px;
+}
+</style>
