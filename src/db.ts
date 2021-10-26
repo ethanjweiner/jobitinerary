@@ -46,7 +46,11 @@ export class InfiniteList {
   }
 
   async init() {
-    await this.loadNewBatch();
+    try {
+      await this.loadNewBatch();
+    } catch {
+      // Do nothing
+    }
   }
 
   async loadNewBatch() {
@@ -80,7 +84,7 @@ export class InfiniteList {
                 break;
             }
           });
-          if (snapshot.empty) reject();
+          if (snapshot.empty) reject("The snapshot is empty.");
           else {
             this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
             resolve(0);
@@ -194,54 +198,3 @@ export async function copyVisit(visit: Visit, employeeID: string) {
 
   await copiedVisit.create(copiedData);
 }
-
-// Testing
-
-// const visitsList = new InfiniteList(
-//   companiesCollection
-//     .doc("b4d8b6c4-afe9-4a6b-b0f9-136df2f4680a")
-//     .collection("visits"),
-//   10,
-//   20,
-//   "date",
-//   ""
-// );
-
-// setTimeout(() => {
-//   for (let i = 0; i < 60; i++) {
-//     createVisit({ employeeID: i.toString() });
-//   }
-// }, 1000);
-
-// visitsList.init().then(() => {
-//   visitsList.loadMore().then(() => {
-//     visitsList.loadMore().then(() => {
-//       console.log(visitsList.buffer);
-//       console.log(visitsList.list);
-//     });
-//   });
-// });
-
-/* BACKLOG
-
-export async function fetchThreads(
-  recipientType: "company" | "employee" | "customer",
-  name?: "string"
-) {
-  console.log(name);
-  switch (recipientType) {
-    case "company":
-      // Retrieve all threads where company is a user
-      return [sampleThread, sampleThread];
-    case "employee":
-      // Retrieve threads with the given employee _name_
-      return [sampleThread, sampleThread];
-    case "customer":
-      // Retrieve threads with the given customer _name_
-      return [sampleThread, sampleThread];
-    default:
-      break;
-  }
-}
-
-*/
