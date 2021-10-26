@@ -2,16 +2,16 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Home</ion-title>
+        <ion-title>JobItinerary</ion-title>
         <SettingsButton />
       </ion-toolbar>
     </ion-header>
-    <ion-split-pane when="xs" content-id="main">
-      <ion-content class="ion-padding">
-        <Visits :dbRef="visitsRef" />
-      </ion-content>
-      <ion-content class="ion-padding" id="main">
+    <ion-split-pane when="sm" content-id="main">
+      <ion-content>
         <Jobs :dbRef="jobsRef" />
+      </ion-content>
+      <ion-content id="main">
+        <Visits :dbRef="visitsRef" />
       </ion-content>
     </ion-split-pane>
     <CreateButton />
@@ -20,21 +20,20 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonSplitPane,
-  IonContent,
+  IonHeader,
   IonToolbar,
   IonTitle,
-  IonHeader,
+  IonSplitPane,
+  IonContent,
+  IonPage,
 } from "@ionic/vue";
 
 import CreateButton from "@/components/buttons/CreateButton.vue";
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import store from "@/store";
 import { companiesCollection, db } from "@/main";
-import { ref } from "@vue/reactivity";
 import Visits from "@/components/lists/VisitsInfinite.vue";
 import Jobs from "@/components/lists/Jobs.vue";
+import SettingsButton from "@/components/buttons/SettingsButton.vue";
 
 export default {
   name: "Home",
@@ -46,55 +45,22 @@ export default {
       .collectionGroup("jobs")
       .where("data.companyID", "==", store.state.companyID);
 
-    const isDisabled = ref(false);
-    const toggleInfiniteScroll = () => {
-      isDisabled.value = !isDisabled.value;
-    };
-    const items = ref([]);
-    const pushData = () => {
-      const max = items.value.length + 20;
-      const min = max - 20;
-      for (let i = min; i < max; i++) {
-        items.value.push(i);
-      }
-    };
-
-    const loadData = (ev: any) => {
-      setTimeout(() => {
-        pushData();
-        console.log("Loaded data");
-        ev.target.complete();
-
-        // App logic to determine if all data is loaded
-        // and disable the infinite scroll
-        if (items.value.length == 1000) {
-          ev.target.disabled = true;
-        }
-      }, 500);
-    };
-
-    pushData();
-
     return {
       visitsRef,
       jobsRef,
-      isDisabled,
-      toggleInfiniteScroll,
-      loadData,
-      items,
     };
   },
   components: {
-    IonPage,
     CreateButton,
     IonSplitPane,
     IonContent,
+    Visits,
+    Jobs,
+    IonHeader,
     IonToolbar,
     IonTitle,
     SettingsButton,
-    IonHeader,
-    Visits,
-    Jobs,
+    IonPage,
   },
 };
 </script>
@@ -127,5 +93,9 @@ ion-col {
 }
 ion-card {
   height: 100%;
+}
+
+ion-header {
+  --background: var(--ion-color-primary);
 }
 </style>
