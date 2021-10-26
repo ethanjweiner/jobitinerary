@@ -1,36 +1,36 @@
 <template>
-  <ion-toolbar>
-    <ion-item>
-      <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
-      <ion-icon
-        v-if="type == 'employee'"
-        :icon="icons.hammerOutline"
-      ></ion-icon>
-      <ion-select
-        v-if="state.ids.length"
-        @ionChange="$emit('update:modelValue', $event.detail.value)"
-        :value="modelValue"
-        :placeholder="'Select ' + capitalize(type)"
-        :key="modelValue"
-      >
-        <ion-select-option v-for="id in state.ids" :key="id" :value="id">{{
-          idToName(id)
-        }}</ion-select-option>
-      </ion-select>
-      <ion-button
-        v-else
-        size="default"
-        style="margin-left: 10px;"
+  <ion-item color="primary">
+    <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
+    <ion-icon v-if="type == 'employee'" :icon="icons.hammerOutline"></ion-icon>
+    <ion-select
+      v-if="state.ids.length"
+      @ionChange="$emit('update:modelValue', $event.detail.value)"
+      :value="modelValue"
+      :placeholder="'Select ' + capitalize(type)"
+      :key="modelValue"
+      color="primary"
+    >
+      <ion-select-option v-for="id in state.ids" :key="id" :value="id">{{
+        idToName(id)
+      }}</ion-select-option>
+    </ion-select>
+    <ion-button
+      v-else
+      size="default"
+      style="margin-left: 10px;"
+      @click="newUserModalIsOpen = true"
+    >
+      Create {{ capitalize(type) }}
+    </ion-button>
+    <ion-buttons slot="end" v-if="state.ids.length">
+      <ion-fab-button
+        color="light"
+        size="small"
         @click="newUserModalIsOpen = true"
       >
-        Create {{ capitalize(type) }}
-      </ion-button>
-      <ion-buttons slot="end" v-if="state.ids.length">
-        <ion-fab-button size="small" @click="newUserModalIsOpen = true">
-          <ion-icon :icon="icons.add"></ion-icon>
-        </ion-fab-button>
-      </ion-buttons>
-    </ion-item>
+        <ion-icon :icon="icons.add"></ion-icon>
+      </ion-fab-button>
+    </ion-buttons>
     <ion-modal
       :is-open="newUserModalIsOpen"
       @didDismiss="newUserModalIsOpen = false"
@@ -42,14 +42,13 @@
         @didDismiss="newUserModalIsOpen = false"
       />
     </ion-modal>
-  </ion-toolbar>
+  </ion-item>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 
 import {
-  IonToolbar,
   IonItem,
   IonSelect,
   IonSelectOption,
@@ -79,7 +78,6 @@ export default defineComponent({
   },
   emits: ["update:modelValue", "userAdded"],
   components: {
-    IonToolbar,
     IonItem,
     IonSelect,
     IonSelectOption,
@@ -134,6 +132,7 @@ export default defineComponent({
 
 <style scoped>
 ion-item {
+  max-width: 600px;
   padding-bottom: 0;
   margin-bottom: 0;
 }
