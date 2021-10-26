@@ -1,12 +1,6 @@
 <template>
-  <div slot="fixed" class="ion-padding list-header">
-    <ion-title>
-      Visits
-      <AddButton @click="newVisit" />
-    </ion-title>
-    <ion-searchbar class="ion-text-start" v-model="searchText"></ion-searchbar>
-  </div>
-  <div style="margin-top: 130px;"></div>
+  <SearchToolbar :addAction="newVisit" title="Visits" v-model="searchText" />
+  <div style="margin-top: 68px;"></div>
   <InfiniteList
     :key="searchText"
     :splitters="splitters"
@@ -14,6 +8,7 @@
     :dbRef="dbRef"
     orderByParam="date"
     :searchFilter="searchText"
+    :sizes="sizes"
   >
     <template v-slot:item="itemProps">
       <VisitItem
@@ -33,25 +28,22 @@
 <script lang="ts">
 import { ref } from "vue";
 import router from "@/router";
-import { IonTitle, IonSearchbar } from "@ionic/vue";
 
 import { VisitInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";
 import InfiniteList from "./InfiniteList.vue";
-import AddButton from "@/components/buttons/AddButton.vue";
 
 import { createVisit } from "@/db";
+import SearchToolbar from "../inputs/SearchToolbar.vue";
 
 export default {
   name: "Visits",
   components: {
     VisitItem,
     InfiniteList,
-    IonSearchbar,
-    IonTitle,
-    AddButton,
+    SearchToolbar,
   },
   props: {
     dbRef: Object, // Determine database query in parent component
@@ -63,14 +55,22 @@ export default {
 
     const splitters = ref<Array<Splitter>>([
       {
-        name: "Scheduled Visits",
+        name: "Scheduled",
         filter: (item: VisitInterface) => new Date(item.date) >= new Date(),
       },
       {
-        name: "Past Visits",
+        name: "Past",
         filter: (item: VisitInterface) => new Date(item.date) < new Date(),
       },
     ]);
+
+    const sizes = {
+      xs: 12,
+      sm: 12,
+      md: 12,
+      lg: 6,
+      xl: 6,
+    };
 
     const newVisit = async () => {
       const visit = await createVisit();
@@ -82,6 +82,7 @@ export default {
       searchText,
       splitters,
       newVisit,
+      sizes,
     };
   },
 };

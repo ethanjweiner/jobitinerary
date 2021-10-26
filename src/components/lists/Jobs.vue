@@ -1,12 +1,6 @@
 <template>
-  <div slot="fixed" class="ion-padding list-header">
-    <ion-title>
-      Jobs
-      <AddButton @click="createJob" />
-    </ion-title>
-    <ion-searchbar class="ion-text-start" v-model="searchText"></ion-searchbar>
-  </div>
-  <div style="margin-top: 130px;"></div>
+  <SearchToolbar :addAction="createJob" title="Jobs" v-model="searchText" />
+  <div style="margin-top: 68px;"></div>
 
   <InfiniteList
     :key="searchText"
@@ -15,6 +9,7 @@
     :dbRef="dbRef"
     orderByParam="startDate"
     :searchFilter="searchText"
+    :sizes="sizes"
   >
     <template v-slot:item="itemProps">
       <JobItem
@@ -35,7 +30,6 @@
 </template>
 
 <script lang="ts">
-import { IonSearchbar, IonTitle } from "@ionic/vue";
 import { reactive, ref } from "vue";
 import router from "@/router";
 
@@ -43,8 +37,8 @@ import { JobInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import JobItem from "./items/JobItem.vue";
-import AddButton from "@/components/buttons/AddButton.vue";
 import InfiniteList from "./InfiniteList.vue";
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 
 export default {
   name: "Jobs",
@@ -53,6 +47,13 @@ export default {
     customerID: String,
   },
   setup(props: any) {
+    const sizes = {
+      xs: 12,
+      sm: 12,
+      md: 12,
+      lg: 6,
+      xl: 6,
+    };
     // TEMPORARY: Add a job
     const searchText = ref<string>("");
 
@@ -62,21 +63,21 @@ export default {
 
     const splitters = ref<Array<Splitter>>([
       {
-        name: "Unscheduled Jobs",
+        name: "Unscheduled",
         filter: (item: JobInterface) => !item.startDate,
       },
       {
-        name: "Scheduled Jobs",
+        name: "Scheduled",
         filter: (item: JobInterface) => new Date(item.startDate) > new Date(),
       },
       {
-        name: "Current Jobs",
+        name: "Current",
         filter: (item: JobInterface) =>
           new Date(item.startDate) <= new Date() &&
           new Date(item.endDate) >= new Date(),
       },
       {
-        name: "Past Jobs",
+        name: "Past",
         filter: (item: JobInterface) => new Date(item.endDate) < new Date(),
       },
     ]);
@@ -90,6 +91,7 @@ export default {
 
     return {
       state,
+      sizes,
       splitters,
       createJob,
       searchText,
@@ -98,10 +100,8 @@ export default {
   },
   components: {
     JobItem,
-    IonSearchbar,
-    IonTitle,
-    AddButton,
     InfiniteList,
+    SearchToolbar,
   },
 };
 </script>

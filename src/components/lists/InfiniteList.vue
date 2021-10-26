@@ -1,29 +1,36 @@
 <template>
-  <div
-    class="empty-list-container ion-text-center ion-padding"
+  <ion-grid
     v-if="lists.length == 0 || lists[0].length == 0"
+    class="ion-justify-content-center"
+    style="height: 80%;"
   >
-    <ion-title>
-      Add Something to Get Started!
-    </ion-title>
-  </div>
-  <ion-list v-else-if="lists.length >= 1">
-    <ion-item-group v-for="(list, index) in lists" :key="index">
-      <div v-if="list.items.length">
-        <ion-item-divider v-if="list.name">
-          <ion-label>
-            {{ list.name }}
-          </ion-label>
-        </ion-item-divider>
-        <slot
-          name="item"
-          v-for="item in list.items"
-          :key="item.id"
-          :item="item"
-        ></slot>
-      </div>
-    </ion-item-group>
-  </ion-list>
+    <ion-row class="ion-align-items-center" style="height: 100%;">
+      <ion-col class="ion-text-center">
+        <div>
+          <ion-title>Nothing to see here...</ion-title>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid v-else-if="lists.length >= 1">
+    <ion-row v-for="(list, index) in lists" :key="index">
+      <h1 v-if="list.name" class="list-section-title ion-text-center">
+        {{ list.name }}
+      </h1>
+      <ion-col
+        v-for="item in list.items"
+        :key="item.id"
+        :size-xs="sizes ? sizes.xs : 12"
+        :size-sm="sizes ? sizes.sm : 12"
+        :size-md="sizes ? sizes.md : 6"
+        :size-lg="sizes ? sizes.lg : 4"
+        :size-xl="sizes ? sizes.xl : 3"
+      >
+        <slot name="item" :item="item"></slot>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-infinite-scroll
     @ionInfinite="loadMore($event)"
@@ -43,11 +50,10 @@
 import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonList,
-  IonItemGroup,
-  IonItemDivider,
-  IonLabel,
   IonTitle,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { CollectionRef, Splitter } from "@/types/auxiliary";
@@ -69,12 +75,13 @@ export default {
     },
     orderByParam: String,
     searchFilter: String,
+    sizes: Object,
   },
   setup(props: any) {
     const state = reactive<State>({
       infiniteList: new InfiniteList(
         props.dbRef,
-        18,
+        10,
         props.orderByParam,
         props.searchFilter
       ),
@@ -83,12 +90,16 @@ export default {
     const lists = computed(() => {
       if (state.infiniteList.list.items.length) {
         if (props.splitters) {
-          return props.splitters.map((splitter: Splitter) => {
-            return {
-              name: splitter.name,
-              items: state.infiniteList.list.items.filter(splitter.filter),
-            };
-          });
+          return props.splitters
+            .map((splitter: Splitter) => {
+              return {
+                name: splitter.name,
+                items: state.infiniteList.list.items.filter(splitter.filter),
+              };
+            })
+            .filter(
+              (list: { name: string; items: Array<any> }) => list.items.length
+            );
         }
         return [{ items: state.infiniteList.list.items }];
       }
@@ -99,12 +110,13 @@ export default {
       await state.infiniteList.init();
     };
 
-    const loadMore = async (ev: CustomEvent) => {
+    const loadMore = async (ev: any) => {
       setTimeout(() => {
         state.infiniteList
           .loadNewBatch()
           .then(() => ev.target.complete())
-          .catch(() => {
+          .catch((error) => {
+            console.log(error);
             ev.target.complete();
             ev.target.disabled = true;
           });
@@ -129,19 +141,18 @@ export default {
   components: {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    IonList,
-    IonItemGroup,
-    IonItemDivider,
-    IonLabel,
     IonTitle,
+    IonGrid,
+    IonRow,
+    IonCol,
   },
 };
 </script>
 
 <style scoped>
-.empty-list-container {
-  height: 100%;
-  background: rgb(235, 235, 235);
-  border: 3px dashed grey;
+.list-section-title {
+  width: 100%;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
 }
 </style>
