@@ -1,12 +1,14 @@
 <template>
   <ion-button @click="uploadImage">
-    <ion-icon :icon="icons.cameraOutline"></ion-icon>
-    <span style="padding-left: 5px;" v-if="!hideText">Upload Image</span>
+    <ion-icon color="dark" :icon="icons.cameraOutline"></ion-icon>
+    <ion-text color="dark" style="padding-left: 5px;" v-if="!hideText"
+      >Upload Image</ion-text
+    >
   </ion-button>
 </template>
 
 <script lang="ts">
-import { IonButton, IonIcon } from "@ionic/vue";
+import { IonButton, IonIcon, IonText } from "@ionic/vue";
 import { cameraOutline } from "ionicons/icons";
 import { storage } from "@/main";
 import { Camera, CameraResultType } from "@capacitor/camera";
@@ -19,6 +21,7 @@ export default {
   components: {
     IonButton,
     IonIcon,
+    IonText,
   },
   props: {
     hideText: Boolean,

@@ -8,7 +8,7 @@
 
         <ion-buttons slot="end">
           <ion-button @click="$emit('deleteImage')" v-if="!hideClose">
-            <ion-icon :icon="icons.close"></ion-icon>
+            <ion-icon color="dark" :icon="icons.close"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
