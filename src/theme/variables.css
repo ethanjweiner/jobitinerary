@@ -84,19 +84,24 @@ http://ionicframework.com/docs/theming/ */
   /* Fonts */
   --ion-font-family: "Work Sans", sans-serif;
 }
-/* Use media queries to target */
-
-@media (min-width: 768px) {
-  ion-header {
-    display: none;
-  }
-}
 
 div.firebase-emulator-warning {
   top: 0;
   height: 0px;
   width: 0px !important;
   overflow: hidden;
+}
+
+/* Spacing and Positioning */
+
+ion-searchbar {
+  max-width: 400px;
+}
+
+ion-select,
+ion-input,
+ion-toolbar {
+  color: white;
 }
 
 ion-tab-bar {
@@ -115,17 +120,25 @@ ion-tab-bar {
   }
 }
 
-ion-header ion-title {
-  font-family: "Oswald", sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
+@media (min-width: 768px) {
+  ion-header {
+    display: none;
+  }
 }
+
+/* Fonts */
 
 h1,
 h2,
 h3 {
   font-family: "Oswald", sans-serif;
   font-weight: 400;
+  text-transform: uppercase;
+}
+
+ion-header ion-title {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -136,48 +149,7 @@ ion-tab-bar ion-title {
   text-transform: uppercase;
 }
 
-ion-card li {
-  list-style: none;
-}
-
-ion-toolbar {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-light);
-}
-
-ion-searchbar {
-  max-width: 400px;
-}
-
-ion-tab-bar {
-  --border: none;
-}
-
-ion-page,
-ion-router-outlet {
-  background: white;
-}
-.dot {
-  background-color: rgb(0, 102, 255);
-  height: 7px;
-  width: 7px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-ion-list {
-  padding-top: 0 !important;
-}
-
-.list-header {
-  margin: 0;
-  display: inline;
-}
-
-ion-title {
-  padding-inline-start: 15px;
-  padding-inline-end: 25px;
-}
+/* Modals */
 
 .small-modal .modal-wrapper {
   height: 285px;
@@ -189,27 +161,86 @@ ion-title {
   width: 500px;
 }
 
+/* Colors */
+
 input {
   --background: var(--ion-color-light);
 }
 
+/* Customer Styles */
+
+.customer ion-toolbar {
+  --background: var(--ion-color-secondary);
+}
+
+.customer ion-button {
+  --background: var(--ion-color-secondary);
+}
+
+.customer ion-input {
+  --color: var(--ion-color-secondary);
+}
+
+.customer ion-textarea {
+  --color: var(--ion-color-secondary);
+}
+
+.customer ion-item {
+  --background: var(--ion-color-secondary);
+}
+
+.customer ion-segment {
+  --background: var(--ion-color-secondary);
+}
+
+/* Employee Styles */
+
+.employee ion-toolbar {
+  --background: var(--ion-color-tertiary);
+}
+
+.employee ion-button {
+  --background: var(--ion-color-tertiary);
+}
+
+.employee ion-input {
+  --color: var(--ion-color-tertiary);
+}
+
+.employee ion-textarea {
+  --color: var(--ion-color-tertiary);
+}
+
+.employee ion-item {
+  --background: var(--ion-color-tertiary);
+}
+
+.employee ion-segment {
+  --background: var(--ion-color-secondary);
+}
+
+/* Auxiliary */
+ion-page,
+ion-router-outlet {
+  background: white;
+}
+
+ion-tab-bar {
+  --border: none;
+}
+
+.dot {
+  background-color: rgb(0, 102, 255);
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+ion-card li {
+  list-style: none;
+}
+
 .payment-data {
   font-weight: bold;
-}
-
-ion-card {
-  margin: 0 !important;
-  margin-top: 10px !important;
-  font-weight: 400;
-}
-
-/* User specific */
-
-ion-input {
-  --color: var(--ion-color-secondary);
-}
-
-ion-textarea {
-  --background: var(--ion-color-secondary);
-  --color: var(--ion-color-secondary);
 }
