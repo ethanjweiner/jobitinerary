@@ -1,8 +1,11 @@
 <template>
-  <!-- Sections segment -->
-
-  <ion-split-pane content-id="main" when="md" :class="cssClass">
-    <ion-menu content-id="main" ref="menu" menu-id="first">
+  <!-- TEMPORARY: Reload split pane upon route changes... -->
+  <ion-split-pane
+    :key="route.fullPath"
+    :content-id="'main-' + sectionsID"
+    when="md"
+  >
+    <ion-menu :content-id="'main-' + sectionsID">
       <ion-content>
         <ion-item
           class="menu-item"
@@ -17,13 +20,13 @@
       </ion-content>
     </ion-menu>
 
-    <ion-content id="main">
+    <ion-content :id="'main-' + sectionsID">
       <!-- Place whatever you need in here -->
       <ion-segment
         slot="fixed"
         @ionChange="selectedSection = $event.detail.value"
         :value="selectedSection"
-        color="secondary"
+        color="light"
       >
         <ion-segment-button
           v-for="section in sections"
@@ -34,7 +37,9 @@
           <ion-label>{{ section.name }}</ion-label>
         </ion-segment-button>
       </ion-segment>
-      <slot :name="selectedSection" class="main-content"></slot>
+      <div class="main-content">
+        <slot :name="selectedSection"></slot>
+      </div>
     </ion-content>
   </ion-split-pane>
 </template>
@@ -51,31 +56,29 @@ import {
   IonItem,
   IonContent,
   IonMenu,
-  menuController,
 } from "@ionic/vue";
+import { useRoute } from "vue-router";
 
 export default {
   name: "Sections",
   props: {
     sections: Array,
     cssClass: String,
+    sectionsID: String,
   },
-  setup(props: AsyncIterator) {
+  setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);
-
     const screenWidth = ref(0);
+    const route = useRoute();
 
     onMounted(async () => {
       screenWidth.value = window.innerWidth;
       window.addEventListener("resize", () => {
         screenWidth.value = window.innerWidth;
       });
-      menuController.enable(true, "first");
-      const open = await menuController.isOpen("first");
-      console.log(open);
     });
 
-    return { selectedSection, screenWidth };
+    return { selectedSection, screenWidth, route };
   },
   components: {
     IonSegment,
@@ -102,6 +105,9 @@ ion-split-pane {
   ion-segment {
     display: none;
   }
+  ion-menu {
+    display: block;
+  }
 }
 
 ion-label {
@@ -115,5 +121,9 @@ ion-menu ion-item {
 
 ion-menu ion-item {
   --min-height: 80px;
+}
+
+ion-segment-button {
+  --color: var(--ion-color-medium);
 }
 </style>
