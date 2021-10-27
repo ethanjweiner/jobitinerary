@@ -66,6 +66,17 @@ export default {
 </script>
 
 <style scoped>
+ion-split-pane {
+  --side-width: 50%;
+  --side-min-width: 50%;
+  --side-max-width: 50%;
+}
+
+@media (max-width: 768px) {
+  ion-split-pane {
+    margin-top: 56px;
+  }
+}
 ion-grid {
   height: calc(100% - 120px);
 }

@@ -1,55 +1,21 @@
 <template>
-  <Sections v-if="state.customer" :sections="sections" :wrapCards="true">
+  <Sections v-if="state.customer" :sections="sections" cssClass="customer">
     <template v-slot:dates>
-      <div class="list">
-        <CustomerDays
-          :customerID="state.customer.data.id"
-          title="Dates"
-          :dbRef="daysRef"
-        />
-      </div>
+      <CustomerDays
+        :customerID="state.customer.data.id"
+        title="Dates"
+        :dbRef="daysRef"
+      />
     </template>
     <template v-slot:jobs>
-      <div class="list">
-        <Jobs :customerID="state.customer.data.id" :dbRef="jobsRef" />
-      </div>
+      <Jobs
+        color="secondary"
+        :customerID="state.customer.data.id"
+        :dbRef="jobsRef"
+      />
     </template>
     <template v-slot:customer-info>
       <CustomerForm v-model="state.customer" />
-    </template>
-    <template v-slot:sectionsAsGrid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-card>
-            <div class="list">
-              <CustomerDays
-                :customerID="state.customer.data.id"
-                title="Dates"
-                :dbRef="daysRef"
-              />
-            </div>
-          </ion-card>
-        </ion-col>
-        <ion-col size="6">
-          <ion-card>
-            <div class="list">
-              <Jobs :customerID="state.customer.data.id" :dbRef="jobsRef" />
-            </div>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12">
-          <ion-card class="ion-padding">
-            <ion-card-header>
-              <ion-card-title>
-                Customer Info
-              </ion-card-title>
-            </ion-card-header>
-            <CustomerForm v-model="state.customer" />
-          </ion-card>
-        </ion-col>
-      </ion-row>
     </template>
   </Sections>
 </template>
@@ -58,13 +24,6 @@
 import Jobs from "@/components/lists/Jobs.vue";
 import CustomerDays from "@/components/lists/CustomerDays.vue";
 
-import {
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-} from "@ionic/vue";
 import { computed, reactive, ref } from "@vue/reactivity";
 
 import {
@@ -135,7 +94,7 @@ export default {
         id: "jobs",
       },
       {
-        name: "Customer",
+        name: "Info",
         icon: personOutline,
         id: "customer-info",
       },
@@ -158,21 +117,8 @@ export default {
     Sections,
     CustomerDays,
     CustomerForm,
-    IonRow,
-    IonCol,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
   },
 };
 </script>
 
-<style scoped>
-.address-input-item {
-  max-width: 600px;
-}
-#suggestions-card {
-  width: calc(100% - 120px);
-  margin-top: 0;
-}
-</style>
+<style></style>
