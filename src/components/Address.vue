@@ -4,11 +4,11 @@
       <ion-button :disabled="state.location.coordinates ? false : true">
         <ion-icon
           :icon="navigateOutline"
-          :color="state.location.coordinates ? 'primary' : 'grey'"
+          :color="state.location.coordinates ? 'light' : 'medium'"
         ></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-item>
+    <ion-item color="light">
       <ion-label position="stacked">Address </ion-label>
 
       <ion-input
@@ -112,4 +112,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-toolbar {
+  --background: var(--ion-color-secondary);
+}
+</style>

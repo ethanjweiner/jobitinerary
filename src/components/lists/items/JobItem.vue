@@ -1,24 +1,30 @@
 <template>
-  <ion-item>
-    <div>
-      <ion-label>{{ job.name }} </ion-label>
-      <ion-note v-if="showCustomer"
-        >for {{ idToName(job.customerID) }}</ion-note
+  <ion-card button="true">
+    <ion-card-header>
+      <ion-card-title>{{ job.name }}</ion-card-title>
+      <ion-card-subtitle v-if="job.customerID">
+        <ion-icon :icon="icons.cart"></ion-icon>
+        {{ idToName(job.customerID) }}</ion-card-subtitle
       >
-    </div>
-    <div slot="end">
-      <div style="padding: 0;" v-if="job.startDate">
-        <ion-note color="dark">Start: {{ job.startDate }}</ion-note>
-      </div>
-      <div style="padding: 0;" v-if="job.endDate">
-        <ion-note color="dark">End: {{ job.endDate }}</ion-note>
-      </div>
-    </div>
-  </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <li v-if="job.startDate">Start: {{ job.startDate }}</li>
+      <li v-if="job.endDate">End: {{ job.endDate }}</li>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script lang="ts">
-import { IonItem, IonLabel, IonNote } from "@ionic/vue";
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonIcon,
+  IonCardContent,
+} from "@ionic/vue";
+
+import { cart } from "ionicons/icons";
 import router from "@/router";
 import { idToName } from "@/helpers";
 
@@ -32,22 +38,18 @@ export default {
     return {
       router,
       idToName,
+      icons: { cart },
     };
   },
   components: {
-    IonItem,
-    IonLabel,
-    IonNote,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonIcon,
+    IonCardContent,
   },
 };
 </script>
 
-<style scoped>
-ion-item {
-  cursor: pointer;
-}
-div {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-</style>
+<style scoped></style>

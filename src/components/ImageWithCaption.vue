@@ -1,7 +1,7 @@
 <template>
   <div class="image-container">
     <ion-card class="ion-text-start">
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-buttons slot="start" v-if="!hideUploadOption">
           <ImageUploader @imageChange="changeImage" />
         </ion-buttons>
@@ -49,6 +49,7 @@ export default {
     hideUploadOption: Boolean,
     hideCaption: Boolean,
     hideClose: Boolean,
+    color: String,
   },
   emits: ["update:modelValue", "deleteImage"],
   setup(props: any, { emit }: { emit: any }) {

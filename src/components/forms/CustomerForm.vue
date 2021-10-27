@@ -1,109 +1,119 @@
 <template>
-  <form>
-    <ion-list>
-      <ion-list-header>
-        <h5>Contact</h5>
-      </ion-list-header>
-      <ion-grid>
-        <ion-row class="ion-justify-content-around">
-          <ion-col size="12" size-sm="6" size-lg="3">
-            <ion-item>
-              <ion-label position="stacked">
-                <ion-icon :icon="icons.mailOutline"></ion-icon>
-                <span style="padding: 5px;">Email</span>
-              </ion-label>
-              <ion-input
-                type="email"
-                disabled
-                placeholder="email"
-                :debounce="store.DEBOUNCE_AMOUNT"
-                v-model="state.customer.data.email"
-                @ionInput="$emit('update:modelValue', state.customer)"
-              ></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="12" size-sm="6" size-lg="3">
-            <ion-item>
-              <ion-label position="stacked">
-                <ion-icon :icon="icons.callOutline"></ion-icon>
-                <span style="padding: 5px;">Phone</span>
-              </ion-label>
-              <ion-input
-                type="tel"
-                inputmode="tel"
-                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                placeholder="123-123-1234"
-                :debounce="store.DEBOUNCE_AMOUNT"
-                @ionInput="$emit('update:modelValue', state.customer)"
-                v-model="state.customer.data.phone"
-              ></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="12" size-sm="12" size-lg="6">
-            <Address
-              @update:modelValue="$emit('update:modelValue', state.customer)"
-              v-model="state.customer.data.location"
-            />
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-list>
-    <ion-list>
-      <ion-list-header>
-        <h5>Notes</h5>
-      </ion-list-header>
-      <ion-grid>
-        <ion-row class="ion-justify-content-around">
-          <ion-col size="12" size-lg="6">
-            <ion-item>
-              <ion-label position="stacked">Customer Notes</ion-label>
-              <ion-textarea
-                v-if="state.showTextAreas"
-                auto-grow
-                placeholder="Notes on customer"
-                :debounce="store.DEBOUNCE_AMOUNT"
-                @ionInput="$emit('update:modelValue', state.customer)"
-                v-model="state.customer.data.customerNotes"
-              ></ion-textarea>
-            </ion-item>
-          </ion-col>
-          <ion-col size="12" size-lg="6">
-            <ion-item>
-              <ion-label position="stacked">Property Notes</ion-label>
-              <ion-textarea
-                v-if="state.showTextAreas"
-                auto-grow
-                placeholder="Notes on property"
-                :debounce="store.DEBOUNCE_AMOUNT"
-                @ionInput="$emit('update:modelValue', state.customer)"
-                v-model="state.customer.data.propertyNotes"
-              ></ion-textarea>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-list>
-    <ion-list>
-      <ion-list-header>
-        <h5>
-          Property Images
-        </h5>
-
-        <AddButton @click="addImage" />
-      </ion-list-header>
-      <ion-grid>
-        <ion-row class="ion-justify-content-left">
-          <ImageWithCaption
-            v-for="(image, index) in state.customer.data.propertyImages"
-            :key="image.ref"
-            @update:modelValue="$emit('update:modelValue', state.customer)"
-            v-model="state.customer.data.propertyImages[index]"
-            :showCaption="true"
-            @deleteImage="deleteImage(index)"
-          />
-        </ion-row>
-      </ion-grid>
-    </ion-list>
+  <form class="main-content">
+    <ion-grid>
+      <ion-row class="ion-justify-content-around">
+        <ion-col size="12" size-md="6">
+          <ion-card>
+            <ion-card-header color="secondary">
+              <ion-card-title>CONTACT</ion-card-title>
+              <ion-card-subtitle>{{
+                state.customer.data.name
+              }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list> </ion-list>
+              <ion-item>
+                <ion-label position="stacked" color="secondary">
+                  <ion-icon :icon="icons.mailOutline"></ion-icon>
+                  <span style="padding: 5px;">Email</span>
+                </ion-label>
+                <ion-input
+                  type="email"
+                  disabled
+                  placeholder="email"
+                  :debounce="store.DEBOUNCE_AMOUNT"
+                  v-model="state.customer.data.email"
+                  @ionInput="$emit('update:modelValue', state.customer)"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked" color="secondary">
+                  <ion-icon :icon="icons.callOutline"></ion-icon>
+                  <span style="padding: 5px;">Phone</span>
+                </ion-label>
+                <ion-input
+                  type="tel"
+                  inputmode="tel"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  placeholder="123-123-1234"
+                  :debounce="store.DEBOUNCE_AMOUNT"
+                  @ionInput="$emit('update:modelValue', state.customer)"
+                  v-model="state.customer.data.phone"
+                ></ion-input>
+              </ion-item>
+              <Address
+                @update:modelValue="$emit('update:modelValue', state.customer)"
+                v-model="state.customer.data.location"
+              />
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <ion-card>
+            <ion-card-header color="secondary">
+              <ion-card-title>NOTES</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list>
+                <ion-item>
+                  <ion-label color="secondary" position="stacked"
+                    >Customer Notes</ion-label
+                  >
+                  <ion-textarea
+                    v-if="state.showTextAreas"
+                    auto-grow
+                    placeholder="Notes on customer"
+                    :debounce="store.DEBOUNCE_AMOUNT"
+                    @ionInput="$emit('update:modelValue', state.customer)"
+                    v-model="state.customer.data.customerNotes"
+                  ></ion-textarea>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="secondary" position="stacked"
+                    >Property Notes</ion-label
+                  >
+                  <ion-textarea
+                    v-if="state.showTextAreas"
+                    auto-grow
+                    placeholder="Notes on property"
+                    :debounce="store.DEBOUNCE_AMOUNT"
+                    @ionInput="$emit('update:modelValue', state.customer)"
+                    v-model="state.customer.data.propertyNotes"
+                  ></ion-textarea>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12">
+          <ion-card>
+            <ion-card-header color="secondary">
+              <ion-card-title
+                >PROPERTY IMAGES
+                <AddButton @click="addImage" />
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row class="ion-justify-content-left">
+                  <ImageWithCaption
+                    color="secondary"
+                    v-for="(image, index) in state.customer.data.propertyImages"
+                    :key="image.ref"
+                    @update:modelValue="
+                      $emit('update:modelValue', state.customer)
+                    "
+                    v-model="state.customer.data.propertyImages[index]"
+                    :showCaption="true"
+                    @deleteImage="deleteImage(index)"
+                  />
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </form>
 </template>
 
@@ -112,13 +122,17 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
-  IonListHeader,
   IonGrid,
   IonRow,
   IonCol,
   IonTextarea,
   IonIcon,
+  IonCard,
+  IonCardContent,
+  IonCardTitle,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonList,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 
@@ -167,8 +181,6 @@ export default {
     };
   },
   components: {
-    IonList,
-    IonListHeader,
     IonInput,
     IonItem,
     IonLabel,
@@ -180,6 +192,12 @@ export default {
     Address,
     ImageWithCaption,
     AddButton,
+    IonCard,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonList,
   },
 };
 </script>

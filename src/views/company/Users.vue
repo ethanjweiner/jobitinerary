@@ -1,18 +1,20 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start" v-if="state.userID">
+      <ion-toolbar color="primary" v-if="state.userID">
+        <UserSelect
+          slot="start"
+          ref="userSelect"
+          v-model="state.userID"
+          :type="type"
+          :key="state.userID"
+          @update:modelValue="changeUser"
+        />
+        <ion-buttons slot="end">
           <ion-button @click="toggleUserSettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
-
-        <ion-title>{{
-          state.userID ? idToName(state.userID) : capitalize(type) + "s"
-        }}</ion-title>
-
-        <SettingsButton />
       </ion-toolbar>
     </ion-header>
     <ion-popover
@@ -23,28 +25,17 @@
     >
       <DeletePopover :unitName="capitalize(type)" @delete="deleteUser" />
     </ion-popover>
-    <ion-content :fullscreen="true">
-      <!-- On select, route to the users page w/ a prop -->
-      <ion-toolbar id="select-user-toolbar" v-if="state.userID">
-        <UserSelect
-          v-if="state.userID"
-          ref="userSelect"
-          v-model="state.userID"
-          :type="type"
-          :key="state.userID"
-          @update:modelValue="changeUser"
-        />
-      </ion-toolbar>
-
-      <ion-grid v-else style="width: 100%; height: 100%;">
+    <ion-content :fullscreen="true" v-if="!state.userID">
+      <ion-grid style="width: 100%; height: 100%;">
         <ion-row
           class="ion-justify-content-center ion-align-items-center"
           style="height: 100%;"
         >
-          <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Select {{ capitalize(type) }}</h3>
-            </div>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title> Select {{ capitalize(type) }} </ion-card-title>
+            </ion-card-header>
+
             <UserSelect
               ref="userSelect"
               v-model="state.userID"
@@ -52,24 +43,24 @@
               :key="state.userID"
               @update:modelValue="changeUser"
             />
-          </ion-col>
+          </ion-card>
         </ion-row>
       </ion-grid>
-
-      <div id="user-container" class="ion-text-center" v-if="state.userID">
-        <Customer
-          v-if="type == 'customer'"
-          :key="state.userID"
-          :userID="state.userID"
-        />
-        <Employee
-          v-else-if="type == 'employee'"
-          :key="state.userID"
-          :userID="state.userID"
-        />
-        <div v-else>No user type was defined.</div>
-      </div>
     </ion-content>
+
+    <div class="ion-text-center" v-else>
+      <Customer
+        v-if="type == 'customer'"
+        :key="state.userID"
+        :userID="state.userID"
+      />
+      <Employee
+        v-else-if="type == 'employee'"
+        :key="state.userID"
+        :userID="state.userID"
+      />
+      <div v-else>No user type was defined.</div>
+    </div>
   </ion-page>
 </template>
 
@@ -78,15 +69,16 @@ import {
   IonPage,
   IonHeader,
   IonToolbar,
-  IonTitle,
   IonContent,
   IonGrid,
   IonRow,
-  IonCol,
   IonIcon,
   IonButtons,
   IonButton,
   IonPopover,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
 } from "@ionic/vue";
 
 import { reactive, ref } from "@vue/reactivity";
@@ -96,7 +88,6 @@ import { ellipsisVertical } from "ionicons/icons";
 
 import { capitalize } from "@/helpers";
 
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import store from "@/store";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
@@ -165,14 +156,14 @@ export default {
   components: {
     IonHeader,
     IonToolbar,
-    IonTitle,
     IonContent,
     IonPage,
-    SettingsButton,
     UserSelect,
     IonGrid,
     IonRow,
-    IonCol,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
     IonIcon,
     IonButtons,
     IonButton,
@@ -189,9 +180,11 @@ ion-grid,
 ion-row {
   height: 100%;
 }
-#user-container {
-  height: fit-content;
+
+ion-header {
+  display: block;
 }
+
 #select-user-toolbar {
   max-width: 300px;
   margin-top: 10px;

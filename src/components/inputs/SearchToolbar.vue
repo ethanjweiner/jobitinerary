@@ -1,5 +1,9 @@
 <template>
-  <ion-toolbar color="primary" slot="fixed" class="ion-padding list-header">
+  <ion-toolbar
+    :color="color ? color : 'primary'"
+    slot="fixed"
+    class="ion-padding"
+  >
     <h2 slot="start">
       {{ title }}
     </h2>
@@ -23,6 +27,7 @@ export default {
     title: String,
     modelValue: String,
     addAction: Function,
+    color: String,
   },
   components: { IonToolbar, IonSearchbar, AddButton },
 };
