@@ -2,7 +2,10 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
-      <ion-tab-bar :slot="screenWidth < 768 ? 'bottom' : 'top'" color="primary">
+      <ion-tab-bar
+        :slot="screenWidth < 768 ? 'bottom' : 'top'"
+        :color="tabsColor"
+      >
         <ion-title class="main-title"> JobItinerary</ion-title>
         <ion-tab-button
           :layout="screenWidth < 768 ? 'icon-top' : 'icon-start'"
@@ -58,7 +61,8 @@ import {
 } from "@ionic/vue";
 
 import { home, cart, hammer, settings } from "ionicons/icons";
-import { onMounted, ref } from "@vue/runtime-core";
+import { computed, onMounted, ref } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
 
 export default {
   name: "Tabs",
@@ -75,6 +79,13 @@ export default {
   setup() {
     const screenWidth = ref(0);
 
+    const route = useRoute();
+    const tabsColor = computed(() => {
+      if (route.fullPath.includes("customer")) return "secondary";
+      else if (route.fullPath.includes("employee")) return "tertiary";
+      return "primary";
+    });
+
     onMounted(() => {
       screenWidth.value = window.innerWidth;
       window.addEventListener("resize", () => {
@@ -85,6 +96,7 @@ export default {
     return {
       icons: { home, cart, hammer, settings },
       screenWidth,
+      tabsColor,
     };
   },
 };
