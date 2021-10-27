@@ -101,23 +101,4 @@ export default {
 };
 </script>
 
-<style scoped>
-ion-card {
-  height: 100%;
-}
-ion-card-content {
-  height: 80%;
-  padding: 0;
-}
-ion-card-header {
-  border-bottom: 1px solid green;
-}
-.list-header {
-  margin: 0;
-  display: inline;
-}
-ion-input {
-  padding-left: 0;
-  padding-bottom: 0;
-}
-</style>
+<style scoped></style>

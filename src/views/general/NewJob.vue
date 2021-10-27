@@ -28,7 +28,7 @@
             <div class="ion-text-start">
               <h3 class="text-secondary">Create a Job Name</h3>
             </div>
-            <ion-item>
+            <ion-item color="white">
               <ion-input
                 type="text"
                 placeholder="Descriptive name for the job"
@@ -37,7 +37,7 @@
               ></ion-input>
             </ion-item>
 
-            <ion-button expand="block" color="primary" @click="create"
+            <ion-button color="dark" expand="block" @click="create"
               >Create Job</ion-button
             >
             <ion-note
@@ -127,4 +127,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

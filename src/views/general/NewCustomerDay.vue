@@ -19,6 +19,7 @@
               <h3 class="text-secondary">Select a Customer</h3>
             </div>
             <UserSelect
+              color="light"
               :names="
                 store.state.user.customers.map((customer) => customer.name)
               "
@@ -31,7 +32,7 @@
               <h3 class="text-secondary">Select a Date</h3>
             </div>
             <DateSelect v-model="state.date" />
-            <ion-button expand="block" color="primary" @click="create"
+            <ion-button expand="block" color="secondary" @click="create"
               >Create Day</ion-button
             >
             <ion-note

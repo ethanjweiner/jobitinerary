@@ -1,38 +1,58 @@
 <template>
-  <ion-item
+  <ion-card
+    button
     @click="
       router.push({
         name: 'Customer Day',
         params: {
-          userID: state.day.customerID,
-          date: state.day.date,
+          userID: day.customerID,
+          date: day.date,
         },
       })
     "
   >
-    <div>
-      <ion-label>
-        <ion-text>
-          {{ state.day.date }}
-        </ion-text>
-      </ion-label>
-      <ion-note v-if="propertyHours">
+    <ion-card-header>
+      <ion-card-title>{{ day.date }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card-subtitle>
+        <ion-icon :icon="icons.cart"></ion-icon>
+        {{ idToName(day.customerID) }}
+      </ion-card-subtitle>
+      <li v-if="propertyHours">
+        <ion-icon :icon="icons.time"></ion-icon>
+
         {{ propertyHours }} total hours on property
-      </ion-note>
-    </div>
-  </ion-item>
+      </li>
+      <li v-if="employees.length">
+        <ion-icon :icon="icons.hammer"></ion-icon>
+        Employees Worked:
+        <span v-for="id in employees" :key="id">
+          {{ idToName(id) }}
+        </span>
+      </li>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script lang="ts">
-import { IonItem, IonLabel, IonText, IonNote } from "@ionic/vue";
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonIcon,
+} from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import router from "@/router";
 
-import { CustomerDay, Visit } from "@/types/units";
-import { retrieveVisitsOnDate } from "@/helpers";
+import { Visit } from "@/types/units";
+import { retrieveVisitsOnDate, idToName } from "@/helpers";
+
+import { hammer, cart, time } from "ionicons/icons";
 
 interface State {
-  day: CustomerDay;
   visits: Array<Visit>;
 }
 
@@ -43,7 +63,6 @@ export default {
   },
   setup(props: any) {
     const state = reactive<State>({
-      day: props.day,
       visits: [],
     });
 
@@ -60,23 +79,33 @@ export default {
       state.visits.reduce((hours, visit) => hours + visit.data.time.hours, 0)
     );
 
-    return { router, state, propertyHours };
+    const employees = computed(() => {
+      const ids: Array<string> = [];
+      state.visits.forEach((visit: Visit) => {
+        if (visit.data.employeeID && !ids.includes(visit.data.employeeID))
+          ids.push(visit.data.employeeID);
+      });
+      return ids;
+    });
+
+    return {
+      icons: { hammer, cart, time },
+      idToName,
+      router,
+      state,
+      propertyHours,
+      employees,
+    };
   },
   components: {
-    IonItem,
-    IonLabel,
-    IonText,
-    IonNote,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonIcon,
   },
 };
 </script>
 
-<style scoped>
-ion-item {
-  cursor: pointer;
-}
-div {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-</style>
+<style scoped></style>

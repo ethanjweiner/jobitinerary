@@ -1,64 +1,34 @@
 <template>
-  <div>
-    <ion-list>
-      <ion-item-group v-if="scheduledVisits.length">
-        <ion-item-divider>
-          <ion-label>Future Visits</ion-label>
-        </ion-item-divider>
-        <!-- Add a database reference -->
-        <VisitItem
-          v-for="visit in scheduledVisits"
-          :key="visit.id"
-          :visit="visit.data"
-          @detachVisit="detachVisit(visit)"
-          @deleteVisit="deleteVisit(visit)"
-          :itemAction="(state) => (state.modalIsOpen = true)"
-          type="job"
-        />
-      </ion-item-group>
-
-      <ion-item-group v-if="pastVisits.length">
-        <ion-item-divider>
-          <ion-label>Past Visits</ion-label>
-        </ion-item-divider>
-        <!-- Add a database reference -->
-        <VisitItem
-          v-for="visit in pastVisits"
-          :key="visit.id"
-          :visit="visit.data"
-          @detachVisit="detachVisit(visit)"
-          @deleteVisit="deleteVisit(visit)"
-          :itemAction="(state) => (state.modalIsOpen = true)"
-          type="job"
-        />
-      </ion-item-group>
-
-      <ion-item button color="primary" @click="addVisit">
-        <ion-icon :icon="add"></ion-icon>
-        <ion-label>Add Visit</ion-label>
-      </ion-item>
-    </ion-list>
-  </div>
+  <SearchToolbar
+    color="secondary"
+    :addAction="addVisit"
+    title="Visits for the Job"
+    disableSearch
+  />
+  <List :splitters="splitters" :items="state.visits.map((visit) => visit.data)">
+    <template v-slot:item="itemProps">
+      <VisitItem
+        :visit="itemProps.item"
+        :itemAction="(state) => (state.modalIsOpen = true)"
+        @detachVisit="detachVisit"
+        @deleteVisit="deleteVisit"
+      />
+    </template>
+  </List>
 </template>
 
 <script lang="ts">
-import {
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonItemGroup,
-  IonItemDivider,
-} from "@ionic/vue";
 import { add } from "ionicons/icons";
-import { computed, reactive } from "@vue/reactivity";
+import { reactive, ref } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 import router from "@/router";
-import { Visit } from "@/types/units";
+import { Visit, VisitInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
 import VisitItem from "./items/VisitItem.vue";
 import { createVisit } from "@/db";
+import List from "@/components/lists/List.vue";
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 
 export default defineComponent({
   name: "Job Visits",
@@ -67,13 +37,9 @@ export default defineComponent({
     job: Object,
   },
   components: {
-    IonIcon,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonItemGroup,
-    IonItemDivider,
     VisitItem,
+    List,
+    SearchToolbar,
   },
   emits: ["update:modelValue"],
   setup(props: any, { emit }: { emit: any }) {
@@ -85,22 +51,16 @@ export default defineComponent({
 
     // Separate visits with splitters
 
-    const splitters: Array<Splitter> = [
+    const splitters = ref<Array<Splitter>>([
       {
-        name: "Scheduled Visits",
-        filter: (item: Visit) => new Date(item.data.date) >= new Date(),
+        name: "Scheduled",
+        filter: (item: VisitInterface) => new Date(item.date) >= new Date(),
       },
       {
-        name: "Past Visits",
-        filter: (item: Visit) => new Date(item.data.date) < new Date(),
+        name: "Past",
+        filter: (item: VisitInterface) => new Date(item.date) < new Date(),
       },
-    ];
-
-    const scheduledVisits = computed(() =>
-      state.visits.filter(splitters[0].filter)
-    );
-
-    const pastVisits = computed(() => state.visits.filter(splitters[1].filter));
+    ]);
 
     const addVisit = async () => {
       // CREATE NEW VISIT AND ADD TO DATABASE
@@ -121,14 +81,20 @@ export default defineComponent({
       emit("update:modelValue", state.visits);
     };
 
-    const detachVisit = async (visit: Visit) => {
+    const detachVisit = async (visitID: string) => {
       // DELETE VISIT FROM DATABASE
+      const visit = state.visits.find(
+        (visit: Visit) => visit.data.id == visitID
+      );
       visit.data.jobID = "";
       await visit.save();
       removeVisit(visit);
     };
 
-    const deleteVisit = async (visit: Visit) => {
+    const deleteVisit = async (visitID: string) => {
+      const visit = state.visits.find(
+        (visit: Visit) => visit.data.id == visitID
+      );
       await visit.delete();
       removeVisit(visit);
     };
@@ -140,8 +106,7 @@ export default defineComponent({
       detachVisit,
       deleteVisit,
       addVisit,
-      scheduledVisits,
-      pastVisits,
+      splitters,
     };
   },
 });

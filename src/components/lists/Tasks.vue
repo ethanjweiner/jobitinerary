@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ion-item>
+    <ion-item color="white">
       <ion-toggle v-model="state.enableReorder"></ion-toggle>
       <ion-label>Reorder Tasks</ion-label>
     </ion-item>
@@ -15,9 +15,9 @@
         v-model="state.tasks[index]"
         @deleteTask="deleteTask(index)"
       />
-      <ion-item button color="primary" @click="addTask">
-        <ion-icon :icon="add"></ion-icon>
-        <ion-label>Add Task</ion-label>
+      <ion-item button @click="addTask">
+        <ion-icon color="light" :icon="add"></ion-icon>
+        <ion-label color="light">Add Task</ion-label>
       </ion-item>
     </ion-reorder-group>
   </div>

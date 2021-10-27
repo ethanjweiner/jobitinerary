@@ -78,6 +78,7 @@ export default {
     sizes: Object,
   },
   setup(props: any) {
+    console.log(props.searchFilter);
     const state = reactive<State>({
       infiniteList: new InfiniteList(
         props.dbRef,

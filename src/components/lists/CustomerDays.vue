@@ -1,64 +1,43 @@
 <template>
-  <div style="height: 100%;">
-    <ion-card-header>
-      <ion-card-title>
-        {{ title }}
-        <AddButton v-if="!hideAdd" @click="createDay" title="Plan or Log" />
-      </ion-card-title>
-      <ion-item>
-        <ion-input
-          type="date"
-          v-model="searchDate"
-          placeholder="Search by date"
-        ></ion-input>
-      </ion-item>
-    </ion-card-header>
-    <ion-card-content>
-      <InfiniteList
-        :key="searchDate"
-        :splitters="splitters"
-        :pushQuantity="6"
-        :dbRef="dbRef"
-        orderByParam="date"
-        :searchFilter="searchDate"
-      >
-        <template v-slot:item="itemProps">
-          <CustomerDayItem :day="itemProps.item" />
-        </template>
-      </InfiniteList>
-    </ion-card-content>
-  </div>
+  <SearchToolbar
+    color="secondary"
+    :addAction="createDay"
+    title="Dates"
+    v-model="searchDate"
+    useDateInput
+  />
+
+  <InfiniteList
+    :key="searchDate"
+    :splitters="splitters"
+    :pushQuantity="10"
+    :dbRef="dbRef"
+    orderByParam="date"
+    :searchFilter="searchDate"
+  >
+    <template v-slot:item="itemProps">
+      <CustomerDayItem :day="itemProps.item" />
+    </template>
+  </InfiniteList>
 </template>
 
 <script lang="ts">
-import {
-  IonCardHeader,
-  IonInput,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-} from "@ionic/vue";
 import { ref } from "vue";
 import router from "@/router";
 
 import { CustomerDayInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
 
-import AddButton from "../buttons/AddButton.vue";
 import CustomerDayItem from "./items/CustomerDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";
+import SearchToolbar from "../inputs/SearchToolbar.vue";
 
 export default {
   name: "Employee Days",
   components: {
     CustomerDayItem,
-    IonCardHeader,
-    IonInput,
-    IonCardTitle,
-    IonCardContent,
-    IonItem,
-    AddButton,
     InfiniteList,
+    SearchToolbar,
   },
   props: {
     dbRef: Object,
@@ -97,23 +76,4 @@ export default {
 };
 </script>
 
-<style scoped>
-ion-card {
-  height: 100%;
-}
-ion-card-content {
-  height: 80%;
-  padding: 0;
-}
-ion-card-header {
-  border-bottom: 1px solid green;
-}
-.list-header {
-  margin: 0;
-  display: inline;
-}
-ion-input {
-  padding-left: 0;
-  padding-bottom: 0;
-}
-</style>
+<style scoped></style>

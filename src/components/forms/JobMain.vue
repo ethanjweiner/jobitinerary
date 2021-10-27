@@ -1,69 +1,93 @@
 <template>
-  <ion-item>
-    <ion-label position="stacked">Job Name</ion-label>
-    <ion-input
-      type="text"
-      @ionInput="$emit('update:modelValue', state.job)"
-      :debounce="store.DEBOUNCE_AMOUNT"
-      v-model="state.job.data.name"
-      placeholder="Descriptive name for this job"
-      class="job-title"
-    ></ion-input>
-  </ion-item>
   <ion-grid>
-    <ion-row>
-      <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="6">
-        <ion-item>
-          <ion-label>Estimated Start</ion-label>
-          <ion-datetime
-            @ionChange="changeStartDate($event)"
-            display-format="MM/DD/YYYY"
-            v-model="state.job.data.startDate"
-          ></ion-datetime>
-        </ion-item>
+    <ion-row class="ion-justify-content-around">
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header color="secondary">
+            <ion-card-title>INFO</ion-card-title>
+            <ion-card-subtitle>{{ state.job.data.name }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item color="white">
+                <ion-label position="stacked">Job Name</ion-label>
+                <ion-input
+                  type="text"
+                  @ionInput="$emit('update:modelValue', state.job)"
+                  :debounce="store.DEBOUNCE_AMOUNT"
+                  v-model="state.job.data.name"
+                  placeholder="Descriptive name for this job"
+                  class="job-title"
+                ></ion-input>
+              </ion-item>
+              <ion-item color="white">
+                <ion-label>Estimated Start</ion-label>
+                <ion-datetime
+                  @ionChange="changeStartDate($event)"
+                  display-format="MM/DD/YYYY"
+                  v-model="state.job.data.startDate"
+                ></ion-datetime>
+              </ion-item>
+              <ion-item color="white">
+                <ion-label>Estimated End</ion-label>
+                <ion-datetime
+                  @ionChange="changeEndDate($event)"
+                  display-format="MM/DD/YYYY"
+                  v-model="state.job.data.endDate"
+                ></ion-datetime>
+              </ion-item>
+              <ion-item color="white">
+                <ion-label position="stacked">Job Description</ion-label>
+                <ion-textarea
+                  @ionInput="$emit('update:modelValue', state.job)"
+                  :debounce="store.DEBOUNCE_AMOUNT"
+                  auto-grow
+                  type="text"
+                  v-model="state.job.data.description"
+                  placeholder="Longer description for this job"
+                ></ion-textarea>
+              </ion-item>
+              <ion-item color="white">
+                <ion-label>
+                  Total Time Spent on this Job
+                </ion-label>
+                <ion-chip>
+                  <ion-label style="margin: auto;"
+                    >{{ totalHours }} hours</ion-label
+                  >
+                </ion-chip>
+              </ion-item>
+              <ion-item color="white" v-if="employeeHours.length">
+                <ion-label>
+                  Time Spent per Employee
+                </ion-label>
+                <ion-chip
+                  v-for="(employeeHour, index) in employeeHours"
+                  :key="index"
+                >
+                  <ion-label style="margin: auto;"
+                    >{{ employeeHour.employeeID }}:
+                    {{ employeeHour.hours }} hours</ion-label
+                  >
+                </ion-chip>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
-      <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="6">
-        <ion-item>
-          <ion-label>Estimated End</ion-label>
-          <ion-datetime
-            @ionChange="changeEndDate($event)"
-            display-format="MM/DD/YYYY"
-            v-model="state.job.data.endDate"
-          ></ion-datetime>
-        </ion-item>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header color="secondary">
+            <ion-card-title>TASKS</ion-card-title>
+            <ion-card-subtitle>{{ state.job.data.name }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <Tasks v-model="state.job.data.tasks" />
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-item>
-    <ion-label position="stacked">Job Description</ion-label>
-    <ion-textarea
-      @ionInput="$emit('update:modelValue', state.job)"
-      :debounce="store.DEBOUNCE_AMOUNT"
-      auto-grow
-      type="text"
-      v-model="state.job.data.description"
-      placeholder="Longer description for this job"
-    ></ion-textarea>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Total Time Spent on this Job
-    </ion-label>
-    <ion-chip>
-      <ion-label style="margin: auto;">{{ totalHours }} hours</ion-label>
-    </ion-chip>
-  </ion-item>
-  <ion-item v-if="employeeHours.length">
-    <ion-label>
-      Time Spent per Employee
-    </ion-label>
-    <ion-chip v-for="(employeeHour, index) in employeeHours" :key="index">
-      <ion-label style="margin: auto;"
-        >{{ employeeHour.employeeID }}:
-        {{ employeeHour.hours }} hours</ion-label
-      >
-    </ion-chip>
-  </ion-item>
 </template>
 
 <script lang="ts">
@@ -78,7 +102,15 @@ import {
   IonCol,
   IonDatetime,
   IonTextarea,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonList,
 } from "@ionic/vue";
+
+import Tasks from "@/components/lists/Tasks.vue";
 import store from "@/store";
 
 import { Visit } from "@/types/units";
@@ -156,6 +188,13 @@ export default {
     IonCol,
     IonDatetime,
     IonTextarea,
+    Tasks,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonList,
   },
 };
 </script>

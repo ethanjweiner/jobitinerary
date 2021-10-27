@@ -2,12 +2,12 @@
   <ion-card button="true">
     <ion-card-header>
       <ion-card-title>{{ job.name }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
       <ion-card-subtitle v-if="job.customerID">
         <ion-icon :icon="icons.cart"></ion-icon>
         {{ idToName(job.customerID) }}</ion-card-subtitle
       >
-    </ion-card-header>
-    <ion-card-content>
       <li v-if="job.startDate">Start: {{ job.startDate }}</li>
       <li v-if="job.endDate">End: {{ job.endDate }}</li>
     </ion-card-content>

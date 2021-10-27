@@ -1,15 +1,16 @@
 <template>
   <ion-card @click="itemAction(state)" button="true">
     <!-- Add a caption? -->
-    <ion-card-header>
-      <ion-card-title>{{ visit.date }}</ion-card-title>
+    <ion-toolbar color="light">
+      <ion-card-title class="ion-margin">{{ visit.date }}</ion-card-title>
 
       <ion-buttons slot="end">
-        <ion-button @click.stop="$emit('detachVisit')">
-          <ion-icon :icon="icons.trashOutline"></ion-icon>
+        <!-- Detach if a job, delete otherwise -->
+        <ion-button @click.stop="$emit('detachVisit', visit.id)">
+          <ion-icon color="dark" :icon="icons.trashOutline"></ion-icon>
         </ion-button>
       </ion-buttons>
-    </ion-card-header>
+    </ion-toolbar>
     <ion-card-content>
       <ion-card-subtitle v-if="visit.time.hours">
         <ion-icon :icon="icons.time"></ion-icon>
@@ -33,6 +34,10 @@
         >
       </li>
       <li v-if="visit.workType">Work Type: {{ visit.workType }}</li>
+      <li v-if="visit.jobID">
+        <ion-icon :icon="icons.calendar"></ion-icon>
+        {{ idToName(visit.jobID) }}
+      </li>
     </ion-card-content>
   </ion-card>
 
@@ -49,7 +54,7 @@
       @deleteVisit="
         () => {
           state.modalIsOpen = false;
-          $emit('deleteVisit');
+          $emit('deleteVisit', visit.id);
         }
       "
     />
@@ -61,16 +66,16 @@ import {
   IonCard,
   IonCardContent,
   IonCardTitle,
-  IonCardHeader,
   IonCardSubtitle,
   IonButtons,
   IonButton,
   IonIcon,
   IonModal,
+  IonToolbar,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 
-import { trashOutline, hammer, cart, time } from "ionicons/icons";
+import { trashOutline, hammer, cart, time, calendar } from "ionicons/icons";
 import VisitModal from "@/components/modals/VisitModal.vue";
 
 import { idToName, formatTime } from "@/helpers";
@@ -88,7 +93,7 @@ export default {
       modalIsOpen: false,
     });
     return {
-      icons: { trashOutline, hammer, cart, time },
+      icons: { trashOutline, hammer, cart, time, calendar },
       state,
       idToName,
       formatTime,
@@ -103,8 +108,8 @@ export default {
     IonCard,
     IonCardContent,
     IonCardTitle,
-    IonCardHeader,
     IonCardSubtitle,
+    IonToolbar,
   },
 };
 </script>

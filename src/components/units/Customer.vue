@@ -1,5 +1,10 @@
 <template>
-  <Sections v-if="state.customer" :sections="sections" cssClass="customer">
+  <Sections
+    v-if="state.customer"
+    :sections="sections"
+    cssClass="customer"
+    sectionsID="customer"
+  >
     <template v-slot:dates>
       <CustomerDays
         :customerID="state.customer.data.id"
@@ -40,6 +45,7 @@ import CustomerForm from "../forms/CustomerForm.vue";
 import { Company, Customer } from "@/types/users";
 import { companiesCollection } from "@/main";
 import { watch } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
 
 interface State {
   customer: Customer | undefined;
@@ -71,6 +77,8 @@ export default {
       return base;
     });
 
+    console.log(jobsRef.value.path);
+
     // If the user is a Company, assign the customer based on the prop
     if (props.userID && store.state.user instanceof Company) {
       state.customer = store.state.user.customers.find(
@@ -99,6 +107,7 @@ export default {
         id: "customer-info",
       },
     ]);
+    const route = useRoute();
 
     if (state.customer)
       watch(state.customer.data, () => {
@@ -110,6 +119,7 @@ export default {
       state,
       daysRef,
       jobsRef,
+      route,
     };
   },
   components: {

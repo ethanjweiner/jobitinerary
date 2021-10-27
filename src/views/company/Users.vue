@@ -1,7 +1,7 @@
 <template>
-  <ion-page>
+  <ion-page :class="type">
     <ion-header>
-      <ion-toolbar color="primary" v-if="state.userID">
+      <ion-toolbar v-if="state.userID">
         <UserSelect
           slot="start"
           ref="userSelect"
@@ -9,6 +9,8 @@
           :type="type"
           :key="state.userID"
           @update:modelValue="changeUser"
+          :class="type + '-' + 'color'"
+          :color="type"
         />
         <ion-buttons slot="end">
           <ion-button @click="toggleUserSettings(true, $event)">
@@ -25,12 +27,9 @@
     >
       <DeletePopover :unitName="capitalize(type)" @delete="deleteUser" />
     </ion-popover>
-    <ion-content :fullscreen="true" v-if="!state.userID">
-      <ion-grid style="width: 100%; height: 100%;">
-        <ion-row
-          class="ion-justify-content-center ion-align-items-center"
-          style="height: 100%;"
-        >
+    <ion-content :fullscreen="true" v-if="!state.userID" style="height: 100%;">
+      <ion-grid>
+        <ion-row class="ion-justify-content-center ion-align-items-center">
           <ion-card>
             <ion-card-header>
               <ion-card-title> Select {{ capitalize(type) }} </ion-card-title>
@@ -48,7 +47,7 @@
       </ion-grid>
     </ion-content>
 
-    <div class="ion-text-center" v-else>
+    <div v-else>
       <Customer
         v-if="type == 'customer'"
         :key="state.userID"
@@ -95,6 +94,7 @@ import Customer from "@/components/units/Customer.vue";
 import Employee from "@/components/units/Employee.vue";
 import { Company } from "@/types/users";
 import { idToName } from "@/helpers";
+import { useRoute } from "vue-router";
 
 interface State {
   userID: string;
@@ -110,6 +110,8 @@ export default {
     const state = reactive<State>({
       userID: props.userID,
     });
+
+    const route = useRoute();
 
     // POPOVER
     const popoverIsOpen = ref(false);
@@ -151,6 +153,7 @@ export default {
       popoverIsOpen,
       popoverEvent,
       idToName,
+      route,
     };
   },
   components: {

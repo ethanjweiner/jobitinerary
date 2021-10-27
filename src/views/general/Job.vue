@@ -1,14 +1,14 @@
 <template>
-  <ion-page>
-    <ion-header v-if="state.job">
-      <ion-toolbar>
+  <ion-page class="customer">
+    <ion-header>
+      <ion-toolbar color="secondary" v-if="state.job">
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
           {{ state.job.data.name ? state.job.data.name : "New Job" }}</ion-title
         >
-        <ion-note style="padding-left: 15px;"
+        <ion-note style="padding-left: 20px;" color="light"
           >for {{ idToName(state.job.data.customerID) }}</ion-note
         >
         <ion-buttons :collapse="true" slot="end">
@@ -26,58 +26,16 @@
     >
       <DeletePopover unitName="Job" @delete="deleteJob" />
     </ion-popover>
-    <ion-content v-if="state.job" :fullscreen="true">
-      <form>
-        <Sections :sections="sections" wrapCards>
-          <template v-slot:main>
-            <JobMain v-model="state.job" :visits="state.visits" />
-          </template>
-          <template v-slot:tasks>
-            <Tasks v-model="state.job.data.tasks" />
-          </template>
-          <template v-slot:visits>
-            <JobVisits v-model="state.visits" :job="state.job" />
-          </template>
-          <template v-slot:sectionsAsGrid>
-            <ion-row>
-              <ion-col size="6">
-                <ion-row>
-                  <ion-card style="width: 100%;">
-                    <JobMain v-model="state.job" :visits="state.visits" />
-                  </ion-card>
-                </ion-row>
-                <ion-row>
-                  <ion-card style="width: 100%;">
-                    <ion-card-header class="ion-text-center">
-                      <ion-card-title>
-                        <ion-icon :icon="icons.constructOutline"></ion-icon>
-                        Tasks
-                      </ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <Tasks v-model="state.job.data.tasks" />
-                    </ion-card-content>
-                  </ion-card>
-                </ion-row>
-              </ion-col>
-              <ion-col size="6">
-                <ion-card>
-                  <ion-card-header class="ion-text-center">
-                    <ion-card-title>
-                      <ion-icon :icon="icons.homeOutline"></ion-icon>
-                      Visits
-                    </ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                    <JobVisits v-model="state.visits" :job="state.job" />
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-            </ion-row>
-          </template>
-        </Sections>
-      </form>
-    </ion-content>
+    <div v-if="state.job">
+      <Sections :sections="sections" sectionsID="jobs">
+        <template v-slot:main>
+          <JobMain v-model="state.job" :visits="state.visits" />
+        </template>
+        <template v-slot:visits>
+          <JobVisits v-model="state.visits" :job="state.job" />
+        </template>
+      </Sections>
+    </div>
   </ion-page>
 </template>
 
@@ -87,18 +45,11 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent,
   IonIcon,
   IonButtons,
   IonPopover,
   IonButton,
   IonBackButton,
-  IonCard,
-  IonCardTitle,
-  IonCardHeader,
-  IonCardContent,
-  IonRow,
-  IonCol,
   IonNote,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
@@ -117,12 +68,12 @@ import { SectionsType } from "@/types/auxiliary";
 import Sections from "@/components/Sections.vue";
 import JobMain from "@/components/forms/JobMain.vue";
 import JobVisits from "@/components/lists/JobVisits.vue";
-import Tasks from "@/components/lists/Tasks.vue";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import store from "@/store";
 import { watch } from "@vue/runtime-core";
 import { companiesCollection } from "@/main";
 import { idToName } from "@/helpers";
+import { useRoute } from "vue-router";
 
 interface State {
   job: Job | null;
@@ -144,11 +95,6 @@ export default {
         id: "main",
       },
       {
-        name: "Tasks",
-        icon: constructOutline,
-        id: "tasks",
-      },
-      {
         name: "Visits",
         icon: homeOutline,
         id: "visits",
@@ -159,6 +105,7 @@ export default {
       job: null,
       visits: [],
     });
+    const route = useRoute();
 
     // Initialize job
     const initialize = async () => {
@@ -209,6 +156,7 @@ export default {
       toggleJobSettings,
       deleteJob,
       idToName,
+      route,
       icons: {
         ellipsisVertical,
         homeOutline,
@@ -222,21 +170,13 @@ export default {
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonContent,
     IonIcon,
     IonButtons,
     IonPopover,
     IonButton,
     IonBackButton,
-    Tasks,
     JobMain,
     Sections,
-    IonCard,
-    IonCardTitle,
-    IonCardHeader,
-    IonCardContent,
-    IonRow,
-    IonCol,
     JobVisits,
     DeletePopover,
     IonNote,
@@ -244,4 +184,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-header {
+  display: block;
+}
+</style>

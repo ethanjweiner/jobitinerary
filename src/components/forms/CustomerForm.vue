@@ -1,5 +1,5 @@
 <template>
-  <form class="main-content">
+  <form>
     <ion-grid>
       <ion-row class="ion-justify-content-around">
         <ion-col size="12" size-md="6">
@@ -11,40 +11,43 @@
               }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              <ion-list> </ion-list>
-              <ion-item>
-                <ion-label position="stacked" color="secondary">
-                  <ion-icon :icon="icons.mailOutline"></ion-icon>
-                  <span style="padding: 5px;">Email</span>
-                </ion-label>
-                <ion-input
-                  type="email"
-                  disabled
-                  placeholder="email"
-                  :debounce="store.DEBOUNCE_AMOUNT"
-                  v-model="state.customer.data.email"
-                  @ionInput="$emit('update:modelValue', state.customer)"
-                ></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked" color="secondary">
-                  <ion-icon :icon="icons.callOutline"></ion-icon>
-                  <span style="padding: 5px;">Phone</span>
-                </ion-label>
-                <ion-input
-                  type="tel"
-                  inputmode="tel"
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                  placeholder="123-123-1234"
-                  :debounce="store.DEBOUNCE_AMOUNT"
-                  @ionInput="$emit('update:modelValue', state.customer)"
-                  v-model="state.customer.data.phone"
-                ></ion-input>
-              </ion-item>
-              <Address
-                @update:modelValue="$emit('update:modelValue', state.customer)"
-                v-model="state.customer.data.location"
-              />
+              <ion-list>
+                <ion-item color="white">
+                  <ion-label position="stacked" color="secondary">
+                    <ion-icon :icon="icons.mailOutline"></ion-icon>
+                    <span style="padding: 5px;">Email</span>
+                  </ion-label>
+                  <ion-input
+                    type="email"
+                    disabled
+                    placeholder="email"
+                    :debounce="store.DEBOUNCE_AMOUNT"
+                    v-model="state.customer.data.email"
+                    @ionInput="$emit('update:modelValue', state.customer)"
+                  ></ion-input>
+                </ion-item>
+                <ion-item color="white">
+                  <ion-label position="stacked" color="secondary">
+                    <ion-icon :icon="icons.callOutline"></ion-icon>
+                    <span style="padding: 5px;">Phone</span>
+                  </ion-label>
+                  <ion-input
+                    type="tel"
+                    inputmode="tel"
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    placeholder="123-123-1234"
+                    :debounce="store.DEBOUNCE_AMOUNT"
+                    @ionInput="$emit('update:modelValue', state.customer)"
+                    v-model="state.customer.data.phone"
+                  ></ion-input>
+                </ion-item>
+                <Address
+                  @update:modelValue="
+                    $emit('update:modelValue', state.customer)
+                  "
+                  v-model="state.customer.data.location"
+                />
+              </ion-list>
             </ion-card-content>
           </ion-card>
         </ion-col>
@@ -55,7 +58,7 @@
             </ion-card-header>
             <ion-card-content>
               <ion-list>
-                <ion-item>
+                <ion-item color="white">
                   <ion-label color="secondary" position="stacked"
                     >Customer Notes</ion-label
                   >
@@ -68,7 +71,7 @@
                     v-model="state.customer.data.customerNotes"
                   ></ion-textarea>
                 </ion-item>
-                <ion-item>
+                <ion-item color="white">
                   <ion-label color="secondary" position="stacked"
                     >Property Notes</ion-label
                   >

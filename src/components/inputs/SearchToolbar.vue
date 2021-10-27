@@ -8,7 +8,16 @@
       {{ title }}
     </h2>
     <AddButton @click="addAction" slot="start" />
+    <ion-item v-if="useDateInput" color="light">
+      <ion-input
+        type="date"
+        :value="modelValue"
+        @ionInput="$emit('update:modelValue', $event.target.value)"
+        placeholder="Search by date"
+      ></ion-input>
+    </ion-item>
     <ion-searchbar
+      v-else-if="!disableSearch"
       class="ion-text-start"
       @ionInput="$emit('update:modelValue', $event.target.value)"
       :value="modelValue"
@@ -16,8 +25,8 @@
   </ion-toolbar>
 </template>
 
-<script>
-import { IonToolbar, IonSearchbar } from "@ionic/vue";
+<script lang="ts">
+import { IonToolbar, IonSearchbar, IonInput, IonItem } from "@ionic/vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 
 export default {
@@ -28,8 +37,10 @@ export default {
     modelValue: String,
     addAction: Function,
     color: String,
+    useDateInput: Boolean,
+    disableSearch: Boolean,
   },
-  components: { IonToolbar, IonSearchbar, AddButton },
+  components: { IonToolbar, IonSearchbar, AddButton, IonInput, IonItem },
 };
 </script>
 
