@@ -24,12 +24,18 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "",
         redirect: "/company/home",
+        meta: {
+          class: "main",
+        },
       },
       // HOME
       {
         path: "home",
         name: "Home",
         component: () => import("@/views/company/Home.vue"),
+        meta: {
+          class: "main",
+        },
       },
 
       // CUSTOMERS
@@ -38,6 +44,9 @@ const routes: Array<RouteRecordRaw> = [
         name: "Customers",
         props: { type: "customer" },
         component: () => import("@/views/company/Users.vue"),
+        meta: {
+          class: "customer",
+        },
       },
       {
         path: "customers/:userID",
@@ -47,18 +56,27 @@ const routes: Array<RouteRecordRaw> = [
           userID: route.params.userID,
         }),
         component: () => import("@/views/company/Users.vue"),
+        meta: {
+          class: "customer",
+        },
       },
       {
         path: "customers/:userID/customer-day/:date",
         name: "Customer Day",
         props: true,
         component: () => import("@/views/general/CustomerDay.vue"),
+        meta: {
+          class: "customer",
+        },
       },
       {
         path: "customers/:userID/jobs/:jobID",
         name: "Job",
         props: true,
         component: () => import("@/views/general/Job.vue"),
+        meta: {
+          class: "customer",
+        },
       },
 
       // EMPLOYEES
@@ -67,6 +85,9 @@ const routes: Array<RouteRecordRaw> = [
         path: "employees",
         props: { type: "employee" },
         component: () => import("@/views/company/Users.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       {
         path: "employees/:userID",
@@ -76,12 +97,18 @@ const routes: Array<RouteRecordRaw> = [
           userID: route.params.userID,
         }),
         component: () => import("@/views/company/Users.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       {
         path: "employees/:userID/days/:date",
         name: "Employee Day",
         props: true,
         component: () => import("@/views/general/EmployeeDay.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       // VISITS
       {
@@ -89,6 +116,9 @@ const routes: Array<RouteRecordRaw> = [
         name: "Company Visit",
         props: true,
         component: () => import("@/views/general/VisitView.vue"),
+        meta: {
+          class: "main",
+        },
       },
       // NEW DAYS
       {
@@ -96,12 +126,18 @@ const routes: Array<RouteRecordRaw> = [
         name: "New Employee Day",
         props: true,
         component: () => import("@/views/general/NewEmployeeDay.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       {
         path: "new-customer-day/:customerID",
         name: "New Customer Day",
         props: true,
         component: () => import("@/views/general/NewCustomerDay.vue"),
+        meta: {
+          class: "customer",
+        },
       },
       // NEW JOBS
       {
@@ -109,11 +145,17 @@ const routes: Array<RouteRecordRaw> = [
         name: "New Job",
         props: true,
         component: () => import("@/views/general/NewJob.vue"),
+        meta: {
+          class: "main",
+        },
       },
       // SETTINGS
       {
         path: "settings",
         component: () => import("@/views/general/Settings.vue"),
+        meta: {
+          class: "main",
+        },
       },
     ],
   },
