@@ -1,11 +1,6 @@
 <template>
   <div>
-    <SearchToolbar
-      :color="color"
-      :addAction="createJob"
-      title="Jobs"
-      v-model="searchText"
-    />
+    <SearchToolbar :addAction="createJob" title="Jobs" v-model="searchText" />
 
     <InfiniteList
       :key="searchText"
@@ -51,7 +46,6 @@ export default {
   props: {
     dbRef: Object, // Determine database query in parent component
     customerID: String,
-    color: String,
   },
   setup(props: any) {
     const sizes = {

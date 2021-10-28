@@ -19,7 +19,9 @@
           @keyup.enter="logIn"
         ></ion-input>
       </ion-item>
-      <ion-button type="submit" expand="block">Login</ion-button>
+      <ion-button color="primary" type="submit" expand="block"
+        >Login</ion-button
+      >
     </form>
   </ion-card>
 </template>

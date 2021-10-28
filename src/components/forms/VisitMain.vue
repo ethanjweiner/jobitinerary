@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <ion-list>
     <ion-item>
       <ion-icon :icon="icons.calendarNumberOutline"></ion-icon>
       <ion-label style="margin-left: 7px;">Date of Visit </ion-label>
@@ -9,32 +9,24 @@
         @ionChange="changeDate($event)"
       ></ion-datetime>
     </ion-item>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="stacked">Planned Start</ion-label>
-            <ion-datetime
-              v-model="state.visit.data.plannedStart"
-              display-format="h:mm A"
-              picker-format="h:mm A"
-              @ionChange="$emit('update:modelValue', state.visit)"
-            ></ion-datetime>
-          </ion-item>
-        </ion-col>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="stacked">Planned End</ion-label>
-            <ion-datetime
-              v-model="state.visit.data.plannedEnd"
-              display-format="h:mm A"
-              picker-format="h:mm A"
-              @ionChange="$emit('update:modelValue', state.visit)"
-            ></ion-datetime>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-item>
+      <ion-label position="stacked">Planned Start</ion-label>
+      <ion-datetime
+        v-model="state.visit.data.plannedStart"
+        display-format="h:mm A"
+        picker-format="h:mm A"
+        @ionChange="$emit('update:modelValue', state.visit)"
+      ></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Planned End</ion-label>
+      <ion-datetime
+        v-model="state.visit.data.plannedEnd"
+        display-format="h:mm A"
+        picker-format="h:mm A"
+        @ionChange="$emit('update:modelValue', state.visit)"
+      ></ion-datetime>
+    </ion-item>
 
     <!-- Employee Select -->
 
@@ -42,6 +34,7 @@
       v-if="!hideEmployeeSelect"
       v-model="state.visit.data.employeeID"
       type="employee"
+      mode="light"
     />
     <!-- Customer Select -->
     <UserSelect
@@ -49,10 +42,11 @@
       v-model="state.visit.data.customerID"
       type="customer"
       @update:modelValue="clearJob"
+      mode="light"
     />
     <!-- Job Attacher -->
-    <ion-item v-if="!hideJob">
-      <ion-toolbar>
+    <ion-item color="white" v-if="!hideJob">
+      <ion-toolbar color="white">
         <ion-note>Attach a Job</ion-note>
         <ion-label v-if="state.jobData">"{{ state.jobData.name }}"</ion-label>
         <ion-buttons slot="end">
@@ -86,10 +80,9 @@
       @update:modelValue="$emit('update:modelValue', state.visit)"
     />
     <!-- Additional Notes -->
-    <h3 class="ion-text-center">
-      <ion-text>Visit Notes</ion-text>
-    </h3>
+
     <ion-item v-if="state.showTextAreas">
+      <ion-label position="stacked">Visit Notes</ion-label>
       <ion-textarea
         auto-grow
         v-model="state.visit.data.notes"
@@ -110,7 +103,7 @@
         :dbRef="jobsRef"
       />
     </ion-modal>
-  </div>
+  </ion-list>
 </template>
 
 <script lang="ts">
@@ -120,16 +113,13 @@ import {
   IonItem,
   IonChip,
   IonTextarea,
-  IonText,
   IonToolbar,
   IonNote,
   IonIcon,
   IonButtons,
   IonModal,
   IonInput,
-  IonGrid,
-  IonRow,
-  IonCol,
+  IonList,
 } from "@ionic/vue";
 
 import { computed, reactive, ref } from "vue";
@@ -169,7 +159,6 @@ export default {
     IonItem,
     IonChip,
     IonTextarea,
-    IonText,
     IonToolbar,
     IonNote,
     IonIcon,
@@ -179,9 +168,7 @@ export default {
     JobsModal,
     IonModal,
     IonInput,
-    IonGrid,
-    IonRow,
-    IonCol,
+    IonList,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive<State>({

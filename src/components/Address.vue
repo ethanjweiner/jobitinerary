@@ -1,5 +1,5 @@
 <template>
-  <ion-toolbar id="address-toolbar">
+  <ion-toolbar id="address-toolbar" color="tertiary">
     <ion-buttons slot="start">
       <ion-button :disabled="state.location.coordinates ? false : true">
         <ion-icon
@@ -112,8 +112,4 @@ export default {
 };
 </script>
 
-<style scoped>
-ion-toolbar {
-  --background: var(--ion-color-secondary);
-}
-</style>
+<style scoped></style>

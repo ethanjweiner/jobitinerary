@@ -1,7 +1,7 @@
 <template>
   <ion-card @click="itemAction(state)" button="true">
     <!-- Add a caption? -->
-    <ion-toolbar color="light">
+    <ion-toolbar>
       <ion-card-title class="ion-margin">{{ visit.date }}</ion-card-title>
 
       <ion-buttons slot="end">

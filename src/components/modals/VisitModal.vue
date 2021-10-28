@@ -37,11 +37,7 @@
       <DeletePopover unitName="Visit" @delete="$emit('deleteVisit')" />
     </ion-popover>
     <ion-content>
-      <VisitComponent
-        v-model="state.visit"
-        :separateByDefault="true"
-        :hideJob="hideJob"
-      />
+      <VisitComponent v-model="state.visit" :hideJob="hideJob" />
     </ion-content>
   </div>
 </template>

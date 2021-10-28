@@ -1,10 +1,6 @@
 <template>
-  <ion-item>
-    <ion-icon
-      :color="color == 'customer' || color == 'employee' ? 'light' : 'dark'"
-      v-if="type == 'customer'"
-      :icon="icons.cartOutline"
-    ></ion-icon>
+  <ion-item :color="mode == 'light' ? '' : 'primary'">
+    <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
     <ion-icon v-if="type == 'employee'" :icon="icons.hammerOutline"></ion-icon>
     <ion-select
       v-if="state.ids.length"
@@ -12,6 +8,7 @@
       :value="modelValue"
       :placeholder="'Select ' + capitalize(type)"
       :key="modelValue"
+      :style="mode == 'light' ? 'color: black !important;' : ''"
     >
       <ion-select-option v-for="id in state.ids" :key="id" :value="id">{{
         idToName(id)
@@ -27,7 +24,7 @@
     </ion-button>
     <ion-buttons slot="end" v-if="state.ids.length">
       <ion-fab-button
-        :color="color == 'customer' || color == 'employee' ? 'light' : 'dark'"
+        :color="mode == 'light' ? 'dark' : 'light'"
         size="small"
         @click="newUserModalIsOpen = true"
       >
@@ -78,7 +75,7 @@ export default defineComponent({
   props: {
     modelValue: String,
     type: String,
-    color: String,
+    mode: String,
   },
   emits: ["update:modelValue", "userAdded"],
   components: {
@@ -136,30 +133,10 @@ export default defineComponent({
 
 <style scoped>
 ion-item {
-  max-width: 600px;
   padding-bottom: 0;
   margin-bottom: 0;
 }
 ion-select {
   margin-inline-start: 10px;
-  color: black;
-}
-
-ion-input,
-ion-item {
-  --background: white;
-}
-
-ion-item.customer-color {
-  --background: var(--ion-color-secondary);
-}
-
-.customer-color ion-select {
-  color: white;
-}
-
-ion-input,
-.customer-color {
-  color: white;
 }
 </style>

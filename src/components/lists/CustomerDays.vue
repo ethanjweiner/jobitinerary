@@ -1,6 +1,5 @@
 <template>
   <SearchToolbar
-    color="secondary"
     :addAction="createDay"
     title="Dates"
     v-model="searchDate"

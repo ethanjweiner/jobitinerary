@@ -13,11 +13,7 @@
       />
     </template>
     <template v-slot:jobs>
-      <Jobs
-        color="secondary"
-        :customerID="state.customer.data.id"
-        :dbRef="jobsRef"
-      />
+      <Jobs :customerID="state.customer.data.id" :dbRef="jobsRef" />
     </template>
     <template v-slot:customer-info>
       <CustomerForm v-model="state.customer" />

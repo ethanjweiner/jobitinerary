@@ -1,6 +1,5 @@
 <template>
   <SearchToolbar
-    color="secondary"
     :addAction="addVisit"
     title="Visits for the Job"
     disableSearch

@@ -3,7 +3,7 @@
     <ion-row class="ion-justify-content-around">
       <ion-col size="12" size-md="6">
         <ion-card>
-          <ion-card-header color="secondary">
+          <ion-card-header color="primary">
             <ion-card-title>INFO</ion-card-title>
             <ion-card-subtitle>{{ state.job.data.name }}</ion-card-subtitle>
           </ion-card-header>
@@ -77,7 +77,7 @@
       </ion-col>
       <ion-col size="12" size-md="6">
         <ion-card>
-          <ion-card-header color="secondary">
+          <ion-card-header color="primary">
             <ion-card-title>TASKS</ion-card-title>
             <ion-card-subtitle>{{ state.job.data.name }}</ion-card-subtitle>
           </ion-card-header>

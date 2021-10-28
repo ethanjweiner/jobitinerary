@@ -14,8 +14,8 @@
   </ion-grid>
 
   <ion-grid v-else-if="lists.length >= 1">
-    <ion-row v-for="(list, index) in lists" :key="index">
-      <h1 v-if="list.name" class="list-section-title ion-text-center">
+    <ion-row v-for="(list, index) in lists" :key="index" class="ion-margin">
+      <h1 v-if="list.name" class="ion-text-center list-section-title">
         {{ list.name }}
       </h1>
       <ion-col

@@ -13,10 +13,15 @@
             size-lg="5"
             size-xl="4"
           >
-            <div class="ion-text-start">
-              <h3 class="text-secondary">{{ state.title }}</h3>
-            </div>
-            <ion-segment :value="state.authenticationType" color="primary">
+            <ion-text
+              :color="
+                state.authenticationType == 'login' ? 'primary' : 'secondary'
+              "
+              class="ion-text-start"
+            >
+              <h1>{{ state.title }}</h1>
+            </ion-text>
+            <ion-segment :value="state.authenticationType" color="dark">
               <ion-segment-button value="login" @click="changeForm('login')">
                 <ion-label>Login</ion-label>
               </ion-segment-button>
@@ -46,6 +51,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonText,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 
@@ -66,6 +72,7 @@ export default defineComponent({
     IonContent,
     LogIn,
     CompanySignUp,
+    IonText,
   },
   data() {
     return {
@@ -100,8 +107,5 @@ export default defineComponent({
 <style scoped>
 div {
   border: 1px solid white;
-}
-h3 {
-  color: #027e46;
 }
 </style>

@@ -1,82 +1,77 @@
 <template>
-  <form>
-    <Sections
-      :sections="sections"
-      :separateByDefault="separateByDefault"
-      wrapCards
+  <ion-segment
+    @ionChange="selectedSection = $event.detail.value"
+    :value="selectedSection"
+    color="light"
+    class="ion-hide-md-up"
+  >
+    <ion-segment-button
+      v-for="section in sections"
+      :value="section.id"
+      :key="section.id"
     >
-      <template v-slot:main>
-        <VisitMain
-          v-model="state.visit"
-          :hideJob="hideJob"
-          :hideCustomerSelect="hideCustomerSelect"
-          :hideEmployeeSelect="hideEmployeeSelect"
-        />
-      </template>
-      <template v-slot:tasks>
-        <Tasks v-model="state.visit.data.tasks" />
-      </template>
-      <template v-slot:tools>
-        <Tools v-model="state.visit.data.tools" />
-      </template>
-      <template v-slot:images>
-        <Images v-model="state.visit.data.images" />
-      </template>
-      <template v-slot:sectionsAsGrid>
-        <ion-row>
-          <ion-col size="6">
-            <ion-row>
-              <ion-card style="width: 100%;">
-                <VisitMain
-                  v-model="state.visit"
-                  :hideJob="hideJob"
-                  :hideCustomerSelect="hideCustomerSelect"
-                  :hideEmployeeSelect="hideEmployeeSelect"
-                />
-              </ion-card>
-            </ion-row>
+      <ion-icon :icon="section.icon"></ion-icon>
+      <ion-label>{{ section.name }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-            <ion-row>
-              <ion-card style="width: 100%;">
-                <ion-card-header
-                  class="ion-text-center"
-                  style="padding-bottom: 2px;"
-                >
-                  <ion-card-title>
-                    <ion-icon :icon="icons.imagesOutline"></ion-icon>
-                    Images
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                  <Images v-model="state.visit.data.images" />
-                </ion-card-content>
-              </ion-card>
-            </ion-row>
-          </ion-col>
-          <ion-col size="6">
+  <div class="ion-hide-md-up">
+    <VisitMain
+      v-if="selectedSection == 'main'"
+      v-model="state.visit"
+      :hideJob="hideJob"
+      :hideCustomerSelect="hideCustomerSelect"
+      :hideEmployeeSelect="hideEmployeeSelect"
+    />
+    <Tasks
+      v-else-if="selectedSection == 'tasks'"
+      v-model="state.visit.data.tasks"
+    />
+    <Tools
+      v-else-if="selectedSection == 'tools'"
+      v-model="state.visit.data.tools"
+    />
+    <Images
+      v-else-if="selectedSection == 'images'"
+      v-model="state.visit.data.images"
+    />
+  </div>
+
+  <ion-grid class="ion-hide-md-down">
+    <ion-row class="ion-justify-content-around">
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>INFO</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <VisitMain
+              v-model="state.visit"
+              :hideJob="hideJob"
+              :hideCustomerSelect="hideCustomerSelect"
+              :hideEmployeeSelect="hideEmployeeSelect"
+            />
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-row>
+          <ion-col style="padding: 0 !important;">
             <ion-card>
-              <ion-card-header class="ion-text-center">
-                <ion-card-title>
-                  <ion-icon :icon="icons.constructOutline"></ion-icon>
-                  Tasks</ion-card-title
-                >
+              <ion-card-header>
+                <ion-card-title>TASKS</ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <Tasks v-model="state.visit.data.tasks" />
               </ion-card-content>
             </ion-card>
-
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col style="padding: 0 !important;">
             <ion-card>
-              <ion-card-header class="ion-text-center">
-                <ion-card-title>
-                  <ion-icon :icon="icons.hammerOutline"></ion-icon>
-                  Tools</ion-card-title
-                >
-                <ion-card-subtitle
-                  class="ion-text-start"
-                  style="margin-top: 5px; margin-left: 15px;"
-                  >Swipe right to mark a tool as returned</ion-card-subtitle
-                >
+              <ion-card-header>
+                <ion-card-title>TOOLS</ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <Tools v-model="state.visit.data.tools" />
@@ -84,24 +79,39 @@
             </ion-card>
           </ion-col>
         </ion-row>
-      </template>
-    </Sections>
-  </form>
+      </ion-col>
+
+      <ion-col size="12" size-md="8">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>IMAGES</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <Images v-model="state.visit.data.images" />
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </template>
 
 <script lang="ts">
+import { reactive, ref } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
+
 import {
-  IonIcon,
-  IonCard,
-  IonCol,
+  IonGrid,
   IonRow,
+  IonCol,
+  IonSegment,
+  IonSegmentButton,
+  IonCard,
+  IonIcon,
+  IonLabel,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonCardSubtitle,
 } from "@ionic/vue";
-import { reactive, ref } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
 
 import {
   documentTextOutline,
@@ -114,7 +124,6 @@ import {
 
 import { SectionsType } from "@/types/auxiliary";
 
-import Sections from "@/components/Sections.vue";
 import VisitMain from "@/components/forms/VisitMain.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import Tools from "@/components/lists/Tools.vue";
@@ -125,7 +134,6 @@ export default {
   props: {
     modelValue: Object,
     hideJob: Boolean,
-    separateByDefault: Boolean,
     hideEmployeeSelect: Boolean,
     hideCustomerSelect: Boolean,
   },
@@ -160,12 +168,15 @@ export default {
       enableSave: true,
     });
 
+    const selectedSection = ref<string>(sections.value[0].id);
+
     // AUTO-SAVING FUNCTIONALITY
     watch(state.visit.data, () => state.visit.save());
 
     return {
       sections,
       state,
+      selectedSection,
       icons: {
         calendarOutline,
         calendarNumberOutline,
@@ -176,19 +187,21 @@ export default {
     };
   },
   components: {
-    Sections,
-    IonIcon,
     VisitMain,
-    IonCard,
-    IonCol,
+    Tasks,
+    Tools,
+    Images,
+    IonGrid,
     IonRow,
+    IonCol,
+    IonSegment,
+    IonSegmentButton,
+    IonCard,
+    IonIcon,
+    IonLabel,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    Tasks,
-    Tools,
-    IonCardSubtitle,
-    Images,
   },
 };
 </script>
@@ -196,5 +209,8 @@ export default {
 <style scoped>
 ion-title {
   padding-left: 5px;
+}
+ion-segment {
+  --background: var(--ion-color-primary);
 }
 </style>

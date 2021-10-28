@@ -1,7 +1,7 @@
 <template>
   <ion-page :class="type">
     <ion-header>
-      <ion-toolbar v-if="state.userID">
+      <ion-toolbar color="primary" v-if="state.userID">
         <UserSelect
           slot="start"
           ref="userSelect"
@@ -9,8 +9,6 @@
           :type="type"
           :key="state.userID"
           @update:modelValue="changeUser"
-          :class="type + '-' + 'color'"
-          :color="type"
         />
         <ion-buttons slot="end">
           <ion-button @click="toggleUserSettings(true, $event)">
@@ -41,6 +39,7 @@
               :type="type"
               :key="state.userID"
               @update:modelValue="changeUser"
+              mode="light"
             />
           </ion-card>
         </ion-row>

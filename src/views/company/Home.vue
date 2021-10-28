@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="primary">
         <ion-title>JobItinerary</ion-title>
         <SettingsButton />
       </ion-toolbar>
@@ -72,11 +72,6 @@ ion-split-pane {
   --side-max-width: 50%;
 }
 
-@media (max-width: 768px) {
-  ion-split-pane {
-    margin-top: 56px;
-  }
-}
 ion-grid {
   height: calc(100% - 120px);
 }
@@ -97,6 +92,13 @@ ion-col {
   .jobs-column {
     height: 50%;
   }
+
+  ion-split-pane {
+    margin-top: 56px;
+  }
+}
+.ios ion-split-pane {
+  margin-top: 44px !important;
 }
 
 ion-col {

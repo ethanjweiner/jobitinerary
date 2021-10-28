@@ -4,7 +4,7 @@
       <ion-row class="ion-justify-content-around">
         <ion-col size="12" size-md="6">
           <ion-card>
-            <ion-card-header color="secondary">
+            <ion-card-header>
               <ion-card-title>CONTACT</ion-card-title>
               <ion-card-subtitle>{{
                 state.customer.data.name
@@ -13,7 +13,7 @@
             <ion-card-content>
               <ion-list>
                 <ion-item color="white">
-                  <ion-label position="stacked" color="secondary">
+                  <ion-label position="stacked">
                     <ion-icon :icon="icons.mailOutline"></ion-icon>
                     <span style="padding: 5px;">Email</span>
                   </ion-label>
@@ -27,7 +27,7 @@
                   ></ion-input>
                 </ion-item>
                 <ion-item color="white">
-                  <ion-label position="stacked" color="secondary">
+                  <ion-label position="stacked">
                     <ion-icon :icon="icons.callOutline"></ion-icon>
                     <span style="padding: 5px;">Phone</span>
                   </ion-label>
@@ -53,15 +53,13 @@
         </ion-col>
         <ion-col size="12" size-md="6">
           <ion-card>
-            <ion-card-header color="secondary">
+            <ion-card-header>
               <ion-card-title>NOTES</ion-card-title>
             </ion-card-header>
             <ion-card-content>
               <ion-list>
                 <ion-item color="white">
-                  <ion-label color="secondary" position="stacked"
-                    >Customer Notes</ion-label
-                  >
+                  <ion-label position="stacked">Customer Notes</ion-label>
                   <ion-textarea
                     v-if="state.showTextAreas"
                     auto-grow
@@ -72,9 +70,7 @@
                   ></ion-textarea>
                 </ion-item>
                 <ion-item color="white">
-                  <ion-label color="secondary" position="stacked"
-                    >Property Notes</ion-label
-                  >
+                  <ion-label position="stacked">Property Notes</ion-label>
                   <ion-textarea
                     v-if="state.showTextAreas"
                     auto-grow
@@ -90,7 +86,7 @@
         </ion-col>
         <ion-col size="12">
           <ion-card>
-            <ion-card-header color="secondary">
+            <ion-card-header>
               <ion-card-title
                 >PROPERTY IMAGES
                 <AddButton @click="addImage" />
@@ -100,7 +96,6 @@
               <ion-grid>
                 <ion-row class="ion-justify-content-left">
                   <ImageWithCaption
-                    color="secondary"
                     v-for="(image, index) in state.customer.data.propertyImages"
                     :key="image.ref"
                     @update:modelValue="

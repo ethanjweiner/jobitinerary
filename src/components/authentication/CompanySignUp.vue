@@ -2,7 +2,7 @@
   <ion-card>
     <form @submit.prevent="signUp">
       <ion-item>
-        <ion-label position="stacked">Company Name</ion-label>
+        <ion-label color="secondary" position="stacked">Company Name</ion-label>
         <ion-input
           @keyup.enter="signUp"
           v-model="name"
@@ -11,7 +11,9 @@
         ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Company Email</ion-label>
+        <ion-label color="secondary" position="stacked"
+          >Company Email</ion-label
+        >
         <ion-input
           v-model="email"
           type="email"
@@ -21,7 +23,9 @@
         ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Company Phone Number</ion-label>
+        <ion-label color="secondary" position="stacked"
+          >Company Phone Number</ion-label
+        >
         <ion-input
           v-model="phone"
           type="tel"
@@ -33,7 +37,7 @@
         ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Password</ion-label>
+        <ion-label color="secondary" position="stacked">Password</ion-label>
         <ion-input
           v-model="password"
           type="password"
@@ -46,7 +50,9 @@
         Looking to sign up as an employee? Ask your company to add you to their
         system and send you an activation email.
       </p>
-      <ion-button expand="block" type="submit">Sign Up</ion-button>
+      <ion-button color="secondary" expand="block" type="submit"
+        >Sign Up</ion-button
+      >
     </form>
   </ion-card>
 </template>

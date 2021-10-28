@@ -15,7 +15,12 @@
         v-model="state.tasks[index]"
         @deleteTask="deleteTask(index)"
       />
-      <ion-item button @click="addTask">
+      <ion-item
+        class="ion-item-button"
+        button
+        @click="addTask"
+        color="secondary"
+      >
         <ion-icon color="light" :icon="add"></ion-icon>
         <ion-label color="light">Add Task</ion-label>
       </ion-item>
@@ -98,7 +103,7 @@ export default defineComponent({
 });
 </script>
 
-<style sceoped>
+<style scoped>
 ion-reorder-group {
   cursor: grab;
 }

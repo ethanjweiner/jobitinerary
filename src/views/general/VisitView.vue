@@ -2,20 +2,21 @@
   <!-- Different depending on render type -->
   <ion-page>
     <ion-header v-if="state.visit">
-      <ion-toolbar>
+      <ion-toolbar color="primary">
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title style="padding-inline-end: 5px;"
+        <ion-title
           >Visit<span v-if="state.visit.data.date"> on </span
           >{{ state.visit.data.date }}</ion-title
         >
 
         <div style="padding-left: 20px;">
-          <ion-note v-if="state.visit.data.customerID"
-            >for {{ idToName(state.visit.data.customerID) }} |
+          <ion-note v-if="state.visit.data.customerID" color="light"
+            >for {{ idToName(state.visit.data.customerID) }}
+            <span v-if="state.visit.data.employeeID">| </span>
           </ion-note>
-          <ion-note v-if="state.visit.data.employeeID"
+          <ion-note v-if="state.visit.data.employeeID" color="light"
             >by {{ idToName(state.visit.data.employeeID) }}</ion-note
           >
         </div>
@@ -144,7 +145,7 @@ export default {
 </script>
 
 <style scoped>
-ion-title {
-  padding-left: 5px;
+ion-header {
+  display: block;
 }
 </style>

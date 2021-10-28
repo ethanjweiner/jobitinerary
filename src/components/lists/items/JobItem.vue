@@ -1,7 +1,7 @@
 <template>
   <ion-card button="true">
     <ion-card-header>
-      <ion-card-title>{{ job.name }}</ion-card-title>
+      <ion-card-title>{{ idToName(job.id) }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-card-subtitle v-if="job.customerID">

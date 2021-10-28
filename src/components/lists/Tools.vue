@@ -6,9 +6,9 @@
       v-model="state.tools[index]"
       @deleteTool="deleteTool(index)"
     />
-    <ion-item button color="secondary" @click="addTool">
-      <ion-icon :icon="add"></ion-icon>
-      <ion-label>Add Tool</ion-label>
+    <ion-item class="ion-item-button" button color="secondary" @click="addTool">
+      <ion-icon color="light" :icon="add"></ion-icon>
+      <ion-label color="light">Add Tool</ion-label>
     </ion-item>
   </ion-reorder-group>
 </template>

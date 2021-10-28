@@ -23,10 +23,8 @@
     <ion-content :id="'main-' + sectionsID">
       <!-- Place whatever you need in here -->
       <ion-segment
-        slot="fixed"
         @ionChange="selectedSection = $event.detail.value"
         :value="selectedSection"
-        color="light"
       >
         <ion-segment-button
           v-for="section in sections"
@@ -45,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
 import {
   IonSegment,
@@ -68,17 +66,9 @@ export default {
   },
   setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);
-    const screenWidth = ref(0);
     const route = useRoute();
 
-    onMounted(async () => {
-      screenWidth.value = window.innerWidth;
-      window.addEventListener("resize", () => {
-        screenWidth.value = window.innerWidth;
-      });
-    });
-
-    return { selectedSection, screenWidth, route };
+    return { selectedSection, route };
   },
   components: {
     IonSegment,
@@ -95,10 +85,14 @@ export default {
 
 <style scoped>
 ion-split-pane {
-  margin-top: 57px;
+  margin-top: 56px;
   --side-width: 180px;
   --side-min-width: 180px;
   --side-max-width: 180px;
+}
+
+.ios ion-split-pane {
+  margin-top: 64px !important;
 }
 
 @media (min-width: 768px) {
@@ -121,9 +115,5 @@ ion-menu ion-item {
 
 ion-menu ion-item {
   --min-height: 80px;
-}
-
-ion-segment-button {
-  --color: var(--ion-color-medium);
 }
 </style>
