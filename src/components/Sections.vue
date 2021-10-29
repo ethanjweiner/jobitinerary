@@ -1,13 +1,11 @@
 <template>
   <!-- TEMPORARY: Reload split pane upon route changes... -->
-  <ion-split-pane
-    :key="route.fullPath"
-    :content-id="'main-' + sectionsID"
-    when="md"
-  >
-    <ion-menu :content-id="'main-' + sectionsID">
-      <ion-content>
+  <ion-split-pane content-id="main" when="md">
+    <!-- Create a custom menu instead -->
+    <ion-content color="light">
+      <ion-list>
         <ion-item
+          color="light"
           class="menu-item"
           button
           v-for="section in sections"
@@ -17,10 +15,10 @@
           <ion-label>{{ section.name }}</ion-label>
           <ion-icon :icon="section.icon"></ion-icon>
         </ion-item>
-      </ion-content>
-    </ion-menu>
+      </ion-list>
+    </ion-content>
 
-    <ion-content :id="'main-' + sectionsID">
+    <ion-content id="main">
       <!-- Place whatever you need in here -->
       <ion-segment
         @ionChange="selectedSection = $event.detail.value"
@@ -53,22 +51,19 @@ import {
   IonSplitPane,
   IonItem,
   IonContent,
-  IonMenu,
+  IonList,
 } from "@ionic/vue";
-import { useRoute } from "vue-router";
 
 export default {
   name: "Sections",
   props: {
     sections: Array,
     cssClass: String,
-    sectionsID: String,
   },
   setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);
-    const route = useRoute();
 
-    return { selectedSection, route };
+    return { selectedSection };
   },
   components: {
     IonSegment,
@@ -78,7 +73,7 @@ export default {
     IonSplitPane,
     IonItem,
     IonContent,
-    IonMenu,
+    IonList,
   },
 };
 </script>
@@ -99,21 +94,15 @@ ion-split-pane {
   ion-segment {
     display: none;
   }
-  ion-menu {
-    display: block;
-  }
 }
 
 ion-label {
   margin-bottom: 2px !important;
 }
 
-ion-menu ion-content,
-ion-menu ion-item {
-  --background: var(--ion-color-light);
-}
-
-ion-menu ion-item {
+ion-list ion-item {
   --min-height: 80px;
+  font-weight: 500;
+  font-size: 21px;
 }
 </style>
