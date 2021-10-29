@@ -27,7 +27,7 @@
       <DeletePopover unitName="Job" @delete="deleteJob" />
     </ion-popover>
     <div v-if="state.job">
-      <Sections :sections="sections" sectionsID="jobs">
+      <Sections :sections="sections">
         <template v-slot:main>
           <JobMain v-model="state.job" :visits="state.visits" />
         </template>

@@ -29,7 +29,7 @@
       <!-- Add Day Popover here -->
     </ion-popover>
 
-    <Sections :sections="sections" sectionsID="jobs" v-if="state.day">
+    <Sections :sections="sections" v-if="state.day">
       <template v-slot:main>
         <DayMain v-model="state.day" :visits="state.visits" />
       </template>
