@@ -1,14 +1,15 @@
 <template>
   <Sections v-if="state.employee" :sections="sections" :wrapCards="true">
     <template v-slot:dates>
-      <div class="list">
-        <!-- PASS DATABASE REFERENCE -->
-        <EmployeeDays
-          :employeeID="state.employee.data.id"
-          :dbRef="daysRef"
-          title="Dates"
-        />
-      </div>
+      <EmployeeDays
+        :employeeID="state.employee.data.id"
+        title="Dates"
+        :dbRef="daysRef"
+        :showPaidToggle="true"
+      />
+    </template>
+    <template v-slot:expenses>
+      <Expenses :key="expensesRef" title="Expenses" :dbRef="expensesRef" />
     </template>
     <template v-slot:pay>
       <PaymentInfo v-model="state.employee" />
@@ -16,76 +17,32 @@
     <template v-slot:employee-info>
       <EmployeeForm v-model="state.employee" />
     </template>
-    <template v-slot:sectionsAsGrid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-card>
-            <div style="height: 500px;">
-              <!-- PASS DATABASE REFERENCE -->
-              <EmployeeDays
-                :dbRef="daysRef"
-                :employeeID="state.employee.data.id"
-                title="Dates"
-              />
-            </div>
-          </ion-card>
-        </ion-col>
-        <ion-col size="6">
-          <ion-row>
-            <ion-card class="ion-padding" style="width: 100%;">
-              <ion-card-header>
-                <ion-card-title>
-                  Employee Info
-                </ion-card-title>
-              </ion-card-header>
-              <EmployeeForm v-model="state.employee" />
-            </ion-card>
-          </ion-row>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>
-                Payment Info
-              </ion-card-title>
-            </ion-card-header>
-            <PaymentInfo v-model="state.employee" />
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </template>
   </Sections>
 </template>
 
 <script lang="ts">
-import {
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-} from "@ionic/vue";
 import { computed, reactive, ref } from "@vue/reactivity";
 
 import {
   calendarNumberOutline,
   personOutline,
   cashOutline,
+  pricetagsOutline,
 } from "ionicons/icons";
 
 import store from "@/store";
 
-import { CollectionRef, SectionsType } from "@/types/auxiliary";
+import { CollectionRef, Query, SectionsType } from "@/types/auxiliary";
 import { Company, Employee } from "@/types/users";
 import Sections from "../Sections.vue";
 
+import Expenses from "@/components/lists/ExpensesInfinite.vue";
 import EmployeeDays from "@/components/lists/EmployeeDays.vue";
 import PaymentInfo from "@/components/PaymentInfo.vue";
 import EmployeeForm from "@/components/forms/EmployeeForm.vue";
 import { companiesCollection } from "@/main";
 import { watch } from "@vue/runtime-core";
+import { nameToID } from "@/helpers";
 
 interface State {
   employee: Employee | undefined;
@@ -101,10 +58,41 @@ export default {
       employee: undefined,
     });
 
+    const sections = ref<SectionsType>([
+      {
+        name: "Dates",
+        icon: calendarNumberOutline,
+        id: "dates",
+      },
+      {
+        name: "Expenses",
+        icon: pricetagsOutline,
+        id: "expenses",
+      },
+      {
+        name: "Pay",
+        icon: cashOutline,
+        id: "pay",
+      },
+      {
+        name: "Info",
+        icon: personOutline,
+        id: "employee-info",
+      },
+    ]);
+
     const daysRef = computed<CollectionRef>(() => {
       const base = companiesCollection
         .doc(`${store.state.companyID}/employees/${props.userID}`)
         .collection("days");
+
+      return base;
+    });
+
+    const expensesRef = computed<Query>(() => {
+      const base = companiesCollection
+        .doc(`${store.state.companyID}/employees/${nameToID(props.userID)}`)
+        .collection("expenses");
 
       return base;
     });
@@ -119,24 +107,6 @@ export default {
       state.employee = store.state.user;
     }
 
-    const sections = ref<SectionsType>([
-      {
-        name: "Dates",
-        icon: calendarNumberOutline,
-        id: "dates",
-      },
-      {
-        name: "Pay",
-        icon: cashOutline,
-        id: "pay",
-      },
-      {
-        name: "Employee",
-        icon: personOutline,
-        id: "employee-info",
-      },
-    ]);
-
     if (state.employee)
       watch(state.employee.data, () => {
         if (state.employee) state.employee.save();
@@ -148,6 +118,8 @@ export default {
       store,
       state,
       daysRef,
+      expensesRef,
+      icons: { pricetagsOutline },
     };
   },
   components: {
@@ -155,11 +127,7 @@ export default {
     EmployeeDays,
     PaymentInfo,
     EmployeeForm,
-    IonRow,
-    IonCol,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
+    Expenses,
   },
 };
 </script>

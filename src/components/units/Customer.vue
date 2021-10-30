@@ -1,5 +1,5 @@
 <template>
-  <Sections v-if="state.customer" :sections="sections" cssClass="customer">
+  <Sections v-if="state.customer" :sections="sections">
     <template v-slot:dates>
       <CustomerDays
         :customerID="state.customer.data.id"

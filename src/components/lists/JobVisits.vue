@@ -11,6 +11,7 @@
         :itemAction="(state) => (state.modalIsOpen = true)"
         @detachVisit="detachVisit"
         @deleteVisit="deleteVisit"
+        deleteEnabled
       />
     </template>
   </List>

@@ -1,7 +1,7 @@
 <template>
-  <ion-item>
+  <ion-item lines="full" class="ion-padding">
     <div slot="start">
-      <ion-label>{{ state.expense.name }}</ion-label>
+      <ion-label color="tertiary">{{ state.expense.name }}</ion-label>
       <ion-note v-if="showDate">
         {{ state.expense.date }}
       </ion-note>
@@ -15,10 +15,10 @@
     />
 
     <ion-buttons slot="end" style="margin: 0;">
-      <ion-note style="margin: auto;" v-if="state.expense.paid"
+      <ion-note style="margin-right: 7px;" v-if="state.expense.paid"
         ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
       >
-      <ion-note style="margin: auto;" v-if="!state.expense.paid"
+      <ion-note style="margin-right: 7px;" v-if="!state.expense.paid"
         >Unpaid</ion-note
       >
       <ion-toggle

@@ -5,7 +5,6 @@
     type="text"
     :value="formattedValue"
     :placeholder="placeholder"
-    style="margin-right: 10px;"
   />
 </template>
 
@@ -27,4 +26,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+input {
+  background: white;
+  border: 1px solid var(--ion-color-primary);
+  color: var(--ion-color-primary);
+  border-radius: 10px;
+  text-align: center;
+}
+input:disabled {
+  background: rgb(240, 240, 240);
+  color: grey;
+  border: 1px solid grey;
+}
+</style>

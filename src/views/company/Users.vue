@@ -1,5 +1,5 @@
 <template>
-  <ion-page :class="type">
+  <ion-page>
     <ion-header>
       <ion-toolbar color="primary" v-if="state.userID">
         <UserSelect

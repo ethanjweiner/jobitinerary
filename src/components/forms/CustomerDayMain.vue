@@ -73,6 +73,7 @@ import {
 import { computed, reactive } from "@vue/reactivity";
 import store from "@/store";
 import { idToName } from "@/helpers";
+import { Visit } from "@/types/units";
 
 export default {
   name: "Customer Day Main",

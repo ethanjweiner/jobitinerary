@@ -3,8 +3,8 @@
     <h2 slot="start">
       {{ title }}
     </h2>
-    <AddButton @click="addAction" slot="start" />
-    <ion-item v-if="useDateInput" color="light">
+    <AddButton v-if="!disableAdd" @click="addAction" slot="start" />
+    <ion-item v-if="useDateInput && !disableSearch" color="light">
       <ion-input
         type="date"
         :value="modelValue"
@@ -19,6 +19,8 @@
       :value="modelValue"
     ></ion-searchbar>
   </ion-toolbar>
+  <slot name="filter"></slot>
+  <!-- Input an optional filter -->
 </template>
 
 <script lang="ts">
@@ -34,12 +36,16 @@ export default {
     addAction: Function,
     useDateInput: Boolean,
     disableSearch: Boolean,
+    disableAdd: Boolean,
   },
   components: { IonToolbar, IonSearchbar, AddButton, IonInput, IonItem },
 };
 </script>
 
 <style scoped>
+ion-item {
+  max-width: 400px;
+}
 h2 {
   margin: 5px;
 }

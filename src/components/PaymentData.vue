@@ -138,4 +138,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.payment-data {
+  font-weight: bold;
+}
+</style>

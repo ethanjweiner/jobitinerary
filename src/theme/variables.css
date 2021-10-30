@@ -156,7 +156,7 @@ ion-header ion-title {
   font-weight: 600;
 }
 
-ion-header ion-title {
+.ios ion-header ion-title {
   font-family: "Oswald", sans-serif;
   font-weight: 700;
   text-transform: uppercase;
@@ -218,10 +218,6 @@ ion-tab-bar {
 
 ion-card li {
   list-style: none;
-}
-
-.payment-data {
-  font-weight: bold;
 }
 
 .ion-item-button {

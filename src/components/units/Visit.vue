@@ -2,8 +2,8 @@
   <ion-segment
     @ionChange="selectedSection = $event.detail.value"
     :value="selectedSection"
-    color="light"
-    class="ion-hide-md-up"
+    color="tertiary"
+    :class="separateByDefault ? '' : 'ion-hide-md-up'"
   >
     <ion-segment-button
       v-for="section in sections"
@@ -15,7 +15,7 @@
     </ion-segment-button>
   </ion-segment>
 
-  <div class="ion-hide-md-up">
+  <div :class="separateByDefault ? '' : 'ion-hide-md-up'">
     <VisitMain
       v-if="selectedSection == 'main'"
       v-model="state.visit"
@@ -37,7 +37,7 @@
     />
   </div>
 
-  <ion-grid class="ion-hide-md-down">
+  <ion-grid :class="separateByDefault ? 'ion-hide' : 'ion-hide-md-down'">
     <ion-row class="ion-justify-content-around">
       <ion-col size="12" size-md="6">
         <ion-card>
@@ -81,7 +81,7 @@
         </ion-row>
       </ion-col>
 
-      <ion-col size="12" size-md="8">
+      <ion-col size="12">
         <ion-card>
           <ion-card-header>
             <ion-card-title>IMAGES</ion-card-title>
@@ -136,6 +136,7 @@ export default {
     hideJob: Boolean,
     hideEmployeeSelect: Boolean,
     hideCustomerSelect: Boolean,
+    separateByDefault: Boolean,
   },
   emits: ["update:modelValue"],
   setup(props: any) {
@@ -211,6 +212,6 @@ ion-title {
   padding-left: 5px;
 }
 ion-segment {
-  --background: var(--ion-color-primary);
+  --background: white;
 }
 </style>

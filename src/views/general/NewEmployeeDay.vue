@@ -25,6 +25,7 @@
               :selectedName="state.employeeID"
               type="employee"
               :key="state.employeeID"
+              mode="light"
               v-model="state.employeeID"
             />
             <div class="ion-text-start">

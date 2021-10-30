@@ -34,7 +34,7 @@
         <DayMain v-model="state.day" :visits="state.visits" />
       </template>
       <template v-slot:visits>
-        <!-- <DayVisits v-model="state.visits" :job="state.job" /> -->
+        <DayVisits v-model="state.visits" />
       </template>
     </Sections>
   </ion-page>
@@ -62,13 +62,13 @@ import {
 } from "ionicons/icons";
 
 import { CustomerDay, Visit } from "@/types/units";
-import { createVisit } from "@/db";
 import { idToName, retrieveVisitsOnDate } from "@/helpers";
 import store from "@/store";
 import { watch } from "@vue/runtime-core";
 import router from "@/router";
-import DayMain from "@/components/forms/CustomerDayMain.vue";
 
+import DayMain from "@/components/forms/CustomerDayMain.vue";
+import DayVisits from "@/components/lists/CustomerDayVisits.vue";
 import DayPopover from "@/components/popovers/DayPopover.vue";
 import Sections from "@/components/Sections.vue";
 import { SectionsType } from "@/types/auxiliary";
@@ -133,15 +133,6 @@ export default {
     };
 
     // METHODS
-    const addVisit = async () => {
-      const visit = await createVisit({
-        customerID: props.userID,
-        date: props.date,
-      });
-
-      state.visits.unshift(visit);
-    };
-
     const deleteDay = async () => {
       if (state.day) {
         await state.day.delete();
@@ -170,14 +161,6 @@ export default {
       }
     };
 
-    const deleteVisit = async (visit: Visit) => {
-      // DELETE VISIT FROM DATABASE
-      await visit.delete();
-      state.visits = state.visits.filter(
-        (_visit: Visit) => visit.id != _visit.id
-      );
-    };
-
     return {
       state,
       icons: {
@@ -187,10 +170,8 @@ export default {
         homeOutline,
       },
       sections,
-      addVisit,
       deleteDay,
       changeDate,
-      deleteVisit,
       toggleDaySettings,
       popoverIsOpen,
       popoverEvent,
@@ -210,6 +191,7 @@ export default {
     DayPopover,
     DayMain,
     Sections,
+    DayVisits,
   },
 };
 </script>

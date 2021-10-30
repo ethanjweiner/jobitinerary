@@ -58,7 +58,6 @@ export default {
   name: "Sections",
   props: {
     sections: Array,
-    cssClass: String,
   },
   setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);

@@ -15,7 +15,7 @@
         size-sm="6"
         size-md="12"
         size-lg="12"
-        size-xl="12"
+        size-xl="6"
       >
         <ImageWithCaption
           :modelValue="image"
@@ -89,4 +89,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-grid {
+  --ion-grid-padding-xs: 5px;
+  --ion-grid-padding-sm: 5px;
+  --ion-grid-padding-md: 5px;
+  --ion-grid-padding-lg: 8px;
+  --ion-grid-padding-xl: 8px;
+  --ion-grid-column-padding-xs: 2px;
+  --ion-grid-column-padding-sm: 2px;
+  --ion-grid-column-padding-md: 4px;
+  --ion-grid-column-padding-lg: 6px;
+  --ion-grid-column-padding-xl: 6px;
+}
+</style>

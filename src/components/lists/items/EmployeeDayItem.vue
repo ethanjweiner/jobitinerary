@@ -1,72 +1,78 @@
 <template>
-  <ion-item>
-    <div
-      style="width: 100%;"
-      @click="
-        router.push({
-          name: 'Employee Day',
-          params: {
-            userID: state.day.employeeID,
-            date: state.day.date,
-          },
-        })
-      "
-    >
-      <ion-label>
-        <ion-text>
-          {{ day.date }}
-        </ion-text>
-      </ion-label>
-      <ion-note v-if="state.day.time.hours">
-        {{ state.day.time.hours }} total hours @ ${{ hourlyRate }}/hr
-      </ion-note>
-    </div>
-    <ion-buttons slot="end" v-if="showPaidToggle">
-      <ion-note style="margin: auto;" v-if="state.day.paid"
-        ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
-      >
-      <ion-note style="margin: auto;" v-if="!state.day.paid">Unpaid</ion-note>
-      <ion-toggle
-        :checked="state.day.paid"
-        value="paid"
-        @ionChange="togglePaid"
-      ></ion-toggle>
-    </ion-buttons>
-  </ion-item>
+  <ion-card
+    button
+    @click="
+      router.push({
+        name: 'Employee Day',
+        params: {
+          userID: day.employeeID,
+          date: day.date,
+        },
+      })
+    "
+  >
+    <ion-toolbar>
+      <ion-title color="dark">{{ day.date }}</ion-title>
+
+      <ion-buttons slot="end" v-if="showPaidToggle">
+        <ion-note style="margin: auto;" v-if="day.paid"
+          ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
+        >
+        <ion-note style="margin: auto;" v-if="!day.paid">Unpaid</ion-note>
+        <ion-toggle
+          :checked="day.paid"
+          value="paid"
+          @ionChange="togglePaid"
+          @click.stop
+        ></ion-toggle>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-card-subtitle>
+        <ion-icon :icon="icons.hammer"></ion-icon>
+        {{ idToName(day.employeeID) }}
+      </ion-card-subtitle>
+
+      <li v-if="day.time.hours">
+        <ion-icon :icon="icons.time"></ion-icon>
+
+        {{ day.time.hours }} total hours @ {{ hourlyRate }}/hr
+      </li>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script lang="ts">
 import {
-  IonItem,
-  IonLabel,
-  IonText,
-  IonNote,
-  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardSubtitle,
   IonIcon,
+  IonToolbar,
+  IonTitle,
+  IonNote,
   IonToggle,
+  IonButtons,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import router from "@/router";
 
-import { checkmark } from "ionicons/icons";
-
 import { companiesCollection } from "@/main";
-import { EmployeeDayInterface } from "@/types/units";
+import { EmployeeDayInterface, Visit } from "@/types/units";
+
+import { idToName } from "@/helpers";
+
+import { hammer, time, checkmark } from "ionicons/icons";
+
+interface State {
+  visits: Array<Visit>;
+}
 
 export default {
   name: "Employee Day Item",
   props: {
     day: Object,
     showPaidToggle: Boolean,
-  },
-  components: {
-    IonItem,
-    IonLabel,
-    IonText,
-    IonNote,
-    IonButtons,
-    IonIcon,
-    IonToggle,
   },
   emits: ["togglePaid"],
   setup(props: any) {
@@ -90,22 +96,26 @@ export default {
     });
 
     return {
-      checkmark,
+      icons: { checkmark, hammer, time },
+      idToName,
       state,
       hourlyRate,
       router,
       togglePaid,
     };
   },
+  components: {
+    IonCard,
+    IonCardContent,
+    IonCardSubtitle,
+    IonIcon,
+    IonToolbar,
+    IonTitle,
+    IonNote,
+    IonToggle,
+    IonButtons,
+  },
 };
 </script>
 
-<style scoped>
-ion-item {
-  cursor: pointer;
-}
-div {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-</style>
+<style scoped></style>

@@ -1,4 +1,5 @@
 <template>
+  <!-- ADD A PAID STATUS FILTER -->
   <ExpenseComponent
     v-for="(expense, index) in state.expenses"
     :key="expense.id"

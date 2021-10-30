@@ -19,13 +19,13 @@
               <h3 class="text-secondary">Select a Customer</h3>
             </div>
             <UserSelect
-              color="light"
               :names="
                 store.state.user.customers.map((customer) => customer.name)
               "
               :selectedName="state.customerID"
               type="customer"
               :key="state.customerID"
+              mode="light"
               v-model="state.customerID"
             />
             <div class="ion-text-start">

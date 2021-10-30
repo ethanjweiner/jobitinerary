@@ -24,6 +24,7 @@
               "
               v-model="state.customerID"
               type="customer"
+              mode="light"
             />
             <div class="ion-text-start">
               <h3 class="text-secondary">Create a Job Name</h3>

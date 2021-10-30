@@ -6,7 +6,10 @@
 
       <ion-buttons slot="end">
         <!-- Detach if a job, delete otherwise -->
-        <ion-button @click.stop="$emit('detachVisit', visit.id)">
+        <ion-button
+          @click.stop="$emit('detachVisit', visit.id)"
+          v-if="deleteEnabled"
+        >
           <ion-icon color="dark" :icon="icons.trashOutline"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -86,6 +89,7 @@ export default {
     visit: Object,
     type: String,
     itemAction: Function,
+    deleteEnabled: Boolean,
   },
   emits: ["deleteVisit", "detachVisit"],
   setup() {

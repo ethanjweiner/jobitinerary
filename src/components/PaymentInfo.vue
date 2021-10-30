@@ -1,94 +1,68 @@
 <template>
   <ion-grid>
     <ion-row>
-      <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
-        <ion-item>
-          <ion-label>Filter Data by Time Period?</ion-label>
-          <ion-toggle
-            v-model="state.filterByDate"
-            @ionChange="clearDates"
-          ></ion-toggle>
-        </ion-item>
-        <ion-grid v-if="state.filterByDate">
-          <ion-row>
-            <ion-col size="6">
-              <ion-item>
-                <ion-label>Start Date</ion-label>
-                <ion-datetime
-                  display-format="MM/DD/YYYY"
-                  v-model="state.startDate"
-                ></ion-datetime>
-              </ion-item>
-            </ion-col>
-            <ion-col size="6">
-              <ion-item>
-                <ion-label>End Date</ion-label>
-                <ion-datetime
-                  display-format="MM/DD/YYYY"
-                  v-model="state.endDate"
-                ></ion-datetime>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <ion-item color="light">
+              <ion-label>Filter Data by Time Period?</ion-label>
+              <ion-toggle
+                v-model="state.filterByDate"
+                @ionChange="clearDates"
+              ></ion-toggle>
+            </ion-item>
+            <ion-item v-if="state.filterByDate" color="light">
+              <ion-label>Start Date</ion-label>
+              <ion-datetime
+                display-format="MM/DD/YYYY"
+                v-model="state.startDate"
+              ></ion-datetime>
+            </ion-item>
+            <ion-item v-if="state.filterByDate" color="light">
+              <ion-label>End Date</ion-label>
+              <ion-datetime
+                display-format="MM/DD/YYYY"
+                v-model="state.endDate"
+              ></ion-datetime>
+            </ion-item>
 
-        <ion-radio-group
-          :value="state.filterUnpaid"
-          @ionChange="state.filterUnpaid = !state.filterUnpaid"
-        >
-          <ion-item>
-            <ion-label>Include All Hours and Expenses</ion-label>
-            <ion-radio slot="end" :value="false"></ion-radio>
-          </ion-item>
-          <ion-item>
-            <ion-label
-              >Only Include <span style="font-weight: bold">Unpaid </span>Hours
-              and Expenses</ion-label
+            <ion-radio-group
+              :value="state.filterUnpaid"
+              @ionChange="state.filterUnpaid = !state.filterUnpaid"
             >
-            <ion-radio slot="end" :value="true"></ion-radio>
-          </ion-item>
-        </ion-radio-group>
+              <ion-item>
+                <ion-label>Include All Hours and Expenses</ion-label>
+                <ion-radio slot="end" :value="false"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label
+                  >Only Include
+                  <span style="font-weight: bold">Unpaid </span>Hours and
+                  Expenses</ion-label
+                >
+                <ion-radio slot="end" :value="true"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
 
-        <ion-item>
-          <ion-label>
-            <ion-icon :icon="timeOutline"></ion-icon>
-            Default Hourly Rate
-          </ion-label>
-          <CurrencyInput
-            v-model="state.employee.data.defaultHourlyRate"
-            @update:modelValue="$emit('update:modelValue', state.employee)"
-            :options="{ currency: 'USD' }"
-          />
-        </ion-item>
-        <PaymentData
-          :key="daysRef"
-          :daysRef="daysRef"
-          :expensesRef="expensesRef"
-          :filterUnpaid="state.filterUnpaid"
-        />
-      </ion-col>
-      <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
-        <ion-row>
-          <ion-card style="width: 100%; height: 300px;">
-            <EmployeeDays
+            <ion-item>
+              <ion-label>
+                <ion-icon :icon="timeOutline"></ion-icon>
+                Default Hourly Rate
+              </ion-label>
+              <CurrencyInput
+                v-model="state.employee.data.defaultHourlyRate"
+                @update:modelValue="$emit('update:modelValue', state.employee)"
+                :options="{ currency: 'USD' }"
+              />
+            </ion-item>
+            <PaymentData
               :key="daysRef"
-              :dbRef="daysRef"
-              :employeeID="state.employee.data.id"
-              :hideAdd="true"
-              :showPaidToggle="true"
-              :title="state.filterUnpaid ? 'Unpaid Dates' : 'All Dates'"
+              :daysRef="daysRef"
+              :expensesRef="expensesRef"
+              :filterUnpaid="state.filterUnpaid"
             />
-          </ion-card>
-        </ion-row>
-        <ion-row>
-          <ion-card style="width: 100%; height: 250px;">
-            <Expenses
-              :key="expensesRef"
-              :title="state.filterUnpaid ? 'Unpaid Expenses' : 'All Expenses'"
-              :dbRef="expensesRef"
-            />
-          </ion-card>
-        </ion-row>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -107,6 +81,7 @@ import {
   IonDatetime,
   IonToggle,
   IonCard,
+  IonCardContent,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { timeOutline } from "ionicons/icons";
@@ -116,8 +91,6 @@ import store from "@/store";
 import { Employee } from "@/types/users";
 
 import CurrencyInput from "./inputs/CurrencyInput.vue";
-import EmployeeDays from "./lists/EmployeeDays.vue";
-import Expenses from "./lists/ExpensesInfinite.vue";
 import { companiesCollection } from "@/main";
 import { nameToID } from "@/helpers";
 import { CollectionRef, Query } from "@/types/auxiliary";
@@ -128,7 +101,7 @@ interface State {
   filterByDate: boolean;
   startDate: string;
   endDate: string;
-  filterUnpaid: true;
+  filterUnpaid: boolean;
 }
 
 export default {
@@ -229,8 +202,7 @@ export default {
     IonDatetime,
     IonToggle,
     IonCard,
-    EmployeeDays,
-    Expenses,
+    IonCardContent,
     PaymentData,
   },
 };
@@ -248,10 +220,5 @@ export default {
 }
 ion-chip {
   cursor: default;
-}
-
-ion-card-content {
-  height: 80%;
-  padding: 0;
 }
 </style>
