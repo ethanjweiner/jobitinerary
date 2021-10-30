@@ -1,28 +1,34 @@
 <template>
   <div id="visit-modal" v-if="state.visit">
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="tertiary">
         <ion-buttons slot="start" :collapse="true">
           <ion-button @click="toggleVisitSettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
-        <ion-title style="padding-inline-end: 5px;"
+        <ion-title class="ion-text-start" style="padding-inline-end: 5px;"
           >Visit<span v-if="state.visit.data.date"> on </span
           >{{ state.visit.data.date }}</ion-title
         >
 
-        <div style="padding-left: 20px;">
-          <ion-note v-if="state.visit.data.customerID"
-            >for {{ idToName(state.visit.data.customerID) }} |
-          </ion-note>
-          <ion-note v-if="state.visit.data.employeeID"
-            >by {{ idToName(state.visit.data.employeeID) }}</ion-note
-          >
-        </div>
+        <ion-note
+          class="ion-hide-md-down"
+          style="padding-left: 20px;"
+          color="light"
+          v-if="state.visit.data.customerID"
+          >for {{ idToName(state.visit.data.customerID) }}
+          <span v-if="state.visit.data.employeeID">| </span>
+        </ion-note>
+        <ion-note
+          class="ion-hide-md-down"
+          color="light"
+          v-if="state.visit.data.employeeID"
+          >by {{ idToName(state.visit.data.employeeID) }}</ion-note
+        >
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="$emit('close')">
-            Return to Day
+            <span class="ion-hide-md-down">Return to Day</span>
             <ion-icon :icon="icons.close"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -37,7 +43,11 @@
       <DeletePopover unitName="Visit" @delete="$emit('deleteVisit')" />
     </ion-popover>
     <ion-content>
-      <VisitComponent v-model="state.visit" :hideJob="hideJob" />
+      <VisitComponent
+        :separateByDefault="true"
+        v-model="state.visit"
+        :hideJob="hideJob"
+      />
     </ion-content>
   </div>
 </template>
@@ -130,5 +140,8 @@ export default {
 <style scoped>
 #visit-modal {
   height: calc(100% - 50px);
+}
+ion-header {
+  display: block;
 }
 </style>
