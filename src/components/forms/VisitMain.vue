@@ -32,18 +32,23 @@
 
     <UserSelect
       v-if="!hideEmployeeSelect"
+      :key="state.visit.data.employeeID"
       v-model="state.visit.data.employeeID"
       type="employee"
       mode="light"
+      @update:modelValue="$emit('update:modelValue', state.visit)"
     />
     <!-- Customer Select -->
     <UserSelect
+      :key="state.visit.data.customerID"
       v-if="!state.visit.data.job && !hideCustomerSelect"
       v-model="state.visit.data.customerID"
       type="customer"
-      @update:modelValue="clearJob"
+      @update:modelValue="updateCustomer"
       mode="light"
     />
+    <!-- Auto updates on location -->
+    <Address v-model="state.visit.data.location" />
     <!-- Job Attacher -->
     <ion-item color="white" v-if="!hideJob">
       <ion-toolbar color="white">
@@ -137,6 +142,7 @@ import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
 import { companiesCollection, db } from "@/main";
+import Address from "../Address.vue";
 
 interface State {
   visit: Visit;
@@ -169,6 +175,7 @@ export default {
     IonModal,
     IonInput,
     IonList,
+    Address,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive<State>({
@@ -210,6 +217,17 @@ export default {
     const clearJob = () => {
       state.visit.data.jobID = "";
       state.jobData = null;
+    };
+
+    const updateCustomer = async (customerID: string) => {
+      clearJob();
+      const customerDocData = (
+        await companiesCollection
+          .doc(`${state.visit.data.companyID}/customers/${customerID}`)
+          .get()
+      ).data();
+      const location = customerDocData.data.location;
+      state.visit.data.location = location;
       emit("update:modelValue", state.visit);
     };
 
@@ -233,7 +251,7 @@ export default {
       state,
       store,
       jobsRef,
-      clearJob,
+      updateCustomer,
       icons: {
         calendarNumberOutline,
         calendarOutline,
