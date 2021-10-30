@@ -1,77 +1,115 @@
 <template>
-  <div style="height: 100%;">
-    <ion-card-header>
-      <ion-card-title>
-        {{ title }}
-        <AddButton v-if="!hideAdd" @click="createDay" title="Plan or Log" />
-      </ion-card-title>
-      <ion-item>
-        <ion-input
-          type="date"
-          v-model="searchDate"
-          placeholder="Search by date"
-        ></ion-input>
-      </ion-item>
-    </ion-card-header>
-    <ion-card-content>
-      <InfiniteList
-        :key="searchDate"
-        :splitters="splitters"
-        :pushQuantity="6"
-        :dbRef="dbRef"
-        orderByParam="date"
-        :searchFilter="searchDate"
+  <!-- ADD A PAID STATUS FILTER -->
+  <SearchToolbar
+    :addAction="createDay"
+    title="Dates"
+    v-model="searchDate"
+    useDateInput
+  >
+    <template v-slot:filter>
+      <ion-radio-group
+        :value="state.filterUnpaid"
+        @ionChange="state.filterUnpaid = !state.filterUnpaid"
       >
-        <template v-slot:item="itemProps">
-          <EmployeeDayItem
-            :day="itemProps.item"
-            :showPaidToggle="showPaidToggle"
-          />
-        </template>
-      </InfiniteList>
-    </ion-card-content>
-  </div>
+        <ion-grid style="border-top: 1px solid white;">
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-item color="primary" style="border-right: 1px solid white;">
+                <ion-radio
+                  color="light"
+                  slot="start"
+                  :value="false"
+                ></ion-radio>
+                <ion-label>All Days</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-item color="primary">
+                <ion-radio color="light" slot="start" :value="true"></ion-radio>
+                <ion-label>Unpaid Days</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-radio-group>
+    </template>
+  </SearchToolbar>
+
+  <InfiniteList
+    :key="key"
+    :splitters="splitters"
+    :pushQuantity="10"
+    :dbRef="daysRef"
+    orderByParam="date"
+    :searchFilter="searchDate"
+    :sizes="sizes"
+  >
+    <template v-slot:item="itemProps">
+      <EmployeeDayItem :day="itemProps.item" :showPaidToggle="showPaidToggle" />
+    </template>
+  </InfiniteList>
 </template>
 
 <script lang="ts">
 import {
-  IonCardHeader,
-  IonInput,
-  IonCardTitle,
-  IonCardContent,
+  IonRadioGroup,
+  IonRadio,
   IonItem,
+  IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
-import { ref } from "vue";
+
+import { computed, reactive, ref, watch } from "vue";
 import router from "@/router";
 
 import { EmployeeDayInterface } from "@/types/units";
-import { Splitter } from "@/types/auxiliary";
+import { CollectionRef, Query, Splitter } from "@/types/auxiliary";
 
-import AddButton from "../buttons/AddButton.vue";
 import EmployeeDayItem from "./items/EmployeeDayItem.vue";
 import InfiniteList from "./InfiniteList.vue";
+import SearchToolbar from "../inputs/SearchToolbar.vue";
 
 export default {
   name: "Employee Days",
   components: {
     EmployeeDayItem,
-    IonCardHeader,
-    IonInput,
-    IonCardTitle,
-    IonCardContent,
-    IonItem,
-    AddButton,
     InfiniteList,
+    SearchToolbar,
+    IonRadioGroup,
+    IonRadio,
+    IonItem,
+    IonLabel,
+    IonGrid,
+    IonRow,
+    IonCol,
   },
   props: {
     dbRef: Object,
     employeeID: String,
-    showPaidToggle: Boolean,
     hideAdd: Boolean,
     title: String,
+    showPaidToggle: Boolean,
   },
   setup(props: any) {
+    const state = reactive({
+      filterUnpaid: false,
+    });
+
+    const daysRef = computed<Query>(() => {
+      let ref: CollectionRef | Query = props.dbRef;
+      if (state.filterUnpaid) {
+        ref = ref.where("data.paid", "==", false);
+      }
+      return ref;
+    });
+
+    const key = ref(0);
     const searchDate = ref<string>("");
+
+    watch(searchDate, () => (key.value += 1));
+    watch(daysRef, () => (key.value += 1));
 
     const splitters = ref<Array<Splitter>>([
       {
@@ -84,6 +122,14 @@ export default {
       },
     ]);
 
+    const sizes = {
+      xs: 12,
+      sm: 12,
+      md: 12,
+      lg: 6,
+      xl: 4,
+    };
+
     const createDay = async () => {
       router.push({
         name: "New Employee Day",
@@ -92,13 +138,30 @@ export default {
     };
 
     return {
+      key,
+      state,
       router,
       createDay,
       searchDate,
       splitters,
+      sizes,
+      daysRef,
     };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-grid {
+  --ion-grid-padding-xs: 0;
+  --ion-grid-padding-sm: 0;
+  --ion-grid-padding-md: 0;
+  --ion-grid-padding-lg: 0;
+  --ion-grid-padding-xl: 0;
+  --ion-grid-column-padding-xs: 0;
+  --ion-grid-column-padding-sm: 0;
+  --ion-grid-column-padding-md: 0;
+  --ion-grid-column-padding-lg: 0;
+  --ion-grid-column-padding-xl: 0;
+}
+</style>
