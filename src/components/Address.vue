@@ -1,22 +1,22 @@
 <template>
   <ion-toolbar id="address-toolbar" color="tertiary">
     <ion-buttons slot="start">
-      <ion-button :disabled="state.location.coordinates ? false : true">
+      <ion-button :disabled="modelValue.coordinates ? false : true">
         <ion-icon
           :icon="navigateOutline"
-          :color="state.location.coordinates ? 'light' : 'medium'"
+          :color="modelValue.coordinates ? 'light' : 'medium'"
         ></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-item color="light">
-      <ion-label position="stacked">Address </ion-label>
+      <ion-label position="stacked">Address</ion-label>
 
       <ion-input
         type="text"
         id="autocomplete"
         placeholder="Enter address"
         ref="autocompleteInput"
-        :value="state.location.address"
+        :value="modelValue.address"
         :debounce="store.DEBOUNCE_AMOUNT"
         @input="onInput"
       ></ion-input>
