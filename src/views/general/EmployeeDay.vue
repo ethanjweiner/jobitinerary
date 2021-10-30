@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-header v-if="state.day">
-      <ion-toolbar>
+    <ion-header>
+      <ion-toolbar color="primary" v-if="state.day">
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
@@ -30,76 +30,22 @@
       <!-- Add Day Popover here -->
     </ion-popover>
 
-    <ion-content v-if="state.day" :fullscreen="true">
-      <form>
-        <Sections :sections="sections" wrapCards>
-          <template v-slot:main>
-            <DayMain v-model="state.day" />
-          </template>
-          <template v-slot:visits>
-            <DayVisits
-              :key="state.visits.length"
-              v-model="state.visits"
-              :employeeID="userID"
-              :date="date"
-            />
-          </template>
-          <template v-slot:expenses>
-            <Expenses
-              v-model="state.expenses"
-              :employeeID="userID"
-              :date="date"
-            />
-          </template>
-          <template v-slot:sectionsAsGrid>
-            <ion-row>
-              <ion-col size="6">
-                <ion-row>
-                  <ion-card style="width: 100%;">
-                    <DayMain v-model="state.day" />
-                  </ion-card>
-                </ion-row>
-                <ion-row>
-                  <ion-card style="width: 100%;">
-                    <ion-card-header class="ion-text-center">
-                      <ion-card-title>
-                        <ion-icon :icon="icons.pricetagsOutline"></ion-icon>
-                        Expenses
-                      </ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <Expenses
-                        v-model="state.expenses"
-                        :employeeID="userID"
-                        :date="date"
-                      />
-                    </ion-card-content>
-                  </ion-card>
-                </ion-row>
-              </ion-col>
-              <ion-col size="6">
-                <ion-card>
-                  <ion-card-header class="ion-text-center">
-                    <ion-card-title>
-                      <ion-icon :icon="icons.homeOutline"></ion-icon>
-                      Visits
-                    </ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                    <DayVisits
-                      :key="state.visits.length"
-                      v-model="state.visits"
-                      :employeeID="userID"
-                      :date="date"
-                    />
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-            </ion-row>
-          </template>
-        </Sections>
-      </form>
-    </ion-content>
+    <Sections :sections="sections" v-if="state.day">
+      <template v-slot:main>
+        <DayMain v-model="state.day" />
+      </template>
+      <template v-slot:visits>
+        <DayVisits
+          :key="state.visits.length"
+          v-model="state.visits"
+          :employeeID="userID"
+          :date="date"
+        />
+      </template>
+      <template v-slot:expenses>
+        <Expenses v-model="state.expenses" :employeeID="userID" :date="date" />
+      </template>
+    </Sections>
   </ion-page>
 </template>
 
@@ -109,17 +55,10 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent,
   IonIcon,
   IonButtons,
   IonPopover,
   IonButton,
-  IonCard,
-  IonCol,
-  IonRow,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
   IonBackButton,
 } from "@ionic/vue";
 import { ref, watch } from "vue";
@@ -310,7 +249,6 @@ export default {
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonContent,
     IonPage,
     Sections,
     IonIcon,
@@ -320,20 +258,14 @@ export default {
     DayMain,
     DayVisits,
     Expenses,
-    IonCard,
-    IonCol,
-    IonRow,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
     IonBackButton,
     DayPopover,
   },
 };
 </script>
 
-<style>
-ion-title {
-  padding-left: 10px;
+<style scoped>
+ion-header {
+  display: block;
 }
 </style>

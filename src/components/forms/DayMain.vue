@@ -1,83 +1,98 @@
 <template>
-  <ion-item>
-    <ion-label position="stacked">Start Location</ion-label>
-    <ion-input
-      type="text"
-      v-model="state.day.data.startLocation"
-      :debounce="store.DEBOUNCE_AMOUNT"
-      @ionInput="$emit('update:modelValue', state.day)"
-      placeholder="Meeting location at the start of the day"
-    />
-  </ion-item>
   <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-item>
-          <ion-label position="stacked">Planned Start</ion-label>
-          <ion-datetime
-            @ionInput="$emit('update:modelValue', state.day)"
-            v-model="state.day.data.plannedStart"
-            display-format="h:mm A"
-            picker-format="h:mm A"
-          ></ion-datetime>
-        </ion-item>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-lg="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>MAIN</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label position="stacked">Start Location</ion-label>
+                <ion-input
+                  type="text"
+                  v-model="state.day.data.startLocation"
+                  :debounce="store.DEBOUNCE_AMOUNT"
+                  @ionInput="$emit('update:modelValue', state.day)"
+                  placeholder="Meeting location at the start of the day"
+                />
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Planned Start</ion-label>
+                <ion-datetime
+                  @ionInput="$emit('update:modelValue', state.day)"
+                  v-model="state.day.data.plannedStart"
+                  display-format="h:mm A"
+                  picker-format="h:mm A"
+                ></ion-datetime>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Planned End</ion-label>
+                <ion-datetime
+                  @ionInput="$emit('update:modelValue', state.day)"
+                  v-model="state.day.data.plannedEnd"
+                  display-format="h:mm A"
+                  picker-format="h:mm A"
+                ></ion-datetime>
+              </ion-item>
+
+              <ion-item>
+                <div style="margin-top: 10px; margin-bottom: 10px;">
+                  <ion-label>Hourly Rate</ion-label>
+                  <ion-note>{{ paymentText }}</ion-note>
+                </div>
+                <CurrencyInput
+                  @ionInput="$emit('update:modelValue', state.day)"
+                  v-model="state.day.data.hourlyRate"
+                  :options="{ currency: 'USD' }"
+                  placeholder="$/hr"
+                />
+              </ion-item>
+              <ion-item>
+                <ion-label>Mark Day as Paid</ion-label>
+                <ion-buttons slot="end">
+                  <ion-note style="margin: auto;" v-if="state.day.data.paid"
+                    ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
+                  >
+                  <ion-note style="margin: auto;" v-else>Unpaid</ion-note>
+                  <ion-toggle
+                    @ionInput="$emit('update:modelValue', state.day)"
+                    v-model="state.day.data.paid"
+                    value="paid"
+                  ></ion-toggle>
+                </ion-buttons>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Notes on the Day</ion-label>
+                <ion-textarea
+                  auto-grow
+                  :debounce="store.DEBOUNCE_AMOUNT"
+                  @ionInput="$emit('update:modelValue', state.day)"
+                  v-model="state.day.data.notes"
+                ></ion-textarea>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
-      <ion-col size="6">
-        <ion-item>
-          <ion-label position="stacked">Planned End</ion-label>
-          <ion-datetime
-            @ionInput="$emit('update:modelValue', state.day)"
-            v-model="state.day.data.plannedEnd"
-            display-format="h:mm A"
-            picker-format="h:mm A"
-          ></ion-datetime>
-        </ion-item>
+      <ion-col size="12" size-lg="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>TIME LOG</ion-card-title>
+            <ion-card-subtitle>Total hours for the day</ion-card-subtitle>
+          </ion-card-header>
+          <TimeLog
+            @update:modelValue="$emit('update:modelValue', state.day)"
+            v-model="state.day.data.time"
+            :title="'Track Day Hours'"
+          />
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-item>
-    <div style="margin-bottom: 10px;">
-      <ion-label>Hourly Rate</ion-label>
-      <ion-note>{{ paymentText }}</ion-note>
-    </div>
-    <CurrencyInput
-      @ionInput="$emit('update:modelValue', state.day)"
-      v-model="state.day.data.hourlyRate"
-      :options="{ currency: 'USD' }"
-      placeholder="$/hr"
-    />
-  </ion-item>
-  <ion-item>
-    <ion-label>Mark Day as Paid</ion-label>
-    <ion-buttons slot="end">
-      <ion-note style="margin: auto;" v-if="state.day.data.paid"
-        ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
-      >
-      <ion-note style="margin: auto;" v-else>Unpaid</ion-note>
-      <ion-toggle
-        @ionInput="$emit('update:modelValue', state.day)"
-        v-model="state.day.data.paid"
-        value="paid"
-      ></ion-toggle>
-    </ion-buttons>
-  </ion-item>
-  <TimeLog
-    @update:modelValue="$emit('update:modelValue', state.day)"
-    v-model="state.day.data.time"
-    :title="'Track Day Hours'"
-  />
+
   <!-- Additional Notes -->
-  <h3 class="ion-text-center">
-    <ion-text>Notes on the Day</ion-text>
-  </h3>
-  <ion-item>
-    <ion-textarea
-      auto-grow
-      :debounce="store.DEBOUNCE_AMOUNT"
-      @ionInput="$emit('update:modelValue', state.day)"
-      v-model="state.day.data.notes"
-    ></ion-textarea>
-  </ion-item>
 </template>
 
 <script lang="ts">
@@ -96,8 +111,13 @@ import {
   IonTextarea,
   IonInput,
   IonIcon,
-  IonText,
   IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonList,
+  IonCardSubtitle,
 } from "@ionic/vue";
 import store from "@/store";
 
@@ -142,9 +162,14 @@ export default {
     IonInput,
     IonIcon,
     TimeLog,
-    IonText,
     CurrencyInput,
     IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonList,
+    IonCardSubtitle,
   },
 };
 </script>

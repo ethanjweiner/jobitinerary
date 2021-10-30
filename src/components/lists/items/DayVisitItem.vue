@@ -1,14 +1,22 @@
 <template>
   <div>
-    <ion-item @click="state.modalIsOpen = true">
+    <ion-item color="light" @click="state.modalIsOpen = true">
       <ion-buttons slot="start" @click.stop>
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
       <div style="width: 100%; height: 50%;">
-        <ion-label>{{ idToName(state.visit.data.customerID) }}</ion-label>
+        <ion-label v-if="state.visit.data.customerID">
+          <ion-icon :icon="icons.cart"></ion-icon>
+          {{ idToName(state.visit.data.customerID) }}</ion-label
+        >
+        <ion-label v-else>Visit</ion-label>
       </div>
 
-      <div v-if="store.state.userType == 'company'" slot="end">
+      <div
+        class="ion-hide-sm-down"
+        v-if="store.state.userType == 'company'"
+        slot="end"
+      >
         <ion-note v-if="state.visit.data.time.hours" style="display: block;"
           >{{ state.visit.data.time.hours }} hours</ion-note
         >
@@ -71,7 +79,7 @@ import { reactive } from "@vue/reactivity";
 import router from "@/router";
 import store from "@/store";
 
-import { trashOutline } from "ionicons/icons";
+import { trashOutline, cart } from "ionicons/icons";
 
 import { formatTime, idToName } from "@/helpers";
 
@@ -99,7 +107,7 @@ export default {
       store,
       formatTime,
       idToName,
-      icons: { trashOutline },
+      icons: { trashOutline, cart },
     };
   },
   components: {
