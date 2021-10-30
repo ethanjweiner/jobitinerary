@@ -3,7 +3,14 @@
 import { dateToString, dateToStrings, explode, hasKey } from "@/helpers";
 import { companiesCollection } from "@/main";
 
-import { DocRef, ImageWithCaption, Task, TimeLog, Tool } from "./auxiliary";
+import {
+  DocRef,
+  ImageWithCaption,
+  Location,
+  Task,
+  TimeLog,
+  Tool,
+} from "./auxiliary";
 
 export interface ExpenseInterface {
   id: string;
@@ -44,6 +51,7 @@ export interface VisitInterface {
   date: string;
   time: TimeLog;
   notes: string;
+  location: Location;
   tasks: Array<Task>;
   tools: Array<Tool>;
   images: Array<ImageWithCaption>;
@@ -71,6 +79,10 @@ export function newVisitInterface(
       hours: 0,
     },
     notes: "",
+    location: {
+      address: "",
+      coordinates: null,
+    },
     tasks: [],
     tools: [],
     images: [],
