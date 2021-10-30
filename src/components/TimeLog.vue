@@ -1,17 +1,14 @@
 <template>
   <ion-grid class="ion-padding">
-    <h3 class="ion-text-center" style="margin: 0;">
-      <ion-text>{{ title }}</ion-text>
-    </h3>
     <ion-row>
       <ion-col size="6">
-        <ion-button color="primary" expand="block" @click="setStartTime">
-          <ion-icon :icon="icons.playOutline"></ion-icon>
+        <ion-button color="success" expand="block" @click="setStartTime">
+          <ion-icon color="light" :icon="icons.playOutline"></ion-icon>
         </ion-button>
       </ion-col>
       <ion-col size="6">
         <ion-button color="danger" expand="block" @click="setEndTime">
-          <ion-icon :icon="icons.stopOutline"></ion-icon>
+          <ion-icon color="light" :icon="icons.stopOutline"></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>
@@ -23,7 +20,7 @@
       </ion-note>
     </ion-row>
     <ion-row color="light">
-      <ion-col size="6" size-lg="4">
+      <ion-col size="6" size-xl="4">
         <ion-item>
           <ion-label position="stacked">Start Time</ion-label>
           <ion-datetime
@@ -33,7 +30,7 @@
           ></ion-datetime>
         </ion-item>
       </ion-col>
-      <ion-col size="6" size-lg="4">
+      <ion-col size="6" size-xl="4">
         <ion-item>
           <ion-label position="stacked">End Time</ion-label>
           <ion-datetime
@@ -43,21 +40,20 @@
           ></ion-datetime>
         </ion-item>
       </ion-col>
-      <ion-col size="12" size-lg="4">
+      <ion-col size="12" size-xl="4">
         <ion-item>
           <ion-label position="stacked">Total Hours</ion-label>
-
           <ion-input
             type="number"
             inputmode="numeric"
             v-model="state.time.hours"
           ></ion-input>
           <ion-button
+            fill="outline"
             color="secondary"
             size="small"
-            expand="block"
             @click="refreshHours"
-            >Auto-Calculate</ion-button
+            >Calculate</ion-button
           >
         </ion-item>
       </ion-col>
@@ -163,7 +159,18 @@ ion-label {
   margin-left: 0;
 }
 ion-grid {
-  background: rgb(241, 241, 241);
+  --ion-padding: 7px;
+
+  --ion-grid-padding-xs: 7px;
+  --ion-grid-padding-sm: 7px;
+  --ion-grid-padding-md: 7px;
+  --ion-grid-padding-lg: 7px;
+  --ion-grid-padding-xl: 7px;
+  --ion-grid-column-padding-xs: 7px;
+  --ion-grid-column-padding-sm: 7px;
+  --ion-grid-column-padding-md: 7px;
+  --ion-grid-column-padding-lg: 7px;
+  --ion-grid-column-padding-xl: 7px;
 }
 ion-item {
   border-radius: 10px;
