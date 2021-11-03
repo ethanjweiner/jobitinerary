@@ -8,10 +8,15 @@
         <ion-title>Settings</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-button color="tertiary" expand="fill" @click="signOut"
-        >Logout</ion-button
-      >
+    <ion-content>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Settings</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button color="danger" @click="signOut">Logout</ion-button>
+        </ion-card-content>
+      </ion-card>
     </ion-content>
   </ion-page>
 </template>
@@ -26,6 +31,10 @@ import {
   IonButton,
   IonButtons,
   IonBackButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
 } from "@ionic/vue";
 
 import { signOut } from "@/authentication";
@@ -41,6 +50,10 @@ export default {
     IonButton,
     IonButtons,
     IonBackButton,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
   },
   setup() {
     return {
@@ -50,4 +63,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-card {
+  margin: auto;
+  margin-top: 50px;
+  max-width: 500px;
+}
+</style>

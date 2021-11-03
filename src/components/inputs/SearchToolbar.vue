@@ -4,7 +4,11 @@
       {{ title }}
     </h2>
     <AddButton v-if="!disableAdd" @click="addAction" slot="start" />
-    <ion-item v-if="useDateInput && !disableSearch" color="light">
+    <ion-item
+      style="margin-left: 10px;"
+      v-if="useDateInput && !disableSearch"
+      color="light"
+    >
       <ion-input
         type="date"
         :value="modelValue"
@@ -18,18 +22,33 @@
       @ionInput="$emit('update:modelValue', $event.target.value)"
       :value="modelValue"
     ></ion-searchbar>
+    <ion-buttons slot="end" v-if="modalClose">
+      <ion-button @click="$emit('close')">
+        <ion-icon :icon="icons.close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   <slot name="filter"></slot>
   <!-- Input an optional filter -->
 </template>
 
 <script lang="ts">
-import { IonToolbar, IonSearchbar, IonInput, IonItem } from "@ionic/vue";
+import {
+  IonToolbar,
+  IonSearchbar,
+  IonInput,
+  IonItem,
+  IonIcon,
+  IonButton,
+  IonButtons,
+} from "@ionic/vue";
+
+import { close } from "ionicons/icons";
 import AddButton from "@/components/buttons/AddButton.vue";
 
 export default {
   name: "Search Toolbar",
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "close"],
   props: {
     title: String,
     modelValue: String,
@@ -37,8 +56,23 @@ export default {
     useDateInput: Boolean,
     disableSearch: Boolean,
     disableAdd: Boolean,
+    modalClose: Boolean,
   },
-  components: { IonToolbar, IonSearchbar, AddButton, IonInput, IonItem },
+  setup() {
+    return {
+      icons: { close },
+    };
+  },
+  components: {
+    IonToolbar,
+    IonSearchbar,
+    AddButton,
+    IonInput,
+    IonItem,
+    IonIcon,
+    IonButton,
+    IonButtons,
+  },
 };
 </script>
 

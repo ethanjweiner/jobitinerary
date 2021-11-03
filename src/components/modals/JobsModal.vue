@@ -1,48 +1,40 @@
 <template>
   <div id="jobs-modal">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title> Choose a Job</ion-title>
-        <ion-buttons slot="end">
-          <ion-button @click="$emit('close')">
-            <ion-icon :icon="icons.close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-      <ion-searchbar v-model="searchText"></ion-searchbar>
-    </ion-header>
+    <SearchToolbar
+      :disableAdd="true"
+      title="Jobs"
+      v-model="searchText"
+      :modalClose="true"
+      @close="$emit('close')"
+    />
+
     <!-- PASS A DATABASE REFERENCE TO ALL JOBS UNDER THE SELECTED CUSTOMER -->
-    <InfiniteList
-      :key="searchText"
-      :splitters="splitters"
-      :searchFilter="searchText"
-      :dbRef="dbRef"
-      :pushQuantity="10"
-      orderByParam="startDate"
-    >
-      <template v-slot:item="itemProps">
-        <JobItem
-          class="job-item"
-          :key="itemProps.item.id"
-          :job="itemProps.item"
-          :showCustomer="true"
-          @click="$emit('jobSelected', itemProps.item)"
-        />
-      </template>
-    </InfiniteList>
+    <ion-content>
+      <InfiniteList
+        type="list"
+        :key="searchText"
+        :splitters="splitters"
+        :searchFilter="searchText"
+        :dbRef="dbRef"
+        :pushQuantity="10"
+        orderByParam="startDate"
+      >
+        <template v-slot:item="itemProps">
+          <JobItem
+            class="job-item"
+            :key="itemProps.item.id"
+            :job="itemProps.item"
+            :showCustomer="true"
+            @click="$emit('jobSelected', itemProps.item)"
+          />
+        </template>
+      </InfiniteList>
+    </ion-content>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  IonSearchbar,
-  IonToolbar,
-  IonTitle,
-  IonHeader,
-  IonIcon,
-  IonButton,
-  IonButtons,
-} from "@ionic/vue";
+import { IonContent } from "@ionic/vue";
 import { defineComponent, ref } from "vue";
 import { close } from "ionicons/icons";
 
@@ -50,19 +42,15 @@ import InfiniteList from "../lists/InfiniteList.vue";
 import JobItem from "@/components/lists/items/JobItem.vue";
 import { Splitter } from "@/types/auxiliary";
 import { JobInterface } from "@/types/units";
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 
 export default defineComponent({
   name: "Jobs",
   components: {
     JobItem,
-    IonSearchbar,
-    IonToolbar,
-    IonTitle,
-    IonHeader,
-    IonIcon,
-    IonButton,
-    IonButtons,
     InfiniteList,
+    IonContent,
+    SearchToolbar,
   },
   props: {
     dbRef: Object,
@@ -102,17 +90,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-searchbar {
-  padding-left: 0;
-  padding-bottom: 0;
-}
 .job-item {
   cursor: pointer;
 }
-ion-searchbar {
-  padding: 0;
-}
 #jobs-modal {
-  height: calc(100% - 105px);
+  height: calc(100% - 80px);
 }
 </style>

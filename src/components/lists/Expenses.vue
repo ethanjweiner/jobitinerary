@@ -1,34 +1,30 @@
 <template>
-  <!-- ADD A PAID STATUS FILTER -->
-  <ExpenseComponent
-    v-for="(expense, index) in state.expenses"
-    :key="expense.id"
-    v-model="state.expenses[index]"
-    @deleteExpense="deleteExpense(expense)"
-  />
-  <ion-item
-    style="margin-top: 10px;"
-    button
-    color="primary"
-    @click="addExpense"
-  >
-    <ion-icon :icon="add"></ion-icon>
-    <ion-label>Add Expense</ion-label>
-  </ion-item>
+  <SearchToolbar :addAction="addExpense" disableSearch title="Expenses" />
+  <List type="list" :items="state.expenses">
+    <template v-slot:item="itemProps">
+      <ExpenseItem
+        @deleteExpense="deleteExpense"
+        :expense="itemProps.item"
+        :showDate="true"
+        enableDelete
+      />
+    </template>
+  </List>
 </template>
 
 <script lang="ts">
-import { IonItem, IonIcon, IonLabel } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { add } from "ionicons/icons";
 
-import ExpenseComponent from "./items/Expense.vue";
+import ExpenseItem from "./items/ExpenseItem.vue";
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
+import List from "./List.vue";
 import { createExpense } from "@/db";
 import { Expense } from "@/types/units";
 
 export default {
-  name: "Expenses",
+  name: "Expenses Infinite",
   props: {
+    title: String,
     modelValue: Array,
     date: String,
     employeeID: String,
@@ -43,15 +39,14 @@ export default {
       const expense = await createExpense(props.employeeID, {
         date: props.date,
       });
-      state.expenses.push(expense);
+      state.expenses.unshift(expense);
       emit("update:modelValue", state.expenses);
     };
 
     const deleteExpense = async (expense: Expense) => {
-      // DELETE VISIT FROM DATABASE
       await expense.delete();
       state.expenses = state.expenses.filter(
-        (_expense: Expense) => expense.id != _expense.id
+        (_expense: Expense) => _expense.id != expense.id
       );
       emit("update:modelValue", state.expenses);
     };
@@ -60,11 +55,31 @@ export default {
       state,
       addExpense,
       deleteExpense,
-      add,
     };
   },
-  components: { IonItem, IonIcon, IonLabel, ExpenseComponent },
+  components: {
+    ExpenseItem,
+    SearchToolbar,
+    List,
+  },
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-card-content {
+  height: 80%;
+  padding: 0;
+}
+ion-grid {
+  --ion-grid-padding-xs: 0;
+  --ion-grid-padding-sm: 0;
+  --ion-grid-padding-md: 0;
+  --ion-grid-padding-lg: 0;
+  --ion-grid-padding-xl: 0;
+  --ion-grid-column-padding-xs: 0;
+  --ion-grid-column-padding-sm: 0;
+  --ion-grid-column-padding-md: 0;
+  --ion-grid-column-padding-lg: 0;
+  --ion-grid-column-padding-xl: 0;
+}
+</style>

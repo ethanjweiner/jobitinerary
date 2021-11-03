@@ -8,9 +8,13 @@
     </ion-header>
     <ion-split-pane when="sm" content-id="main">
       <ion-content>
+        <div style="margin-top: 68px;"></div>
+
         <Jobs :dbRef="jobsRef" />
       </ion-content>
       <ion-content id="main">
+        <div style="margin-top: 68px;"></div>
+
         <Visits :dbRef="visitsRef" />
       </ion-content>
     </ion-split-pane>
@@ -70,6 +74,7 @@ ion-split-pane {
   --side-width: 50%;
   --side-min-width: 50%;
   --side-max-width: 50%;
+  --border: 3px solid var(--ion-color-primary);
 }
 
 ion-grid {

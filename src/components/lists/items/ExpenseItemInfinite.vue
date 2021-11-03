@@ -1,31 +1,31 @@
 <template>
   <ion-item lines="full" class="ion-padding">
     <div slot="start">
-      <ion-label color="tertiary">{{ state.expense.data.name }}</ion-label>
+      <ion-label color="tertiary">{{ state.expense.name }}</ion-label>
       <ion-note v-if="showDate">
-        {{ state.expense.data.date }}
+        {{ state.expense.date }}
       </ion-note>
     </div>
 
     <CurrencyInput
-      v-model="state.expense.data.cost"
+      v-model="state.expense.cost"
       placeholder="Cost"
       :options="{ currency: 'USD' }"
-      :disabled="disableInput"
+      disabled
     />
 
     <ion-buttons slot="end" style="margin: 0;">
-      <ion-note style="margin-right: 7px;" v-if="state.expense.data.paid"
+      <ion-note style="margin-right: 7px;" v-if="state.expense.paid"
         ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
       >
-      <ion-note style="margin-right: 7px;" v-else>Unpaid</ion-note>
-      <ion-toggle v-model="state.expense.data.paid" value="paid"></ion-toggle>
-      <ion-button
-        @click="$emit('deleteExpense', state.expense)"
-        v-if="enableDelete"
+      <ion-note style="margin-right: 7px;" v-if="!state.expense.paid"
+        >Unpaid</ion-note
       >
-        <ion-icon :icon="icons.trashOutline"></ion-icon>
-      </ion-button>
+      <ion-toggle
+        :checked="state.expense.paid"
+        @ionChange="togglePaid"
+        value="paid"
+      ></ion-toggle>
     </ion-buttons>
   </ion-item>
 </template>
@@ -38,34 +38,38 @@ import {
   IonIcon,
   IonToggle,
   IonLabel,
-  IonButton,
 } from "@ionic/vue";
 import { trashOutline, checkmark } from "ionicons/icons";
 import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
 import store from "@/store";
+import { companiesCollection } from "@/main";
 import { reactive } from "@vue/reactivity";
-import { Expense } from "@/types/units";
-import { watch } from "@vue/runtime-core";
+import { ExpenseInterface } from "@/types/units";
 
 export default {
   name: "Expense",
   props: {
     expense: Object,
     showDate: Boolean,
-    enableDelete: Boolean,
-    disableInput: Boolean,
   },
-  emits: ["deleteExpense", "costChange"],
   setup(props: any) {
-    const state = reactive<{ expense: Expense }>({
+    const state = reactive<{ expense: ExpenseInterface }>({
       expense: props.expense,
     });
 
-    watch(state.expense.data, () => state.expense.save());
+    const togglePaid = async () => {
+      state.expense.paid = !state.expense.paid;
+      await companiesCollection
+        .doc(
+          `${state.expense.companyID}/employees/${state.expense.employeeID}/expenses/${state.expense.id}`
+        )
+        .update({ "data.paid": state.expense.paid });
+    };
 
     return {
       state,
       store,
+      togglePaid,
       icons: {
         trashOutline,
         checkmark,
@@ -75,7 +79,6 @@ export default {
   components: {
     IonItem,
     IonButtons,
-    IonButton,
     IonNote,
     IonIcon,
     IonToggle,

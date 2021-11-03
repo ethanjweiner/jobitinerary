@@ -1,17 +1,17 @@
 <template>
-  <ion-grid
-    v-if="lists.length == 0 || lists[0].length == 0"
-    class="ion-justify-content-center"
-    style="height: 80%;"
-  >
-    <ion-row class="ion-align-items-center" style="height: 100%;">
-      <ion-col class="ion-text-center">
-        <div>
-          <ion-title>Nothing to see here...</ion-title>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ListPlaceholder v-if="lists.length == 0 || lists[0].length == 0" />
+
+  <ion-list v-else-if="type == 'list' && lists.length == 1">
+    <slot v-for="item in lists[0].items" name="item" :item="item"></slot>
+  </ion-list>
+  <ion-list v-else-if="type == 'list'">
+    <ion-item-group v-for="(list, index) in lists" :key="index">
+      <ion-item-divider v-if="list.name">
+        <ion-label>{{ list.name }}</ion-label>
+      </ion-item-divider>
+      <slot v-for="item in list.items" name="item" :item="item"></slot>
+    </ion-item-group>
+  </ion-list>
 
   <ion-grid v-else-if="lists.length >= 1">
     <ion-row v-for="(list, index) in lists" :key="index">
@@ -34,9 +34,18 @@
 </template>
 
 <script lang="ts">
-import { IonTitle, IonGrid, IonRow, IonCol } from "@ionic/vue";
+import {
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonList,
+  IonLabel,
+  IonItemDivider,
+  IonItemGroup,
+} from "@ionic/vue";
 import { computed } from "@vue/reactivity";
 import { Splitter } from "@/types/auxiliary";
+import ListPlaceholder from "../ListPlaceholder.vue";
 
 // NOTE: THIS COMPONENT RERENDERS AND RELOADS DATA UPON ANY SEARCH CHANGE
 export default {
@@ -45,6 +54,7 @@ export default {
     splitters: Array,
     sizes: Object,
     items: Array,
+    type: String,
   },
   setup(props: any) {
     const lists = computed(() => {
@@ -71,10 +81,14 @@ export default {
     };
   },
   components: {
-    IonTitle,
     IonGrid,
     IonRow,
     IonCol,
+    IonList,
+    IonLabel,
+    IonItemDivider,
+    IonItemGroup,
+    ListPlaceholder,
   },
 };
 </script>

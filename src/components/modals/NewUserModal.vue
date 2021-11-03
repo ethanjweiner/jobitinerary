@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;">
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="primary">
         <ion-title> Add {{ capitalize(type) }} </ion-title>
         <ion-buttons slot="end">
           <ion-button @click="$emit('didDismiss')">
@@ -10,13 +10,13 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <div class="ion-padding">
-        <ion-note
+    <ion-content class="ion-padding">
+      <ion-item lines="none">
+        <ion-text color="tertiary" style="font-size: 13px;"
           >The {{ type }} will receive an email with instructions to setup their
-          account.</ion-note
+          account.</ion-text
         >
-      </div>
+      </ion-item>
 
       <ion-item>
         <ion-label position="stacked">{{ capitalize(type) }} Name</ion-label>
@@ -58,7 +58,7 @@ import {
   IonItem,
   IonLabel,
   IonInput,
-  IonNote,
+  IonText,
 } from "@ionic/vue";
 
 import { close } from "ionicons/icons";
@@ -81,7 +81,7 @@ export default {
     IonItem,
     IonLabel,
     IonInput,
-    IonNote,
+    IonText,
   },
   props: ["type"],
   emits: ["userAdded", "didDismiss"],
@@ -120,4 +120,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-header {
+  display: block;
+}
+</style>

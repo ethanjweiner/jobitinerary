@@ -104,4 +104,8 @@ ion-list ion-item {
   font-weight: 500;
   font-size: 21px;
 }
+
+.main-content {
+  height: 100%;
+}
 </style>

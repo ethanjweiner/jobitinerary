@@ -25,22 +25,24 @@
     >
       <DeletePopover :unitName="capitalize(type)" @delete="deleteUser" />
     </ion-popover>
-    <ion-content :fullscreen="true" v-if="!state.userID" style="height: 100%;">
+    <ion-content v-if="!state.userID" style="height: 100%;">
       <ion-grid>
         <ion-row class="ion-justify-content-center ion-align-items-center">
-          <ion-card>
+          <ion-card class="select-user-card">
             <ion-card-header>
               <ion-card-title> Select {{ capitalize(type) }} </ion-card-title>
             </ion-card-header>
-
-            <UserSelect
-              ref="userSelect"
-              v-model="state.userID"
-              :type="type"
-              :key="state.userID"
-              @update:modelValue="changeUser"
-              mode="light"
-            />
+            <ion-card-content style="padding: 5px;">
+              <UserSelect
+                ref="userSelect"
+                v-model="state.userID"
+                :type="type"
+                :key="state.userID"
+                @update:modelValue="changeUser"
+                mode="light"
+                :displayAsList="true"
+              />
+            </ion-card-content>
           </ion-card>
         </ion-row>
       </ion-grid>
@@ -77,6 +79,7 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
+  IonCardContent,
 } from "@ionic/vue";
 
 import { reactive, ref } from "@vue/reactivity";
@@ -173,6 +176,7 @@ export default {
     IonPopover,
     Employee,
     Customer,
+    IonCardContent,
   },
 };
 </script>
@@ -190,5 +194,11 @@ ion-header {
 #select-user-toolbar {
   max-width: 300px;
   margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+  .select-user-card {
+    width: 500px;
+  }
 }
 </style>

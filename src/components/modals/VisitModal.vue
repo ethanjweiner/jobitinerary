@@ -7,7 +7,7 @@
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
-        <ion-title class="ion-text-start" style="padding-inline-end: 5px;"
+        <ion-title class="ion-text-start"
           >Visit<span v-if="state.visit.data.date"> on </span
           >{{ state.visit.data.date }}</ion-title
         >
@@ -143,5 +143,8 @@ export default {
 }
 ion-header {
   display: block;
+}
+ion-title {
+  padding-inline: 0;
 }
 </style>

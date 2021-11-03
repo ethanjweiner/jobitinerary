@@ -1,70 +1,67 @@
 <template>
-  <div>
-    <ion-grid
-      v-if="lists.length == 0 || lists[0].length == 0"
-      class="ion-justify-content-center"
-      style="height: 80%;"
-    >
-      <ion-row class="ion-align-items-center" style="height: 100%;">
-        <ion-col class="ion-text-center">
-          <div>
-            <ion-title>Nothing to see here...</ion-title>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <ListPlaceholder v-if="lists.length == 0 || lists[0].length == 0" />
 
-    <ion-list v-else-if="type == 'list' && lists.length">
-      <slot v-for="item in lists[0].items" name="item" :item="item"></slot>
-    </ion-list>
-    <ion-grid v-else-if="lists.length >= 1">
-      <ion-row v-for="(list, index) in lists" :key="index" class="ion-margin">
-        <h1 v-if="list.name" class="ion-text-center list-section-title">
-          {{ list.name }}
-        </h1>
-        <ion-col
-          v-for="item in list.items"
-          :key="item.id"
-          :size-xs="sizes ? sizes.xs : 12"
-          :size-sm="sizes ? sizes.sm : 12"
-          :size-md="sizes ? sizes.md : 6"
-          :size-lg="sizes ? sizes.lg : 4"
-          :size-xl="sizes ? sizes.xl : 3"
-        >
-          <slot name="item" :item="item"></slot>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-infinite-scroll
-      @ionInfinite="loadMore($event)"
-      threshold="100px"
-      id="infinite-scroll"
-      :disabled="false"
-    >
-      <ion-infinite-scroll-content
-        loading-spinner="bubbles"
-        loading-text="Loading visits..."
+  <ion-list v-else-if="type == 'list' && lists.length == 1">
+    <slot v-for="item in lists[0].items" name="item" :item="item"></slot>
+  </ion-list>
+  <ion-list v-else-if="type == 'list'">
+    <ion-item-group v-for="(list, index) in lists" :key="index">
+      <ion-item-divider v-if="list.name">
+        <ion-label>{{ list.name }}</ion-label>
+      </ion-item-divider>
+      <slot v-for="item in list.items" name="item" :item="item"></slot>
+    </ion-item-group>
+  </ion-list>
+  <ion-grid v-else-if="lists.length >= 1">
+    <ion-row v-for="(list, index) in lists" :key="index" class="ion-margin">
+      <h1 v-if="list.name" class="ion-text-center list-section-title">
+        {{ list.name }}
+      </h1>
+      <ion-col
+        v-for="item in list.items"
+        :key="item.id"
+        :size-xs="sizes ? sizes.xs : 12"
+        :size-sm="sizes ? sizes.sm : 12"
+        :size-md="sizes ? sizes.md : 6"
+        :size-lg="sizes ? sizes.lg : 4"
+        :size-xl="sizes ? sizes.xl : 3"
       >
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </div>
+        <slot name="item" :item="item"></slot>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll
+    @ionInfinite="loadMore($event)"
+    threshold="100px"
+    id="infinite-scroll"
+    :disabled="false"
+  >
+    <ion-infinite-scroll-content
+      loading-spinner="bubbles"
+      loading-text="Loading more..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </template>
 
 <script lang="ts">
 import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonTitle,
   IonGrid,
   IonRow,
   IonCol,
   IonList,
+  IonItemGroup,
+  IonItemDivider,
+  IonLabel,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { CollectionRef, Splitter } from "@/types/auxiliary";
 import { InfiniteList } from "@/db";
 import { onUnmounted } from "@vue/runtime-core";
+import ListPlaceholder from "../ListPlaceholder.vue";
 
 interface State {
   infiniteList: InfiniteList;
@@ -149,11 +146,14 @@ export default {
   components: {
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    IonTitle,
     IonGrid,
     IonRow,
     IonCol,
     IonList,
+    IonItemGroup,
+    IonItemDivider,
+    IonLabel,
+    ListPlaceholder,
   },
 };
 </script>

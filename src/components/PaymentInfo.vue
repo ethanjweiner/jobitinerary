@@ -1,11 +1,11 @@
 <template>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
+  <ion-grid class="ion-justify-content-center">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-lg="8">
         <ion-card>
           <ion-card-content>
             <ion-item color="light">
-              <ion-label>Filter Data by Time Period?</ion-label>
+              <ion-label>Filter by Time?</ion-label>
               <ion-toggle
                 v-model="state.filterByDate"
                 @ionChange="clearDates"
@@ -31,14 +31,13 @@
               @ionChange="state.filterUnpaid = !state.filterUnpaid"
             >
               <ion-item>
-                <ion-label>Include All Hours and Expenses</ion-label>
+                <ion-label>All Hours/Expenses</ion-label>
                 <ion-radio slot="end" :value="false"></ion-radio>
               </ion-item>
               <ion-item>
-                <ion-label
-                  >Only Include
-                  <span style="font-weight: bold">Unpaid </span>Hours and
-                  Expenses</ion-label
+                <ion-label>
+                  <span style="font-weight: bold">Unpaid </span
+                  >Hours/Expenses</ion-label
                 >
                 <ion-radio slot="end" :value="true"></ion-radio>
               </ion-item>
@@ -47,7 +46,7 @@
             <ion-item>
               <ion-label>
                 <ion-icon :icon="timeOutline"></ion-icon>
-                Default Hourly Rate
+                Default Rate (/hr)
               </ion-label>
               <CurrencyInput
                 v-model="state.employee.data.defaultHourlyRate"
@@ -209,8 +208,20 @@ export default {
 </script>
 
 <style scoped>
+ion-grid {
+  --ion-grid-padding-xs: 3px;
+  --ion-grid-padding-sm: 3px;
+  --ion-grid-padding-md: 4px;
+  --ion-grid-padding-lg: 6px;
+  --ion-grid-padding-xl: 6px;
+  --ion-grid-column-padding-xs: 2px;
+  --ion-grid-column-padding-sm: 2px;
+  --ion-grid-column-padding-md: 4px;
+  --ion-grid-column-padding-lg: 6px;
+  --ion-grid-column-padding-xl: 6px;
+}
 .currency-input {
-  width: 120px;
+  width: 70px;
   height: 40px;
   text-align: center;
 }
@@ -220,5 +231,16 @@ export default {
 }
 ion-chip {
   cursor: default;
+}
+
+@media (min-width: 768px) {
+  ion-row {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  ion-grid {
+    height: 100%;
+  }
 }
 </style>

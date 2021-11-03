@@ -2,7 +2,7 @@
   <form>
     <ion-grid>
       <ion-row class="ion-justify-content-around">
-        <ion-col size="12" size-sm="6">
+        <ion-col size="12" size-md="8" size-lg="6">
           <ion-card>
             <ion-card-header>
               <ion-card-title>CONTACT</ion-card-title>

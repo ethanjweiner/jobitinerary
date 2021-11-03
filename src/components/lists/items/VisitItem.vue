@@ -1,8 +1,10 @@
 <template>
   <ion-card @click="itemAction(state)" button="true">
     <!-- Add a caption? -->
-    <ion-toolbar>
-      <ion-card-title class="ion-margin">{{ visit.date }}</ion-card-title>
+    <ion-toolbar color="secondary">
+      <ion-card-title color="light" class="ion-margin">{{
+        visit.date
+      }}</ion-card-title>
 
       <ion-buttons slot="end">
         <!-- Detach if a job, delete otherwise -->

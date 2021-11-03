@@ -1,5 +1,5 @@
 <template>
-  <ion-chip outline color="light">
+  <ion-chip outline :color="mode == 'dark' ? 'dark' : 'light'">
     <ion-icon :icon="icons.add"></ion-icon>
     <ion-label class="ion-text-center">{{ title ? title : "Add" }}</ion-label>
   </ion-chip>
@@ -13,6 +13,7 @@ export default {
   name: "Add Button",
   props: {
     title: String,
+    mode: String,
   },
   components: {
     IonChip,

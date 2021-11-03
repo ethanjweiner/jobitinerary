@@ -170,15 +170,16 @@ ion-tab-bar ion-title {
 }
 
 /* Modals */
+@media (min-width: 768px) {
+  .small-modal .modal-wrapper {
+    height: 285px;
+    width: 350px;
+  }
 
-.small-modal .modal-wrapper {
-  height: 285px;
-  width: 350px;
-}
-
-.medium-modal .modal-wrapper {
-  height: 400px;
-  width: 500px;
+  .medium-modal .modal-wrapper {
+    height: 400px;
+    width: 500px;
+  }
 }
 
 /* Colors */

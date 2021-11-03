@@ -46,7 +46,7 @@
           @keyup.enter="signUp"
         ></ion-input>
       </ion-item>
-      <p class="ion-padding" style="margin-top: 0; margin-bottom: 0;">
+      <p class="ion-margin">
         Looking to sign up as an employee? Ask your company to add you to their
         system and send you an activation email.
       </p>

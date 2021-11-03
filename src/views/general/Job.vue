@@ -8,7 +8,10 @@
         <ion-title>
           {{ state.job.data.name ? state.job.data.name : "New Job" }}</ion-title
         >
-        <ion-note style="padding-left: 20px;" color="light"
+        <ion-note
+          style="padding-left: 20px;"
+          color="light"
+          class="ion-hide-md-down"
           >for {{ idToName(state.job.data.customerID) }}</ion-note
         >
         <ion-buttons :collapse="true" slot="end">
@@ -73,7 +76,6 @@ import store from "@/store";
 import { watch } from "@vue/runtime-core";
 import { companiesCollection } from "@/main";
 import { idToName } from "@/helpers";
-import { useRoute } from "vue-router";
 
 interface State {
   job: Job | null;
@@ -105,7 +107,6 @@ export default {
       job: null,
       visits: [],
     });
-    const route = useRoute();
 
     // Initialize job
     const initialize = async () => {
@@ -144,7 +145,8 @@ export default {
       if (state.job) await state.job.delete();
 
       // Return to home
-      router.push({ name: "Home" });
+      await router.push({ name: "Home" });
+      router.go(0);
       popoverIsOpen.value = false;
     };
 
@@ -156,7 +158,6 @@ export default {
       toggleJobSettings,
       deleteJob,
       idToName,
-      route,
       icons: {
         ellipsisVertical,
         homeOutline,

@@ -33,6 +33,15 @@
         {{ idToName(day.employeeID) }}
       </ion-card-subtitle>
 
+      <ion-card-subtitle v-if="customers.length">
+        <ion-icon :icon="icons.cart"></ion-icon>
+        Customers:
+        <span v-for="(id, index) in customers" :key="id"
+          >{{ idToName(id)
+          }}<span v-if="index != customers.length - 1">, </span>
+        </span>
+      </ion-card-subtitle>
+
       <li v-if="day.time.hours">
         <ion-icon :icon="icons.time"></ion-icon>
 
@@ -60,11 +69,12 @@ import router from "@/router";
 import { companiesCollection } from "@/main";
 import { EmployeeDayInterface, Visit } from "@/types/units";
 
-import { idToName } from "@/helpers";
+import { idToName, retrieveVisitsOnDate } from "@/helpers";
 
-import { hammer, time, checkmark } from "ionicons/icons";
+import { hammer, time, checkmark, cart } from "ionicons/icons";
 
 interface State {
+  day: EmployeeDayInterface;
   visits: Array<Visit>;
 }
 
@@ -76,9 +86,26 @@ export default {
   },
   emits: ["togglePaid"],
   setup(props: any) {
-    const state = reactive<{ day: EmployeeDayInterface }>({
+    const state = reactive<State>({
       day: props.day,
+      visits: [],
     });
+
+    const initialize = async () => {
+      state.visits = await retrieveVisitsOnDate(state.day.date, {
+        employeeID: state.day.employeeID,
+      });
+    };
+
+    const customers = computed(() =>
+      state.visits.reduce((customers: Array<string>, visit: Visit) => {
+        if (!customers.includes(visit.data.customerID))
+          customers.push(visit.data.customerID);
+        return customers;
+      }, [])
+    );
+
+    initialize();
 
     const togglePaid = async () => {
       state.day.paid = !state.day.paid;
@@ -96,12 +123,13 @@ export default {
     });
 
     return {
-      icons: { checkmark, hammer, time },
+      icons: { checkmark, hammer, time, cart },
       idToName,
       state,
       hourlyRate,
       router,
       togglePaid,
+      customers,
     };
   },
   components: {

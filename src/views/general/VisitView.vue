@@ -11,7 +11,7 @@
           >{{ state.visit.data.date }}</ion-title
         >
 
-        <div style="padding-left: 20px;">
+        <div style="padding-left: 20px;" class="ion-hide-md-down">
           <ion-note v-if="state.visit.data.customerID" color="light"
             >for {{ idToName(state.visit.data.customerID) }}
             <span v-if="state.visit.data.employeeID">| </span>
@@ -110,7 +110,9 @@ export default {
       if (state.visit) await state.visit.delete();
 
       // Return to home
-      router.push({ name: "Home" });
+      await router.push({ name: "Home" });
+      router.go(0);
+
       popoverIsOpen.value = false;
     };
 

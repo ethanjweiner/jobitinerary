@@ -1,33 +1,31 @@
 <template>
-  <div>
-    <SearchToolbar :addAction="createJob" title="Jobs" v-model="searchText" />
+  <SearchToolbar :addAction="createJob" title="Jobs" v-model="searchText" />
 
-    <InfiniteList
-      :key="searchText"
-      :splitters="splitters"
-      :pushQuantity="10"
-      :dbRef="dbRef"
-      orderByParam="startDate"
-      :searchFilter="searchText"
-      :sizes="sizes"
-    >
-      <template v-slot:item="itemProps">
-        <JobItem
-          :job="itemProps.item"
-          :showCustomer="customerID ? false : true"
-          @click="
-            router.push({
-              name: 'Job',
-              params: {
-                userID: itemProps.item.customerID,
-                jobID: itemProps.item.id,
-              },
-            })
-          "
-        />
-      </template>
-    </InfiniteList>
-  </div>
+  <InfiniteList
+    :key="searchText"
+    :splitters="splitters"
+    :pushQuantity="10"
+    :dbRef="dbRef"
+    orderByParam="startDate"
+    :searchFilter="searchText"
+    :sizes="sizes"
+  >
+    <template v-slot:item="itemProps">
+      <JobItem
+        :job="itemProps.item"
+        :showCustomer="customerID ? false : true"
+        @click="
+          router.push({
+            name: 'Job',
+            params: {
+              userID: itemProps.item.customerID,
+              jobID: itemProps.item.id,
+            },
+          })
+        "
+      />
+    </template>
+  </InfiniteList>
 </template>
 
 <script lang="ts">

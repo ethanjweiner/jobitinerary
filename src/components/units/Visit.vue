@@ -84,7 +84,10 @@
       <ion-col size="12">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>IMAGES</ion-card-title>
+            <ion-card-title>
+              IMAGES
+              <AddButton @click="addImage" mode="dark" />
+            </ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <Images v-model="state.visit.data.images" />
@@ -128,6 +131,7 @@ import VisitMain from "@/components/forms/VisitMain.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import Tools from "@/components/lists/Tools.vue";
 import Images from "@/components/lists/Images.vue";
+import AddButton from "../buttons/AddButton.vue";
 
 export default {
   name: "VisitView",
@@ -169,6 +173,13 @@ export default {
       enableSave: true,
     });
 
+    const addImage = () => {
+      state.visit.data.images.unshift({
+        ref: "",
+        caption: "",
+      });
+    };
+
     const selectedSection = ref<string>(sections.value[0].id);
 
     // AUTO-SAVING FUNCTIONALITY
@@ -178,6 +189,7 @@ export default {
       sections,
       state,
       selectedSection,
+      addImage,
       icons: {
         calendarOutline,
         calendarNumberOutline,
@@ -203,6 +215,7 @@ export default {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
+    AddButton,
   },
 };
 </script>

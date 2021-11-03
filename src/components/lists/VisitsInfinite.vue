@@ -1,6 +1,5 @@
 <template>
   <SearchToolbar :addAction="newVisit" title="Visits" v-model="searchText" />
-  <div style="margin-top: 68px;"></div>
   <InfiniteList
     :key="searchText"
     :splitters="splitters"

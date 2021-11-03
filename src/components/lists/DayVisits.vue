@@ -14,12 +14,11 @@
               v-model="state.visits[index]"
               @deleteVisit="deleteVisit(visit)"
             />
-
-            <ion-item button color="tertiary" @click="addVisit">
-              <ion-icon :icon="add"></ion-icon>
-              <ion-label>Add Visit</ion-label>
-            </ion-item>
           </ion-reorder-group>
+          <ion-item button color="tertiary" @click="addVisit">
+            <ion-icon :icon="add"></ion-icon>
+            <ion-label>Add Visit</ion-label>
+          </ion-item>
         </ion-card>
       </ion-col>
     </ion-row>
