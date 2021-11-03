@@ -1,36 +1,61 @@
 <template>
-  <ion-item :color="mode == 'light' ? '' : 'primary'">
-    <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
-    <ion-icon v-if="type == 'employee'" :icon="icons.hammerOutline"></ion-icon>
-    <ion-select
-      v-if="state.ids.length"
-      @ionChange="$emit('update:modelValue', $event.detail.value)"
-      :value="modelValue"
-      :placeholder="'Select ' + capitalize(type)"
-      :key="modelValue"
-      :style="mode == 'light' ? 'color: black !important;' : ''"
-    >
-      <ion-select-option v-for="id in state.ids" :key="id" :value="id">{{
-        idToName(id)
-      }}</ion-select-option>
-    </ion-select>
-    <ion-button
-      v-else
-      size="default"
-      style="margin-left: 10px;"
-      @click="newUserModalIsOpen = true"
-    >
-      Create {{ capitalize(type) }}
-    </ion-button>
-    <ion-buttons slot="end" v-if="state.ids.length">
-      <ion-fab-button
-        :color="mode == 'light' ? 'dark' : 'light'"
-        size="small"
+  <div>
+    <ion-list v-if="displayAsList && screenWidth >= 768">
+      <ion-item
+        button
+        v-for="id in state.ids"
+        :key="id"
+        @click="$emit('update:modelValue', id)"
+      >
+        {{ idToName(id) }}
+      </ion-item>
+      <ion-button
+        fill="outline"
+        expand="block"
+        color="primary"
         @click="newUserModalIsOpen = true"
       >
         <ion-icon :icon="icons.add"></ion-icon>
-      </ion-fab-button>
-    </ion-buttons>
+        Create {{ capitalize(type) }}
+      </ion-button>
+    </ion-list>
+    <ion-item :color="mode == 'light' ? '' : 'primary'" v-else>
+      <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
+      <ion-icon
+        v-if="type == 'employee'"
+        :icon="icons.hammerOutline"
+      ></ion-icon>
+      <ion-select
+        v-if="state.ids.length"
+        @ionChange="$emit('update:modelValue', $event.detail.value)"
+        :value="modelValue"
+        :placeholder="'Select ' + capitalize(type)"
+        :key="modelValue"
+        :style="mode == 'light' ? 'color: black !important;' : ''"
+      >
+        <ion-select-option v-for="id in state.ids" :key="id" :value="id">{{
+          idToName(id)
+        }}</ion-select-option>
+      </ion-select>
+      <ion-button
+        v-else
+        fill="outline"
+        size="default"
+        style="margin-left: 10px;"
+        @click="newUserModalIsOpen = true"
+      >
+        Create {{ capitalize(type) }}
+      </ion-button>
+      <ion-buttons slot="end" v-if="state.ids.length">
+        <ion-fab-button
+          :color="mode == 'light' ? 'dark' : 'light'"
+          size="small"
+          @click="newUserModalIsOpen = true"
+        >
+          <ion-icon :icon="icons.add"></ion-icon>
+        </ion-fab-button>
+      </ion-buttons>
+    </ion-item>
     <ion-modal
       :is-open="newUserModalIsOpen"
       @didDismiss="newUserModalIsOpen = false"
@@ -42,11 +67,11 @@
         @didDismiss="newUserModalIsOpen = false"
       />
     </ion-modal>
-  </ion-item>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 
 import {
   IonItem,
@@ -57,6 +82,7 @@ import {
   IonButton,
   IonButtons,
   IonModal,
+  IonList,
 } from "@ionic/vue";
 
 import { cartOutline, hammerOutline, add } from "ionicons/icons";
@@ -76,6 +102,7 @@ export default defineComponent({
     modelValue: String,
     type: String,
     mode: String,
+    displayAsList: Boolean,
   },
   emits: ["update:modelValue", "userAdded"],
   components: {
@@ -88,6 +115,7 @@ export default defineComponent({
     IonButtons,
     IonModal,
     NewUserModal,
+    IonList,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive<State>({
@@ -114,6 +142,14 @@ export default defineComponent({
       emit("update:modelValue", id);
       refreshState();
     };
+    const screenWidth = ref(0);
+
+    onMounted(() => {
+      screenWidth.value = window.innerWidth;
+      window.addEventListener("resize", () => {
+        screenWidth.value = window.innerWidth;
+      });
+    });
 
     return {
       state,
@@ -126,6 +162,7 @@ export default defineComponent({
       capitalize,
       idToName,
       newUserModalIsOpen,
+      screenWidth,
     };
   },
 });
