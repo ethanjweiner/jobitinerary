@@ -226,8 +226,8 @@ export default {
           .doc(`${state.visit.data.companyID}/customers/${customerID}`)
           .get()
       ).data();
-      const location = customerDocData.data.location;
-      state.visit.data.location = location;
+      if (customerDocData)
+        state.visit.data.location = customerDocData.data.location;
       emit("update:modelValue", state.visit);
     };
 
@@ -252,6 +252,7 @@ export default {
       store,
       jobsRef,
       updateCustomer,
+      clearJob,
       icons: {
         calendarNumberOutline,
         calendarOutline,
