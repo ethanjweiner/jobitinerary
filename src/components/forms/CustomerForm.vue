@@ -89,7 +89,7 @@
             <ion-card-header>
               <ion-card-title
                 >PROPERTY IMAGES
-                <AddButton @click="addImage" />
+                <AddButton @click="addImage" mode="dark" />
               </ion-card-title>
             </ion-card-header>
             <ion-card-content>

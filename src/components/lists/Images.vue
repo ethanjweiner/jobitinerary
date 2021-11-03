@@ -1,31 +1,22 @@
 <template>
   <ion-grid>
-    <ion-row class="ion-justify-content-around">
-      <ion-chip class="ion-text-center" @click="addImage">
+    <ion-row class="ion-justify-content-around ion-hide-md-up">
+      <ion-chip style="margin: auto;" class="ion-text-center" @click="addImage">
         <ion-icon :icon="add"></ion-icon>
         <ion-label style="margin: 0 !important;">Add Image</ion-label>
       </ion-chip>
     </ion-row>
 
-    <ion-row class="ion-justify-content-around">
-      <ion-col
+    <ion-row class="ion-justify-content-left">
+      <ImageWithCaption
         v-for="(image, index) in state.images"
-        :key="image.id"
-        size-xs="12"
-        size-sm="6"
-        size-md="12"
-        size-lg="12"
-        size-xl="6"
-      >
-        <ImageWithCaption
-          :modelValue="image"
-          @update:modelValue="(newImage) => (state.images[index] = newImage)"
-          @deleteImage="deleteImage(index)"
-          style="margin: auto;"
-          :showCaption="true"
-          :showUploadOption="true"
-        />
-      </ion-col>
+        :key="image.ref"
+        :modelValue="image"
+        @update:modelValue="(newImage) => (state.images[index] = newImage)"
+        @deleteImage="deleteImage(index)"
+        :showCaption="true"
+        :showUploadOption="true"
+      />
     </ion-row>
   </ion-grid>
 </template>
@@ -34,14 +25,7 @@
 import { reactive } from "@vue/reactivity";
 import ImageWithCaption from "../ImageWithCaption.vue";
 import { watch } from "@vue/runtime-core";
-import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonChip,
-  IonIcon,
-  IonLabel,
-} from "@ionic/vue";
+import { IonGrid, IonRow, IonChip, IonIcon, IonLabel } from "@ionic/vue";
 import { add } from "ionicons/icons";
 
 export default {
@@ -54,7 +38,6 @@ export default {
     ImageWithCaption,
     IonGrid,
     IonRow,
-    IonCol,
     IonChip,
     IonIcon,
     IonLabel,

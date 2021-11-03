@@ -1,29 +1,27 @@
 <template>
-  <div class="image-container">
-    <ion-card class="ion-text-start">
-      <ion-toolbar color="light">
-        <ion-buttons slot="start" v-if="!hideUploadOption">
-          <ImageUploader @imageChange="changeImage" />
-        </ion-buttons>
+  <ion-card class="ion-text-start">
+    <ion-toolbar color="light">
+      <ion-buttons slot="start" v-if="!hideUploadOption">
+        <ImageUploader @imageChange="changeImage" />
+      </ion-buttons>
 
-        <ion-buttons slot="end">
-          <ion-button @click="$emit('deleteImage')" v-if="!hideClose">
-            <ion-icon color="dark" :icon="icons.close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-      <!-- Change the src to be the image url -->
-      <img v-if="state.image.ref" :src="state.imageURL" alt="Image" />
-      <ion-card-content>
-        <ion-textarea
-          v-model="state.image.caption"
-          auto-grow
-          placeholder="Caption"
-          v-if="!hideCaption"
-        ></ion-textarea>
-      </ion-card-content>
-    </ion-card>
-  </div>
+      <ion-buttons slot="end">
+        <ion-button @click="$emit('deleteImage')" v-if="!hideClose">
+          <ion-icon color="dark" :icon="icons.close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <!-- Change the src to be the image url -->
+    <img v-if="state.image.ref" :src="state.imageURL" alt="Image" />
+    <ion-card-content>
+      <ion-textarea
+        v-model="state.image.caption"
+        auto-grow
+        placeholder="Caption"
+        v-if="!hideCaption"
+      ></ion-textarea>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script lang="ts">
@@ -101,10 +99,5 @@ img {
 }
 ion-textarea {
   margin: 0;
-}
-
-.image-container {
-  padding: 10px;
-  width: fit-content;
 }
 </style>
