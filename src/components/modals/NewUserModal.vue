@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;">
     <ion-header>
-      <ion-toolbar color="primary">
+      <ion-toolbar color="dark">
         <ion-title> Add {{ capitalize(type) }} </ion-title>
         <ion-buttons slot="end">
           <ion-button @click="$emit('didDismiss')">
@@ -38,7 +38,7 @@
         ></ion-input>
       </ion-item>
       <ion-item button @click="addUser">
-        <ion-input type="submit" color="primary">
+        <ion-input type="submit" color="dark">
           Create {{ capitalize(type) }}
         </ion-input>
       </ion-item>

@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="ion-text-start">
+  <ion-card class="ion-text-start ion-margin">
     <ion-toolbar color="light">
       <ion-buttons slot="start" v-if="!hideUploadOption">
         <ImageUploader @imageChange="changeImage" />

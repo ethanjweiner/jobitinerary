@@ -14,7 +14,6 @@
 
         <ion-note
           class="ion-hide-md-down"
-          style="padding-left: 20px;"
           color="light"
           v-if="state.visit.data.customerID"
           >for {{ idToName(state.visit.data.customerID) }}
