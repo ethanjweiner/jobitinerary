@@ -93,20 +93,10 @@
               </ion-card-title>
             </ion-card-header>
             <ion-card-content>
-              <ion-grid>
-                <ion-row class="ion-justify-content-left">
-                  <ImageWithCaption
-                    v-for="(image, index) in state.customer.data.propertyImages"
-                    :key="image.ref"
-                    @update:modelValue="
-                      $emit('update:modelValue', state.customer)
-                    "
-                    v-model="state.customer.data.propertyImages[index]"
-                    :showCaption="true"
-                    @deleteImage="deleteImage(index)"
-                  />
-                </ion-row>
-              </ion-grid>
+              <Images
+                v-model="state.customer.data.propertyImages"
+                @update:modelValue="$emit('update:modelValue', state.customer)"
+              />
             </ion-card-content>
           </ion-card>
         </ion-col>
@@ -141,7 +131,7 @@ import { newImage } from "@/types/auxiliary";
 
 import AddButton from "@/components/buttons/AddButton.vue";
 import Address from "@/components/Address.vue";
-import ImageWithCaption from "@/components/ImageWithCaption.vue";
+import Images from "../lists/Images.vue";
 
 export default {
   name: "Customer Form",
@@ -188,7 +178,6 @@ export default {
     IonTextarea,
     IonIcon,
     Address,
-    ImageWithCaption,
     AddButton,
     IonCard,
     IonCardContent,
@@ -196,6 +185,7 @@ export default {
     IonCardHeader,
     IonCardSubtitle,
     IonList,
+    Images,
   },
 };
 </script>

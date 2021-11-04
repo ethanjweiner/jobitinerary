@@ -1,10 +1,12 @@
 <template>
   <ion-grid>
-    <ion-row class="ion-justify-content-around ion-hide-md-up">
-      <ion-chip style="margin: auto;" class="ion-text-center" @click="addImage">
-        <ion-icon :icon="add"></ion-icon>
-        <ion-label style="margin: 0 !important;">Add Image</ion-label>
-      </ion-chip>
+    <ion-row class="ion-justify-content-around">
+      <AddButton
+        style="margin: auto;"
+        @click="addImage"
+        mode="dark"
+        title="Add Image"
+      />
     </ion-row>
 
     <ion-row class="ion-justify-content-left">
@@ -25,8 +27,9 @@
 import { reactive } from "@vue/reactivity";
 import ImageWithCaption from "../ImageWithCaption.vue";
 import { watch } from "@vue/runtime-core";
-import { IonGrid, IonRow, IonChip, IonIcon, IonLabel } from "@ionic/vue";
+import { IonGrid, IonRow } from "@ionic/vue";
 import { add } from "ionicons/icons";
+import AddButton from "../buttons/AddButton.vue";
 
 export default {
   name: "Images",
@@ -38,9 +41,7 @@ export default {
     ImageWithCaption,
     IonGrid,
     IonRow,
-    IonChip,
-    IonIcon,
-    IonLabel,
+    AddButton,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
