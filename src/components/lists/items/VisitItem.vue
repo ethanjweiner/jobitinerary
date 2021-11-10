@@ -1,21 +1,22 @@
 <template>
   <ion-card @click="itemAction(state)" button="true">
     <!-- Add a caption? -->
-    <ion-toolbar color="secondary">
-      <ion-card-title color="light" class="ion-margin">{{
-        visit.date
-      }}</ion-card-title>
+    <ion-card-header style="padding: 0;">
+      <ion-toolbar>
+        <ion-card-title class="ion-margin">{{ visit.date }}</ion-card-title>
 
-      <ion-buttons slot="end">
-        <!-- Detach if a job, delete otherwise -->
-        <ion-button
-          @click.stop="$emit('detachVisit', visit.id)"
-          v-if="deleteEnabled"
-        >
-          <ion-icon color="dark" :icon="icons.trashOutline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+        <ion-buttons slot="end">
+          <!-- Detach if a job, delete otherwise -->
+          <ion-button
+            @click.stop="$emit('detachVisit', visit.id)"
+            v-if="deleteEnabled"
+          >
+            <ion-icon color="dark" :icon="icons.trashOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-header>
+
     <ion-card-content>
       <ion-card-subtitle v-if="visit.time.hours">
         <ion-icon :icon="icons.time"></ion-icon>
@@ -77,6 +78,7 @@ import {
   IonIcon,
   IonModal,
   IonToolbar,
+  IonCardHeader,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 
@@ -116,6 +118,7 @@ export default {
     IonCardTitle,
     IonCardSubtitle,
     IonToolbar,
+    IonCardHeader,
   },
 };
 </script>

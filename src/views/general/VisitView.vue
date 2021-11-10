@@ -6,10 +6,12 @@
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title
-          >Visit<span v-if="state.visit.data.date"> on </span
-          >{{ state.visit.data.date }}</ion-title
-        >
+        <ion-title>
+          <ion-text color="light">
+            Visit<span v-if="state.visit.data.date"> on </span
+            >{{ state.visit.data.date }}
+          </ion-text>
+        </ion-title>
 
         <div style="padding-left: 20px;" class="ion-hide-md-down">
           <ion-note v-if="state.visit.data.customerID" color="light"
@@ -55,6 +57,7 @@ import {
   IonButton,
   IonBackButton,
   IonPage,
+  IonText,
 } from "@ionic/vue";
 
 import { reactive, ref } from "@vue/reactivity";
@@ -142,6 +145,7 @@ export default {
     IonBackButton,
     IonPage,
     VisitComponent,
+    IonText,
   },
 };
 </script>

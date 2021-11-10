@@ -5,7 +5,11 @@
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title> {{ idToName(userID) }} on {{ date }} </ion-title>
+        <ion-title>
+          <ion-text color="light">
+            {{ idToName(userID) }} on {{ date }}
+          </ion-text>
+        </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
@@ -51,6 +55,7 @@ import {
   IonButtons,
   IonBackButton,
   IonPopover,
+  IonText,
 } from "@ionic/vue";
 
 import { reactive, ref } from "@vue/reactivity";
@@ -192,6 +197,7 @@ export default {
     DayMain,
     Sections,
     DayVisits,
+    IonText,
   },
 };
 </script>

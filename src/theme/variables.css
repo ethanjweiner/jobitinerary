@@ -47,12 +47,12 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-danger-shade: #cf3c4f;
   --ion-color-danger-tint: #ed576b;
 
-  --ion-color-dark: #444c38;
-  --ion-color-dark-rgb: 68, 76, 56;
+  --ion-color-dark: #555555;
+  --ion-color-dark-rgb: 85, 85, 85;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
-  --ion-color-dark-shade: #3c4331;
-  --ion-color-dark-tint: #575e4c;
+  --ion-color-dark-shade: #4b4b4b;
+  --ion-color-dark-tint: #666666;
 
   --ion-color-medium: #b8dd9d;
   --ion-color-medium-rgb: 169, 186, 157;
@@ -82,6 +82,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-grid-column-padding-lg: 20px;
   --ion-grid-column-padding-xl: 20px;
 
+  --ion-background-color: rgb(250, 250, 250);
   /* Fonts */
   --ion-font-family: "Work Sans", sans-serif;
 }
@@ -130,6 +131,16 @@ ion-searchbar {
   max-width: 400px;
 }
 
+ion-card,
+ion-card-header,
+ion-card-content,
+ion-card ion-toolbar,
+ion-list,
+ion-item {
+  --background: white !important;
+  background-color: white !important;
+}
+
 ion-card-content {
   padding-top: 15px !important;
 }
@@ -169,6 +180,15 @@ ion-tab-bar ion-title {
   text-transform: uppercase;
 }
 
+ion-title,
+ion-card-title,
+ion-card-header,
+h1,
+h2,
+h3 {
+  color: var(--ion-color-dark);
+}
+
 /* Modals */
 @media (min-width: 768px) {
   .small-modal .modal-wrapper {
@@ -184,19 +204,13 @@ ion-tab-bar ion-title {
 
 /* Colors */
 
-ion-card ion-card-header,
-ion-card ion-toolbar {
-  --background: var(--ion-color-primary-lighter);
-}
-
 ion-select,
-ion-input,
 ion-toolbar {
   color: white;
 }
 
 input {
-  --background: var(--ion-color-light);
+  --background: var(--ion-color-white);
 }
 
 /* Auxiliary */
@@ -223,4 +237,8 @@ ion-card li {
 
 .ion-item-button {
   border-radius: 15px;
+}
+
+.input-card {
+  padding: 25px;
 }

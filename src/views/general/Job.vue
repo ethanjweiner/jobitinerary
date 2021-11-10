@@ -6,8 +6,10 @@
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-          {{ state.job.data.name ? state.job.data.name : "New Job" }}</ion-title
-        >
+          <ion-text color="light">
+            {{ state.job.data.name ? state.job.data.name : "New Job" }}
+          </ion-text>
+        </ion-title>
         <ion-note
           style="padding-left: 20px;"
           color="light"
@@ -54,6 +56,7 @@ import {
   IonButton,
   IonBackButton,
   IonNote,
+  IonText,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
 import router from "@/router";
@@ -181,6 +184,7 @@ export default {
     JobVisits,
     DeletePopover,
     IonNote,
+    IonText,
   },
 };
 </script>

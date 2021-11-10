@@ -2,18 +2,18 @@
   <!-- TEMPORARY: Reload split pane upon route changes... -->
   <ion-split-pane content-id="main" when="md">
     <!-- Create a custom menu instead -->
-    <ion-content color="light">
+    <ion-content color="dark">
       <ion-list>
         <ion-item
-          color="light"
+          color="dark"
           class="menu-item"
           button
           v-for="section in sections"
           :key="section.id"
           @click="selectedSection = section.id"
         >
-          <ion-label>{{ section.name }}</ion-label>
-          <ion-icon :icon="section.icon"></ion-icon>
+          <ion-label color="light">{{ section.name }}</ion-label>
+          <ion-icon color="light" :icon="section.icon"></ion-icon>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -83,6 +83,11 @@ ion-split-pane {
   --side-width: 180px;
   --side-min-width: 180px;
   --side-max-width: 180px;
+  --border: none;
+}
+
+ion-item {
+  border-bottom: 1px solid rgb(134, 134, 134);
 }
 
 .ios ion-split-pane {

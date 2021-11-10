@@ -14,31 +14,39 @@
           class="ion-justify-content-center ion-align-items-center"
           style="height: 100%;"
         >
-          <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Select an Employee</h3>
-            </div>
-            <UserSelect
-              :names="
-                store.state.user.employees.map((employee) => employee.name)
-              "
-              :selectedName="state.employeeID"
-              type="employee"
-              :key="state.employeeID"
-              mode="light"
-              v-model="state.employeeID"
-            />
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Select a Date</h3>
-            </div>
-            <DateSelect v-model="state.date" />
-            <ion-button expand="block" color="primary" @click="create"
-              >Create Day</ion-button
-            >
-            <ion-note
-              >Note: You won't be able to change the date or employee
-              later.</ion-note
-            >
+          <ion-col
+            size-xs="12"
+            size-sm="10"
+            size-md="8"
+            size-lg="6"
+            size-xl="4"
+          >
+            <ion-card class="input-card">
+              <div class="ion-text-start">
+                <h3 class="text-secondary">Select an Employee</h3>
+              </div>
+              <UserSelect
+                :names="
+                  store.state.user.employees.map((employee) => employee.name)
+                "
+                :selectedName="state.employeeID"
+                type="employee"
+                :key="state.employeeID"
+                mode="light"
+                v-model="state.employeeID"
+              />
+              <div class="ion-text-start">
+                <h3 class="text-secondary">Select a Date</h3>
+              </div>
+              <DateSelect v-model="state.date" />
+              <ion-button expand="block" color="primary" @click="create"
+                >Create Day</ion-button
+              >
+              <ion-note
+                >Note: You won't be able to change the date or employee
+                later.</ion-note
+              >
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -61,6 +69,7 @@ import {
   IonBackButton,
   IonButton,
   IonNote,
+  IonCard,
 } from "@ionic/vue";
 
 import router from "@/router";
@@ -87,6 +96,7 @@ export default {
     UserSelect,
     IonButton,
     IonNote,
+    IonCard,
   },
   props: {
     employeeID: String,

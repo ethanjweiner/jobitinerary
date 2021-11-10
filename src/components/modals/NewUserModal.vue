@@ -2,7 +2,9 @@
   <div style="height: 100%;">
     <ion-header>
       <ion-toolbar color="dark">
-        <ion-title> Add {{ capitalize(type) }} </ion-title>
+        <ion-title>
+          <ion-text color="light"> Add {{ capitalize(type) }} </ion-text>
+        </ion-title>
         <ion-buttons slot="end">
           <ion-button @click="$emit('didDismiss')">
             <ion-icon :icon="icons.close"></ion-icon>
@@ -37,11 +39,16 @@
           @keyup.enter="addUser"
         ></ion-input>
       </ion-item>
-      <ion-item button @click="addUser">
-        <ion-input type="submit" color="dark">
-          Create {{ capitalize(type) }}
-        </ion-input>
-      </ion-item>
+      <ion-button
+        color="dark"
+        expand="block"
+        fill="outline"
+        button
+        @click="addUser"
+        class="ion-text-center"
+      >
+        <ion-input type="submit"> Create {{ capitalize(type) }} </ion-input>
+      </ion-button>
     </ion-content>
   </div>
 </template>

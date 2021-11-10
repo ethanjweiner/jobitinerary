@@ -7,10 +7,12 @@
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
-        <ion-title class="ion-text-start"
-          >Visit<span v-if="state.visit.data.date"> on </span
-          >{{ state.visit.data.date }}</ion-title
-        >
+        <ion-title class="ion-text-start">
+          <ion-text color="light">
+            Visit<span v-if="state.visit.data.date"> on </span
+            >{{ state.visit.data.date }}
+          </ion-text>
+        </ion-title>
 
         <ion-note
           class="ion-hide-md-down"
@@ -62,6 +64,7 @@ import {
   IonButtons,
   IonButton,
   IonPopover,
+  IonText,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
 import { close, ellipsisVertical } from "ionicons/icons";
@@ -132,6 +135,7 @@ export default {
     VisitComponent,
     DeletePopover,
     IonPopover,
+    IonText,
   },
 };
 </script>

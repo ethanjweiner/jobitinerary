@@ -5,6 +5,7 @@
     </ion-fab-button>
     <ion-fab-list side="end">
       <ion-fab-button
+        color="dark"
         @click="
           router.push({
             name: 'New Employee Day',
@@ -13,8 +14,9 @@
         "
         >Day</ion-fab-button
       >
-      <ion-fab-button @click="newVisit">Visit</ion-fab-button>
+      <ion-fab-button color="dark" @click="newVisit">Visit</ion-fab-button>
       <ion-fab-button
+        color="dark"
         @click="router.push({ name: 'New Job', params: { customerID: 'new' } })"
         >Job</ion-fab-button
       >

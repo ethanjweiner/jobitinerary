@@ -14,36 +14,44 @@
           class="ion-justify-content-center ion-align-items-center"
           style="height: 100%;"
         >
-          <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Select a Customer</h3>
-            </div>
-            <UserSelect
-              :names="
-                store.state.user.customers.map((customer) => customer.name)
-              "
-              v-model="state.customerID"
-              type="customer"
-              mode="light"
-            />
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Create a Job Name</h3>
-            </div>
-            <ion-item color="white">
-              <ion-input
-                type="text"
-                placeholder="Descriptive name for the job"
-                v-model="state.jobName"
-                @keyup.enter="create"
-              ></ion-input>
-            </ion-item>
+          <ion-col
+            size-xs="12"
+            size-sm="10"
+            size-md="8"
+            size-lg="6"
+            size-xl="4"
+          >
+            <ion-card class="input-card">
+              <div class="ion-text-start">
+                <h3 class="text-secondary">Select a Customer</h3>
+              </div>
+              <UserSelect
+                :names="
+                  store.state.user.customers.map((customer) => customer.name)
+                "
+                v-model="state.customerID"
+                type="customer"
+                mode="light"
+              />
+              <div class="ion-text-start">
+                <h3 class="text-secondary">Create a Job Name</h3>
+              </div>
+              <ion-item color="white">
+                <ion-input
+                  type="text"
+                  placeholder="Descriptive name for the job"
+                  v-model="state.jobName"
+                  @keyup.enter="create"
+                ></ion-input>
+              </ion-item>
 
-            <ion-button color="dark" expand="block" @click="create"
-              >Create Job</ion-button
-            >
-            <ion-note
-              >Note: You won't be able to change the customer later.</ion-note
-            >
+              <ion-button color="dark" expand="block" @click="create"
+                >Create Job</ion-button
+              >
+              <ion-note
+                >Note: You won't be able to change the customer later.</ion-note
+              >
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>

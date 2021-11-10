@@ -2,7 +2,11 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="primary">
-        <ion-title>JobItinerary</ion-title>
+        <ion-title>
+          <ion-text color="light">
+            JobItinerary
+          </ion-text>
+        </ion-title>
         <SettingsButton />
       </ion-toolbar>
     </ion-header>
@@ -30,6 +34,7 @@ import {
   IonSplitPane,
   IonContent,
   IonPage,
+  IonText,
 } from "@ionic/vue";
 
 import CreateButton from "@/components/buttons/CreateButton.vue";
@@ -65,6 +70,7 @@ export default {
     IonTitle,
     SettingsButton,
     IonPage,
+    IonText,
   },
 };
 </script>

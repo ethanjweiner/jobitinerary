@@ -14,7 +14,9 @@
         <ion-card>
           <ion-toolbar color="tertiary">
             <ion-title v-if="visit.data.employeeID">
-              Visit by {{ idToName(visit.data.employeeID) }}
+              <ion-text color="light">
+                Visit by {{ idToName(visit.data.employeeID) }}
+              </ion-text>
             </ion-title>
             <ion-buttons slot="end">
               <ion-button @click="deleteVisit(visit)">
@@ -48,6 +50,7 @@ import {
   IonTitle,
   IonButton,
   IonIcon,
+  IonText,
 } from "@ionic/vue";
 import VisitInline from "@/components/units/Visit.vue";
 import { reactive } from "@vue/reactivity";
@@ -102,6 +105,7 @@ export default {
     SearchToolbar,
     IonToolbar,
     IonButtons,
+    IonText,
   },
 };
 </script>

@@ -1,7 +1,9 @@
 <template>
   <ion-toolbar color="primary" slot="fixed" class="ion-padding">
     <h2 slot="start">
-      {{ title }}
+      <ion-text color="light">
+        {{ title }}
+      </ion-text>
     </h2>
     <AddButton v-if="!disableAdd" @click="addAction" slot="start" />
     <ion-item
@@ -22,6 +24,7 @@
       @ionInput="$emit('update:modelValue', $event.target.value)"
       :value="modelValue"
     ></ion-searchbar>
+
     <ion-buttons slot="end" v-if="modalClose">
       <ion-button @click="$emit('close')">
         <ion-icon :icon="icons.close"></ion-icon>
@@ -41,6 +44,7 @@ import {
   IonIcon,
   IonButton,
   IonButtons,
+  IonText,
 } from "@ionic/vue";
 
 import { close } from "ionicons/icons";
@@ -72,6 +76,7 @@ export default {
     IonIcon,
     IonButton,
     IonButtons,
+    IonText,
   },
 };
 </script>
@@ -85,5 +90,11 @@ h2 {
 }
 ion-toolbar {
   --background: var(--ion-color-tertiary);
+}
+ion-searchbar {
+  margin-left: 10px;
+  padding: 0;
+  background-color: white;
+  color: var(--ion-color-dark);
 }
 </style>

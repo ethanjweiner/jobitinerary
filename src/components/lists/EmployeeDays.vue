@@ -11,10 +11,10 @@
         :value="state.filterUnpaid"
         @ionChange="state.filterUnpaid = !state.filterUnpaid"
       >
-        <ion-grid style="border-top: 1px solid white;">
+        <ion-grid style="border-top: 1px solid grey;">
           <ion-row>
             <ion-col size="12" size-md="6">
-              <ion-item color="primary" style="border-right: 1px solid white;">
+              <ion-item color="primary" style="border-right: 1px solid grey;">
                 <ion-radio
                   color="light"
                   slot="start"

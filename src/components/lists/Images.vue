@@ -10,15 +10,15 @@
     </ion-row>
 
     <ion-row class="ion-justify-content-left">
-      <ImageWithCaption
-        v-for="(image, index) in state.images"
-        :key="image.ref"
-        :modelValue="image"
-        @update:modelValue="(newImage) => (state.images[index] = newImage)"
-        @deleteImage="deleteImage(index)"
-        :showCaption="true"
-        :showUploadOption="true"
-      />
+      <ion-col v-for="(image, index) in state.images" :key="image.ref">
+        <ImageWithCaption
+          :modelValue="image"
+          @update:modelValue="(newImage) => (state.images[index] = newImage)"
+          @deleteImage="deleteImage(index)"
+          :showCaption="true"
+          :showUploadOption="true"
+        />
+      </ion-col>
     </ion-row>
   </ion-grid>
 </template>
@@ -76,14 +76,14 @@ export default {
 <style scoped>
 ion-grid {
   --ion-grid-padding-xs: 5px;
-  --ion-grid-padding-sm: 5px;
-  --ion-grid-padding-md: 5px;
-  --ion-grid-padding-lg: 8px;
-  --ion-grid-padding-xl: 8px;
+  --ion-grid-padding-sm: 10px;
+  --ion-grid-padding-md: 15px;
+  --ion-grid-padding-lg: 20px;
+  --ion-grid-padding-xl: 20px;
   --ion-grid-column-padding-xs: 2px;
   --ion-grid-column-padding-sm: 2px;
-  --ion-grid-column-padding-md: 4px;
-  --ion-grid-column-padding-lg: 6px;
-  --ion-grid-column-padding-xl: 6px;
+  --ion-grid-column-padding-md: 3px;
+  --ion-grid-column-padding-lg: 4px;
+  --ion-grid-column-padding-xl: 5px;
 }
 </style>

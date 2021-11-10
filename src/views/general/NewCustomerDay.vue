@@ -14,31 +14,39 @@
           class="ion-justify-content-center ion-align-items-center"
           style="height: 100%;"
         >
-          <ion-col size-xs="11" size-sm="8" size-md="5" size-lg="4" size-xl="3">
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Select a Customer</h3>
-            </div>
-            <UserSelect
-              :names="
-                store.state.user.customers.map((customer) => customer.name)
-              "
-              :selectedName="state.customerID"
-              type="customer"
-              :key="state.customerID"
-              mode="light"
-              v-model="state.customerID"
-            />
-            <div class="ion-text-start">
-              <h3 class="text-secondary">Select a Date</h3>
-            </div>
-            <DateSelect v-model="state.date" />
-            <ion-button expand="block" color="secondary" @click="create"
-              >Create Day</ion-button
-            >
-            <ion-note
-              >Note: You won't be able to change the date or customer
-              later.</ion-note
-            >
+          <ion-col
+            size-xs="12"
+            size-sm="10"
+            size-md="8"
+            size-lg="6"
+            size-xl="4"
+          >
+            <ion-card class="input-card">
+              <div class="ion-text-start">
+                <h3 class="text-secondary">Select a Customer</h3>
+              </div>
+              <UserSelect
+                :names="
+                  store.state.user.customers.map((customer) => customer.name)
+                "
+                :selectedName="state.customerID"
+                type="customer"
+                :key="state.customerID"
+                mode="light"
+                v-model="state.customerID"
+              />
+              <div class="ion-text-start">
+                <h3 class="text-secondary">Select a Date</h3>
+              </div>
+              <DateSelect v-model="state.date" />
+              <ion-button expand="block" color="secondary" @click="create"
+                >Create Day</ion-button
+              >
+              <ion-note
+                >Note: You won't be able to change the date or customer
+                later.</ion-note
+              >
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>

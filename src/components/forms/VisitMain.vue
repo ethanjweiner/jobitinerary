@@ -53,7 +53,9 @@
     <ion-item color="white" v-if="!hideJob">
       <ion-toolbar color="white">
         <ion-note>Attach a Job</ion-note>
-        <ion-label v-if="state.jobData">"{{ state.jobData.name }}"</ion-label>
+        <ion-label color="tertiary" v-if="state.jobData"
+          >"{{ state.jobData.name }}"</ion-label
+        >
         <ion-buttons slot="end">
           <ion-chip v-if="state.jobData" @click="clearJob">
             <ion-icon :icon="icons.trashOutline"></ion-icon>
