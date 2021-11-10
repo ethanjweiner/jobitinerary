@@ -19,6 +19,7 @@
       ></ion-input>
     </ion-item>
     <ion-searchbar
+      color="light"
       v-else-if="!disableSearch"
       class="ion-text-start"
       @ionInput="$emit('update:modelValue', $event.target.value)"
@@ -93,8 +94,9 @@ ion-toolbar {
 }
 ion-searchbar {
   margin-left: 10px;
-  padding: 0;
+}
+.md ion-searchbar {
   background-color: white;
-  color: var(--ion-color-dark);
+  padding: 0;
 }
 </style>
