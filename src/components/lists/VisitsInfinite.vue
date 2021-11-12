@@ -26,16 +26,15 @@
 
 <script lang="ts">
 import { ref } from "vue";
-import router from "@/router";
-
-import { VisitInterface } from "@/types/units";
-import { Splitter } from "@/types/auxiliary";
-
-import VisitItem from "./items/VisitItem.vue";
-import InfiniteList from "./InfiniteList.vue";
 
 import { createVisit } from "@/db";
+import router from "@/router";
+import { Splitter } from "@/types/auxiliary";
+import { VisitInterface } from "@/types/units";
+
 import SearchToolbar from "../inputs/SearchToolbar.vue";
+import InfiniteList from "./InfiniteList.vue";
+import VisitItem from "./items/VisitItem.vue";
 
 export default {
   name: "Visits",

@@ -25,10 +25,11 @@
 </template>
 
 <script>
-import { IonFab, IonFabButton, IonIcon, IonFabList } from "@ionic/vue";
+import { IonFab, IonFabButton, IonFabList,IonIcon } from "@ionic/vue";
 import { add } from "ionicons/icons";
-import router from "@/router";
+
 import { createVisit } from "@/db";
+import router from "@/router";
 
 export default {
   name: "Create Button",

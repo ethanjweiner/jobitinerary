@@ -41,18 +41,17 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
-
 import {
+  IonContent,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
   IonSegment,
   IonSegmentButton,
-  IonIcon,
-  IonLabel,
   IonSplitPane,
-  IonItem,
-  IonContent,
-  IonList,
 } from "@ionic/vue";
+import { ref } from "vue";
 
 export default {
   name: "Sections",

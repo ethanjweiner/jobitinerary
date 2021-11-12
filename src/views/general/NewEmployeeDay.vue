@@ -55,29 +55,29 @@
 </template>
 
 <script lang="ts">
-import DateSelect from "@/components/selects/DateSelect.vue";
 import {
-  IonPage,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
   IonBackButton,
   IonButton,
-  IonNote,
+  IonButtons,
   IonCard,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonNote,
+  IonPage,
+  IonRow,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
+import { reactive } from "@vue/reactivity";
 
+import DateSelect from "@/components/selects/DateSelect.vue";
+import UserSelect from "@/components/selects/UserSelect.vue";
+import { createEmployeeDay } from "@/db";
+import { dateToString } from "@/helpers";
 import router from "@/router";
 import store from "@/store";
-import UserSelect from "@/components/selects/UserSelect.vue";
-import { reactive } from "@vue/reactivity";
-import { dateToString } from "@/helpers";
-import { createEmployeeDay } from "@/db";
 
 export default {
   name: "Select Date",

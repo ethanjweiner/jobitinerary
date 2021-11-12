@@ -27,24 +27,24 @@
 
 <script lang="ts">
 import {
-  IonGrid,
-  IonRow,
-  IonCol,
   IonCard,
-  IonReorderGroup,
+  IonCol,
+  IonGrid,
   IonIcon,
   IonItem,
   IonLabel,
+  IonReorderGroup,
+  IonRow,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import router from "@/router";
-
 import { add } from "ionicons/icons";
 
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
-import DayVisitItem from "./items/DayVisitItem.vue";
-import { Visit } from "@/types/units";
 import { createVisit } from "@/db";
+import router from "@/router";
+import { Visit } from "@/types/units";
+
+import DayVisitItem from "./items/DayVisitItem.vue";
 
 export default {
   name: "Day Visits",

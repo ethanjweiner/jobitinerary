@@ -22,14 +22,14 @@
 
 <script lang="ts">
 import { ref } from "vue";
+
 import router from "@/router";
-
-import { CustomerDayInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
+import { CustomerDayInterface } from "@/types/units";
 
-import CustomerDayItem from "./items/CustomerDayItem.vue";
-import InfiniteList from "./InfiniteList.vue";
 import SearchToolbar from "../inputs/SearchToolbar.vue";
+import InfiniteList from "./InfiniteList.vue";
+import CustomerDayItem from "./items/CustomerDayItem.vue";
 
 export default {
   name: "Employee Days",

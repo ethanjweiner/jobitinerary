@@ -17,26 +17,24 @@
 </template>
 
 <script lang="ts">
-import Jobs from "@/components/lists/Jobs.vue";
-import CustomerDays from "@/components/lists/CustomerDays.vue";
-
 import { computed, reactive, ref } from "@vue/reactivity";
-
+import { watch } from "@vue/runtime-core";
 import {
-  calendarOutline,
   calendarNumberOutline,
+  calendarOutline,
   personOutline,
 } from "ionicons/icons";
+import { useRoute } from "vue-router";
 
+import CustomerDays from "@/components/lists/CustomerDays.vue";
+import Jobs from "@/components/lists/Jobs.vue";
+import { companiesCollection } from "@/main";
 import store from "@/store";
 import { CollectionRef, SectionsType } from "@/types/auxiliary";
-
-import Sections from "../Sections.vue";
-import CustomerForm from "../forms/CustomerForm.vue";
 import { Company, Customer } from "@/types/users";
-import { companiesCollection } from "@/main";
-import { watch } from "@vue/runtime-core";
-import { useRoute } from "vue-router";
+
+import CustomerForm from "../forms/CustomerForm.vue";
+import Sections from "../Sections.vue";
 
 interface State {
   customer: Customer | undefined;

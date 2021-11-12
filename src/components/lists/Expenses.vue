@@ -15,11 +15,12 @@
 <script lang="ts">
 import { reactive } from "@vue/reactivity";
 
-import ExpenseItem from "./items/ExpenseItem.vue";
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
-import List from "./List.vue";
 import { createExpense } from "@/db";
 import { Expense } from "@/types/units";
+
+import ExpenseItem from "./items/ExpenseItem.vue";
+import List from "./List.vue";
 
 export default {
   name: "Expenses Infinite",

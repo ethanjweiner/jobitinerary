@@ -38,17 +38,17 @@
 
 <script lang="ts">
 import {
-  IonToolbar,
-  IonSearchbar,
-  IonInput,
-  IonItem,
-  IonIcon,
   IonButton,
   IonButtons,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonSearchbar,
   IonText,
+  IonToolbar,
 } from "@ionic/vue";
-
 import { close } from "ionicons/icons";
+
 import AddButton from "@/components/buttons/AddButton.vue";
 
 export default {

@@ -66,37 +66,34 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonIcon,
-  IonButtons,
   IonButton,
-  IonPopover,
+  IonButtons,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonCardContent,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonPopover,
+  IonRow,
+  IonToolbar,
 } from "@ionic/vue";
-
 import { reactive, ref } from "@vue/reactivity";
-import router from "@/router";
-
 import { ellipsisVertical } from "ionicons/icons";
+import { useRoute } from "vue-router";
 
-import { capitalize } from "@/helpers";
-
-import UserSelect from "@/components/selects/UserSelect.vue";
-import store from "@/store";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
+import UserSelect from "@/components/selects/UserSelect.vue";
 import Customer from "@/components/units/Customer.vue";
 import Employee from "@/components/units/Employee.vue";
-import { Company } from "@/types/users";
+import { capitalize } from "@/helpers";
 import { idToName } from "@/helpers";
-import { useRoute } from "vue-router";
+import router from "@/router";
+import store from "@/store";
+import { Company } from "@/types/users";
 
 interface State {
   userID: string;

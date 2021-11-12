@@ -1,12 +1,13 @@
 // AUTHENTICATION HELPERS
 
+import firebase from "firebase/app";
+
+import { generateUUID } from "./helpers";
 import { auth, companiesCollection } from "./main";
 import router from "./router";
 import store from "./store";
-import firebase from "firebase/app";
-import { Company } from "./types/users";
-import { generateUUID } from "./helpers";
 import { DocRef } from "./types/auxiliary";
+import { Company } from "./types/users";
 
 export async function signUpCompany(credentials: {
   name: string;

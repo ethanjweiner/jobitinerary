@@ -33,22 +33,24 @@
 
 <script lang="ts">
 import {
-  IonToolbar,
-  IonTitle,
-  IonButtons,
   IonButton,
-  IonIcon,
-  IonTextarea,
-  IonItem,
+  IonButtons,
   IonCard,
   IonContent,
+  IonIcon,
+  IonItem,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-
-import { close, sendOutline } from "ionicons/icons";
 import { reactive } from "@vue/reactivity";
-import { emptyMessage, Message, Thread } from "@/types/units";
-import ImageWithCaption from "../components/ImageWithCaption.vue";
+import { close, sendOutline } from "ionicons/icons";
+
+import { showTextAreas } from "@/helpers";
 import store from "@/store";
+import { emptyMessage, Message, Thread } from "@/types/units";
+
+import ImageWithCaption from "../components/ImageWithCaption.vue";
 
 export default {
   name: "Message Modal",
@@ -79,7 +81,7 @@ export default {
       emit("closeModal");
     };
 
-    setTimeout(() => (state.showTextAreas = true), 250);
+    showTextAreas(state);
 
     return {
       state,

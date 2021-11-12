@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
+
 import CompanyTabs from "../views/company/Tabs.vue";
 import EmployeeTabs from "../views/employee/Tabs.vue";
 

@@ -32,20 +32,21 @@
 
 <script lang="ts">
 import {
-  IonItem,
-  IonButtons,
-  IonNote,
-  IonIcon,
-  IonToggle,
-  IonLabel,
   IonButton,
+  IonButtons,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonNote,
+  IonToggle,
 } from "@ionic/vue";
-import { trashOutline, checkmark } from "ionicons/icons";
+import { reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
+import { checkmark,trashOutline } from "ionicons/icons";
+
 import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
 import store from "@/store";
-import { reactive } from "@vue/reactivity";
 import { Expense } from "@/types/units";
-import { watch } from "@vue/runtime-core";
 
 export default {
   name: "Expense",

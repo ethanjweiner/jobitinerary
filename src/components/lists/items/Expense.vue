@@ -6,7 +6,7 @@
         placeholder="Name"
         v-model="state.expense.data.name"
         @ionInput="$emit('update:modelValue', state.expense)"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
         :disabled="hideControls"
       ></ion-input>
       <ion-note style="margin: 0;" v-if="showDate">
@@ -17,7 +17,7 @@
     <CurrencyInput
       v-model="state.expense.data.cost"
       @update:modelValue="$emit('update:modelValue', state.expense)"
-      :debounce="store.DEBOUNCE_AMOUNT"
+      :debounce="config.constants.DEBOUNCE_AMOUNT"
       placeholder="Cost"
       :options="{ currency: 'USD' }"
       :disabled="hideControls"
@@ -45,18 +45,20 @@
 
 <script lang="ts">
 import {
-  IonItem,
-  IonInput,
   IonButton,
   IonButtons,
-  IonNote,
   IonIcon,
+  IonInput,
+  IonItem,
+  IonNote,
   IonToggle,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { trashOutline, checkmark } from "ionicons/icons";
-import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
 import { watch } from "@vue/runtime-core";
+import { checkmark,trashOutline } from "ionicons/icons";
+
+import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
+import config from "@/config/config";
 import store from "@/store";
 
 export default {
@@ -81,6 +83,7 @@ export default {
         trashOutline,
         checkmark,
       },
+      config,
     };
   },
   components: {

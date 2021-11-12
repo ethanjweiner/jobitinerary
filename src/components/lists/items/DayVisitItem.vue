@@ -66,26 +66,24 @@
 
 <script lang="ts">
 import {
-  IonItem,
-  IonButtons,
-  IonReorder,
-  IonLabel,
   IonButton,
+  IonButtons,
   IonIcon,
-  IonNote,
+  IonItem,
+  IonLabel,
   IonModal,
+  IonNote,
+  IonReorder,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
+import { cart,trashOutline } from "ionicons/icons";
+
+import VisitModal from "@/components/modals/VisitModal.vue";
+import TimeLog from "@/components/TimeLog.vue";
+import { formatTime, idToName } from "@/helpers";
 import router from "@/router";
 import store from "@/store";
-
-import { trashOutline, cart } from "ionicons/icons";
-
-import { formatTime, idToName } from "@/helpers";
-
-import TimeLog from "@/components/TimeLog.vue";
-import VisitModal from "@/components/modals/VisitModal.vue";
-import { watch } from "@vue/runtime-core";
 
 export default {
   name: "Visit",

@@ -52,24 +52,23 @@
 
 <script lang="ts">
 import {
-  IonRadioGroup,
-  IonRadio,
+  IonCol,
+  IonGrid,
   IonItem,
   IonLabel,
-  IonGrid,
+  IonRadio,
+  IonRadioGroup,
   IonRow,
-  IonCol,
 } from "@ionic/vue";
-
 import { computed, reactive, ref, watch } from "vue";
+
 import router from "@/router";
-
-import { EmployeeDayInterface } from "@/types/units";
 import { CollectionRef, Query, Splitter } from "@/types/auxiliary";
+import { EmployeeDayInterface } from "@/types/units";
 
-import EmployeeDayItem from "./items/EmployeeDayItem.vue";
-import InfiniteList from "./InfiniteList.vue";
 import SearchToolbar from "../inputs/SearchToolbar.vue";
+import InfiniteList from "./InfiniteList.vue";
+import EmployeeDayItem from "./items/EmployeeDayItem.vue";
 
 export default {
   name: "Employee Days",

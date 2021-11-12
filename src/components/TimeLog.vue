@@ -18,6 +18,14 @@
           Note: The times and hours don't match up.
         </ion-text>
       </ion-note>
+      <ion-button
+        style="padding-left: 15px;"
+        fill="outline"
+        color="danger"
+        size="small"
+        @click="refreshHours"
+        >Auto-Calculate</ion-button
+      >
     </ion-row>
     <ion-row color="light">
       <ion-col size="6" size-xl="4">
@@ -46,15 +54,9 @@
           <ion-input
             type="number"
             inputmode="numeric"
-            v-model="state.time.hours"
+            :value="state.time.hours"
+            @ionInput="updateHours($event.target.value)"
           ></ion-input>
-          <ion-button
-            fill="outline"
-            color="secondary"
-            size="small"
-            @click="refreshHours"
-            >Calculate</ion-button
-          >
         </ion-item>
       </ion-col>
     </ion-row>
@@ -62,22 +64,22 @@
 </template>
 
 <script lang="ts">
-import { playOutline, stopOutline } from "ionicons/icons";
 import {
-  IonGrid,
-  IonRow,
-  IonCol,
   IonButton,
+  IonCol,
+  IonDatetime,
+  IonGrid,
   IonIcon,
-  IonLabel,
   IonInput,
   IonItem,
-  IonText,
+  IonLabel,
   IonNote,
-  IonDatetime,
+  IonRow,
+  IonText,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
+import { playOutline, stopOutline } from "ionicons/icons";
 export default {
   name: "Timelog",
   props: {
@@ -91,10 +93,13 @@ export default {
     });
 
     const retrieveHours = (): number => {
-      const hours =
-        (new Date(state.time.end).getTime() -
-          new Date(state.time.start).getTime()) /
-        (1000 * 60 * 60);
+      const startDate = new Date(state.time.start);
+      const startHours = startDate.getHours() + startDate.getMinutes() / 60;
+
+      const endDate = new Date(state.time.end);
+      const endHours = endDate.getHours() + endDate.getMinutes() / 60;
+
+      const hours = endHours - startHours < 0 ? 0 : endHours - startHours;
 
       if (hours) return Math.round(hours * 10) / 10;
       return 0;
@@ -112,6 +117,10 @@ export default {
     const setEndTime = () => {
       state.time.end = new Date().toISOString();
       if (state.time.start && state.time.end) refreshHours();
+    };
+
+    const updateHours = (hoursInput: string) => {
+      if (hoursInput) state.time.hours = parseInt(hoursInput);
     };
 
     watch(state.time, (newTime) => emit("update:modelValue", newTime));
@@ -136,6 +145,7 @@ export default {
       setStartTime,
       setEndTime,
       refreshHours,
+      updateHours,
     };
   },
   components: {

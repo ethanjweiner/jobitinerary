@@ -28,21 +28,21 @@
 
 <script lang="ts">
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonSplitPane,
   IonContent,
+  IonHeader,
   IonPage,
+  IonSplitPane,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
 
 import CreateButton from "@/components/buttons/CreateButton.vue";
-import store from "@/store";
-import { companiesCollection, db } from "@/main";
-import Visits from "@/components/lists/VisitsInfinite.vue";
-import Jobs from "@/components/lists/Jobs.vue";
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
+import Jobs from "@/components/lists/Jobs.vue";
+import Visits from "@/components/lists/VisitsInfinite.vue";
+import { companiesCollection, db } from "@/main";
+import store from "@/store";
 
 export default {
   name: "Home",

@@ -1,7 +1,7 @@
+import { loadUser } from "@/authentication";
+import { generateUUID, nameToID } from "@/helpers";
 import { auth, companiesCollection } from "@/main";
 import { DocData, DocRef, ImageWithCaption, Location } from "@/types/auxiliary";
-import { generateUUID, nameToID } from "@/helpers";
-import { loadUser } from "@/authentication";
 
 // USERS
 

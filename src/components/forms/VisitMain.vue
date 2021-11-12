@@ -10,23 +10,23 @@
       ></ion-datetime>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Planned Start</ion-label>
-      <ion-datetime
-        v-model="state.visit.data.plannedStart"
-        display-format="h:mm A"
-        picker-format="h:mm A"
-        @ionChange="$emit('update:modelValue', state.visit)"
-      ></ion-datetime>
+      <ion-label style="font-weight: bold;">
+        <ion-icon :icon="icons.timeOutline"></ion-icon>
+        {{ state.visit.data.time.hours }} Hours
+        <span v-if="state.visit.data.time.start && state.visit.data.time.end">
+          ({{ formatTime(state.visit.data.time.start) }}-{{
+            formatTime(state.visit.data.time.end)
+          }})
+        </span>
+      </ion-label>
     </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Planned End</ion-label>
-      <ion-datetime
-        v-model="state.visit.data.plannedEnd"
-        display-format="h:mm A"
-        picker-format="h:mm A"
-        @ionChange="$emit('update:modelValue', state.visit)"
-      ></ion-datetime>
-    </ion-item>
+
+    <!-- Limit to employee view -->
+    <TimeLogComponent
+      title="Visit Time Log"
+      v-model="state.visit.data.time"
+      @update:modelValue="$emit('update:modelValue', state.visit)"
+    />
 
     <!-- Employee Select -->
 
@@ -47,6 +47,24 @@
       @update:modelValue="updateCustomer"
       mode="light"
     />
+    <ion-item>
+      <ion-label position="stacked">Planned Start</ion-label>
+      <ion-datetime
+        v-model="state.visit.data.plannedStart"
+        display-format="h:mm A"
+        picker-format="h:mm A"
+        @ionChange="$emit('update:modelValue', state.visit)"
+      ></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Planned End</ion-label>
+      <ion-datetime
+        v-model="state.visit.data.plannedEnd"
+        display-format="h:mm A"
+        picker-format="h:mm A"
+        @ionChange="$emit('update:modelValue', state.visit)"
+      ></ion-datetime>
+    </ion-item>
     <!-- Auto updates on location -->
     <Address v-model="state.visit.data.location" />
     <!-- Job Attacher -->
@@ -76,16 +94,10 @@
         v-model="state.visit.data.workType"
         placeholder="Describe the type of work being done at this visit"
         @ionInput="$emit('update:modelValue', state.visit)"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
       />
     </ion-item>
 
-    <TimeLogComponent
-      v-if="store.state.userType == 'employee'"
-      title="Visit Time Log"
-      v-model="state.visit.data.time"
-      @update:modelValue="$emit('update:modelValue', state.visit)"
-    />
     <!-- Additional Notes -->
 
     <ion-item v-if="state.showTextAreas">
@@ -95,7 +107,7 @@
         v-model="state.visit.data.notes"
         placeholder="Notes for the visit"
         @ionInput="$emit('update:modelValue', state.visit)"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
       ></ion-textarea>
     </ion-item>
 
@@ -115,35 +127,36 @@
 
 <script lang="ts">
 import {
-  IonLabel,
-  IonDatetime,
-  IonItem,
+  IonButtons,
   IonChip,
+  IonDatetime,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonNote,
   IonTextarea,
   IonToolbar,
-  IonNote,
-  IonIcon,
-  IonButtons,
-  IonModal,
-  IonInput,
-  IonList,
 } from "@ionic/vue";
-
-import { computed, reactive, ref } from "vue";
-import store from "@/store";
-
 import {
   calendarNumberOutline,
   calendarOutline,
+  timeOutline,
   trashOutline,
 } from "ionicons/icons";
-
-import { JobInterface, Visit } from "@/types/units";
+import { computed, reactive, ref } from "vue";
 
 import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
+import config from "@/config/config";
+import { formatTime, showTextAreas } from "@/helpers";
 import { companiesCollection, db } from "@/main";
+import store from "@/store";
+import { JobInterface, Visit } from "@/types/units";
+
 import Address from "../Address.vue";
 
 interface State {
@@ -199,7 +212,7 @@ export default {
         .where("data.companyID", "==", store.state.companyID);
     });
 
-    setTimeout(() => (state.showTextAreas = true), 250);
+    showTextAreas(state);
 
     const changeDate = (ev: CustomEvent) => {
       state.visit.data.date = ev.detail.value.substring(0, 10);
@@ -259,10 +272,13 @@ export default {
         calendarNumberOutline,
         calendarOutline,
         trashOutline,
+        timeOutline,
       },
       changeDate,
       jobsModalIsOpen,
       attachJob,
+      formatTime,
+      config,
     };
   },
 };

@@ -58,8 +58,9 @@
 </template>
 
 <script lang="ts">
-import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
+import { IonButton,IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
+
 import { signUpCompany } from "@/authentication";
 
 export default {

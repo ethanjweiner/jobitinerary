@@ -47,18 +47,17 @@
 
 <script lang="ts">
 import {
+  IonIcon,
+  IonLabel,
+  IonPage,
+  IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonLabel,
-  IonIcon,
-  IonPage,
-  IonRouterOutlet,
   IonTitle,
 } from "@ionic/vue";
-
-import { home, cart, hammer, settings } from "ionicons/icons";
 import { onMounted, ref } from "@vue/runtime-core";
+import { cart, hammer, home, settings } from "ionicons/icons";
 import { useRoute } from "vue-router";
 
 export default {

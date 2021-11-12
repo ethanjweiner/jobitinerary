@@ -55,25 +55,25 @@
 
 <script lang="ts">
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonNote,
-  IonIcon,
-  IonButtons,
   IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonNote,
   IonPopover,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
 import { close, ellipsisVertical } from "ionicons/icons";
 
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import VisitComponent from "@/components/units/Visit.vue";
-import { Visit, VisitInterface } from "@/types/units";
-import store from "@/store";
 import { idToName } from "@/helpers";
+import store from "@/store";
+import { Visit, VisitInterface } from "@/types/units";
 
 interface State {
   visit: Visit | null;

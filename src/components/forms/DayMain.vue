@@ -13,9 +13,9 @@
                 <ion-input
                   type="text"
                   v-model="state.day.data.startLocation"
-                  :debounce="store.DEBOUNCE_AMOUNT"
+                  :debounce="config.constants.DEBOUNCE_AMOUNT"
                   @ionInput="$emit('update:modelValue', state.day)"
-                  placeholder="Meeting location at the start of the day"
+                  placeholder="Where's the meet-up spot?"
                 />
               </ion-item>
               <ion-item>
@@ -37,11 +37,8 @@
                 ></ion-datetime>
               </ion-item>
 
-              <ion-item>
-                <div style="margin-top: 10px; margin-bottom: 10px;">
-                  <ion-label>Hourly Rate</ion-label>
-                  <ion-note>{{ paymentText }}</ion-note>
-                </div>
+              <ion-item lines="none">
+                <ion-label>Hourly Rate</ion-label>
                 <CurrencyInput
                   @ionInput="$emit('update:modelValue', state.day)"
                   v-model="state.day.data.hourlyRate"
@@ -49,6 +46,10 @@
                   placeholder="$/hr"
                 />
               </ion-item>
+              <ion-item>
+                <ion-note>{{ paymentText }}</ion-note>
+              </ion-item>
+
               <ion-item>
                 <ion-label>Mark Day as Paid</ion-label>
                 <ion-buttons slot="end">
@@ -67,7 +68,7 @@
                 <ion-label position="stacked">Notes on the Day</ion-label>
                 <ion-textarea
                   auto-grow
-                  :debounce="store.DEBOUNCE_AMOUNT"
+                  :debounce="config.constants.DEBOUNCE_AMOUNT"
                   @ionInput="$emit('update:modelValue', state.day)"
                   v-model="state.day.data.notes"
                 ></ion-textarea>
@@ -96,29 +97,31 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive } from "@vue/reactivity";
-import { checkmark } from "ionicons/icons";
-import TimeLog from "@/components/TimeLog.vue";
 import {
-  IonItem,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonDatetime,
-  IonLabel,
-  IonNote,
-  IonToggle,
-  IonTextarea,
-  IonInput,
-  IonIcon,
   IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardTitle,
-  IonList,
   IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonDatetime,
+  IonGrid,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonRow,
+  IonTextarea,
+  IonToggle,
 } from "@ionic/vue";
+import { computed, reactive } from "@vue/reactivity";
+import { checkmark } from "ionicons/icons";
+
+import TimeLog from "@/components/TimeLog.vue";
+import config from "@/config/config";
 import store from "@/store";
 
 import CurrencyInput from "../inputs/CurrencyInput.vue";
@@ -147,6 +150,7 @@ export default {
       state,
       checkmark,
       paymentText,
+      config,
     };
   },
   components: {

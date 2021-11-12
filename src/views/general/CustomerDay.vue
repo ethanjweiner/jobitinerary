@@ -38,7 +38,7 @@
         <DayMain v-model="state.day" :visits="state.visits" />
       </template>
       <template v-slot:visits>
-        <DayVisits v-model="state.visits" />
+        <DayVisits v-model="state.visits" :userID="userID" />
       </template>
     </Sections>
   </ion-page>
@@ -46,37 +46,35 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonIcon,
+  IonBackButton,
   IonButton,
   IonButtons,
-  IonBackButton,
+  IonHeader,
+  IonIcon,
+  IonPage,
   IonPopover,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-
 import { reactive, ref } from "@vue/reactivity";
-import {
-  ellipsisVertical,
-  trashOutline,
-  documentTextOutline,
-  homeOutline,
-} from "ionicons/icons";
-
-import { CustomerDay, Visit } from "@/types/units";
-import { idToName, retrieveVisitsOnDate } from "@/helpers";
-import store from "@/store";
 import { watch } from "@vue/runtime-core";
-import router from "@/router";
+import {
+  documentTextOutline,
+  ellipsisVertical,
+  homeOutline,
+  trashOutline,
+} from "ionicons/icons";
 
 import DayMain from "@/components/forms/CustomerDayMain.vue";
 import DayVisits from "@/components/lists/CustomerDayVisits.vue";
 import DayPopover from "@/components/popovers/DayPopover.vue";
 import Sections from "@/components/Sections.vue";
+import { idToName, retrieveVisitsOnDate } from "@/helpers";
+import router from "@/router";
+import store from "@/store";
 import { SectionsType } from "@/types/auxiliary";
+import { CustomerDay, Visit } from "@/types/units";
 
 interface State {
   day: CustomerDay | null;

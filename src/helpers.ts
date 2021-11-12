@@ -1,9 +1,10 @@
-import router from "./router";
-import { companiesCollection, storage } from "./main";
 import date from "date-and-time";
+
+import { companiesCollection, storage } from "./main";
+import router from "./router";
+import store from "./store";
 import { Loader } from "./types/auxiliary";
 import { Visit } from "./types/units";
-import store from "./store";
 
 // ROUTING HELPERS
 
@@ -159,4 +160,8 @@ export async function retrieveVisitsOnDate(
 // in TS 3.0+, putting just "string" raises an error
 export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
   return key in obj;
+}
+
+export function showTextAreas(state: any) {
+  setTimeout(() => (state.showTextAreas = true), 250);
 }

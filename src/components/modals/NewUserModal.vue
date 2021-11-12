@@ -55,23 +55,22 @@
 
 <script lang="ts">
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
   IonButton,
-  IonIcon,
+  IonButtons,
   IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
   IonItem,
   IonLabel,
-  IonInput,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-
+import { reactive, toRefs } from "@vue/reactivity";
 import { close } from "ionicons/icons";
 
 import { capitalize, nameToID } from "@/helpers";
-import { reactive, toRefs } from "@vue/reactivity";
 import store from "@/store";
 import { Company } from "@/types/users";
 

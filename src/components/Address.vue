@@ -17,7 +17,7 @@
         placeholder="Enter address"
         ref="autocompleteInput"
         :value="modelValue.address"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
         @input="onInput"
       ></ion-input>
     </ion-item>
@@ -32,19 +32,19 @@
 <script>
 import {
   IonButton,
-  IonToolbar,
-  IonCard,
-  IonItem,
-  IonInput,
-  IonIcon,
-  IonLabel,
   IonButtons,
+  IonCard,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonToolbar,
 } from "@ionic/vue";
-
 import { reactive } from "@vue/reactivity";
-import { onMounted, ref, watch } from "vue";
 import { navigateOutline } from "ionicons/icons";
+import { onMounted, ref, watch } from "vue";
 
+import config from "@/config/config";
 import store from "@/store";
 
 export default {
@@ -107,9 +107,15 @@ export default {
       autocompleteInput,
       onInput,
       navigateOutline,
+      config,
     };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#suggestions-card {
+  width: calc(100% - 120px);
+  margin-top: 0;
+}
+</style>

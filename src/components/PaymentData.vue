@@ -51,9 +51,9 @@
 </template>
 
 <script lang="ts">
-import { IonText, IonNote, IonChip, IonLabel, IonGrid } from "@ionic/vue";
-
+import { IonChip, IonGrid,IonLabel, IonNote, IonText } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
+
 import { CollectionRef } from "@/types/auxiliary";
 import { EmployeeDayInterface, ExpenseInterface } from "@/types/units";
 

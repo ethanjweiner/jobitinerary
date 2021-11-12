@@ -24,12 +24,13 @@
 </template>
 
 <script lang="ts">
+import { IonCol,IonGrid, IonRow } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import ImageWithCaption from "../ImageWithCaption.vue";
 import { watch } from "@vue/runtime-core";
-import { IonGrid, IonRow } from "@ionic/vue";
 import { add } from "ionicons/icons";
+
 import AddButton from "../buttons/AddButton.vue";
+import ImageWithCaption from "../ImageWithCaption.vue";
 
 export default {
   name: "Images",
@@ -42,6 +43,7 @@ export default {
     IonGrid,
     IonRow,
     AddButton,
+    IonCol,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({

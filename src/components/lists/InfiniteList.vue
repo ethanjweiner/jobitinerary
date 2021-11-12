@@ -47,20 +47,22 @@
 
 <script lang="ts">
 import {
+  IonCol,
+  IonGrid,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonList,
-  IonItemGroup,
   IonItemDivider,
+  IonItemGroup,
   IonLabel,
+  IonList,
+  IonRow,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import { CollectionRef, Splitter } from "@/types/auxiliary";
-import { InfiniteList } from "@/db";
 import { onUnmounted } from "@vue/runtime-core";
+
+import { InfiniteList } from "@/db";
+import { CollectionRef, Splitter } from "@/types/auxiliary";
+
 import ListPlaceholder from "../ListPlaceholder.vue";
 
 interface State {

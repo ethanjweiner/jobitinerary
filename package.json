@@ -24,6 +24,7 @@
     "@vue/cli-plugin-eslint": "^4.5.13",
     "core-js": "^3.6.5",
     "date-and-time": "^2.0.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "firebase": "^8.10.0",
     "vue": "^3.2.1",
     "vue-beautiful-chat": "^2.5.0",

@@ -14,11 +14,12 @@
 </template>
 
 <script lang="ts">
-import { IonReorderGroup, IonIcon, IonItem, IonLabel } from "@ionic/vue";
-import Tool from "./items/Tool.vue";
-import { add } from "ionicons/icons";
+import { IonIcon, IonItem, IonLabel,IonReorderGroup } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { defineComponent, watch } from "@vue/runtime-core";
+import { add } from "ionicons/icons";
+
+import Tool from "./items/Tool.vue";
 
 export default defineComponent({
   name: "Tasks",

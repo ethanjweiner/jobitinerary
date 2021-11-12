@@ -19,16 +19,16 @@
 </template>
 
 <script lang="ts">
-import PaymentInfo from "@/components/PaymentInfo.vue";
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
 
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
+import PaymentInfo from "@/components/PaymentInfo.vue";
 
 export default {
   name: "Days",

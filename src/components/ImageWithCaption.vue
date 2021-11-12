@@ -19,26 +19,30 @@
         auto-grow
         placeholder="Caption"
         v-if="!hideCaption"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
       ></ion-textarea>
     </ion-card-content>
   </ion-card>
 </template>
 
 <script lang="ts">
-import { reactive } from "@vue/reactivity";
-import { close, cameraOutline } from "ionicons/icons";
 import {
-  IonCard,
-  IonCardContent,
-  IonToolbar,
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardContent,
   IonIcon,
   IonTextarea,
+  IonToolbar,
 } from "@ionic/vue";
+import { reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
-import ImageUploader from "./ImageUploader.vue";
+import { cameraOutline,close } from "ionicons/icons";
+
+import config from "@/config/config";
 import { getImageURL } from "@/helpers";
+
+import ImageUploader from "./ImageUploader.vue";
 
 export default {
   name: "Image With Caption",
@@ -74,6 +78,7 @@ export default {
       state,
       icons: { close, cameraOutline },
       changeImage,
+      config,
     };
   },
   components: {

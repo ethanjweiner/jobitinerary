@@ -17,16 +17,16 @@
 <script lang="ts">
 import {
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonIcon,
   IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonIcon,
 } from "@ionic/vue";
-
 import { cart } from "ionicons/icons";
-import router from "@/router";
+
 import { idToName } from "@/helpers";
+import router from "@/router";
 
 export default {
   name: "Job Item",

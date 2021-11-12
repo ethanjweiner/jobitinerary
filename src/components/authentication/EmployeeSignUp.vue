@@ -27,11 +27,12 @@
 </template>
 
 <script lang="ts">
-import { IonItem, IonCard, IonInput, IonLabel, IonButton } from "@ionic/vue";
-import { ref } from "vue";
+import { IonButton,IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
-import { Employee } from "@/types/users";
+import { ref } from "vue";
+
 import { verifyEmployee } from "@/authentication";
+import { Employee } from "@/types/users";
 
 export default {
   name: "Employee Sign Up",

@@ -35,14 +35,15 @@
 
 <script lang="ts">
 import { IonContent } from "@ionic/vue";
-import { defineComponent, ref } from "vue";
 import { close } from "ionicons/icons";
+import { defineComponent, ref } from "vue";
 
-import InfiniteList from "../lists/InfiniteList.vue";
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 import JobItem from "@/components/lists/items/JobItem.vue";
 import { Splitter } from "@/types/auxiliary";
 import { JobInterface } from "@/types/units";
-import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
+
+import InfiniteList from "../lists/InfiniteList.vue";
 
 export default defineComponent({
   name: "Jobs",

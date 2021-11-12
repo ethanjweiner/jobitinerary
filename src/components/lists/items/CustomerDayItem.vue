@@ -40,17 +40,16 @@ import {
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardTitle,
   IonCardSubtitle,
+  IonCardTitle,
   IonIcon,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
+import { cart, hammer, time } from "ionicons/icons";
+
+import { idToName,retrieveVisitsOnDate } from "@/helpers";
 import router from "@/router";
-
 import { Visit } from "@/types/units";
-import { retrieveVisitsOnDate, idToName } from "@/helpers";
-
-import { hammer, cart, time } from "ionicons/icons";
 
 interface State {
   visits: Array<Visit>;

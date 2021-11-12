@@ -30,15 +30,15 @@
 
 <script lang="ts">
 import {
+  IonIcon,
+  IonLabel,
+  IonPage,
+  IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonLabel,
-  IonIcon,
-  IonPage,
-  IonRouterOutlet,
 } from "@ionic/vue";
-import { today, calendar, cash, send } from "ionicons/icons";
+import { calendar, cash, send,today } from "ionicons/icons";
 
 export default {
   name: "Tabs",

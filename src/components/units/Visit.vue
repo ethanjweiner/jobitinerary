@@ -99,38 +99,36 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
-
 import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonSegment,
-  IonSegmentButton,
   IonCard,
-  IonIcon,
-  IonLabel,
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonCardContent,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonLabel,
+  IonRow,
+  IonSegment,
+  IonSegmentButton,
 } from "@ionic/vue";
-
+import { reactive, ref } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 import {
-  documentTextOutline,
-  constructOutline,
-  hammerOutline,
-  calendarOutline,
   calendarNumberOutline,
+  calendarOutline,
+  constructOutline,
+  documentTextOutline,
+  hammerOutline,
   imagesOutline,
 } from "ionicons/icons";
 
-import { SectionsType } from "@/types/auxiliary";
-
 import VisitMain from "@/components/forms/VisitMain.vue";
+import Images from "@/components/lists/Images.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import Tools from "@/components/lists/Tools.vue";
-import Images from "@/components/lists/Images.vue";
+import { SectionsType } from "@/types/auxiliary";
+
 import AddButton from "../buttons/AddButton.vue";
 
 export default {

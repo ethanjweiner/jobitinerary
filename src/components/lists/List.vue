@@ -35,16 +35,18 @@
 
 <script lang="ts">
 import {
-  IonGrid,
-  IonRow,
   IonCol,
-  IonList,
-  IonLabel,
+  IonGrid,
   IonItemDivider,
   IonItemGroup,
+  IonLabel,
+  IonList,
+  IonRow,
 } from "@ionic/vue";
 import { computed } from "@vue/reactivity";
+
 import { Splitter } from "@/types/auxiliary";
+
 import ListPlaceholder from "../ListPlaceholder.vue";
 
 // NOTE: THIS COMPONENT RERENDERS AND RELOADS DATA UPON ANY SEARCH CHANGE

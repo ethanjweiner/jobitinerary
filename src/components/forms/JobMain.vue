@@ -14,7 +14,7 @@
                 <ion-input
                   type="text"
                   @ionInput="$emit('update:modelValue', state.job)"
-                  :debounce="store.DEBOUNCE_AMOUNT"
+                  :debounce="config.constants.DEBOUNCE_AMOUNT"
                   v-model="state.job.data.name"
                   placeholder="Descriptive name for this job"
                   class="job-title"
@@ -40,7 +40,7 @@
                 <ion-label position="stacked">Job Description</ion-label>
                 <ion-textarea
                   @ionInput="$emit('update:modelValue', state.job)"
-                  :debounce="store.DEBOUNCE_AMOUNT"
+                  :debounce="config.constants.DEBOUNCE_AMOUNT"
                   auto-grow
                   type="text"
                   v-model="state.job.data.description"
@@ -91,28 +91,28 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive } from "@vue/reactivity";
 import {
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonChip,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonDatetime,
-  IonTextarea,
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardTitle,
   IonCardSubtitle,
+  IonCardTitle,
+  IonChip,
+  IonCol,
+  IonDatetime,
+  IonGrid,
+  IonInput,
+  IonItem,
+  IonLabel,
   IonList,
+  IonRow,
+  IonTextarea,
 } from "@ionic/vue";
+import { computed, reactive } from "@vue/reactivity";
 
 import Tasks from "@/components/lists/Tasks.vue";
+import config from "@/config/config";
 import store from "@/store";
-
 import { Visit } from "@/types/units";
 
 export default {
@@ -176,6 +176,7 @@ export default {
       employeeHours,
       changeStartDate,
       changeEndDate,
+      config,
     };
   },
   components: {

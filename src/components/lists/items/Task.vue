@@ -10,7 +10,7 @@
       <ion-input
         placeholder="General name"
         @ionInput="$emit('update:modelValue', state.task)"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
         v-model="state.task.header"
         type="text"
       >
@@ -35,7 +35,7 @@
         auto-grow
         rows="1"
         @ionInput="$emit('update:modelValue', state.task)"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
         v-model="state.task.notes"
       ></ion-textarea>
     </ion-item>
@@ -60,26 +60,26 @@
 
 <script lang="ts">
 import {
-  IonItem,
-  IonTextarea,
-  IonCheckbox,
-  IonButtons,
   IonButton,
-  IonIcon,
-  IonReorder,
-  IonInput,
-  IonThumbnail,
-  IonModal,
+  IonButtons,
   IonCard,
+  IonCheckbox,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonModal,
+  IonReorder,
+  IonTextarea,
+  IonThumbnail,
   IonToolbar,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import store from "@/store";
+import { cameraOutline, close,trashOutline } from "ionicons/icons";
 
-import { trashOutline, cameraOutline, close } from "ionicons/icons";
-
-import { getImageURL } from "@/helpers";
 import ImageUploader from "@/components/ImageUploader.vue";
+import config from "@/config/config";
+import { getImageURL, showTextAreas } from "@/helpers";
+import store from "@/store";
 
 export default {
   name: "Task",
@@ -110,7 +110,7 @@ export default {
       imageURL: "",
     });
 
-    setTimeout(() => (state.showTextAreas = true), 250);
+    showTextAreas(state);
 
     const changeImage = async (imageRef: string) => {
       state.task.image.ref = imageRef;
@@ -125,6 +125,7 @@ export default {
       state,
       store,
       changeImage,
+      config,
       icons: { trashOutline, cameraOutline, close },
     };
   },

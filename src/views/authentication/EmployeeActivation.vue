@@ -27,9 +27,10 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonGrid, IonRow, IonCol } from "@ionic/vue";
-import EmployeeSignUp from "@/components/authentication/EmployeeSignUp.vue";
+import { IonCol,IonContent, IonGrid, IonPage, IonRow } from "@ionic/vue";
 import { defineComponent } from "vue";
+
+import EmployeeSignUp from "@/components/authentication/EmployeeSignUp.vue";
 
 export default defineComponent({
   name: "Authentication",

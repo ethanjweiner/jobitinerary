@@ -30,10 +30,10 @@
 
 <script lang="ts">
 import {
-  IonReorderGroup,
   IonIcon,
   IonItem,
   IonLabel,
+  IonReorderGroup,
   IonToggle,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";

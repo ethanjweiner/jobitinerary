@@ -8,11 +8,12 @@
 </template>
 
 <script lang="ts">
+import { Camera, CameraResultType } from "@capacitor/camera";
 import { IonButton, IonIcon, IonText } from "@ionic/vue";
 import { cameraOutline } from "ionicons/icons";
-import { storage } from "@/main";
-import { Camera, CameraResultType } from "@capacitor/camera";
+
 import { generateUUID } from "@/helpers";
+import { storage } from "@/main";
 import store from "@/store";
 
 export default {

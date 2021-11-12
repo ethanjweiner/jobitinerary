@@ -21,7 +21,7 @@
                     type="email"
                     disabled
                     placeholder="email"
-                    :debounce="store.DEBOUNCE_AMOUNT"
+                    :debounce="config.constants.DEBOUNCE_AMOUNT"
                     @ionInput="$emit('update:modelValue', state.employee)"
                     v-model="state.employee.data.email"
                   ></ion-input>
@@ -36,7 +36,7 @@
                     inputmode="tel"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     placeholder="123-123-1234"
-                    :debounce="store.DEBOUNCE_AMOUNT"
+                    :debounce="config.constants.DEBOUNCE_AMOUNT"
                     @ionInput="$emit('update:modelValue', state.employee)"
                     v-model="state.employee.data.phone"
                   ></ion-input>
@@ -52,24 +52,25 @@
 
 <script lang="ts">
 import {
-  IonList,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonIcon,
-  IonCardContent,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import store from "@/store";
+import { callOutline,mailOutline } from "ionicons/icons";
 
-import { mailOutline, callOutline } from "ionicons/icons";
+import config from "@/config/config";
+import store from "@/store";
 
 export default {
   name: "Employee Form",
@@ -104,6 +105,7 @@ export default {
         mailOutline,
         callOutline,
       },
+      config,
     };
   },
 };

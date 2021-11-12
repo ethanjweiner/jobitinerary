@@ -69,23 +69,22 @@
 
 <script lang="ts">
 import {
+  IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
-  IonCardTitle,
+  IonCardHeader,
   IonCardSubtitle,
-  IonButtons,
-  IonButton,
+  IonCardTitle,
   IonIcon,
   IonModal,
   IonToolbar,
-  IonCardHeader,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
+import { calendar,cart, hammer, time, trashOutline } from "ionicons/icons";
 
-import { trashOutline, hammer, cart, time, calendar } from "ionicons/icons";
 import VisitModal from "@/components/modals/VisitModal.vue";
-
-import { idToName, formatTime } from "@/helpers";
+import { formatTime,idToName } from "@/helpers";
 
 export default {
   name: "Visit Item",

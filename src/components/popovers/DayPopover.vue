@@ -50,19 +50,20 @@
 </template>
 
 <script lang="ts">
-import { trash, calendarNumberOutline, copyOutline } from "ionicons/icons";
 import {
-  IonList,
-  IonItem,
-  IonText,
-  IonIcon,
-  IonNote,
   IonDatetime,
+  IonIcon,
+  IonItem,
   IonLabel,
+  IonList,
+  IonNote,
   IonSelect,
   IonSelectOption,
+  IonText,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
+import { calendarNumberOutline, copyOutline,trash } from "ionicons/icons";
+
 import store from "@/store";
 import { Employee } from "@/types/users";
 export default {

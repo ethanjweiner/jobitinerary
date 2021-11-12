@@ -41,7 +41,7 @@
             <ion-item>
               <ion-label position="stacked">Notes</ion-label>
               <ion-textarea
-                :debounce="store.DEBOUNCE_AMOUNT"
+                :debounce="config.constants.DEBOUNCE_AMOUNT"
                 placeholder="Notes on this day"
                 v-model="state.day.data.notes"
                 @ionInput="$emit('update:modelValue', state.day)"
@@ -59,20 +59,21 @@
 import {
   IonCard,
   IonCardContent,
-  IonItem,
-  IonTextarea,
-  IonChip,
-  IonLabel,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
+  IonCol,
+  IonGrid,
+  IonItem,
+  IonLabel,
+  IonRow,
+  IonTextarea,
 } from "@ionic/vue";
-
 import { computed, reactive } from "@vue/reactivity";
-import store from "@/store";
+
+import config from "@/config/config";
 import { idToName } from "@/helpers";
+import store from "@/store";
 import { Visit } from "@/types/units";
 
 export default {
@@ -119,6 +120,7 @@ export default {
       workTypes,
       employees,
       idToName,
+      config,
     };
   },
   components: {

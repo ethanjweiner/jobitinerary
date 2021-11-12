@@ -61,28 +61,28 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
   IonBackButton,
   IonButton,
-  IonNote,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
   IonInput,
   IonItem,
+  IonNote,
+  IonPage,
+  IonRow,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-
-import router from "@/router";
-import store from "@/store";
-import UserSelect from "@/components/selects/UserSelect.vue";
 import { reactive } from "@vue/reactivity";
+
+import UserSelect from "@/components/selects/UserSelect.vue";
 import { createJob } from "@/db";
 import { nameToID } from "@/helpers";
+import router from "@/router";
+import store from "@/store";
 
 export default {
   name: "Select Date",

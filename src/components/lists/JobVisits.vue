@@ -18,17 +18,18 @@
 </template>
 
 <script lang="ts">
-import { add } from "ionicons/icons";
 import { reactive, ref } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
+import { add } from "ionicons/icons";
+
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
+import List from "@/components/lists/List.vue";
+import { createVisit } from "@/db";
 import router from "@/router";
-import { Visit, VisitInterface } from "@/types/units";
 import { Splitter } from "@/types/auxiliary";
+import { Visit, VisitInterface } from "@/types/units";
 
 import VisitItem from "./items/VisitItem.vue";
-import { createVisit } from "@/db";
-import List from "@/components/lists/List.vue";
-import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 
 export default defineComponent({
   name: "Job Visits",

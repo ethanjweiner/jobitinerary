@@ -71,24 +71,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from "vue";
-
 import {
-  IonItem,
-  IonSelect,
-  IonSelectOption,
-  IonIcon,
-  IonFabButton,
   IonButton,
   IonButtons,
-  IonModal,
+  IonFabButton,
+  IonIcon,
+  IonItem,
   IonList,
+  IonModal,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/vue";
-
-import { cartOutline, hammerOutline, add } from "ionicons/icons";
+import { add,cartOutline, hammerOutline } from "ionicons/icons";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 
 import NewUserModal from "@/components/modals/NewUserModal.vue";
-
 import { capitalize, idToName } from "@/helpers";
 import store from "@/store";
 

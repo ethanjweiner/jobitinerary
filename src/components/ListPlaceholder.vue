@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
+import { IonCard, IonCardContent,IonCol, IonGrid, IonRow } from "@ionic/vue";
 
 export default {
   name: "List Placeholder",

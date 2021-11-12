@@ -1,7 +1,9 @@
 import { reactive } from "vue";
-import { Company, Employee, Customer } from "../types/users";
-import { companiesCollection, employeesCollection } from "../main";
+
 import { initializeUserRouting } from "@/helpers";
+
+import { companiesCollection, employeesCollection } from "../main";
+import { Company, Customer,Employee } from "../types/users";
 
 // GLOBAL STATE
 
@@ -19,9 +21,6 @@ const store = {
     errorMessage: "",
     companyID: "",
   }),
-
-  DEBOUNCE_AMOUNT: 600,
-  PUSH_QUANTITY: 10,
 
   async setUser(user: Company | Employee | Customer | null) {
     this.state.user = user;

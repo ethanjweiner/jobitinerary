@@ -43,22 +43,22 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, ref } from "@vue/reactivity";
-
 import {
-  IonRadioGroup,
-  IonRadio,
+  IonCol,
+  IonGrid,
   IonItem,
   IonLabel,
-  IonGrid,
+  IonRadio,
+  IonRadioGroup,
   IonRow,
-  IonCol,
 } from "@ionic/vue";
-
-import InfiniteList from "@/components/lists/InfiniteList.vue";
-import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
-import { CollectionRef, Query } from "@/types/auxiliary";
+import { computed, reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
+
+import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
+import InfiniteList from "@/components/lists/InfiniteList.vue";
+import { CollectionRef, Query } from "@/types/auxiliary";
+
 import ExpenseItemInfinite from "./items/ExpenseItemInfinite.vue";
 
 export default {

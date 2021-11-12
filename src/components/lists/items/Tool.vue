@@ -14,7 +14,7 @@
         placeholder="Enter tool"
         v-model="state.tool.name"
         @ionInput="$emit('update:modelValue', state.tool)"
-        :debounce="store.DEBOUNCE_AMOUNT"
+        :debounce="config.constants.DEBOUNCE_AMOUNT"
       ></ion-input>
       <ion-buttons slot="end">
         <ion-note v-if="state.tool.returned">
@@ -32,20 +32,22 @@
 
 <script lang="ts">
 import {
-  IonItem,
-  IonButtons,
   IonButton,
+  IonButtons,
   IonIcon,
   IonInput,
-  IonReorder,
-  IonItemSliding,
-  IonItemOptions,
+  IonItem,
   IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonNote,
+  IonReorder,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
+import { checkmark,trashOutline } from "ionicons/icons";
+
+import config from "@/config/config";
 import store from "@/store";
-import { trashOutline, checkmark } from "ionicons/icons";
 
 export default {
   name: "Tool",
@@ -81,6 +83,7 @@ export default {
       toggleReturned,
       trashOutline,
       checkmark,
+      config,
     };
   },
 };

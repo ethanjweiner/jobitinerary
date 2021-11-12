@@ -55,41 +55,38 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonIcon,
-  IonButtons,
-  IonPopover,
-  IonButton,
   IonBackButton,
+  IonButton,
+  IonButtons,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonPopover,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-import { ref, watch } from "vue";
 import { reactive } from "@vue/reactivity";
-
-import store from "@/store";
-import router from "@/router";
-
-import { Expense, EmployeeDay, Visit } from "@/types/units";
-import { SectionsType } from "@/types/auxiliary";
-
-import Sections from "@/components/Sections.vue";
-import DayMain from "@/components/forms/DayMain.vue";
-import DayVisits from "@/components/lists/DayVisits.vue";
-import Expenses from "@/components/lists/Expenses.vue";
-
 import {
-  pricetagsOutline,
   documentTextOutline,
   ellipsisVertical,
   homeOutline,
+  pricetagsOutline,
 } from "ionicons/icons";
+import { ref, watch } from "vue";
+
+import DayMain from "@/components/forms/DayMain.vue";
+import DayVisits from "@/components/lists/DayVisits.vue";
+import Expenses from "@/components/lists/Expenses.vue";
 import DayPopover from "@/components/popovers/DayPopover.vue";
-import { retrieveVisitsOnDate, idToName, nameToID } from "@/helpers";
-import { companiesCollection } from "@/main";
+import Sections from "@/components/Sections.vue";
 import { copyVisit } from "@/db";
+import { idToName, nameToID,retrieveVisitsOnDate } from "@/helpers";
+import { companiesCollection } from "@/main";
+import router from "@/router";
+import store from "@/store";
+import { SectionsType } from "@/types/auxiliary";
+import { EmployeeDay, Expense, Visit } from "@/types/units";
 
 interface State {
   day: EmployeeDay | null;

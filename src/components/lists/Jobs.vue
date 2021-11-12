@@ -30,14 +30,14 @@
 
 <script lang="ts">
 import { reactive, ref } from "vue";
-import router from "@/router";
 
-import { JobInterface } from "@/types/units";
-import { Splitter } from "@/types/auxiliary";
-
-import JobItem from "./items/JobItem.vue";
-import InfiniteList from "./InfiniteList.vue";
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
+import router from "@/router";
+import { Splitter } from "@/types/auxiliary";
+import { JobInterface } from "@/types/units";
+
+import InfiniteList from "./InfiniteList.vue";
+import JobItem from "./items/JobItem.vue";
 
 export default {
   name: "Jobs",

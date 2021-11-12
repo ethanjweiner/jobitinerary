@@ -69,30 +69,29 @@
 
 <script lang="ts">
 import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonItem,
-  IonLabel,
-  IonRadioGroup,
-  IonRadio,
-  IonIcon,
-  IonDatetime,
-  IonToggle,
   IonCard,
   IonCardContent,
+  IonCol,
+  IonDatetime,
+  IonGrid,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
+  IonToggle,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { timeOutline } from "ionicons/icons";
 
+import { nameToID } from "@/helpers";
+import { companiesCollection } from "@/main";
 import store from "@/store";
-
+import { CollectionRef, Query } from "@/types/auxiliary";
 import { Employee } from "@/types/users";
 
 import CurrencyInput from "./inputs/CurrencyInput.vue";
-import { companiesCollection } from "@/main";
-import { nameToID } from "@/helpers";
-import { CollectionRef, Query } from "@/types/auxiliary";
 import PaymentData from "./PaymentData.vue";
 
 interface State {

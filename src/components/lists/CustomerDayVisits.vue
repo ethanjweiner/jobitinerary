@@ -18,6 +18,19 @@
                 Visit by {{ idToName(visit.data.employeeID) }}
               </ion-text>
             </ion-title>
+            <ion-note
+              style="padding-left: 20px;"
+              color="light"
+              v-if="visit.data.time.hours"
+            >
+              <ion-icon :icon="icons.timeOutline"></ion-icon>
+              {{ visit.data.time.hours }} Hours
+              <span v-if="visit.data.time.start && visit.data.time.end">
+                ({{ formatTime(visit.data.time.start) }}-{{
+                  formatTime(visit.data.time.end)
+                }})
+              </span>
+            </ion-note>
             <ion-buttons slot="end">
               <ion-button @click="deleteVisit(visit)">
                 <ion-icon :icon="icons.trashOutline"></ion-icon>
@@ -40,30 +53,33 @@
 
 <script lang="ts">
 import {
-  IonGrid,
-  IonRow,
-  IonCol,
+  IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
-  IonButton,
+  IonCol,
+  IonGrid,
   IonIcon,
+  IonNote,
+  IonRow,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-import VisitInline from "@/components/units/Visit.vue";
 import { reactive } from "@vue/reactivity";
-import { Visit } from "@/types/units";
-import { createVisit } from "@/db";
-import { idToName } from "@/helpers";
+import { timeOutline, trashOutline } from "ionicons/icons";
 
-import { trashOutline } from "ionicons/icons";
+import VisitInline from "@/components/units/Visit.vue";
+import { createVisit } from "@/db";
+import { formatTime,idToName } from "@/helpers";
+import { Visit } from "@/types/units";
+
 import SearchToolbar from "../inputs/SearchToolbar.vue";
 
 export default {
   name: "Customer Day Visits",
   props: {
+    userID: String,
     modelValue: Array,
   },
   emits: ["update:modelValue"],
@@ -90,7 +106,14 @@ export default {
       emit("update:modelValue", state.visits);
     };
 
-    return { state, addVisit, deleteVisit, idToName, icons: { trashOutline } };
+    return {
+      state,
+      formatTime,
+      addVisit,
+      deleteVisit,
+      idToName,
+      icons: { trashOutline, timeOutline },
+    };
   },
   components: {
     VisitInline,
@@ -106,6 +129,7 @@ export default {
     IonToolbar,
     IonButtons,
     IonText,
+    IonNote,
   },
 };
 </script>

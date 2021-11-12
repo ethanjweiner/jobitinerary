@@ -22,27 +22,25 @@
 
 <script lang="ts">
 import { computed, reactive, ref } from "@vue/reactivity";
-
+import { watch } from "@vue/runtime-core";
 import {
   calendarNumberOutline,
-  personOutline,
   cashOutline,
+  personOutline,
   pricetagsOutline,
 } from "ionicons/icons";
 
+import EmployeeForm from "@/components/forms/EmployeeForm.vue";
+import EmployeeDays from "@/components/lists/EmployeeDays.vue";
+import Expenses from "@/components/lists/ExpensesInfinite.vue";
+import PaymentInfo from "@/components/PaymentInfo.vue";
+import { nameToID } from "@/helpers";
+import { companiesCollection } from "@/main";
 import store from "@/store";
-
 import { CollectionRef, Query, SectionsType } from "@/types/auxiliary";
 import { Company, Employee } from "@/types/users";
-import Sections from "../Sections.vue";
 
-import Expenses from "@/components/lists/ExpensesInfinite.vue";
-import EmployeeDays from "@/components/lists/EmployeeDays.vue";
-import PaymentInfo from "@/components/PaymentInfo.vue";
-import EmployeeForm from "@/components/forms/EmployeeForm.vue";
-import { companiesCollection } from "@/main";
-import { watch } from "@vue/runtime-core";
-import { nameToID } from "@/helpers";
+import Sections from "../Sections.vue";
 
 interface State {
   employee: Employee | undefined;

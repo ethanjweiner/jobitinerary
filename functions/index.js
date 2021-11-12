@@ -116,7 +116,6 @@ const addVisitToCustomerDay = async (date, companyID, customerID, visitID) => {
 // Check for conditions that indicate that no work was, or is being performed on that day (i.e. that the day shouldn't be searchable)
 const employeeDayIsEmpty = (dayDoc) => {
   const data = dayDoc.data().data;
-  functions.logger.log(data);
 
   return (
     data.visitIDs.length <= 1 &&

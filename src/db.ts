@@ -1,26 +1,26 @@
+import { reactive } from "@vue/reactivity";
+
 import { generateUUID, nameToID } from "./helpers";
 import store from "./store";
 import {
   CollectionRef,
   DocSnapshot,
-  QuerySnapshot,
   Query,
+  QuerySnapshot,
 } from "./types/auxiliary";
-import { Company, Employee } from "./types/users";
 import {
-  newVisitInterface,
-  Job,
-  newJobInterface,
-  Visit,
-  EmployeeDay,
-  newEmployeeDayInterface,
-  Expense,
-  newExpenseInterface,
   CustomerDay,
+  EmployeeDay,
+  Expense,
+  Job,
   newCustomerDayInterface,
+  newEmployeeDayInterface,
+  newExpenseInterface,
+  newJobInterface,
+  newVisitInterface,
+  Visit,
 } from "./types/units";
-
-import { reactive } from "@vue/reactivity";
+import { Company, Employee } from "./types/users";
 
 export class InfiniteList {
   query: Query;

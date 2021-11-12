@@ -21,7 +21,7 @@
                     type="email"
                     disabled
                     placeholder="email"
-                    :debounce="store.DEBOUNCE_AMOUNT"
+                    :debounce="config.constants.DEBOUNCE_AMOUNT"
                     v-model="state.customer.data.email"
                     @ionInput="$emit('update:modelValue', state.customer)"
                   ></ion-input>
@@ -36,7 +36,7 @@
                     inputmode="tel"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     placeholder="123-123-1234"
-                    :debounce="store.DEBOUNCE_AMOUNT"
+                    :debounce="config.constants.DEBOUNCE_AMOUNT"
                     @ionInput="$emit('update:modelValue', state.customer)"
                     v-model="state.customer.data.phone"
                   ></ion-input>
@@ -64,7 +64,7 @@
                     v-if="state.showTextAreas"
                     auto-grow
                     placeholder="Notes on customer"
-                    :debounce="store.DEBOUNCE_AMOUNT"
+                    :debounce="config.constants.DEBOUNCE_AMOUNT"
                     @ionInput="$emit('update:modelValue', state.customer)"
                     v-model="state.customer.data.customerNotes"
                   ></ion-textarea>
@@ -75,7 +75,7 @@
                     v-if="state.showTextAreas"
                     auto-grow
                     placeholder="Notes on property"
-                    :debounce="store.DEBOUNCE_AMOUNT"
+                    :debounce="config.constants.DEBOUNCE_AMOUNT"
                     @ionInput="$emit('update:modelValue', state.customer)"
                     v-model="state.customer.data.propertyNotes"
                   ></ion-textarea>
@@ -86,7 +86,7 @@
         </ion-col>
         <ion-col size="12">
           <ion-card>
-            <ion-card-header>
+            <ion-card-header style="padding-bottom: 0;">
               <ion-card-title
                 >PROPERTY IMAGES
                 <AddButton @click="addImage" mode="dark" />
@@ -107,30 +107,31 @@
 
 <script lang="ts">
 import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonGrid,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonTextarea,
-  IonIcon,
-  IonCard,
-  IonCardContent,
-  IonCardTitle,
-  IonCardHeader,
-  IonCardSubtitle,
   IonList,
+  IonRow,
+  IonTextarea,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
+import { callOutline,mailOutline } from "ionicons/icons";
 
+import Address from "@/components/Address.vue";
+import AddButton from "@/components/buttons/AddButton.vue";
+import config from "@/config/config";
+import { showTextAreas } from "@/helpers";
 import store from "@/store";
-
-import { mailOutline, callOutline } from "ionicons/icons";
 import { newImage } from "@/types/auxiliary";
 
-import AddButton from "@/components/buttons/AddButton.vue";
-import Address from "@/components/Address.vue";
 import Images from "../lists/Images.vue";
 
 export default {
@@ -145,7 +146,7 @@ export default {
       showTextAreas: false,
     });
 
-    setTimeout(() => (state.showTextAreas = true), 250);
+    showTextAreas(state);
 
     const addImage = () => {
       state.customer.data.propertyImages.unshift(newImage(Date.now()));
@@ -166,6 +167,7 @@ export default {
         mailOutline,
         callOutline,
       },
+      config,
     };
   },
   components: {
@@ -193,9 +195,5 @@ export default {
 <style scoped>
 .address-input-item {
   width: 100%;
-}
-#suggestions-card {
-  width: calc(100% - 120px);
-  margin-top: 0;
 }
 </style>

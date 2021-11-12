@@ -23,18 +23,18 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
+  IonBackButton,
   IonButton,
   IonButtons,
-  IonBackButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
 
 import { signOut } from "@/authentication";

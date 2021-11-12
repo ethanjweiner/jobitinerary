@@ -53,25 +53,23 @@
 
 <script lang="ts">
 import {
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardSubtitle,
   IonIcon,
-  IonToolbar,
-  IonTitle,
   IonNote,
+  IonTitle,
   IonToggle,
-  IonButtons,
+  IonToolbar,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import router from "@/router";
-
-import { companiesCollection } from "@/main";
-import { EmployeeDayInterface, Visit } from "@/types/units";
+import { cart,checkmark, hammer, time } from "ionicons/icons";
 
 import { idToName, retrieveVisitsOnDate } from "@/helpers";
-
-import { hammer, time, checkmark, cart } from "ionicons/icons";
+import { companiesCollection } from "@/main";
+import router from "@/router";
+import { EmployeeDayInterface, Visit } from "@/types/units";
 
 interface State {
   day: EmployeeDayInterface;

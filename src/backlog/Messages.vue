@@ -38,22 +38,21 @@
 
 <script lang="ts">
 import {
+  IonBadge,
+  IonCardContent,
+  IonCardHeader,
+  IonContent,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonList,
-  IonContent,
-  IonCardHeader,
-  IonBadge,
   IonText,
-  IonCardContent,
 } from "@ionic/vue";
+import { computed } from "vue";
+
+import { auth } from "@/main";
+import { Message,Thread } from "@/types/units";
 
 import MessageItem from "./MessageItem.vue";
-
-import { Thread, Message } from "@/types/units";
-
-import { computed } from "vue";
-import { auth } from "@/main";
 
 export default {
   name: "Messages",

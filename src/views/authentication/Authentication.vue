@@ -43,21 +43,21 @@
 
 <script lang="ts">
 import {
+  IonCol,
   IonContent,
+  IonGrid,
   IonLabel,
+  IonPage,
+  IonRow,
   IonSegment,
   IonSegmentButton,
-  IonPage,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonText,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 
-import { AuthenticationTitleText } from "@/types/auxiliary";
-import LogIn from "@/components/authentication/LogIn.vue";
 import CompanySignUp from "@/components/authentication/CompanySignUp.vue";
+import LogIn from "@/components/authentication/LogIn.vue";
+import { AuthenticationTitleText } from "@/types/auxiliary";
 
 export default defineComponent({
   name: "Authentication",

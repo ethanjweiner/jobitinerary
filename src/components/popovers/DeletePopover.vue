@@ -10,8 +10,8 @@
 </template>
 
 <script>
+import { IonIcon,IonItem, IonList, IonText } from "@ionic/vue";
 import { trash } from "ionicons/icons";
-import { IonList, IonItem, IonText, IonIcon } from "@ionic/vue";
 export default {
   name: "Delete Popover",
   components: { IonList, IonItem, IonText, IonIcon },

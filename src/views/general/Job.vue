@@ -46,39 +46,37 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonIcon,
-  IonButtons,
-  IonPopover,
-  IonButton,
   IonBackButton,
+  IonButton,
+  IonButtons,
+  IonHeader,
+  IonIcon,
   IonNote,
+  IonPage,
+  IonPopover,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
-import router from "@/router";
-
+import { watch } from "@vue/runtime-core";
 import {
-  documentTextOutline,
-  homeOutline,
   constructOutline,
+  documentTextOutline,
   ellipsisVertical,
+  homeOutline,
 } from "ionicons/icons";
 
-import { Job, Visit } from "@/types/units";
-import { SectionsType } from "@/types/auxiliary";
-
-import Sections from "@/components/Sections.vue";
 import JobMain from "@/components/forms/JobMain.vue";
 import JobVisits from "@/components/lists/JobVisits.vue";
 import DeletePopover from "@/components/popovers/DeletePopover.vue";
-import store from "@/store";
-import { watch } from "@vue/runtime-core";
-import { companiesCollection } from "@/main";
+import Sections from "@/components/Sections.vue";
 import { idToName } from "@/helpers";
+import { companiesCollection } from "@/main";
+import router from "@/router";
+import store from "@/store";
+import { SectionsType } from "@/types/auxiliary";
+import { Job, Visit } from "@/types/units";
 
 interface State {
   job: Job | null;

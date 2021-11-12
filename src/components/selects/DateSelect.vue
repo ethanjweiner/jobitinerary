@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts">
+import { IonDatetime,IonItem, IonLabel } from "@ionic/vue";
 import { ref } from "@vue/reactivity";
-import { IonItem, IonLabel, IonDatetime } from "@ionic/vue";
 import { watch } from "@vue/runtime-core";
 export default {
   name: "Date Select",
