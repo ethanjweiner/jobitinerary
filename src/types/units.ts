@@ -1,6 +1,12 @@
 // Units
 
-import { dateToString, dateToStrings, explode, hasKey } from "@/helpers";
+import {
+  dateToString,
+  dateToStrings,
+  explode,
+  hasKey,
+  idToName,
+} from "@/helpers";
 import { companiesCollection } from "@/main";
 
 import {
@@ -248,17 +254,25 @@ export class DBUnit<T> {
       } else return [];
     };
 
+    const generateKeywordsForID = (id: any) => {
+      if (id) {
+        return explode(idToName(id));
+      } else return [];
+    };
+
     const generateKeywordsForKey = (key: string): Array<string> => {
       if (hasKey(this.data, key)) {
         if (key.toLowerCase().includes("date"))
           return generateKeywordsForDate(this.data[key]);
+        else if (key == "customerID" || key == "employeeID")
+          return generateKeywordsForID(this.data[key]);
         else return explode(this.data[key]);
       }
       return [];
     };
 
     this.keywords = this.searchKeys
-      .map((key) => generateKeywordsForKey(key))
+      .map(generateKeywordsForKey)
       .reduce((keywords, list) => keywords.concat(list))
       .map((keyword) => keyword.toLowerCase().trim());
     this.keywords.unshift("");
