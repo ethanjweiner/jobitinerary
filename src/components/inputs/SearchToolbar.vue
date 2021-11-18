@@ -26,7 +26,7 @@
       :value="modelValue"
     ></ion-searchbar>
 
-    <ion-buttons slot="end" v-if="modalClose">
+    <ion-buttons slot="end" v-if="modalClose" style="margin-left: 10px;">
       <ion-button @click="$emit('close')">
         <ion-icon :icon="icons.close"></ion-icon>
       </ion-button>
