@@ -76,12 +76,12 @@ import {
 import { ref, watch } from "vue";
 
 import DayMain from "@/components/forms/DayMain.vue";
-import DayVisits from "@/components/lists/DayVisits.vue";
+import DayVisits from "@/components/lists/EmployeeDayVisits.vue";
 import Expenses from "@/components/lists/Expenses.vue";
 import DayPopover from "@/components/popovers/DayPopover.vue";
 import Sections from "@/components/Sections.vue";
 import { copyVisit } from "@/db";
-import { idToName, nameToID,retrieveVisitsOnDate } from "@/helpers";
+import { idToName, nameToID, retrieveVisitsOnDate } from "@/helpers";
 import { companiesCollection } from "@/main";
 import router from "@/router";
 import store from "@/store";

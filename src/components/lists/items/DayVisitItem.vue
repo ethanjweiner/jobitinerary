@@ -1,15 +1,18 @@
 <template>
-  <div>
-    <ion-item color="light" @click="state.modalIsOpen = true">
+  <ion-card class="ion-margin">
+    <ion-item lines="inset" color="light" @click="state.modalIsOpen = true">
       <ion-buttons slot="start" @click.stop>
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
-      <div style="width: 100%; height: 50%;">
+      <div style="width: 100%;">
         <ion-label v-if="state.visit.data.customerID">
           <ion-icon :icon="icons.cart"></ion-icon>
           {{ idToName(state.visit.data.customerID) }}</ion-label
         >
         <ion-label v-else>Visit</ion-label>
+        <ion-note v-if="state.visit.data.plannedStart">
+          Planned Start: {{ formatTime(state.visit.data.plannedStart) }}
+        </ion-note>
       </div>
 
       <div
@@ -61,13 +64,14 @@
         "
       />
     </ion-modal>
-  </div>
+  </ion-card>
 </template>
 
 <script lang="ts">
 import {
   IonButton,
   IonButtons,
+  IonCard,
   IonIcon,
   IonItem,
   IonLabel,
@@ -77,7 +81,7 @@ import {
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
-import { cart,trashOutline } from "ionicons/icons";
+import { cart, trashOutline } from "ionicons/icons";
 
 import VisitModal from "@/components/modals/VisitModal.vue";
 import TimeLog from "@/components/TimeLog.vue";
@@ -119,6 +123,7 @@ export default {
     IonNote,
     IonModal,
     VisitModal,
+    IonCard,
   },
 };
 </script>

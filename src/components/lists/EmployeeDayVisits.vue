@@ -2,24 +2,29 @@
   <SearchToolbar :addAction="addVisit" title="Visits" disableSearch />
   <ion-grid>
     <ion-row v-if="state.visits" class="ion-justify-content-around">
-      <ion-col size="12" size-lg="8">
-        <ion-card>
-          <ion-reorder-group
-            @ionItemReorder="reorderVisits($event)"
-            disabled="false"
-          >
-            <DayVisitItem
-              v-for="(visit, index) in state.visits"
-              :key="visit.id"
-              v-model="state.visits[index]"
-              @deleteVisit="deleteVisit(visit)"
-            />
-          </ion-reorder-group>
-          <ion-item button color="tertiary" @click="addVisit">
-            <ion-icon :icon="add"></ion-icon>
-            <ion-label>Add Visit</ion-label>
-          </ion-item>
-        </ion-card>
+      <ion-col size="12" size-lg="8" size-xl="6">
+        <ion-reorder-group
+          @ionItemReorder="reorderVisits($event)"
+          disabled="false"
+        >
+          <DayVisitItem
+            v-for="(visit, index) in state.visits"
+            :key="visit.id"
+            v-model="state.visits[index]"
+            @deleteVisit="deleteVisit(visit)"
+          />
+        </ion-reorder-group>
+        <ion-button
+          class="ion-margin"
+          color="tertiary"
+          @click="addVisit"
+          fill="outline"
+          expand="block"
+          size="lg"
+        >
+          <ion-icon :icon="add"></ion-icon>
+          <ion-label>Add Visit</ion-label>
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -27,11 +32,10 @@
 
 <script lang="ts">
 import {
-  IonCard,
+  IonButton,
   IonCol,
   IonGrid,
   IonIcon,
-  IonItem,
   IonLabel,
   IonReorderGroup,
   IonRow,
@@ -102,13 +106,12 @@ export default {
     IonGrid,
     IonRow,
     IonCol,
-    IonCard,
     IonReorderGroup,
     IonIcon,
-    IonItem,
     IonLabel,
     DayVisitItem,
     SearchToolbar,
+    IonButton,
   },
 };
 </script>
