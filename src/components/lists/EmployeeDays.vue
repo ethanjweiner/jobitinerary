@@ -38,7 +38,7 @@
   <InfiniteList
     :key="key"
     :splitters="splitters"
-    :pushQuantity="10"
+    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="daysRef"
     orderByParam="date"
     :searchFilter="searchDate"
@@ -62,6 +62,7 @@ import {
 } from "@ionic/vue";
 import { computed, reactive, ref, watch } from "vue";
 
+import config from "@/config/config";
 import router from "@/router";
 import { CollectionRef, Query, Splitter } from "@/types/auxiliary";
 import { EmployeeDayInterface } from "@/types/units";
@@ -145,6 +146,7 @@ export default {
       splitters,
       sizes,
       daysRef,
+      config,
     };
   },
 };

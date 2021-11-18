@@ -30,7 +30,7 @@
   </SearchToolbar>
   <InfiniteList
     :key="key"
-    :pushQuantity="10"
+    :pushQuantity="config.constants.PUSH_QUANTITY"
     :searchFilter="searchText"
     :dbRef="expensesRef"
     orderByParam="date"
@@ -57,6 +57,7 @@ import { watch } from "@vue/runtime-core";
 
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 import InfiniteList from "@/components/lists/InfiniteList.vue";
+import config from "@/config/config";
 import { CollectionRef, Query } from "@/types/auxiliary";
 
 import ExpenseItemInfinite from "./items/ExpenseItemInfinite.vue";
@@ -92,6 +93,7 @@ export default {
       key,
       state,
       expensesRef,
+      config,
     };
   },
   components: {

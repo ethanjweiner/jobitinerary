@@ -4,7 +4,7 @@
   <InfiniteList
     :key="searchText"
     :splitters="splitters"
-    :pushQuantity="10"
+    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="dbRef"
     orderByParam="startDate"
     :searchFilter="searchText"
@@ -32,6 +32,7 @@
 import { reactive, ref } from "vue";
 
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
+import config from "@/config/config";
 import router from "@/router";
 import { Splitter } from "@/types/auxiliary";
 import { JobInterface } from "@/types/units";
@@ -95,6 +96,7 @@ export default {
       createJob,
       searchText,
       router,
+      config,
     };
   },
   components: {

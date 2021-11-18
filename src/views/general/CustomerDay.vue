@@ -38,7 +38,7 @@
         <DayMain v-model="state.day" :visits="state.visits" />
       </template>
       <template v-slot:visits>
-        <DayVisits v-model="state.visits" :userID="userID" />
+        <DayVisits v-model="state.visits" :userID="userID" :date="date" />
       </template>
     </Sections>
   </ion-page>

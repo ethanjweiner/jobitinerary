@@ -71,7 +71,7 @@ import { timeOutline, trashOutline } from "ionicons/icons";
 
 import VisitInline from "@/components/units/Visit.vue";
 import { createVisit } from "@/db";
-import { formatTime,idToName } from "@/helpers";
+import { formatTime, idToName } from "@/helpers";
 import { Visit } from "@/types/units";
 
 import SearchToolbar from "../inputs/SearchToolbar.vue";
@@ -81,6 +81,7 @@ export default {
   props: {
     userID: String,
     modelValue: Array,
+    date: String,
   },
   emits: ["update:modelValue"],
   setup(props: any, { emit }: { emit: any }) {

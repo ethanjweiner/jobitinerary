@@ -16,7 +16,7 @@
         :splitters="splitters"
         :searchFilter="searchText"
         :dbRef="dbRef"
-        :pushQuantity="10"
+        :pushQuantity="config.constants.PUSH_QUANTITY"
         orderByParam="startDate"
       >
         <template v-slot:item="itemProps">
@@ -40,6 +40,7 @@ import { defineComponent, ref } from "vue";
 
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 import JobItem from "@/components/lists/items/JobItem.vue";
+import config from "@/config/config";
 import { Splitter } from "@/types/auxiliary";
 import { JobInterface } from "@/types/units";
 
@@ -85,6 +86,7 @@ export default defineComponent({
       searchText,
       splitters,
       icons: { close },
+      config,
     };
   },
 });

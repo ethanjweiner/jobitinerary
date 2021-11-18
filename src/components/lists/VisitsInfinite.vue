@@ -3,7 +3,7 @@
   <InfiniteList
     :key="searchText"
     :splitters="splitters"
-    :pushQuantity="10"
+    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="dbRef"
     orderByParam="date"
     :searchFilter="searchText"
@@ -27,6 +27,7 @@
 <script lang="ts">
 import { ref } from "vue";
 
+import config from "@/config/config";
 import { createVisit } from "@/db";
 import router from "@/router";
 import { Splitter } from "@/types/auxiliary";
@@ -81,6 +82,7 @@ export default {
       splitters,
       newVisit,
       sizes,
+      config,
     };
   },
 };

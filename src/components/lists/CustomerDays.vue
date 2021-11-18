@@ -9,7 +9,7 @@
   <InfiniteList
     :key="searchDate"
     :splitters="splitters"
-    :pushQuantity="10"
+    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="dbRef"
     orderByParam="date"
     :searchFilter="searchDate"
@@ -23,6 +23,7 @@
 <script lang="ts">
 import { ref } from "vue";
 
+import config from "@/config/config";
 import router from "@/router";
 import { Splitter } from "@/types/auxiliary";
 import { CustomerDayInterface } from "@/types/units";
@@ -70,6 +71,7 @@ export default {
       createDay,
       searchDate,
       splitters,
+      config,
     };
   },
 };
