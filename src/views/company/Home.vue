@@ -22,7 +22,6 @@
         <Visits :dbRef="visitsRef" />
       </ion-content>
     </ion-split-pane>
-    <CreateButton />
   </ion-page>
 </template>
 
@@ -37,7 +36,6 @@ import {
   IonToolbar,
 } from "@ionic/vue";
 
-import CreateButton from "@/components/buttons/CreateButton.vue";
 import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import Jobs from "@/components/lists/Jobs.vue";
 import Visits from "@/components/lists/VisitsInfinite.vue";
@@ -60,7 +58,6 @@ export default {
     };
   },
   components: {
-    CreateButton,
     IonSplitPane,
     IonContent,
     Visits,

@@ -33,6 +33,7 @@ input {
   color: var(--ion-color-primary);
   border-radius: 10px;
   text-align: center;
+  max-width: 125px;
 }
 input:disabled {
   background: rgb(240, 240, 240);

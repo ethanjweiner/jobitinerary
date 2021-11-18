@@ -8,8 +8,11 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ion-item>
-                <ion-label position="stacked">Start Location</ion-label>
+              <ion-item lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.locationOutline"></ion-icon>
+                  Start Location</ion-label
+                >
                 <ion-input
                   type="text"
                   v-model="state.day.data.startLocation"
@@ -18,8 +21,11 @@
                   placeholder="Where's the meet-up spot?"
                 />
               </ion-item>
-              <ion-item>
-                <ion-label position="stacked">Planned Start</ion-label>
+              <ion-item lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.timerOutline"></ion-icon>
+                  Planned Start</ion-label
+                >
                 <ion-datetime
                   @ionInput="$emit('update:modelValue', state.day)"
                   v-model="state.day.data.plannedStart"
@@ -27,8 +33,11 @@
                   picker-format="h:mm A"
                 ></ion-datetime>
               </ion-item>
-              <ion-item>
-                <ion-label position="stacked">Planned End</ion-label>
+              <ion-item lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.timerOutline"></ion-icon>
+                  Planned End</ion-label
+                >
                 <ion-datetime
                   @ionInput="$emit('update:modelValue', state.day)"
                   v-model="state.day.data.plannedEnd"
@@ -38,7 +47,10 @@
               </ion-item>
 
               <ion-item lines="none">
-                <ion-label>Hourly Rate</ion-label>
+                <ion-label position="start">
+                  <ion-icon :icon="icons.timeOutline"></ion-icon>
+                  Hourly Rate</ion-label
+                >
                 <CurrencyInput
                   @ionInput="$emit('update:modelValue', state.day)"
                   v-model="state.day.data.hourlyRate"
@@ -47,14 +59,21 @@
                 />
               </ion-item>
               <ion-item>
-                <ion-note>{{ paymentText }}</ion-note>
+                <ion-note style="font-size: 12px;">
+                  If no hourly rate is specified, the default hourly rate will
+                  be assumed.
+                </ion-note>
               </ion-item>
 
               <ion-item>
-                <ion-label>Mark Day as Paid</ion-label>
+                <ion-label>
+                  <ion-icon :icon="icons.cashOutline"></ion-icon>
+                  Mark Day as Paid</ion-label
+                >
                 <ion-buttons slot="end">
                   <ion-note style="margin: auto;" v-if="state.day.data.paid"
-                    ><ion-icon :icon="checkmark"></ion-icon> Paid</ion-note
+                    ><ion-icon :icon="icons.checkmark"></ion-icon>
+                    Paid</ion-note
                   >
                   <ion-note style="margin: auto;" v-else>Unpaid</ion-note>
                   <ion-toggle
@@ -64,8 +83,11 @@
                   ></ion-toggle>
                 </ion-buttons>
               </ion-item>
-              <ion-item>
-                <ion-label position="stacked">Notes on the Day</ion-label>
+              <ion-item lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.documentTextOutline"></ion-icon>
+                  Notes on the Day</ion-label
+                >
                 <ion-textarea
                   auto-grow
                   :debounce="config.constants.DEBOUNCE_AMOUNT"
@@ -117,8 +139,15 @@ import {
   IonTextarea,
   IonToggle,
 } from "@ionic/vue";
-import { computed, reactive } from "@vue/reactivity";
-import { checkmark } from "ionicons/icons";
+import { reactive } from "@vue/reactivity";
+import {
+  cashOutline,
+  checkmark,
+  documentTextOutline,
+  locationOutline,
+  timeOutline,
+  timerOutline,
+} from "ionicons/icons";
 
 import TimeLog from "@/components/TimeLog.vue";
 import config from "@/config/config";
@@ -137,19 +166,17 @@ export default {
       day: props.modelValue,
     });
 
-    const paymentText = computed(() => {
-      if (store.state.userType == "company")
-        return "If no hourly rate is specified, the default rate for this employee will be assumed.";
-      else if (store.state.userType == "employee")
-        return "If no hourly rate is specified, your default hourly rate will be assumed.";
-      else return "";
-    });
-
     return {
       store,
       state,
-      checkmark,
-      paymentText,
+      icons: {
+        cashOutline,
+        checkmark,
+        documentTextOutline,
+        locationOutline,
+        timeOutline,
+        timerOutline,
+      },
       config,
     };
   },

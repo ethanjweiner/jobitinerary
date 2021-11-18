@@ -30,7 +30,10 @@
     <ion-row color="light">
       <ion-col size="6" size-xl="4">
         <ion-item>
-          <ion-label position="stacked">Start Time</ion-label>
+          <ion-label position="stacked">
+            <ion-icon :icon="icons.timerOutline"></ion-icon>
+            Start Time</ion-label
+          >
           <ion-datetime
             v-model="state.time.start"
             display-format="h:mm A"
@@ -40,7 +43,10 @@
       </ion-col>
       <ion-col size="6" size-xl="4">
         <ion-item>
-          <ion-label position="stacked">End Time</ion-label>
+          <ion-label position="stacked">
+            <ion-icon :icon="icons.timerOutline"></ion-icon>
+            End Time</ion-label
+          >
           <ion-datetime
             v-model="state.time.end"
             display-format="h:mm A"
@@ -50,7 +56,10 @@
       </ion-col>
       <ion-col size="12" size-xl="4">
         <ion-item>
-          <ion-label position="stacked">Total Hours</ion-label>
+          <ion-label position="stacked">
+            <ion-icon :icon="icons.timeOutline"></ion-icon>
+            Total Hours</ion-label
+          >
           <ion-input
             type="number"
             inputmode="numeric"
@@ -79,7 +88,12 @@ import {
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
-import { playOutline, stopOutline } from "ionicons/icons";
+import {
+  playOutline,
+  stopOutline,
+  timeOutline,
+  timerOutline,
+} from "ionicons/icons";
 export default {
   name: "Timelog",
   props: {
@@ -120,7 +134,7 @@ export default {
     };
 
     const updateHours = (hoursInput: string) => {
-      if (hoursInput) state.time.hours = parseInt(hoursInput);
+      if (hoursInput) state.time.hours = parseFloat(hoursInput);
     };
 
     watch(state.time, (newTime) => emit("update:modelValue", newTime));
@@ -139,6 +153,8 @@ export default {
       icons: {
         playOutline,
         stopOutline,
+        timerOutline,
+        timeOutline,
       },
       mismatch,
       isTicking,
@@ -169,6 +185,10 @@ ion-label {
   margin-left: 0;
 }
 ion-grid {
+  box-shadow: 0px 0px 3px grey inset;
+  border-radius: 15px;
+  margin: 10px;
+  background: var(--ion-color-light);
   --ion-padding: 7px;
 
   --ion-grid-padding-xs: 7px;
@@ -183,9 +203,12 @@ ion-grid {
   --ion-grid-column-padding-xl: 7px;
 }
 ion-item {
-  border-radius: 10px;
+  border: 1px solid rgb(219, 219, 219);
+
   height: 100%;
   background: white;
+}
+ion-item {
 }
 input {
   padding: 0 !important;

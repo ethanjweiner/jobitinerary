@@ -42,6 +42,7 @@
         <div slot="start">dfdf</div>
       </ion-tab-bar>
     </ion-tabs>
+    <CreateButton />
   </ion-page>
 </template>
 
@@ -60,6 +61,8 @@ import { onMounted, ref } from "@vue/runtime-core";
 import { cart, hammer, home, settings } from "ionicons/icons";
 import { useRoute } from "vue-router";
 
+import CreateButton from "@/components/buttons/CreateButton.vue";
+
 export default {
   name: "Tabs",
   components: {
@@ -71,6 +74,7 @@ export default {
     IonPage,
     IonRouterOutlet,
     IonTitle,
+    CreateButton,
   },
   setup() {
     const screenWidth = ref(0);

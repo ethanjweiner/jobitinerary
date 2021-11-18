@@ -48,7 +48,10 @@
       mode="light"
     />
     <ion-item>
-      <ion-label position="stacked">Planned Start</ion-label>
+      <ion-label position="stacked">
+        <ion-icon :icon="icons.timerOutline"></ion-icon>
+        Planned Start</ion-label
+      >
       <ion-datetime
         v-model="state.visit.data.plannedStart"
         display-format="h:mm A"
@@ -57,7 +60,10 @@
       ></ion-datetime>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Planned End</ion-label>
+      <ion-label position="stacked">
+        <ion-icon :icon="icons.timerOutline"></ion-icon>
+        Planned End</ion-label
+      >
       <ion-datetime
         v-model="state.visit.data.plannedEnd"
         display-format="h:mm A"
@@ -88,7 +94,10 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked">Type of Work</ion-label>
+      <ion-label position="stacked">
+        <ion-icon :icon="icons.optionsOutline"></ion-icon>
+        Type of Work
+      </ion-label>
       <ion-input
         type="text"
         v-model="state.visit.data.workType"
@@ -101,7 +110,10 @@
     <!-- Additional Notes -->
 
     <ion-item v-if="state.showTextAreas">
-      <ion-label position="stacked">Visit Notes</ion-label>
+      <ion-label position="stacked">
+        <ion-icon :icon="icons.documentTextOutline"></ion-icon>
+        Visit Notes</ion-label
+      >
       <ion-textarea
         auto-grow
         v-model="state.visit.data.notes"
@@ -143,7 +155,10 @@ import {
 import {
   calendarNumberOutline,
   calendarOutline,
+  documentTextOutline,
+  optionsOutline,
   timeOutline,
+  timerOutline,
   trashOutline,
 } from "ionicons/icons";
 import { computed, reactive, ref } from "vue";
@@ -273,6 +288,9 @@ export default {
         calendarOutline,
         trashOutline,
         timeOutline,
+        timerOutline,
+        optionsOutline,
+        documentTextOutline,
       },
       changeDate,
       jobsModalIsOpen,

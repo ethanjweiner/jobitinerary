@@ -5,7 +5,7 @@
     </ion-fab-button>
     <ion-fab-list side="end">
       <ion-fab-button
-        color="dark"
+        color="primary"
         @click="
           router.push({
             name: 'New Employee Day',
@@ -14,9 +14,9 @@
         "
         >Day</ion-fab-button
       >
-      <ion-fab-button color="dark" @click="newVisit">Visit</ion-fab-button>
+      <ion-fab-button color="primary" @click="newVisit">Visit</ion-fab-button>
       <ion-fab-button
-        color="dark"
+        color="primary"
         @click="router.push({ name: 'New Job', params: { customerID: 'new' } })"
         >Job</ion-fab-button
       >
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { IonFab, IonFabButton, IonFabList,IonIcon } from "@ionic/vue";
+import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/vue";
 import { add } from "ionicons/icons";
 
 import { createVisit } from "@/db";
@@ -60,5 +60,10 @@ ion-fab {
 ion-fab-button {
   margin-left: 10px;
   margin-bottom: 10px;
+}
+@media (max-width: 768px) {
+  ion-fab-button {
+    margin-bottom: 55px;
+  }
 }
 </style>

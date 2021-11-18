@@ -9,7 +9,7 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ion-item color="white">
+              <ion-item color="white" lines="inset">
                 <ion-label position="stacked">Job Name</ion-label>
                 <ion-input
                   type="text"
@@ -20,24 +20,35 @@
                   class="job-title"
                 ></ion-input>
               </ion-item>
-              <ion-item color="white">
-                <ion-label>Estimated Start</ion-label>
+              <ion-item color="white" lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.timeOutline"></ion-icon>
+                  Estimated Start</ion-label
+                >
                 <ion-datetime
+                  placeholder="MM/DD/YYYY"
                   @ionChange="changeStartDate($event)"
                   display-format="MM/DD/YYYY"
                   v-model="state.job.data.startDate"
                 ></ion-datetime>
               </ion-item>
-              <ion-item color="white">
-                <ion-label>Estimated End</ion-label>
+              <ion-item color="white" lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.timeOutline"></ion-icon>
+                  Estimated End</ion-label
+                >
                 <ion-datetime
+                  placeholder="MM/DD/YYYY"
                   @ionChange="changeEndDate($event)"
                   display-format="MM/DD/YYYY"
                   v-model="state.job.data.endDate"
                 ></ion-datetime>
               </ion-item>
-              <ion-item color="white">
-                <ion-label position="stacked">Job Description</ion-label>
+              <ion-item color="white" lines="inset">
+                <ion-label position="stacked">
+                  <ion-icon :icon="icons.documentTextOutline"></ion-icon>
+                  Job Description</ion-label
+                >
                 <ion-textarea
                   @ionInput="$emit('update:modelValue', state.job)"
                   :debounce="config.constants.DEBOUNCE_AMOUNT"
@@ -47,8 +58,8 @@
                   placeholder="Longer description for this job"
                 ></ion-textarea>
               </ion-item>
-              <ion-item color="white">
-                <ion-label>
+              <ion-item color="white" lines="inset">
+                <ion-label color="tertiary" style="font-weight: bold;">
                   Total Time Spent on this Job
                 </ion-label>
                 <ion-chip>
@@ -58,15 +69,17 @@
                 </ion-chip>
               </ion-item>
               <ion-item color="white" v-if="employeeHours.length">
-                <ion-label>
+                <ion-label color="tertiary" style="font-weight: bold;">
                   Time Spent per Employee
                 </ion-label>
                 <ion-chip
                   v-for="(employeeHour, index) in employeeHours"
                   :key="index"
                 >
-                  <ion-label style="margin: auto;"
-                    >{{ employeeHour.employeeID }}:
+                  <ion-label
+                    v-if="employeeHour.employeeID"
+                    style="margin: auto;"
+                    >{{ idToName(employeeHour.employeeID) }}:
                     {{ employeeHour.hours }} hours</ion-label
                   >
                 </ion-chip>
@@ -101,6 +114,7 @@ import {
   IonCol,
   IonDatetime,
   IonGrid,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -109,9 +123,15 @@ import {
   IonTextarea,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
+import {
+  calendarNumberOutline,
+  documentTextOutline,
+  timeOutline,
+} from "ionicons/icons";
 
 import Tasks from "@/components/lists/Tasks.vue";
 import config from "@/config/config";
+import { idToName } from "@/helpers";
 import store from "@/store";
 import { Visit } from "@/types/units";
 
@@ -136,18 +156,20 @@ export default {
 
     // Step 2: For each employee, determine the amount of hours
     const employeeHours = computed(() => {
-      return employeeIDs.map((employeeID) => {
-        return {
-          employeeID,
-          hours: props.visits.reduce((hoursAcc: number, visit: Visit) => {
-            if (visit.data.employeeID == employeeID)
-              return visit.data.time
-                ? visit.data.time.hours + hoursAcc
-                : hoursAcc;
-            return hoursAcc;
-          }, 0),
-        };
-      });
+      return employeeIDs
+        .map((employeeID) => {
+          return {
+            employeeID,
+            hours: props.visits.reduce((hoursAcc: number, visit: Visit) => {
+              if (visit.data.employeeID == employeeID)
+                return visit.data.time
+                  ? visit.data.time.hours + hoursAcc
+                  : hoursAcc;
+              return hoursAcc;
+            }, 0),
+          };
+        })
+        .filter((employeeHour) => employeeHour.employeeID);
     });
 
     // Step 3: Determine the total number of hours
@@ -177,6 +199,8 @@ export default {
       changeStartDate,
       changeEndDate,
       config,
+      idToName,
+      icons: { calendarNumberOutline, documentTextOutline, timeOutline },
     };
   },
   components: {
@@ -196,6 +220,7 @@ export default {
     IonCardTitle,
     IonCardSubtitle,
     IonList,
+    IonIcon,
   },
 };
 </script>
