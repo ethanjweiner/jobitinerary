@@ -1,20 +1,22 @@
 <template>
-  <ion-reorder-group @ionItemReorder="reorderTools($event)" disabled="false">
-    <Tool
-      v-for="(tool, index) in state.tools"
-      :key="tool.id"
-      v-model="state.tools[index]"
-      @deleteTool="deleteTool(index)"
-    />
+  <div class="ion-margin">
+    <ion-reorder-group @ionItemReorder="reorderTools($event)" disabled="false">
+      <Tool
+        v-for="(tool, index) in state.tools"
+        :key="tool.id"
+        v-model="state.tools[index]"
+        @deleteTool="deleteTool(index)"
+      />
+    </ion-reorder-group>
     <ion-item class="ion-item-button" button color="secondary" @click="addTool">
       <ion-icon color="light" :icon="add"></ion-icon>
       <ion-label color="light">Add Tool</ion-label>
     </ion-item>
-  </ion-reorder-group>
+  </div>
 </template>
 
 <script lang="ts">
-import { IonIcon, IonItem, IonLabel,IonReorderGroup } from "@ionic/vue";
+import { IonIcon, IonItem, IonLabel, IonReorderGroup } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { defineComponent, watch } from "@vue/runtime-core";
 import { add } from "ionicons/icons";

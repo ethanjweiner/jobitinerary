@@ -1,8 +1,11 @@
 <template>
-  <div>
-    <ion-item color="white">
+  <div class="ion-margin">
+    <ion-item color="white" lines="none">
       <ion-toggle v-model="state.enableReorder"></ion-toggle>
-      <ion-label>Reorder Tasks</ion-label>
+      <div>
+        <ion-label>Reorder Tasks</ion-label>
+        <ion-note v-if="state.enableReorder">Drag to reorder</ion-note>
+      </div>
     </ion-item>
     <ion-reorder-group
       @ionItemReorder="reorderTasks($event)"
@@ -15,16 +18,11 @@
         v-model="state.tasks[index]"
         @deleteTask="deleteTask(index)"
       />
-      <ion-item
-        class="ion-item-button"
-        button
-        @click="addTask"
-        color="secondary"
-      >
-        <ion-icon color="light" :icon="add"></ion-icon>
-        <ion-label color="light">Add Task</ion-label>
-      </ion-item>
     </ion-reorder-group>
+    <ion-item class="ion-item-button" button @click="addTask" color="secondary">
+      <ion-icon color="light" :icon="add"></ion-icon>
+      <ion-label color="light">Add Task</ion-label>
+    </ion-item>
   </div>
 </template>
 
@@ -33,6 +31,7 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
+  IonNote,
   IonReorderGroup,
   IonToggle,
 } from "@ionic/vue";
@@ -55,6 +54,7 @@ export default defineComponent({
     IonLabel,
     IonIcon,
     IonToggle,
+    IonNote,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
