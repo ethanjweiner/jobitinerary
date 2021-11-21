@@ -10,8 +10,9 @@
     </ion-row>
 
     <ion-row class="ion-justify-content-left">
-      <ion-col v-for="(image, index) in state.images" :key="image.ref">
+      <ion-col v-for="(image, index) in state.images" :key="image.id">
         <ImageWithCaption
+          :key="image.id"
           :modelValue="image"
           @update:modelValue="(newImage) => (state.images[index] = newImage)"
           @deleteImage="deleteImage(index)"
@@ -24,10 +25,12 @@
 </template>
 
 <script lang="ts">
-import { IonCol,IonGrid, IonRow } from "@ionic/vue";
+import { IonCol, IonGrid, IonRow } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
 import { add } from "ionicons/icons";
+
+import { newImage } from "@/types/auxiliary";
 
 import AddButton from "../buttons/AddButton.vue";
 import ImageWithCaption from "../ImageWithCaption.vue";
@@ -51,10 +54,7 @@ export default {
     });
 
     const addImage = () => {
-      state.images.unshift({
-        ref: "",
-        caption: "",
-      });
+      state.images.unshift(newImage());
     };
 
     const deleteImage = (index: number) => {

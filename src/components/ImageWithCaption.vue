@@ -37,7 +37,7 @@ import {
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
-import { cameraOutline,close } from "ionicons/icons";
+import { cameraOutline, close } from "ionicons/icons";
 
 import config from "@/config/config";
 import { getImageURL } from "@/helpers";
@@ -101,6 +101,7 @@ ion-card {
 }
 img {
   max-height: 400px;
+  max-width: 400px;
 }
 ion-textarea {
   margin: 0;
