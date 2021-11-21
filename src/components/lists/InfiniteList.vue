@@ -33,7 +33,7 @@
 
   <ion-infinite-scroll
     @ionInfinite="loadMore($event)"
-    threshold="100px"
+    threshold="50px"
     id="infinite-scroll"
     :disabled="false"
   >
@@ -84,11 +84,10 @@ export default {
     type: String,
   },
   setup(props: any) {
-    console.log(props.searchFilter);
     const state = reactive<State>({
       infiniteList: new InfiniteList(
         props.dbRef,
-        10,
+        props.pushQuantity,
         props.orderByParam,
         props.searchFilter
       ),
@@ -165,5 +164,6 @@ export default {
   width: 100%;
   margin-top: 0px !important;
   margin-bottom: 0px !important;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 </style>
