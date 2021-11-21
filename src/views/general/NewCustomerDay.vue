@@ -68,7 +68,8 @@ import {
   IonPage,
   IonRow,
   IonTitle,
-  IonToolbar} from "@ionic/vue";
+  IonToolbar,
+} from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 
 import DateSelect from "@/components/selects/DateSelect.vue";
@@ -95,7 +96,7 @@ export default {
     UserSelect,
     IonButton,
     IonNote,
-    IonCard
+    IonCard,
   },
   props: {
     customerID: String,
@@ -109,7 +110,7 @@ export default {
     const create = async () => {
       if (state.customerID && state.date) {
         await createCustomerDay(state.date, state.customerID);
-        router.push({
+        router.replace({
           name: "Customer Day",
           params: { userID: state.customerID, date: state.date },
         });
