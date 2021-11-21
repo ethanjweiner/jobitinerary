@@ -1,5 +1,7 @@
 import firebase from "firebase/app";
 
+import { generateUUID } from "@/helpers";
+
 // Auxiliary
 export interface SectionType {
   name: string;
@@ -23,21 +25,21 @@ export const sampleLocation: Location = {
 };
 
 export interface ImageWithCaption {
-  id: number;
+  id: string;
   ref: string;
   caption: string;
 }
 
-export const newImage = (id: number): ImageWithCaption => {
+export const newImage = (): ImageWithCaption => {
   return {
-    id,
+    id: generateUUID(),
     ref: "",
     caption: "",
   };
 };
 
 export const sampleImage: ImageWithCaption = {
-  id: Date.now(),
+  id: Date.now().toString(),
   ref: "",
   caption: "Image caption",
 };
