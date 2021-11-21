@@ -13,12 +13,10 @@
     <ion-split-pane when="sm" content-id="main">
       <ion-content>
         <div style="margin-top: 68px;"></div>
-
         <Jobs :dbRef="jobsRef" />
       </ion-content>
       <ion-content id="main">
         <div style="margin-top: 68px;"></div>
-
         <Visits :dbRef="visitsRef" />
       </ion-content>
     </ion-split-pane>

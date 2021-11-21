@@ -7,14 +7,14 @@
       </ion-note>
     </div>
 
-    <CurrencyInput
-      v-model="state.expense.cost"
-      placeholder="Cost"
-      :options="{ currency: 'USD' }"
-      disabled
-    />
-
     <ion-buttons slot="end" style="margin: 0;">
+      <CurrencyInput
+        v-model="state.expense.cost"
+        placeholder="Cost"
+        :options="{ currency: 'USD' }"
+        disabled
+        style="margin-right: 8px;"
+      />
       <ion-note style="margin-right: 7px;" v-if="state.expense.paid"
         ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
       >
@@ -40,7 +40,7 @@ import {
   IonToggle,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { checkmark,trashOutline } from "ionicons/icons";
+import { checkmark, trashOutline } from "ionicons/icons";
 
 import CurrencyInput from "@/components/inputs/CurrencyInput.vue";
 import { companiesCollection } from "@/main";

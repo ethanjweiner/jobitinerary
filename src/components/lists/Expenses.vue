@@ -3,6 +3,7 @@
   <List type="list" :items="state.expenses">
     <template v-slot:item="itemProps">
       <ExpenseItem
+        :key="itemProps.item.id"
         @deleteExpense="deleteExpense"
         :expense="itemProps.item"
         :showDate="true"
@@ -10,10 +11,23 @@
       />
     </template>
   </List>
+  <ion-button
+    class="ion-margin"
+    color="tertiary"
+    @click="addExpense"
+    fill="outline"
+    expand="block"
+    size="lg"
+  >
+    <ion-icon :icon="icons.add"></ion-icon>
+    Add Expense
+  </ion-button>
 </template>
 
 <script lang="ts">
+import { IonButton, IonIcon } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
+import { add } from "ionicons/icons";
 
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 import { createExpense } from "@/db";
@@ -31,6 +45,7 @@ export default {
     employeeID: String,
   },
   setup(props: any, { emit }: { emit: any }) {
+    console.log(props.modelValue);
     const state = reactive({
       expenses: props.modelValue,
     });
@@ -40,11 +55,13 @@ export default {
       const expense = await createExpense(props.employeeID, {
         date: props.date,
       });
-      state.expenses.unshift(expense);
+      console.log(expense);
+      state.expenses.push(expense);
       emit("update:modelValue", state.expenses);
     };
 
     const deleteExpense = async (expense: Expense) => {
+      console.log(expense);
       await expense.delete();
       state.expenses = state.expenses.filter(
         (_expense: Expense) => _expense.id != expense.id
@@ -56,12 +73,15 @@ export default {
       state,
       addExpense,
       deleteExpense,
+      icons: { add },
     };
   },
   components: {
     ExpenseItem,
     SearchToolbar,
     List,
+    IonIcon,
+    IonButton,
   },
 };
 </script>

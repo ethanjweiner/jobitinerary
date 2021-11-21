@@ -3,7 +3,12 @@
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar :slot="screenWidth < 768 ? 'bottom' : 'top'" color="primary">
-        <ion-title class="main-title"> JobItinerary</ion-title>
+        <div style="height: 100%;">
+          <ion-title class="main-title" style="height: 90%;">
+            JobItinerary</ion-title
+          >
+        </div>
+
         <ion-tab-button
           :layout="screenWidth < 768 ? 'icon-top' : 'icon-start'"
           tab="home"
@@ -58,7 +63,7 @@ import {
   IonTitle,
 } from "@ionic/vue";
 import { onMounted, ref } from "@vue/runtime-core";
-import { cart, hammer, home, settings } from "ionicons/icons";
+import { cart, hammer, home, list, settings } from "ionicons/icons";
 import { useRoute } from "vue-router";
 
 import CreateButton from "@/components/buttons/CreateButton.vue";
@@ -89,7 +94,7 @@ export default {
     });
 
     return {
-      icons: { home, cart, hammer, settings },
+      icons: { home, cart, hammer, settings, list },
       screenWidth,
       route,
     };
@@ -99,8 +104,11 @@ export default {
 
 <style scoped>
 .main-title {
-  color: white;
   font-size: 25px;
+  color: var(--ion-color-primary);
+  background-color: white;
+  border-radius: 0px 0px 40px 40px;
+  box-shadow: 0px 0px 10px grey;
 }
 @media (max-width: 768px) {
   .main-title,

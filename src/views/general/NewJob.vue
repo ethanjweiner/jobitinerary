@@ -64,6 +64,7 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
+  IonCard,
   IonCol,
   IonContent,
   IonGrid,
@@ -132,6 +133,7 @@ export default {
     IonNote,
     IonInput,
     IonItem,
+    IonCard,
   },
 };
 </script>

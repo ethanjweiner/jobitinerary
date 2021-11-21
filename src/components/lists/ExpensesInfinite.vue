@@ -37,7 +37,11 @@
     type="list"
   >
     <template v-slot:item="itemProps">
-      <ExpenseItemInfinite :expense="itemProps.item" :showDate="true" />
+      <ExpenseItemInfinite
+        :key="itemProps.item.id"
+        :expense="itemProps.item"
+        :showDate="true"
+      />
     </template>
   </InfiniteList>
 </template>

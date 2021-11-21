@@ -145,6 +145,7 @@ export default {
           .doc(`${store.state.companyID}/employees/${props.userID}`)
           .collection("expenses")
           .where("data.date", "==", props.date)
+          .orderBy("data.name")
           .get()
       ).docs;
       for (const doc of expenseDocs) {

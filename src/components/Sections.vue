@@ -1,7 +1,5 @@
 <template>
-  <!-- TEMPORARY: Reload split pane upon route changes... -->
   <ion-split-pane content-id="main" when="md">
-    <!-- Create a custom menu instead -->
     <ion-content color="dark">
       <ion-list>
         <ion-item
@@ -19,7 +17,6 @@
     </ion-content>
 
     <ion-content id="main">
-      <!-- Place whatever you need in here -->
       <ion-segment
         @ionChange="selectedSection = $event.detail.value"
         :value="selectedSection"

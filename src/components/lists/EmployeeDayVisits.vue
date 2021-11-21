@@ -23,7 +23,7 @@
           size="lg"
         >
           <ion-icon :icon="add"></ion-icon>
-          <ion-label>Add Visit</ion-label>
+          Add Visit
         </ion-button>
       </ion-col>
     </ion-row>
@@ -36,7 +36,6 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
-  IonLabel,
   IonReorderGroup,
   IonRow,
 } from "@ionic/vue";
@@ -108,7 +107,6 @@ export default {
     IonCol,
     IonReorderGroup,
     IonIcon,
-    IonLabel,
     DayVisitItem,
     SearchToolbar,
     IonButton,

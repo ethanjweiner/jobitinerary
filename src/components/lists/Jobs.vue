@@ -1,6 +1,5 @@
 <template>
   <SearchToolbar :addAction="createJob" title="Jobs" v-model="searchText" />
-
   <InfiniteList
     :key="searchText"
     :splitters="splitters"

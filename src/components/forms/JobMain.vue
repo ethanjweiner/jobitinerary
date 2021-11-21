@@ -94,9 +94,7 @@
             <ion-card-title>TASKS</ion-card-title>
             <ion-card-subtitle>{{ state.job.data.name }}</ion-card-subtitle>
           </ion-card-header>
-          <ion-card-content>
-            <Tasks v-model="state.job.data.tasks" />
-          </ion-card-content>
+          <Tasks v-model="state.job.data.tasks" />
         </ion-card>
       </ion-col>
     </ion-row>

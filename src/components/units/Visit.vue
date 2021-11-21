@@ -127,7 +127,7 @@ import VisitMain from "@/components/forms/VisitMain.vue";
 import Images from "@/components/lists/Images.vue";
 import Tasks from "@/components/lists/Tasks.vue";
 import Tools from "@/components/lists/Tools.vue";
-import { SectionsType } from "@/types/auxiliary";
+import { newImage, SectionsType } from "@/types/auxiliary";
 
 import AddButton from "../buttons/AddButton.vue";
 
@@ -172,10 +172,7 @@ export default {
     });
 
     const addImage = () => {
-      state.visit.data.images.unshift({
-        ref: "",
-        caption: "",
-      });
+      state.visit.data.images.unshift(newImage());
     };
 
     const selectedSection = ref<string>(sections.value[0].id);
