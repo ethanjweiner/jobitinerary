@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ion-list v-if="displayAsList && screenWidth >= 768">
+    <ion-list :class="displayAsList ? 'ion-hide-md-down' : 'ion-hide'">
       <ion-item
         button
         v-for="id in state.ids"
@@ -19,7 +19,10 @@
         Create {{ capitalize(type) }}
       </ion-button>
     </ion-list>
-    <ion-item :color="mode == 'light' ? '' : 'primary'" v-else>
+    <ion-item
+      :class="displayAsList ? 'ion-hide-md-up' : ''"
+      :color="mode == 'light' ? '' : 'primary'"
+    >
       <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
       <ion-icon
         v-if="type == 'employee'"
@@ -27,6 +30,7 @@
       ></ion-icon>
       <ion-select
         v-if="state.ids.length"
+        :class="header ? 'select-header' : ''"
         @ionChange="$emit('update:modelValue', $event.detail.value)"
         :value="modelValue"
         :placeholder="'Select ' + capitalize(type)"
@@ -82,8 +86,8 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/vue";
-import { add,cartOutline, hammerOutline } from "ionicons/icons";
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { add, cartOutline, hammerOutline } from "ionicons/icons";
+import { defineComponent, reactive, ref } from "vue";
 
 import NewUserModal from "@/components/modals/NewUserModal.vue";
 import { capitalize, idToName } from "@/helpers";
@@ -100,6 +104,7 @@ export default defineComponent({
     type: String,
     mode: String,
     displayAsList: Boolean,
+    header: Boolean,
   },
   emits: ["update:modelValue", "userAdded"],
   components: {
@@ -139,14 +144,6 @@ export default defineComponent({
       emit("update:modelValue", id);
       refreshState();
     };
-    const screenWidth = ref(0);
-
-    onMounted(() => {
-      screenWidth.value = window.innerWidth;
-      window.addEventListener("resize", () => {
-        screenWidth.value = window.innerWidth;
-      });
-    });
 
     return {
       state,
@@ -159,7 +156,6 @@ export default defineComponent({
       capitalize,
       idToName,
       newUserModalIsOpen,
-      screenWidth,
     };
   },
 });
@@ -172,5 +168,17 @@ ion-item {
 }
 ion-select {
   margin-inline-start: 10px;
+}
+.select-header {
+  font-size: 25px;
+  font-weight: bold;
+}
+@media (max-width: 768px) {
+  ion-select {
+    max-width: 180px;
+  }
+  .select-header {
+    font-size: 20px;
+  }
 }
 </style>
