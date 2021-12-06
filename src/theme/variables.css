@@ -192,7 +192,7 @@ h3 {
 /* Modals */
 @media (min-width: 768px) {
   .small-modal .modal-wrapper {
-    height: 285px;
+    height: 270px;
     width: 350px;
   }
 
@@ -241,4 +241,9 @@ ion-card li {
 
 .input-card {
   padding: 25px;
+}
+
+.toggle-item {
+  border-top: 1px solid grey;
+  border-right: 1px solid grey;
 }

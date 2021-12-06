@@ -62,7 +62,7 @@ import {
   IonText,
 } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
-import { calendarNumberOutline, copyOutline,trash } from "ionicons/icons";
+import { calendarNumberOutline, copyOutline, trash } from "ionicons/icons";
 
 import store from "@/store";
 import { Employee } from "@/types/users";

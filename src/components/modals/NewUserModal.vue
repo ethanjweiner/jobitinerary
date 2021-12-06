@@ -99,18 +99,14 @@ export default {
 
     const addUser = async () => {
       if (state.name && state.email && store.state.user instanceof Company) {
-        // ADD USER TO DATABASE
         if (props.type == "employee") {
-          // Add employee to database
           await store.state.user.addEmployee(state.name, state.email);
         } else if (props.type == "customer") {
-          // Add customer to database
           await store.state.user.addCustomer(state.name, state.email);
         } else {
           throw Error("The specified user type is not valid.");
         }
         emit("userAdded", nameToID(state.name));
-        // Add the user locally
       } else throw Error("You must enter a name and email for the new user.");
 
       emit("didDismiss");

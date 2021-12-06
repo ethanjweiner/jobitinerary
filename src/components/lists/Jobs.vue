@@ -3,7 +3,6 @@
   <InfiniteList
     :key="searchText"
     :splitters="splitters"
-    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="dbRef"
     orderByParam="startDate"
     :searchFilter="searchText"

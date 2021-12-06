@@ -149,7 +149,7 @@ export default {
     showTextAreas(state);
 
     const addImage = () => {
-      state.customer.data.propertyImages.unshift(newImage(Date.now()));
+      state.customer.data.propertyImages.unshift(newImage());
       emit("update:modelValue", state.customer);
     };
 

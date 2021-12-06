@@ -8,7 +8,6 @@
       @close="$emit('close')"
     />
 
-    <!-- PASS A DATABASE REFERENCE TO ALL JOBS UNDER THE SELECTED CUSTOMER -->
     <ion-content>
       <InfiniteList
         type="list"
@@ -16,7 +15,6 @@
         :splitters="splitters"
         :searchFilter="searchText"
         :dbRef="dbRef"
-        :pushQuantity="config.constants.PUSH_QUANTITY"
         orderByParam="startDate"
       >
         <template v-slot:item="itemProps">

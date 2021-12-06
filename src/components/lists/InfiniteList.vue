@@ -60,6 +60,7 @@ import {
 import { computed, reactive } from "@vue/reactivity";
 import { onUnmounted } from "@vue/runtime-core";
 
+import config from "@/config/config";
 import { InfiniteList } from "@/db";
 import { CollectionRef, Splitter } from "@/types/auxiliary";
 
@@ -87,7 +88,9 @@ export default {
     const state = reactive<State>({
       infiniteList: new InfiniteList(
         props.dbRef,
-        props.pushQuantity,
+        props.pushQuantity
+          ? props.pushQuantity
+          : config.constants.PUSH_QUANTITY,
         props.orderByParam,
         props.searchFilter
       ),

@@ -9,7 +9,6 @@
   <InfiniteList
     :key="searchDate"
     :splitters="splitters"
-    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="dbRef"
     orderByParam="date"
     :searchFilter="searchDate"

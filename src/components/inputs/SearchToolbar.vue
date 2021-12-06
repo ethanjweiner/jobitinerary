@@ -16,6 +16,7 @@
         :value="modelValue"
         @ionInput="$emit('update:modelValue', $event.target.value)"
         placeholder="Search by date"
+        clear-on-edit
       ></ion-input>
     </ion-item>
     <ion-searchbar
@@ -92,6 +93,7 @@ h2 {
 ion-toolbar {
   --background: var(--ion-color-tertiary);
 }
+
 ion-searchbar {
   margin-left: 10px;
 }

@@ -11,10 +11,10 @@
         :value="state.filterUnpaid"
         @ionChange="state.filterUnpaid = !state.filterUnpaid"
       >
-        <ion-grid style="border-top: 1px solid grey;">
+        <ion-grid>
           <ion-row>
-            <ion-col size="12" size-md="6">
-              <ion-item color="primary" style="border-right: 1px solid grey;">
+            <ion-col size="12" size-sm="6" size-md="5" size-lg="4">
+              <ion-item color="primary" class="toggle-item">
                 <ion-radio
                   color="light"
                   slot="start"
@@ -23,11 +23,14 @@
                 <ion-label>All Days</ion-label>
               </ion-item>
             </ion-col>
-            <ion-col size="12" size-md="6">
-              <ion-item color="primary">
+            <ion-col size="12" size-sm="6" size-md="5" size-lg="4">
+              <ion-item color="primary" class="toggle-item">
                 <ion-radio color="light" slot="start" :value="true"></ion-radio>
                 <ion-label>Unpaid Days</ion-label>
               </ion-item>
+            </ion-col>
+            <ion-col class="ion-hide-md-down" size-md="2" size-lg="4">
+              <ion-item color="primary"></ion-item>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -38,7 +41,6 @@
   <InfiniteList
     :key="key"
     :splitters="splitters"
-    :pushQuantity="config.constants.PUSH_QUANTITY"
     :dbRef="daysRef"
     orderByParam="date"
     :searchFilter="searchDate"

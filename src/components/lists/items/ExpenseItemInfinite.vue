@@ -1,38 +1,41 @@
 <template>
-  <ion-item lines="full" class="ion-padding">
-    <div slot="start">
-      <ion-label color="tertiary">{{ state.expense.name }}</ion-label>
-      <ion-note v-if="showDate">
-        {{ state.expense.date }}
-      </ion-note>
-    </div>
+  <ion-card class="ion-margin">
+    <ion-item lines="none" class="ion-padding">
+      <div slot="start">
+        <ion-label color="tertiary">{{ state.expense.name }}</ion-label>
+        <ion-note v-if="showDate">
+          {{ state.expense.date }}
+        </ion-note>
+      </div>
 
-    <ion-buttons slot="end" style="margin: 0;">
-      <CurrencyInput
-        v-model="state.expense.cost"
-        placeholder="Cost"
-        :options="{ currency: 'USD' }"
-        disabled
-        style="margin-right: 8px;"
-      />
-      <ion-note style="margin-right: 7px;" v-if="state.expense.paid"
-        ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
-      >
-      <ion-note style="margin-right: 7px;" v-if="!state.expense.paid"
-        >Unpaid</ion-note
-      >
-      <ion-toggle
-        :checked="state.expense.paid"
-        @ionChange="togglePaid"
-        value="paid"
-      ></ion-toggle>
-    </ion-buttons>
-  </ion-item>
+      <ion-buttons slot="end" style="margin: 0;">
+        <CurrencyInput
+          v-model="state.expense.cost"
+          placeholder="Cost"
+          :options="{ currency: 'USD' }"
+          disabled
+          style="margin-right: 8px;"
+        />
+        <ion-note style="margin-right: 7px;" v-if="state.expense.paid"
+          ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
+        >
+        <ion-note style="margin-right: 7px;" v-if="!state.expense.paid"
+          >Unpaid</ion-note
+        >
+        <ion-toggle
+          :checked="state.expense.paid"
+          @ionChange="togglePaid"
+          value="paid"
+        ></ion-toggle>
+      </ion-buttons>
+    </ion-item>
+  </ion-card>
 </template>
 
 <script lang="ts">
 import {
   IonButtons,
+  IonCard,
   IonIcon,
   IonItem,
   IonLabel,
@@ -85,6 +88,7 @@ export default {
     IonToggle,
     CurrencyInput,
     IonLabel,
+    IonCard,
   },
 };
 </script>
