@@ -1,5 +1,8 @@
 <template>
   <ion-grid class="ion-padding">
+    <ion-row v-if="isTicking">
+      <Timer :key="state.time.start" :start-time="state.time.start" />
+    </ion-row>
     <ion-row>
       <ion-col size="6">
         <ion-button color="success" expand="block" @click="setStartTime">
@@ -94,6 +97,9 @@ import {
   timeOutline,
   timerOutline,
 } from "ionicons/icons";
+
+import Timer from "./Timer.vue";
+
 export default {
   name: "Timelog",
   props: {
@@ -176,6 +182,7 @@ export default {
     IonText,
     IonNote,
     IonDatetime,
+    Timer,
   },
 };
 </script>
