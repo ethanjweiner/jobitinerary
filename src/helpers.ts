@@ -125,6 +125,16 @@ export async function getImageURL(ref: string) {
     .getDownloadURL();
 }
 
+export async function retrieveCustomerAddress(customerID: string) {
+  const query = companiesCollection.doc(
+    `${store.state.companyID}/customers/${customerID}`
+  );
+  const customerDocData = (await query.get()).data();
+
+  if (customerDocData && customerDocData.data.location)
+    return customerDocData.data.location;
+}
+
 export async function retrieveVisitsOnDate(
   date: string,
   options: { customerID?: string; employeeID?: string }

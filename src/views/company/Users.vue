@@ -3,6 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary" v-if="state.userID">
         <UserSelect
+          :header="true"
           slot="start"
           ref="userSelect"
           v-model="state.userID"

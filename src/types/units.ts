@@ -85,10 +85,12 @@ export function newVisitInterface(
       hours: 0,
     },
     notes: "",
-    location: {
-      address: "",
-      coordinates: null,
-    },
+    location: options.location
+      ? options.location
+      : {
+          address: "",
+          coordinates: null,
+        },
     tasks: [],
     tools: [],
     images: [],
@@ -149,6 +151,7 @@ export interface JobInterface {
   startDate: string;
   endDate: string;
   tasks: Array<Task>;
+  location: Location;
 }
 
 export function newJobInterface(
@@ -166,6 +169,10 @@ export function newJobInterface(
     startDate: "", // Must manually select start date
     endDate: "",
     tasks: [],
+    location: {
+      address: "",
+      coordinates: null,
+    },
   };
 }
 

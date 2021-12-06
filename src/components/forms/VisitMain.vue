@@ -167,7 +167,7 @@ import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
 import config from "@/config/config";
-import { formatTime, showTextAreas } from "@/helpers";
+import { formatTime, retrieveCustomerAddress, showTextAreas } from "@/helpers";
 import { companiesCollection, db } from "@/main";
 import store from "@/store";
 import { JobInterface, Visit } from "@/types/units";
@@ -251,13 +251,10 @@ export default {
 
     const updateCustomer = async (customerID: string) => {
       clearJob();
-      const customerDocData = (
-        await companiesCollection
-          .doc(`${state.visit.data.companyID}/customers/${customerID}`)
-          .get()
-      ).data();
-      if (customerDocData)
-        state.visit.data.location = customerDocData.data.location;
+
+      // Try to retrieve the address of the customer
+      const customerAddress = await retrieveCustomerAddress(customerID);
+      if (customerAddress) state.visit.data.location = customerAddress;
       emit("update:modelValue", state.visit);
     };
 

@@ -1,6 +1,6 @@
 import { reactive } from "@vue/reactivity";
 
-import { generateUUID, nameToID } from "./helpers";
+import { generateUUID, nameToID, retrieveCustomerAddress } from "./helpers";
 import store from "./store";
 import {
   CollectionRef,
@@ -125,6 +125,13 @@ export async function search(
 export async function createVisit(options?: any) {
   const visitID = generateUUID();
   const visit = new Visit(visitID, store.state.companyID);
+
+  // Try to retrieve location if there is a customer
+  if (options && options.customerID) {
+    const customerAddress = await retrieveCustomerAddress(options.customerID);
+    if (customerAddress) options.location = customerAddress;
+  }
+
   // Input empty data
   await visit.create(
     newVisitInterface(visitID, store.state.companyID, options ? options : {})
