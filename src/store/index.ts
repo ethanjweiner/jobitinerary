@@ -1,9 +1,10 @@
 import { reactive } from "vue";
 
 import { initializeUserRouting } from "@/helpers";
+import { Alert } from "@/types/auxiliary";
 
 import { companiesCollection, employeesCollection } from "../main";
-import { Company, Customer,Employee } from "../types/users";
+import { Company, Customer, Employee } from "../types/users";
 
 // GLOBAL STATE
 
@@ -11,15 +12,17 @@ interface State {
   user: Company | Employee | Customer | null;
   userType: "company" | "employee" | "customer" | null;
   companyID: string;
-  errorMessage: string;
 }
 
 const store = {
   state: reactive<State>({
     user: null,
     userType: null,
-    errorMessage: "",
     companyID: "",
+  }),
+  alert: reactive<Alert>({
+    message: "Unidentified error",
+    color: "danger",
   }),
 
   async setUser(user: Company | Employee | Customer | null) {
@@ -80,6 +83,11 @@ const store = {
       }
     }
     return false;
+  },
+
+  async setAlert(alert: Alert) {
+    this.alert.message = alert.message;
+    this.alert.color = alert.color;
   },
 };
 

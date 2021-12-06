@@ -48,6 +48,15 @@
       </ion-tab-bar>
     </ion-tabs>
     <CreateButton />
+    <!-- Global Alerts -->
+    <ion-toast
+      :is-open="alertIsOpen"
+      :message="store.alert.message"
+      :color="store.alert.color"
+      :duration="5000"
+      @didDismiss="setAlertOpen(false)"
+    >
+    </ion-toast>
   </ion-page>
 </template>
 
@@ -61,12 +70,14 @@ import {
   IonTabButton,
   IonTabs,
   IonTitle,
+  IonToast,
 } from "@ionic/vue";
-import { onMounted, ref } from "@vue/runtime-core";
+import { onMounted, ref, watch } from "@vue/runtime-core";
 import { cart, hammer, home, list, settings } from "ionicons/icons";
 import { useRoute } from "vue-router";
 
 import CreateButton from "@/components/buttons/CreateButton.vue";
+import store from "@/store";
 
 export default {
   name: "Tabs",
@@ -80,11 +91,20 @@ export default {
     IonRouterOutlet,
     IonTitle,
     CreateButton,
+    IonToast,
   },
   setup() {
     const screenWidth = ref(0);
 
     const route = useRoute();
+
+    const alertIsOpen = ref(false);
+    const setAlertOpen = (state: boolean) => (alertIsOpen.value = state);
+    store.setAlert("ethan");
+
+    watch(store.alert, () => {
+      if (store.alert.message) setAlertOpen(true);
+    });
 
     onMounted(() => {
       screenWidth.value = window.innerWidth;
@@ -97,6 +117,9 @@ export default {
       icons: { home, cart, hammer, settings, list },
       screenWidth,
       route,
+      alertIsOpen,
+      store,
+      setAlertOpen,
     };
   },
 };

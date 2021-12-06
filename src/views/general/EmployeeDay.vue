@@ -29,6 +29,7 @@
         @copyDay="copyDay"
         type="employee"
         :employeeID="userID"
+        :key="state.day.data.date"
         :currentDate="state.day.data.date"
       />
       <!-- Add Day Popover here -->
@@ -181,6 +182,11 @@ export default {
       }
       router.push({ name: "Employee", params: { userID: props.userID } });
       popoverIsOpen.value = false;
+
+      store.setAlert({
+        message: `The day was successfully deleted.`,
+        color: "success",
+      });
     };
 
     const changeDate = async (date: string) => {
@@ -200,6 +206,11 @@ export default {
 
         router.go(0);
       }
+
+      store.setAlert({
+        message: `Date changed to ${date}.`,
+        color: "success",
+      });
     };
 
     const copyVisits = async (employeeID: string) => {
@@ -225,6 +236,10 @@ export default {
         await copiedDay.create(copiedData);
         await copyVisits(employeeID);
         popoverIsOpen.value = false;
+        store.setAlert({
+          message: `Your day was copied to ${employeeName}.`,
+          color: "success",
+        });
       }
     };
 

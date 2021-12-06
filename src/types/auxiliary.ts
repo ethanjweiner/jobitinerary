@@ -98,6 +98,11 @@ export const sampleTimeLog: TimeLog = {
   hours: 8,
 };
 
+export interface Alert {
+  message: string;
+  color: "success" | "danger" | "dark";
+}
+
 export enum AuthenticationTitleText {
   LogIn = "Log in to JobItinerary",
   CompanySignUp = "Sign up your company for JobItinerary",
