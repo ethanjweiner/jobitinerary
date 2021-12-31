@@ -1,10 +1,12 @@
 <template>
   <div class="ion-margin">
-    <ion-item color="white" lines="none">
+    <ion-item class="reorder-item" lines="none">
       <ion-toggle v-model="state.enableReorder"></ion-toggle>
       <div>
-        <ion-label>Reorder Tasks</ion-label>
-        <ion-note v-if="state.enableReorder">Drag to reorder</ion-note>
+        <ion-label style="margin-left: 5px;">Reorder Tasks</ion-label>
+        <ion-note style="margin-left: 5px;" v-if="state.enableReorder"
+          >Drag to reorder</ion-note
+        >
       </div>
     </ion-item>
     <ion-reorder-group

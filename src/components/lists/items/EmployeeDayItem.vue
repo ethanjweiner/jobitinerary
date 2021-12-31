@@ -11,22 +11,25 @@
       })
     "
   >
-    <ion-toolbar>
-      <ion-title color="dark">{{ day.date }}</ion-title>
+    <ion-card-header>
+      <ion-toolbar>
+        <ion-card-title color="dark">{{ day.date.slice(5) }}</ion-card-title>
 
-      <ion-buttons slot="end" v-if="showPaidToggle">
-        <ion-note style="margin: auto;" v-if="day.paid"
-          ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
-        >
-        <ion-note style="margin: auto;" v-if="!day.paid">Unpaid</ion-note>
-        <ion-toggle
-          :checked="day.paid"
-          value="paid"
-          @ionChange="togglePaid"
-          @click.stop
-        ></ion-toggle>
-      </ion-buttons>
-    </ion-toolbar>
+        <ion-buttons slot="end" v-if="showPaidToggle">
+          <ion-note style="margin: auto;" v-if="day.paid"
+            ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
+          >
+          <ion-note style="margin: auto;" v-if="!day.paid">Unpaid</ion-note>
+          <ion-toggle
+            :checked="day.paid"
+            value="paid"
+            @ionChange="togglePaid"
+            @click.stop
+            style="margin-left: 5px;"
+          ></ion-toggle>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-header>
     <ion-card-content>
       <ion-card-subtitle>
         <ion-icon :icon="icons.hammer"></ion-icon>
@@ -57,14 +60,14 @@ import {
   IonCard,
   IonCardContent,
   IonCardSubtitle,
+  IonCardTitle,
   IonIcon,
   IonNote,
-  IonTitle,
   IonToggle,
   IonToolbar,
 } from "@ionic/vue";
 import { computed, reactive } from "@vue/reactivity";
-import { cart,checkmark, hammer, time } from "ionicons/icons";
+import { cart, checkmark, hammer, time } from "ionicons/icons";
 
 import { idToName, retrieveVisitsOnDate } from "@/helpers";
 import { companiesCollection } from "@/main";
@@ -136,7 +139,7 @@ export default {
     IonCardSubtitle,
     IonIcon,
     IonToolbar,
-    IonTitle,
+    IonCardTitle,
     IonNote,
     IonToggle,
     IonButtons,

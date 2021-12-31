@@ -12,7 +12,7 @@
         :key="visit.id"
       >
         <ion-card>
-          <ion-toolbar color="tertiary">
+          <ion-toolbar class="unit-toolbar" color="tertiary">
             <ion-title v-if="visit.data.employeeID">
               <ion-text color="light">
                 Visit by {{ idToName(visit.data.employeeID) }}

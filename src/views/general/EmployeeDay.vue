@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar color="primary" v-if="state.day">
+      <ion-toolbar class="unit-toolbar" color="primary" v-if="state.day">
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
         </ion-buttons>

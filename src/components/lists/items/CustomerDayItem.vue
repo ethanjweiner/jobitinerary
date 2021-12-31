@@ -12,7 +12,9 @@
     "
   >
     <ion-card-header>
-      <ion-card-title>{{ day.date }}</ion-card-title>
+      <ion-card-title class="ion-text-start">{{
+        day.date.slice(5)
+      }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-card-subtitle>
@@ -47,7 +49,7 @@ import {
 import { computed, reactive } from "@vue/reactivity";
 import { cart, hammer, time } from "ionicons/icons";
 
-import { idToName,retrieveVisitsOnDate } from "@/helpers";
+import { idToName, retrieveVisitsOnDate } from "@/helpers";
 import router from "@/router";
 import { Visit } from "@/types/units";
 

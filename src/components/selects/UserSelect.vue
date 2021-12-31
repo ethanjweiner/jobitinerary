@@ -21,7 +21,7 @@
     </ion-list>
     <ion-item
       :class="displayAsList ? 'ion-hide-md-up' : ''"
-      :color="mode == 'light' ? '' : 'primary'"
+      :color="mode == 'light' ? 'white' : 'primary'"
     >
       <ion-icon v-if="type == 'customer'" :icon="icons.cartOutline"></ion-icon>
       <ion-icon

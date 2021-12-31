@@ -70,7 +70,7 @@ export default defineComponent({
         customerID: props.job.data.customerID,
       });
 
-      state.visits.push(visit);
+      state.visits.unshift(visit);
       emit("update:modelValue", state.visits);
       // Open modal associated with visit
     };

@@ -85,7 +85,7 @@
             <ion-icon :icon="icons.trashOutline"></ion-icon>
             <ion-label>Clear Job</ion-label>
           </ion-chip>
-          <ion-chip @click="jobsModalIsOpen = true">
+          <ion-chip v-else @click="jobsModalIsOpen = true">
             <ion-icon :icon="icons.calendarOutline"></ion-icon>
             <ion-label style="margin-top: 6px;">Attach New</ion-label>
           </ion-chip>

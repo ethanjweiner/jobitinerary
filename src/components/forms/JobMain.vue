@@ -59,30 +59,34 @@
                 ></ion-textarea>
               </ion-item>
               <ion-item color="white" lines="inset">
-                <ion-label color="tertiary" style="font-weight: bold;">
-                  Total Time Spent on this Job
-                </ion-label>
-                <ion-chip>
-                  <ion-label style="margin: auto;"
-                    >{{ totalHours }} hours</ion-label
-                  >
-                </ion-chip>
+                <div class="ion-padding">
+                  <ion-label color="tertiary" style="font-weight: bold;">
+                    Total Time on Job
+                  </ion-label>
+                  <ion-chip>
+                    <ion-label style="margin: auto;"
+                      >{{ totalHours }} hours</ion-label
+                    >
+                  </ion-chip>
+                </div>
               </ion-item>
               <ion-item color="white" v-if="employeeHours.length">
-                <ion-label color="tertiary" style="font-weight: bold;">
-                  Time Spent per Employee
-                </ion-label>
-                <ion-chip
-                  v-for="(employeeHour, index) in employeeHours"
-                  :key="index"
-                >
-                  <ion-label
-                    v-if="employeeHour.employeeID"
-                    style="margin: auto;"
-                    >{{ idToName(employeeHour.employeeID) }}:
-                    {{ employeeHour.hours }} hours</ion-label
+                <div class="ion-padding">
+                  <ion-label color="tertiary" style="font-weight: bold;">
+                    Time Spent per Employee
+                  </ion-label>
+                  <ion-chip
+                    v-for="(employeeHour, index) in employeeHours"
+                    :key="index"
                   >
-                </ion-chip>
+                    <ion-label
+                      v-if="employeeHour.employeeID"
+                      style="margin: auto;"
+                      >{{ idToName(employeeHour.employeeID) }}:
+                      {{ employeeHour.hours }} hours</ion-label
+                    >
+                  </ion-chip>
+                </div>
               </ion-item>
             </ion-list>
           </ion-card-content>
@@ -226,5 +230,8 @@ export default {
 <style scoped>
 ion-chip {
   cursor: default;
+}
+ion-card-content {
+  padding: 5px;
 }
 </style>

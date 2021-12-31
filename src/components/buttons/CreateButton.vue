@@ -1,9 +1,9 @@
 <template>
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon :icon="icons.add"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="end">
+    <ion-fab-list side="top">
       <ion-fab-button
         color="primary"
         @click="
@@ -57,12 +57,12 @@ export default {
 ion-fab {
   transform: scale(1.3);
 }
-ion-fab-button {
-  margin-left: 10px;
+ion-fab {
+  margin-right: 10px;
   margin-bottom: 10px;
 }
 @media (max-width: 768px) {
-  ion-fab-button {
+  ion-fab {
     margin-bottom: 55px;
   }
 }

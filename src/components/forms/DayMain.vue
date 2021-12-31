@@ -205,4 +205,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ion-card-content {
+  padding: 5px;
+}
+</style>

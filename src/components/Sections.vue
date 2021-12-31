@@ -1,7 +1,7 @@
 <template>
   <ion-split-pane content-id="main" when="md">
     <ion-content color="dark">
-      <ion-list>
+      <ion-list style="padding: 0;">
         <ion-item
           color="dark"
           class="menu-item"

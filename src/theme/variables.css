@@ -71,14 +71,14 @@ http://ionicframework.com/docs/theming/ */
   /* Grid Padding */
   --ion-padding: 5px;
 
-  --ion-grid-padding-xs: 12px;
-  --ion-grid-padding-sm: 12px;
-  --ion-grid-padding-md: 15px;
+  --ion-grid-padding-xs: 5px;
+  --ion-grid-padding-sm: 8px;
+  --ion-grid-padding-md: 13px;
   --ion-grid-padding-lg: 20px;
   --ion-grid-padding-xl: 20px;
-  --ion-grid-column-padding-xs: 10px;
-  --ion-grid-column-padding-sm: 10px;
-  --ion-grid-column-padding-md: 15px;
+  --ion-grid-column-padding-xs: 5px;
+  --ion-grid-column-padding-sm: 8px;
+  --ion-grid-column-padding-md: 13px;
   --ion-grid-column-padding-lg: 20px;
   --ion-grid-column-padding-xl: 20px;
 
@@ -135,8 +135,7 @@ ion-card,
 ion-card-header,
 ion-card-content,
 ion-card ion-toolbar,
-ion-list,
-ion-item {
+ion-list {
   --background: white !important;
   background-color: white !important;
 }
@@ -246,4 +245,12 @@ ion-card li {
 .toggle-item {
   border-top: 1px solid grey;
   border-right: 1px solid grey;
+}
+
+.reorder-item {
+  background: var(--ion-background-color) !important;
+}
+
+.unit-toolbar {
+  height: 63px;
 }
