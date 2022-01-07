@@ -103,6 +103,13 @@ img {
   max-height: 400px;
   max-width: 400px;
 }
+@media (max-width: 768px) {
+  img {
+    max-height: 325px;
+    max-width: 325px;
+  }
+}
+
 ion-textarea {
   margin: 0;
 }

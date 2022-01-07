@@ -44,7 +44,6 @@
           <ion-icon :icon="icons.settings"></ion-icon>
           <ion-label>Settings</ion-label>
         </ion-tab-button>
-        <div slot="start">dfdf</div>
       </ion-tab-bar>
     </ion-tabs>
     <CreateButton />
