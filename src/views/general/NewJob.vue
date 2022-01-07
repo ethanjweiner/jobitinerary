@@ -104,7 +104,7 @@ export default {
           name: "Job",
           params: {
             userID: state.customerID,
-            jobID: nameToID(state.jobName),
+            id: nameToID(state.jobName),
           },
         });
       } else throw Error("Please select a customer and job name.");

@@ -6,7 +6,7 @@
         name: 'Employee Day',
         params: {
           userID: day.employeeID,
-          date: day.date,
+          id: day.date,
         },
       })
     "
@@ -59,6 +59,7 @@ import {
   IonButtons,
   IonCard,
   IonCardContent,
+  IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonIcon,
@@ -143,6 +144,7 @@ export default {
     IonNote,
     IonToggle,
     IonButtons,
+    IonCardHeader,
   },
 };
 </script>

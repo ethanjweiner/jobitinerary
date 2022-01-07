@@ -71,7 +71,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: "customers/:userID/jobs/:jobID",
+        path: "customers/:userID/jobs/:id",
         name: "Job",
         props: true,
         component: () => import("@/views/general/Job.vue"),
@@ -103,7 +103,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: "employees/:userID/days/:date",
+        path: "employees/:userID/days/:id",
         name: "Employee Day",
         props: true,
         component: () => import("@/views/general/EmployeeDay.vue"),
@@ -113,7 +113,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       // VISITS
       {
-        path: "visits/:visitID",
+        path: "visits/:id",
         name: "Company Visit",
         props: true,
         component: () => import("@/views/general/VisitView.vue"),
@@ -182,7 +182,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/employee/Days.vue"),
       },
       {
-        path: "days/:date",
+        path: "days/:id",
         component: () => import("@/views/employee/EmployeeDay.vue"),
       },
       // PAY
@@ -201,7 +201,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       // VISITS
       {
-        path: "visits/:visitID",
+        path: "visits/:id",
         name: "Visit",
         props: true,
         component: () => import("@/views/general/VisitView.vue"),

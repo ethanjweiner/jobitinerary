@@ -6,9 +6,7 @@
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-          <ion-text color="light">
-            {{ idToName(userID) }} on {{ date }}</ion-text
-          >
+          <ion-text color="light"> {{ idToName(userID) }} on {{ id }}</ion-text>
         </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
@@ -37,18 +35,23 @@
 
     <Sections :sections="sections" v-if="state.day">
       <template v-slot:main>
-        <DayMain v-model="state.day" />
+        <DayMain :key="state.day" v-model="state.day" />
       </template>
       <template v-slot:visits>
         <DayVisits
-          :key="state.visits.length"
+          :key="state.visits.length || state.day"
           v-model="state.visits"
           :employeeID="userID"
-          :date="date"
+          :date="id"
         />
       </template>
       <template v-slot:expenses>
-        <Expenses v-model="state.expenses" :employeeID="userID" :date="date" />
+        <Expenses
+          :key="state.day"
+          v-model="state.expenses"
+          :employeeID="userID"
+          :date="id"
+        />
       </template>
     </Sections>
   </ion-page>
@@ -84,6 +87,7 @@ import Sections from "@/components/Sections.vue";
 import { copyVisit } from "@/db";
 import { idToName, nameToID, retrieveVisitsOnDate } from "@/helpers";
 import { companiesCollection } from "@/main";
+import { refreshOnRouteChange } from "@/mixins";
 import router from "@/router";
 import store from "@/store";
 import { SectionsType } from "@/types/auxiliary";
@@ -98,7 +102,7 @@ export default {
   name: "Employee Day",
   props: {
     userID: String,
-    date: String,
+    id: String,
   },
   setup(props: any) {
     // SETUP
@@ -127,34 +131,26 @@ export default {
     });
 
     // Retrieve the day
-    const initialize = async () => {
+    const initialize = async (id: string, userID: string) => {
       // Initialize Day
-      const day = new EmployeeDay(
-        props.date,
-        store.state.companyID,
-        props.userID
-      );
+      const day = new EmployeeDay(id, store.state.companyID, props.userID);
       await day.init();
       state.day = day;
       // Initialze Visits
-      state.visits = await retrieveVisitsOnDate(props.date, {
-        employeeID: props.userID,
+      state.visits = await retrieveVisitsOnDate(id, {
+        employeeID: userID,
       });
       // Initialize Expenses
       const expenseDocs = (
         await companiesCollection
-          .doc(`${store.state.companyID}/employees/${props.userID}`)
+          .doc(`${store.state.companyID}/employees/${userID}`)
           .collection("expenses")
-          .where("data.date", "==", props.date)
+          .where("data.date", "==", id)
           .orderBy("data.name")
           .get()
       ).docs;
       for (const doc of expenseDocs) {
-        const expense = new Expense(
-          doc.id,
-          store.state.companyID,
-          props.userID
-        );
+        const expense = new Expense(doc.id, store.state.companyID, userID);
         await expense.init(doc.data().data);
         state.expenses.push(expense);
       }
@@ -163,7 +159,7 @@ export default {
       });
     };
 
-    initialize();
+    initialize(props.id, props.userID);
 
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
@@ -242,6 +238,8 @@ export default {
         });
       }
     };
+
+    refreshOnRouteChange(initialize);
 
     return {
       store,

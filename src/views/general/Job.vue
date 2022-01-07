@@ -34,10 +34,14 @@
     <div v-if="state.job">
       <Sections :sections="sections">
         <template v-slot:main>
-          <JobMain v-model="state.job" :visits="state.visits" />
+          <JobMain
+            :key="state.job"
+            v-model="state.job"
+            :visits="state.visits"
+          />
         </template>
         <template v-slot:visits>
-          <JobVisits v-model="state.visits" :job="state.job" />
+          <JobVisits :key="state.job" v-model="state.visits" :job="state.job" />
         </template>
       </Sections>
     </div>
@@ -73,6 +77,7 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import Sections from "@/components/Sections.vue";
 import { idToName } from "@/helpers";
 import { companiesCollection } from "@/main";
+import { refreshOnRouteChange } from "@/mixins";
 import router from "@/router";
 import store from "@/store";
 import { SectionsType } from "@/types/auxiliary";
@@ -87,7 +92,7 @@ export default {
   name: "Job",
   props: {
     userID: String,
-    jobID: String,
+    id: String,
   },
   setup(props: any) {
     // Sections
@@ -110,15 +115,15 @@ export default {
     });
 
     // Initialize job
-    const initialize = async () => {
-      const job = new Job(props.jobID, store.state.companyID, props.userID);
+    const initialize = async (id) => {
+      const job = new Job(id, store.state.companyID, props.userID);
       await job.init();
       state.job = job;
       const visitDocs = (
         await companiesCollection
           .doc(store.state.companyID)
           .collection("visits")
-          .where("data.jobID", "==", job.id)
+          .where("data.id", "==", job.id)
           .get()
       ).docs;
       for (const doc of visitDocs) {
@@ -131,7 +136,7 @@ export default {
       });
     };
 
-    initialize();
+    initialize(props.id);
 
     // Popover
     const popoverIsOpen = ref(false);
@@ -150,6 +155,8 @@ export default {
       router.go(0);
       popoverIsOpen.value = false;
     };
+
+    refreshOnRouteChange(initialize);
 
     return {
       state,

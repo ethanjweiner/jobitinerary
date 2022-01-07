@@ -42,7 +42,7 @@ export default {
   setup() {
     const newVisit = async () => {
       const visit = await createVisit();
-      router.push({ name: "Company Visit", params: { visitID: visit.id } });
+      router.push({ name: "Company Visit", params: { id: visit.id } });
     };
     return {
       newVisit,

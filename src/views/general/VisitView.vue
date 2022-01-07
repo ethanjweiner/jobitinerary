@@ -39,7 +39,7 @@
     </ion-popover>
 
     <ion-content v-if="state.visit" :fullscreen="true">
-      <VisitComponent v-model="state.visit" />
+      <VisitComponent :key="state.visit" v-model="state.visit" />
     </ion-content>
   </ion-page>
 </template>
@@ -66,6 +66,7 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import VisitComponent from "@/components/units/Visit.vue";
 import { createVisit } from "@/db";
 import { idToName } from "@/helpers";
+import { refreshOnRouteChange } from "@/mixins";
 import router from "@/router";
 import store from "@/store";
 import { Visit } from "@/types/units";
@@ -77,27 +78,27 @@ interface State {
 export default {
   name: "Visit View",
   props: {
-    visitID: String,
+    id: String,
   },
   setup(props: any) {
     const state = reactive<State>({
       visit: null,
     });
 
-    const initialize = async () => {
+    const initialize = async (id) => {
       // ADD NEW VISIT
-      if (props.visitID == "new") {
+      if (id == "new") {
         // Generate a random id for now...
         const visit = await createVisit();
         state.visit = visit;
       } else {
-        const visit = new Visit(props.visitID, store.state.companyID);
+        const visit = new Visit(id, store.state.companyID);
         await visit.init();
         state.visit = visit;
       }
     };
 
-    initialize();
+    initialize(props.id);
 
     // Popover
     const popoverIsOpen = ref(false);
@@ -117,6 +118,8 @@ export default {
 
       popoverIsOpen.value = false;
     };
+
+    refreshOnRouteChange(initialize);
 
     return {
       state,

@@ -17,7 +17,7 @@
             name: 'Job',
             params: {
               userID: itemProps.item.customerID,
-              jobID: itemProps.item.id,
+              id: itemProps.item.id,
             },
           })
         "

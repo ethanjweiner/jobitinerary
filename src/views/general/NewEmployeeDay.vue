@@ -112,7 +112,7 @@ export default {
         await createEmployeeDay(state.date, state.employeeID);
         router.replace({
           name: "Employee Day",
-          params: { userID: state.employeeID, date: state.date },
+          params: { userID: state.employeeID, id: state.date },
         });
       } else throw Error("Please select an employee and date.");
     };
