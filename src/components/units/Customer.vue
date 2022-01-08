@@ -66,8 +66,6 @@ export default {
       return base;
     });
 
-    console.log(jobsRef.value.path);
-
     // If the user is a Company, assign the customer based on the prop
     if (props.userID && store.state.user instanceof Company) {
       state.customer = store.state.user.customers.find(

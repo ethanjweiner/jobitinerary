@@ -77,7 +77,6 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import Sections from "@/components/Sections.vue";
 import { idToName } from "@/helpers";
 import { companiesCollection } from "@/main";
-import { refreshOnRouteChange } from "@/mixins";
 import router from "@/router";
 import store from "@/store";
 import { SectionsType } from "@/types/auxiliary";
@@ -115,7 +114,7 @@ export default {
     });
 
     // Initialize job
-    const initialize = async (id) => {
+    const initialize = async (id: string) => {
       const job = new Job(id, store.state.companyID, props.userID);
       await job.init();
       state.job = job;

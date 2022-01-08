@@ -87,7 +87,6 @@ import Sections from "@/components/Sections.vue";
 import { copyVisit } from "@/db";
 import { idToName, nameToID, retrieveVisitsOnDate } from "@/helpers";
 import { companiesCollection } from "@/main";
-import { refreshOnRouteChange } from "@/mixins";
 import router from "@/router";
 import store from "@/store";
 import { SectionsType } from "@/types/auxiliary";

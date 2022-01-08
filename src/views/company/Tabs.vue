@@ -105,7 +105,6 @@ export default {
 
     const alertIsOpen = ref(false);
     const setAlertOpen = (state: boolean) => (alertIsOpen.value = state);
-    store.setAlert("ethan");
 
     watch(store.alert, () => {
       if (store.alert.message) setAlertOpen(true);

@@ -66,7 +66,6 @@ import DeletePopover from "@/components/popovers/DeletePopover.vue";
 import VisitComponent from "@/components/units/Visit.vue";
 import { createVisit } from "@/db";
 import { idToName } from "@/helpers";
-import { refreshOnRouteChange } from "@/mixins";
 import router from "@/router";
 import store from "@/store";
 import { Visit } from "@/types/units";
@@ -85,7 +84,7 @@ export default {
       visit: null,
     });
 
-    const initialize = async (id) => {
+    const initialize = async (id: string) => {
       // ADD NEW VISIT
       if (id == "new") {
         // Generate a random id for now...

@@ -24,10 +24,10 @@ export default {
   },
   setup(props: any) {
     const startTime = new Date(props.startTime);
-    const timerValue = reactive({});
+    const timerValue = reactive<any>({});
 
     const refreshTimer = () => {
-      const t = Date.now() - startTime;
+      const t = Date.now() - startTime.getTime();
       timerValue.seconds = Math.floor((t / 1000) % 60);
       timerValue.minutes = Math.floor((t / 1000 / 60) % 60);
       timerValue.hours = Math.floor((t / (1000 * 60 * 60)) % 24);
