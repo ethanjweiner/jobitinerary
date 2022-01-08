@@ -77,6 +77,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/general/Job.vue"),
         meta: {
           class: "customer",
+          refresh: true,
         },
       },
 
@@ -109,6 +110,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/general/EmployeeDay.vue"),
         meta: {
           class: "employee",
+          refresh: true,
         },
       },
       // VISITS
@@ -119,6 +121,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/general/VisitView.vue"),
         meta: {
           class: "main",
+          refresh: true,
         },
       },
       // NEW DAYS

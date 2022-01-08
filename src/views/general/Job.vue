@@ -156,7 +156,7 @@ export default {
       popoverIsOpen.value = false;
     };
 
-    refreshOnRouteChange(initialize);
+    // refreshOnRouteChange(initialize);
 
     return {
       state,

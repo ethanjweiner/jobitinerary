@@ -1,7 +1,7 @@
 <template>
   <ion-page :class="route.meta.class">
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>
+      <ion-router-outlet :key="refresher"></ion-router-outlet>
       <ion-tab-bar :slot="screenWidth < 768 ? 'bottom' : 'top'" color="primary">
         <div style="height: 100%;">
           <ion-title class="main-title" style="height: 90%;">
@@ -97,6 +97,12 @@ export default {
 
     const route = useRoute();
 
+    const refresher = ref(0);
+
+    watch(route, async (_, newRoute) => {
+      if (newRoute.meta.refresh) refresher.value += 1;
+    });
+
     const alertIsOpen = ref(false);
     const setAlertOpen = (state: boolean) => (alertIsOpen.value = state);
     store.setAlert("ethan");
@@ -118,6 +124,7 @@ export default {
       route,
       alertIsOpen,
       store,
+      refresher,
       setAlertOpen,
     };
   },

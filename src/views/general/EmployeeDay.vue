@@ -239,7 +239,7 @@ export default {
       }
     };
 
-    refreshOnRouteChange(initialize);
+    // refreshOnRouteChange(initialize);
 
     return {
       store,
