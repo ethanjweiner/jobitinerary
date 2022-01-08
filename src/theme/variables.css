@@ -208,7 +208,8 @@ ion-toolbar {
   color: white;
 }
 
-input {
+input,
+ion-item {
   --background: var(--ion-color-white);
 }
 
