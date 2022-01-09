@@ -49,7 +49,7 @@
       </ion-grid>
     </ion-content>
 
-    <div v-else>
+    <div class="large-header" v-else>
       <Customer
         v-if="type == 'customer'"
         :key="state.userID"

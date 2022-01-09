@@ -12,11 +12,12 @@
       <VisitItem
         :visit="itemProps.item"
         :itemAction="
-          () =>
+          (state) => {
             router.push({
               name: 'Company Visit',
               params: { id: itemProps.item.id },
-            })
+            });
+          }
         "
       />
     </template>

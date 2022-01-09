@@ -6,7 +6,7 @@
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-          <ion-text color="light"> {{ idToName(userID) }} on {{ id }}</ion-text>
+          <ion-text color="light">{{ idToName(userID) }}</ion-text>
         </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
@@ -33,7 +33,7 @@
       <!-- Add Day Popover here -->
     </ion-popover>
 
-    <Sections :sections="sections" v-if="state.day">
+    <Sections :title="id" :sections="sections" v-if="state.day">
       <template v-slot:main>
         <DayMain :key="state.day" v-model="state.day" />
       </template>

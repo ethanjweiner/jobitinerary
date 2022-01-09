@@ -7,7 +7,7 @@
         </ion-buttons>
         <ion-title>
           <ion-text color="light">
-            {{ date }}
+            {{ idToName(userID) }}
           </ion-text>
         </ion-title>
         <ion-buttons :collapse="true" slot="end">
@@ -17,7 +17,6 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
     <ion-popover
       :is-open="popoverIsOpen"
       :translucent="true"
@@ -33,7 +32,7 @@
       <!-- Add Day Popover here -->
     </ion-popover>
 
-    <Sections :sections="sections" v-if="state.day">
+    <Sections :title="date" :sections="sections" v-if="state.day">
       <template v-slot:main>
         <DayMain v-model="state.day" :visits="state.visits" />
       </template>

@@ -10,12 +10,6 @@
             {{ state.job.data.name ? state.job.data.name : "New Job" }}
           </ion-text>
         </ion-title>
-        <ion-note
-          style="padding-left: 20px;"
-          color="light"
-          class="ion-hide-md-down"
-          >for {{ idToName(state.job.data.customerID) }}</ion-note
-        >
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleJobSettings(true, $event)">
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
@@ -32,7 +26,10 @@
       <DeletePopover unitName="Job" @delete="deleteJob" />
     </ion-popover>
     <div v-if="state.job">
-      <Sections :sections="sections">
+      <Sections
+        :title="idToName(state.job.data.customerID)"
+        :sections="sections"
+      >
         <template v-slot:main>
           <JobMain
             :key="state.job"
@@ -55,7 +52,6 @@ import {
   IonButtons,
   IonHeader,
   IonIcon,
-  IonNote,
   IonPage,
   IonPopover,
   IonText,
@@ -187,7 +183,6 @@ export default {
     Sections,
     JobVisits,
     DeletePopover,
-    IonNote,
     IonText,
   },
 };

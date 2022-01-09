@@ -17,6 +17,9 @@
     </ion-content>
 
     <ion-content id="main">
+      <ion-item v-if="title" color="primary">
+        {{ title }}
+      </ion-item>
       <ion-segment
         @ionChange="selectedSection = $event.detail.value"
         :value="selectedSection"
@@ -54,6 +57,7 @@ export default {
   name: "Sections",
   props: {
     sections: Array,
+    title: String,
   },
   setup(props: any) {
     const selectedSection = ref<string>(props.sections[0].id);
@@ -87,7 +91,11 @@ ion-item {
 }
 
 .ios ion-split-pane {
-  margin-top: 64px !important;
+  margin-top: 44px;
+}
+
+.ios .large-header > ion-split-pane {
+  margin-top: 64px;
 }
 
 @media (min-width: 768px) {

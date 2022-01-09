@@ -1,5 +1,4 @@
 <template>
-  <!-- Different depending on render type -->
   <ion-page>
     <ion-header v-if="state.visit">
       <ion-toolbar color="primary">

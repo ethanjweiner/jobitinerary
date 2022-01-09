@@ -251,7 +251,3 @@ ion-card li {
 .reorder-item {
   background: var(--ion-background-color) !important;
 }
-
-.unit-toolbar {
-  height: 63px;
-}

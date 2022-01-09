@@ -2,23 +2,27 @@
   <ion-list>
     <ion-item button @click="$emit('deleteDay')">
       <ion-text color="danger">
-        <ion-icon :icon="icons.trash" color="danger"></ion-icon>
-        Delete
-        <ion-note>Delete the day, and any visits on this date.</ion-note>
+        <ion-icon
+          class="ion-hide-md-down"
+          :icon="icons.trash"
+          color="danger"
+        ></ion-icon>
+        Delete Day
       </ion-text>
     </ion-item>
     <ion-item>
       <ion-label color="secondary">
         <ion-icon
+          class="ion-hide-md-down"
           :icon="icons.calendarNumberOutline"
           color="secondary"
         ></ion-icon>
-        Change Date
+        <span class="ion-hide-md-down">Change</span> Date
       </ion-label>
       <ion-datetime
         v-model="date"
         @ionChange="$emit('changeDate', $event.detail.value.substring(0, 10))"
-        display-format="YYYY-MM-DD"
+        display-format="MM/DD/22"
       ></ion-datetime>
     </ion-item>
 
@@ -26,8 +30,12 @@
       v-if="type == 'employee' && store.state.user.employees.length > 1"
     >
       <ion-label color="tertiary">
-        <ion-icon :icon="icons.copyOutline" color="tertiary"></ion-icon>
-        Copy to Employee
+        <ion-icon
+          class="ion-hide-md-down"
+          :icon="icons.copyOutline"
+          color="tertiary"
+        ></ion-icon>
+        Copy <span class="ion-hide-md-down">to Employee</span>
       </ion-label>
       <ion-select @ionChange="$emit('copyDay', $event.detail.value)">
         <ion-select-option

@@ -7,7 +7,7 @@
             <ion-icon :icon="icons.ellipsisVertical"></ion-icon>
           </ion-button>
         </ion-buttons>
-        <ion-title class="ion-text-start">
+        <ion-title>
           <ion-text color="light">
             Visit<span v-if="state.visit.data.date"> on </span
             >{{ state.visit.data.date }}

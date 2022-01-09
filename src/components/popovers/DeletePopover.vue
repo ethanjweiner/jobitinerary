@@ -2,7 +2,11 @@
   <ion-list>
     <ion-item button @click="$emit('delete')">
       <ion-text color="danger">
-        <ion-icon :icon="trash" color="danger"></ion-icon>
+        <ion-icon
+          :icon="trash"
+          color="danger"
+          class="ion-hide-md-down"
+        ></ion-icon>
         Delete {{ unitName }}
       </ion-text>
     </ion-item>
