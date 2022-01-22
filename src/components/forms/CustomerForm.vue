@@ -19,7 +19,6 @@
                   </ion-label>
                   <ion-input
                     type="email"
-                    disabled
                     placeholder="email"
                     :debounce="config.constants.DEBOUNCE_AMOUNT"
                     v-model="state.customer.data.email"
@@ -123,7 +122,7 @@ import {
   IonTextarea,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { callOutline,mailOutline } from "ionicons/icons";
+import { callOutline, mailOutline } from "ionicons/icons";
 
 import Address from "@/components/Address.vue";
 import AddButton from "@/components/buttons/AddButton.vue";

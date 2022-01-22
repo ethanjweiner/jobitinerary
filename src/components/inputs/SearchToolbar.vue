@@ -1,9 +1,7 @@
 <template>
   <ion-toolbar color="primary" slot="fixed" class="ion-padding">
     <h2 slot="start">
-      <ion-text color="light">
-        {{ title }}
-      </ion-text>
+      <ion-text color="light"> {{ title }} </ion-text>
     </h2>
     <AddButton v-if="!disableAdd" @click="addAction" slot="start" />
     <ion-item

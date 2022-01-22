@@ -1,0 +1,8 @@
+{
+	"appId": "com.jobitinerary.app",
+	"appName": "job-itinerary",
+	"webDir": "dist",
+	"server": {
+		"url": "http://10.0.0.3:8100"
+	}
+}
