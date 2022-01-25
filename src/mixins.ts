@@ -1,3 +1,10 @@
+import {
+  Camera,
+  CameraResultType,
+  CameraSource,
+  Photo,
+} from "@capacitor/camera";
+import { Directory, Filesystem } from "@capacitor/filesystem";
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -14,4 +21,40 @@ const refreshOnRouteChange = (
   });
 };
 
-export { refreshOnRouteChange };
+const convertBlobToBase64 = (blob: Blob) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+    reader.readAsDataURL(blob);
+  });
+
+const readAsBase64 = async (photo: Photo) => {
+  const response = await fetch(photo.webPath as string);
+  const blob = await response.blob();
+  return (await convertBlobToBase64(blob)) as string;
+};
+
+const saveImage = async (photo: Photo) => {
+  const base64Data = await readAsBase64(photo);
+  const fileName = new Date().getTime() + ".jpeg";
+  await Filesystem.writeFile({
+    path: `job-itinerary/${fileName}`,
+    data: base64Data,
+    directory: Directory.Data,
+  });
+};
+
+const takePhoto = async () => {
+  const image = await Camera.getPhoto({
+    quality: 100,
+    source: CameraSource.Prompt, // Photos OR Camera
+    resultType: CameraResultType.Base64,
+  });
+
+  return image;
+};
+
+export { refreshOnRouteChange, takePhoto, saveImage };

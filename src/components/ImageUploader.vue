@@ -8,12 +8,12 @@
 </template>
 
 <script lang="ts">
-import { Camera, CameraResultType } from "@capacitor/camera";
-import { IonButton, IonIcon, IonText } from "@ionic/vue";
+import { IonButton, IonIcon, IonText, isPlatform } from "@ionic/vue";
 import { cameraOutline } from "ionicons/icons";
 
 import { generateUUID } from "@/helpers";
 import { storage } from "@/main";
+import { saveImage, takePhoto } from "@/mixins";
 import store from "@/store";
 
 export default {
@@ -29,13 +29,11 @@ export default {
   },
   setup(props: any, { emit }: { emit: any }) {
     const uploadImage = async () => {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: true,
-        resultType: CameraResultType.Base64,
-      });
+      const image = await takePhoto();
 
       if (image && image.base64String) {
+        if (isPlatform("ios")) await saveImage(image);
+
         const filePath = `${store.state.companyID}/images/${generateUUID()}.${
           image.format
         }`;
