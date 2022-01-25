@@ -95,7 +95,7 @@ ion-item {
 }
 
 .ios .large-header > ion-split-pane {
-  margin-top: 64px;
+  margin-top: 68px;
 }
 
 @media (min-width: 768px) {

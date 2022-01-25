@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header collapse="condense">
       <ion-toolbar color="primary">
         <ion-title>
           <ion-text color="light">

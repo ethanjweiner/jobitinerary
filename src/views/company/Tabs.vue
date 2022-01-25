@@ -2,6 +2,7 @@
   <ion-page :class="route.meta.class">
     <ion-tabs>
       <ion-router-outlet :key="refresher"></ion-router-outlet>
+      <CreateButton />
       <ion-tab-bar :slot="screenWidth < 768 ? 'bottom' : 'top'" color="primary">
         <div style="height: 100%;">
           <ion-title class="main-title" style="height: 90%;">
@@ -46,7 +47,6 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-    <CreateButton />
     <!-- Global Alerts -->
     <ion-toast
       :is-open="alertIsOpen"
@@ -100,7 +100,9 @@ export default {
     const refresher = ref(0);
 
     watch(route, async (_, newRoute) => {
-      if (newRoute.meta.refresh) refresher.value += 1;
+      if (newRoute.meta.refresh) {
+        refresher.value += 1;
+      }
     });
 
     const alertIsOpen = ref(false);

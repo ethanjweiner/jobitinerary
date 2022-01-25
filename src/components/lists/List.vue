@@ -59,7 +59,6 @@ export default {
     type: String,
   },
   setup(props: any) {
-    console.log(props.items);
     const lists = computed(() => {
       if (props.items.length) {
         if (props.splitters) {

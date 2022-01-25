@@ -15,7 +15,8 @@
           <ion-toolbar class="unit-toolbar" color="tertiary">
             <ion-title v-if="visit.data.employeeID">
               <ion-text color="light">
-                Visit by {{ idToName(visit.data.employeeID) }}
+                <span class="ion-hide-md-down">Visit by</span>
+                {{ idToName(visit.data.employeeID) }}
               </ion-text>
             </ion-title>
             <ion-note

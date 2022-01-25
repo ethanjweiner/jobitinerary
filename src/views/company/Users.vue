@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header collapse="condense">
       <ion-toolbar color="primary" v-if="state.userID">
         <UserSelect
           :header="true"

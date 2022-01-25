@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header collapse="condense">
       <ion-toolbar class="unit-toolbar" color="primary" v-if="state.job">
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>
@@ -118,7 +118,7 @@ export default {
         await companiesCollection
           .doc(store.state.companyID)
           .collection("visits")
-          .where("data.id", "==", job.id)
+          .where("data.jobID", "==", job.id)
           .get()
       ).docs;
       for (const doc of visitDocs) {

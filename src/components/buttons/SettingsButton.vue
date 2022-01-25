@@ -35,7 +35,7 @@ export default {
 
 <style scoped>
 ion-icon {
-  font-size: 35px;
+  font-size: 28px;
   color: var(--ion-color-light);
   cursor: pointer;
   margin-right: 8px;
