@@ -46,6 +46,12 @@
           <ion-label>Settings</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
+      <!-- Global Loading Spinner -->
+      <ion-loading
+        :is-open="store.loadingCounter.value != 0"
+        message="Please wait..."
+      >
+      </ion-loading>
     </ion-tabs>
     <!-- Global Alerts -->
     <ion-toast
@@ -63,6 +69,7 @@
 import {
   IonIcon,
   IonLabel,
+  IonLoading,
   IonPage,
   IonRouterOutlet,
   IonTabBar,
@@ -91,6 +98,7 @@ export default {
     IonTitle,
     CreateButton,
     IonToast,
+    IonLoading,
   },
   setup() {
     const screenWidth = ref(0);

@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 
 import { initializeUserRouting } from "@/helpers";
 import { Alert } from "@/types/auxiliary";
@@ -24,6 +24,16 @@ const store = {
     message: "Unidentified error",
     color: "danger",
   }),
+  loadingCounter: ref<number>(0),
+  incrementLoadingCounter() {
+    this.loadingCounter.value += 1;
+  },
+  decrementLoadingCounter() {
+    this.loadingCounter.value -= 1;
+  },
+  resetLoadingCounter() {
+    this.loadingCounter.value = 0;
+  },
 
   async setUser(user: Company | Employee | Customer | null) {
     this.state.user = user;

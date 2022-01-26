@@ -19,18 +19,25 @@
           @keyup.enter="logIn"
         ></ion-input>
       </ion-item>
-      <ion-button color="primary" type="submit" expand="block"
-        >Login</ion-button
+      <ButtonWithSpinner
+        :loading="loading"
+        title="login"
+        color="primary"
+        type="submit"
+        expand="block"
       >
+      </ButtonWithSpinner>
     </form>
   </ion-card>
 </template>
 
 <script>
-import { IonButton, IonCard,IonInput, IonItem, IonLabel } from "@ionic/vue";
-import { reactive, toRefs } from "@vue/reactivity";
+import { IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
+import { reactive, ref, toRefs } from "@vue/reactivity";
 
 import { signIn } from "@/authentication";
+
+import ButtonWithSpinner from "../buttons/ButtonWithSpinner.vue";
 
 export default {
   name: "Log In",
@@ -38,8 +45,8 @@ export default {
     IonItem,
     IonInput,
     IonLabel,
-    IonButton,
     IonCard,
+    ButtonWithSpinner,
   },
   setup() {
     const credentials = reactive({
@@ -52,16 +59,20 @@ export default {
       credentials.password = null;
     };
 
+    const loading = ref(false);
+
     const logIn = async () => {
       try {
+        loading.value = true;
         await signIn(credentials.email, credentials.password);
       } catch (error) {
         console.log(error);
       } finally {
         resetCredentials();
+        loading.value = false;
       }
     };
-    return { ...toRefs(credentials), logIn };
+    return { ...toRefs(credentials), logIn, loading };
   },
 };
 </script>
