@@ -1,51 +1,55 @@
 <template>
-  <ion-button @click="uploadImage">
+  <button-with-spinner :loading="loading" @click="uploadImage">
     <ion-icon color="dark" :icon="icons.cameraOutline"></ion-icon>
     <ion-text color="dark" style="padding-left: 5px;" v-if="!hideText"
       >Upload Image</ion-text
     >
-  </ion-button>
+  </button-with-spinner>
 </template>
 
 <script lang="ts">
-import { IonButton, IonIcon, IonText, isPlatform } from "@ionic/vue";
+import { IonIcon, IonText } from "@ionic/vue";
+import { ref } from "@vue/reactivity";
 import { cameraOutline } from "ionicons/icons";
 
 import { generateUUID } from "@/helpers";
 import { storage } from "@/main";
-import { saveImage, takePhoto } from "@/mixins";
+import { takePhoto } from "@/mixins";
 import store from "@/store";
+
+import ButtonWithSpinner from "./buttons/ButtonWithSpinner.vue";
 
 export default {
   name: "Image Uploader",
   emits: ["imageChange"],
   components: {
-    IonButton,
     IonIcon,
     IonText,
+    ButtonWithSpinner,
   },
   props: {
     hideText: Boolean,
   },
   setup(props: any, { emit }: { emit: any }) {
+    const loading = ref(false);
+
     const uploadImage = async () => {
-      const image = await takePhoto();
+      const { format, base64String } = await takePhoto();
 
-      if (image && image.base64String) {
-        if (isPlatform("ios")) await saveImage(image);
+      if (base64String) {
+        loading.value = true;
 
-        const filePath = `${store.state.companyID}/images/${generateUUID()}.${
-          image.format
-        }`;
+        const filePath = `${
+          store.state.companyID
+        }/images/${generateUUID()}.${format}`;
         const storageRef = storage.ref();
         // Store the image as a long string...
-        await storageRef
-          .child(filePath)
-          .putString(image.base64String, "base64");
+        await storageRef.child(filePath).putString(base64String, "base64");
         emit("imageChange", filePath);
+        loading.value = false;
       }
     };
-    return { icons: { cameraOutline }, uploadImage };
+    return { icons: { cameraOutline }, uploadImage, loading };
   },
 };
 </script>

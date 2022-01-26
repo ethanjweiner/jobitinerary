@@ -34,7 +34,8 @@ const convertBlobToBase64 = (blob: Blob) =>
 const readAsBase64 = async (photo: Photo) => {
   const response = await fetch(photo.webPath as string);
   const blob = await response.blob();
-  return (await convertBlobToBase64(blob)) as string;
+  const base64 = (await convertBlobToBase64(blob)) as string;
+  return base64.replace("data:image/png;base64,", "");
 };
 
 const saveImage = async (photo: Photo) => {
@@ -52,9 +53,10 @@ const takePhoto = async () => {
     quality: 100,
     source: CameraSource.Prompt, // Photos OR Camera
     resultType: CameraResultType.Base64,
+    saveToGallery: true,
   });
 
   return image;
 };
 
-export { refreshOnRouteChange, takePhoto, saveImage };
+export { refreshOnRouteChange, takePhoto, saveImage, readAsBase64 };
