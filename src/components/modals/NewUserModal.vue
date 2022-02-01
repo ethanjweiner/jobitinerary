@@ -98,7 +98,7 @@ export default {
     });
 
     const addUser = async () => {
-      if (state.name && state.email && store.state.user instanceof Company) {
+      if (state.name && store.state.user instanceof Company) {
         if (props.type == "employee") {
           await store.state.user.addEmployee(state.name, state.email);
         } else if (props.type == "customer") {
@@ -107,7 +107,7 @@ export default {
           throw Error("The specified user type is not valid.");
         }
         emit("userAdded", nameToID(state.name));
-      } else throw Error("You must enter a name and email for the new user.");
+      } else throw Error("You must enter a name for the new user.");
 
       emit("didDismiss");
     };

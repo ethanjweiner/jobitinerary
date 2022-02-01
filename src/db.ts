@@ -47,12 +47,9 @@ export class InfiniteList {
 
   async init() {
     try {
-      store.incrementLoadingCounter();
       await this.loadNewBatch();
     } catch {
       // Do nothing
-    } finally {
-      store.decrementLoadingCounter();
     }
   }
 

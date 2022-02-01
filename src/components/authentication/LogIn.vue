@@ -21,7 +21,7 @@
       </ion-item>
       <ButtonWithSpinner
         :loading="loading"
-        title="login"
+        title="Login"
         color="primary"
         type="submit"
         expand="block"
