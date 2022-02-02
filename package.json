@@ -30,10 +30,11 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "firebase": "^8.10.0",
     "firebase-functions": "^3.16.0",
-    "vue": "^3.2.1",
+    "vue": "^3.2.29",
     "vue-beautiful-chat": "^2.5.0",
     "vue-currency-input": "^2.0.2",
-    "vue-router": "^4.0.0-0",
+    "vue-router": "^4.0.12",
+    "vue3-date-time-picker": "^2.5.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
