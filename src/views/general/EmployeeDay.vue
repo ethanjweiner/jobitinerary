@@ -185,6 +185,7 @@ export default {
     };
 
     const changeDate = async (date: string) => {
+      console.log(date);
       if (state.day) {
         state.day = await state.day.changeDate(date);
         for (const visit of state.visits) {
@@ -196,10 +197,10 @@ export default {
 
         await router.push({
           name: "Employee Day",
-          params: { employee: props.userID, date },
+          params: { employee: props.userID, id: date },
         });
 
-        router.go(0);
+        // router.go(0);
       }
 
       store.setAlert({
