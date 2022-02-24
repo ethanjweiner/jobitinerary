@@ -80,19 +80,22 @@ export default {
     const autocompleteInput = ref();
 
     onMounted(async () => {
-      const input = await autocompleteInput.value.$el.getInputElement();
-      state.autocomplete = new window.google.maps.places.Autocomplete(input, {
-        types: ["address"],
-        fields: ["formatted_address", "geometry"],
-      });
-      state.autocomplete.addListener("place_changed", () => {
-        const place = state.autocomplete.getPlace();
-        state.location.address = place.formatted_address;
-        state.location.coordinates = {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        };
-      });
+      setTimeout(async () => {
+        const input = await autocompleteInput.value.$el.getInputElement();
+        state.autocomplete = new window.google.maps.places.Autocomplete(input, {
+          types: ["address"],
+          fields: ["formatted_address", "geometry"],
+        });
+        state.autocomplete.addListener("place_changed", () => {
+          const place = state.autocomplete.getPlace();
+          state.location.address = place.formatted_address;
+          state.location.coordinates = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          };
+        });
+      }),
+        0;
     });
 
     const onInput = (e) => {
