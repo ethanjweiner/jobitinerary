@@ -1,14 +1,9 @@
 <template>
   <ion-list>
-    <ion-item>
-      <ion-icon :icon="icons.calendarNumberOutline"></ion-icon>
-      <ion-label style="margin-left: 7px;">Date of Visit </ion-label>
-      <ion-datetime
-        display-format="MM/DD/YYYY"
-        v-model="state.visit.data.date"
-        @ionChange="changeDate($event)"
-      ></ion-datetime>
-    </ion-item>
+    <date-picker
+      title="Date of Visit"
+      v-model="state.visit.data.date"
+    ></date-picker>
     <ion-item>
       <ion-label style="font-weight: bold;">
         <ion-icon :icon="icons.timeOutline"></ion-icon>
@@ -47,30 +42,14 @@
       @update:modelValue="updateCustomer"
       mode="light"
     />
-    <ion-item>
-      <ion-label position="stacked">
-        <ion-icon :icon="icons.timerOutline"></ion-icon>
-        Planned Start</ion-label
-      >
-      <ion-datetime
-        v-model="state.visit.data.plannedStart"
-        display-format="h:mm A"
-        picker-format="h:mm A"
-        @ionChange="$emit('update:modelValue', state.visit)"
-      ></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">
-        <ion-icon :icon="icons.timerOutline"></ion-icon>
-        Planned End</ion-label
-      >
-      <ion-datetime
-        v-model="state.visit.data.plannedEnd"
-        display-format="h:mm A"
-        picker-format="h:mm A"
-        @ionChange="$emit('update:modelValue', state.visit)"
-      ></ion-datetime>
-    </ion-item>
+    <time-picker
+      title="Planned Start"
+      v-model="state.visit.data.plannedStart"
+    ></time-picker>
+    <time-picker
+      title="Planned End"
+      v-model="state.visit.data.plannedEnd"
+    ></time-picker>
     <!-- Auto updates on location -->
     <Address v-model="state.visit.data.location" />
     <!-- Job Attacher -->
@@ -141,7 +120,6 @@
 import {
   IonButtons,
   IonChip,
-  IonDatetime,
   IonIcon,
   IonInput,
   IonItem,
@@ -167,12 +145,19 @@ import JobsModal from "@/components/modals/JobsModal.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import TimeLogComponent from "@/components/TimeLog.vue";
 import config from "@/config/config";
-import { formatTime, retrieveCustomerAddress, showTextAreas } from "@/helpers";
+import {
+  formatDate,
+  formatTime,
+  retrieveCustomerAddress,
+  showTextAreas,
+} from "@/helpers";
 import { companiesCollection, db } from "@/main";
 import store from "@/store";
 import { JobInterface, Visit } from "@/types/units";
 
 import Address from "../Address.vue";
+import DatePicker from "../inputs/DatePicker.vue";
+import TimePicker from "../inputs/TimePicker.vue";
 
 interface State {
   visit: Visit;
@@ -191,7 +176,6 @@ export default {
   emits: ["update:modelValue"],
   components: {
     IonLabel,
-    IonDatetime,
     IonItem,
     IonChip,
     IonTextarea,
@@ -206,6 +190,8 @@ export default {
     IonInput,
     IonList,
     Address,
+    DatePicker,
+    TimePicker,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive<State>({
@@ -230,7 +216,7 @@ export default {
     showTextAreas(state);
 
     const changeDate = (ev: CustomEvent) => {
-      state.visit.data.date = ev.detail.value.substring(0, 10);
+      state.visit.data.date = formatDate(ev.detail.value);
       emit("update:modelValue", state.visit);
     };
 

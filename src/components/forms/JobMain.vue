@@ -20,30 +20,18 @@
                   class="job-title"
                 ></ion-input>
               </ion-item>
-              <ion-item color="white" lines="inset">
-                <ion-label position="stacked">
-                  <ion-icon :icon="icons.timeOutline"></ion-icon>
-                  Estimated Start</ion-label
-                >
-                <ion-datetime
-                  placeholder="MM/DD/YYYY"
-                  @ionChange="changeStartDate($event)"
-                  display-format="MM/DD/YYYY"
-                  v-model="state.job.data.startDate"
-                ></ion-datetime>
-              </ion-item>
-              <ion-item color="white" lines="inset">
-                <ion-label position="stacked">
-                  <ion-icon :icon="icons.timeOutline"></ion-icon>
-                  Estimated End</ion-label
-                >
-                <ion-datetime
-                  placeholder="MM/DD/YYYY"
-                  @ionChange="changeEndDate($event)"
-                  display-format="MM/DD/YYYY"
-                  v-model="state.job.data.endDate"
-                ></ion-datetime>
-              </ion-item>
+              <date-picker
+                color="white"
+                title="Estimated Start"
+                v-model="state.job.data.startDate"
+                @ionChange="update"
+              ></date-picker>
+              <date-picker
+                color="white"
+                title="Estimated End"
+                v-model="state.job.data.endDate"
+                @ionChange="update"
+              ></date-picker>
               <ion-item color="white" lines="inset">
                 <ion-label position="stacked">
                   <ion-icon :icon="icons.documentTextOutline"></ion-icon>
@@ -114,7 +102,6 @@ import {
   IonCardTitle,
   IonChip,
   IonCol,
-  IonDatetime,
   IonGrid,
   IonIcon,
   IonInput,
@@ -136,6 +123,8 @@ import config from "@/config/config";
 import { idToName } from "@/helpers";
 import store from "@/store";
 import { Visit } from "@/types/units";
+
+import DatePicker from "../inputs/DatePicker.vue";
 
 export default {
   name: "Job Main",
@@ -183,13 +172,7 @@ export default {
       )
     );
 
-    const changeStartDate = (ev: CustomEvent) => {
-      state.job.data.startDate = ev.detail.value.substring(0, 10);
-      emit("update:modelValue", state.job);
-    };
-
-    const changeEndDate = (ev: CustomEvent) => {
-      state.job.data.endDate = ev.detail.value.substring(0, 10);
+    const update = () => {
       emit("update:modelValue", state.job);
     };
 
@@ -198,8 +181,7 @@ export default {
       store,
       totalHours,
       employeeHours,
-      changeStartDate,
-      changeEndDate,
+      update,
       config,
       idToName,
       icons: { calendarNumberOutline, documentTextOutline, timeOutline },
@@ -213,7 +195,6 @@ export default {
     IonGrid,
     IonRow,
     IonCol,
-    IonDatetime,
     IonTextarea,
     Tasks,
     IonCard,
@@ -223,6 +204,7 @@ export default {
     IonCardSubtitle,
     IonList,
     IonIcon,
+    DatePicker,
   },
 };
 </script>

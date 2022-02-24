@@ -31,33 +31,17 @@
       >
     </ion-row>
     <ion-row color="light">
-      <ion-col size="6" size-xl="4">
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-icon :icon="icons.timerOutline"></ion-icon>
-            Start Time</ion-label
-          >
-          <ion-datetime
-            v-model="state.time.start"
-            display-format="h:mm A"
-            picker-format="h:mm A"
-          ></ion-datetime>
-        </ion-item>
+      <ion-col size="6">
+        <time-picker
+          title="Start Time"
+          v-model="state.time.start"
+        ></time-picker>
       </ion-col>
-      <ion-col size="6" size-xl="4">
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-icon :icon="icons.timerOutline"></ion-icon>
-            End Time</ion-label
-          >
-          <ion-datetime
-            v-model="state.time.end"
-            display-format="h:mm A"
-            picker-format="h:mm A"
-          ></ion-datetime>
-        </ion-item>
+      <ion-col size="6">
+        <time-picker title="End Time" v-model="state.time.end"></time-picker>
       </ion-col>
-      <ion-col size="12" size-xl="4">
+
+      <ion-col size="12">
         <ion-item>
           <ion-label position="stacked">
             <ion-icon :icon="icons.timeOutline"></ion-icon>
@@ -79,7 +63,6 @@
 import {
   IonButton,
   IonCol,
-  IonDatetime,
   IonGrid,
   IonIcon,
   IonInput,
@@ -89,7 +72,7 @@ import {
   IonRow,
   IonText,
 } from "@ionic/vue";
-import { computed, reactive } from "@vue/reactivity";
+import { computed, reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
 import {
   playOutline,
@@ -98,6 +81,9 @@ import {
   timerOutline,
 } from "ionicons/icons";
 
+import { formatTime } from "@/helpers";
+
+import TimePicker from "./inputs/TimePicker.vue";
 import Timer from "./Timer.vue";
 
 export default {
@@ -131,6 +117,7 @@ export default {
 
     const setStartTime = () => {
       state.time.start = new Date().toISOString();
+      console.log(state.time.start);
       if (state.time.start && state.time.end) refreshHours();
     };
 
@@ -154,6 +141,20 @@ export default {
     // Do the start and end times match the hours?
     const mismatch = computed(() => state.time.hours != retrieveHours());
 
+    const startDate = ref();
+
+    const confirmStart = () => {
+      if (startDate.value == undefined) return;
+      startDate.value.$el.confirm(true);
+    };
+
+    const endDate = ref();
+
+    const confirmEnd = () => {
+      if (endDate.value == undefined) return;
+      endDate.value.$el.confirm(true);
+    };
+
     return {
       state,
       icons: {
@@ -162,12 +163,17 @@ export default {
         timerOutline,
         timeOutline,
       },
+      startDate,
+      endDate,
+      confirmStart,
+      confirmEnd,
       mismatch,
       isTicking,
       setStartTime,
       setEndTime,
       refreshHours,
       updateHours,
+      formatTime,
     };
   },
   components: {
@@ -181,8 +187,8 @@ export default {
     IonItem,
     IonText,
     IonNote,
-    IonDatetime,
     Timer,
+    TimePicker,
   },
 };
 </script>

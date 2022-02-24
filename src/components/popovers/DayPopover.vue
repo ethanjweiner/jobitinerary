@@ -10,21 +10,11 @@
         Delete Day
       </ion-text>
     </ion-item>
-    <ion-item>
-      <ion-label color="secondary">
-        <ion-icon
-          class="ion-hide-md-down"
-          :icon="icons.calendarNumberOutline"
-          color="secondary"
-        ></ion-icon>
-        <span class="ion-hide-md-down">Change</span> Date
-      </ion-label>
-      <ion-datetime
-        v-model="date"
-        @ionChange="$emit('changeDate', $event.detail.value.substring(0, 10))"
-        display-format="MM/DD/22"
-      ></ion-datetime>
-    </ion-item>
+    <date-picker
+      title="Change Date"
+      v-model="date"
+      @update:modelValue="(newDate) => $emit('changeDate', newDate)"
+    ></date-picker>
 
     <ion-item
       v-if="type == 'employee' && store.state.user.employees.length > 1"
@@ -59,7 +49,6 @@
 
 <script lang="ts">
 import {
-  IonDatetime,
   IonIcon,
   IonItem,
   IonLabel,
@@ -74,6 +63,8 @@ import { calendarNumberOutline, copyOutline, trash } from "ionicons/icons";
 
 import store from "@/store";
 import { Employee } from "@/types/users";
+
+import DatePicker from "../inputs/DatePicker.vue";
 export default {
   name: "Visit Popover",
   props: {
@@ -87,9 +78,9 @@ export default {
     IonText,
     IonIcon,
     IonNote,
-    IonDatetime,
     IonLabel,
     IonSelect,
+    DatePicker,
     IonSelectOption,
   },
   emits: ["deleteDay", "changeDate", "copyDay"],

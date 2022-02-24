@@ -251,3 +251,15 @@ ion-card li {
 .reorder-item {
   background: var(--ion-background-color) !important;
 }
+
+.date-popover {
+  --width: 350px;
+}
+
+.date-popover ion-datetime {
+  width: 350px;
+}
+
+ion-datetime {
+  --background: white;
+}

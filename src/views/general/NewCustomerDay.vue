@@ -38,7 +38,11 @@
               <div class="ion-text-start">
                 <h3 class="text-secondary">Select a Date</h3>
               </div>
-              <DateSelect v-model="state.date" />
+              <date-picker
+                v-model="state.date"
+                title="Select a Date"
+              ></date-picker>
+              <!-- <DateSelect v-model="state.date" /> -->
               <ion-button expand="block" color="secondary" @click="create"
                 >Create Day</ion-button
               >
@@ -72,7 +76,7 @@ import {
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 
-import DateSelect from "@/components/selects/DateSelect.vue";
+import DatePicker from "@/components/inputs/DatePicker.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import { createCustomerDay } from "@/db";
 import { dateToString } from "@/helpers";
@@ -84,7 +88,6 @@ export default {
   components: {
     IonPage,
     IonContent,
-    DateSelect,
     IonGrid,
     IonRow,
     IonCol,
@@ -97,6 +100,7 @@ export default {
     IonButton,
     IonNote,
     IonCard,
+    DatePicker,
   },
   props: {
     customerID: String,

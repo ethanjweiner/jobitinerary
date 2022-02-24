@@ -21,30 +21,14 @@
                   placeholder="Where's the meet-up spot?"
                 />
               </ion-item>
-              <ion-item lines="inset">
-                <ion-label position="stacked">
-                  <ion-icon :icon="icons.timerOutline"></ion-icon>
-                  Planned Start</ion-label
-                >
-                <ion-datetime
-                  @ionInput="$emit('update:modelValue', state.day)"
-                  v-model="state.day.data.plannedStart"
-                  display-format="h:mm A"
-                  picker-format="h:mm A"
-                ></ion-datetime>
-              </ion-item>
-              <ion-item lines="inset">
-                <ion-label position="stacked">
-                  <ion-icon :icon="icons.timerOutline"></ion-icon>
-                  Planned End</ion-label
-                >
-                <ion-datetime
-                  @ionInput="$emit('update:modelValue', state.day)"
-                  v-model="state.day.data.plannedEnd"
-                  display-format="h:mm A"
-                  picker-format="h:mm A"
-                ></ion-datetime>
-              </ion-item>
+              <time-picker
+                title="Planned Start"
+                v-model="state.day.data.plannedStart"
+              ></time-picker>
+              <time-picker
+                title="Planned End"
+                v-model="state.day.data.plannedEnd"
+              ></time-picker>
 
               <ion-item lines="none">
                 <ion-label position="start">
@@ -127,7 +111,6 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonCol,
-  IonDatetime,
   IonGrid,
   IonIcon,
   IonInput,
@@ -154,6 +137,7 @@ import config from "@/config/config";
 import store from "@/store";
 
 import CurrencyInput from "../inputs/CurrencyInput.vue";
+import TimePicker from "../inputs/TimePicker.vue";
 
 export default {
   name: "Day Main",
@@ -185,7 +169,6 @@ export default {
     IonGrid,
     IonRow,
     IonCol,
-    IonDatetime,
     IonLabel,
     IonNote,
     IonToggle,
@@ -201,6 +184,7 @@ export default {
     IonCardTitle,
     IonList,
     IonCardSubtitle,
+    TimePicker,
   },
 };
 </script>

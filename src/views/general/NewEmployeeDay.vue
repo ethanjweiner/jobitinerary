@@ -38,7 +38,10 @@
               <div class="ion-text-start">
                 <h3 class="text-secondary">Select a Date</h3>
               </div>
-              <DateSelect v-model="state.date" />
+              <date-picker
+                title="Select a Date"
+                v-model="state.date"
+              ></date-picker>
               <ion-button expand="block" color="primary" @click="create"
                 >Create Day</ion-button
               >
@@ -72,7 +75,7 @@ import {
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 
-import DateSelect from "@/components/selects/DateSelect.vue";
+import DatePicker from "@/components/inputs/DatePicker.vue";
 import UserSelect from "@/components/selects/UserSelect.vue";
 import { createEmployeeDay } from "@/db";
 import { dateToString } from "@/helpers";
@@ -84,7 +87,6 @@ export default {
   components: {
     IonPage,
     IonContent,
-    DateSelect,
     IonGrid,
     IonRow,
     IonCol,
@@ -97,6 +99,7 @@ export default {
     IonButton,
     IonNote,
     IonCard,
+    DatePicker,
   },
   props: {
     employeeID: String,

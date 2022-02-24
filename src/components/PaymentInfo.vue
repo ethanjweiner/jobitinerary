@@ -11,20 +11,18 @@
                 @ionChange="clearDates"
               ></ion-toggle>
             </ion-item>
-            <ion-item v-if="state.filterByDate" color="light">
-              <ion-label>Start Date</ion-label>
-              <ion-datetime
-                display-format="MM/DD/YYYY"
-                v-model="state.startDate"
-              ></ion-datetime>
-            </ion-item>
-            <ion-item v-if="state.filterByDate" color="light">
-              <ion-label>End Date</ion-label>
-              <ion-datetime
-                display-format="MM/DD/YYYY"
-                v-model="state.endDate"
-              ></ion-datetime>
-            </ion-item>
+            <date-picker
+              v-if="state.filterByDate"
+              color="light"
+              title="Start Date"
+              v-model="state.startDate"
+            ></date-picker>
+            <date-picker
+              v-if="state.filterByDate"
+              color="light"
+              title="End Date"
+              v-model="state.endDate"
+            ></date-picker>
 
             <ion-radio-group
               :value="state.filterUnpaid"
@@ -72,7 +70,6 @@ import {
   IonCard,
   IonCardContent,
   IonCol,
-  IonDatetime,
   IonGrid,
   IonIcon,
   IonItem,
@@ -92,6 +89,7 @@ import { CollectionRef, Query } from "@/types/auxiliary";
 import { Employee } from "@/types/users";
 
 import CurrencyInput from "./inputs/CurrencyInput.vue";
+import DatePicker from "./inputs/DatePicker.vue";
 import PaymentData from "./PaymentData.vue";
 
 interface State {
@@ -197,11 +195,12 @@ export default {
     IonRadioGroup,
     IonRadio,
     IonIcon,
-    IonDatetime,
+
     IonToggle,
     IonCard,
     IonCardContent,
     PaymentData,
+    DatePicker,
   },
 };
 </script>
