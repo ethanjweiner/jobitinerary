@@ -7,7 +7,12 @@
     <ion-text style="padding: 5px;">{{
       modelValue ? formatTime(modelValue) : ""
     }}</ion-text>
-    <ion-popover :trigger="id" :show-backdrop="false">
+    <ion-popover
+      :trigger="id"
+      :show-backdrop="false"
+      side="top"
+      @didDismiss="confirm()"
+    >
       <ion-datetime
         color="primary"
         v-model="state.time"

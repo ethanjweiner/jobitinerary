@@ -5,7 +5,12 @@
       {{ title }}
     </ion-label>
     <ion-text slot="end">{{ formatDate(state.date) }}</ion-text>
-    <ion-popover class="date-popover" :trigger="id" :show-backdrop="true">
+    <ion-popover
+      class="date-popover"
+      :trigger="id"
+      :show-backdrop="true"
+      @didDismiss="confirm()"
+    >
       <ion-datetime
         color="primary"
         v-model="state.date"
