@@ -42,6 +42,10 @@ export function dateToString(inputDate: Date) {
   return date.format(inputDate, "YYYY-MM-DD");
 }
 
+export function formatDate(inputDate: string) {
+  return inputDate.substring(0, 10);
+}
+
 export function dateToStrings(inputDate: Date): Array<string> {
   const strs = [
     inputDate.toString(),
