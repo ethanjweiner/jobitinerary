@@ -139,7 +139,13 @@ export default {
     });
 
     // Do the start and end times match the hours?
-    const mismatch = computed(() => state.time.hours != retrieveHours());
+    const mismatch = computed(
+      () =>
+        state.time.start &&
+        state.time.end &&
+        state.time.hours &&
+        state.time.hours != retrieveHours()
+    );
 
     const startDate = ref();
 
