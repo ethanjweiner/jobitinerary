@@ -42,6 +42,17 @@
       @update:modelValue="updateCustomer"
       mode="light"
     />
+
+    <!-- Optional customer input -->
+    <ion-item v-if="!state.visit.data.job && !hideCustomerSelect">
+      <ion-label position="stacked"
+        >Unsaved Customer (<i>For infrequent customers</i>)
+      </ion-label>
+      <ion-input
+        v-model="state.visit.data.unregisteredCustomer"
+        placeholder="Name"
+      ></ion-input>
+    </ion-item>
     <time-picker
       title="Planned Start"
       v-model="state.visit.data.plannedStart"

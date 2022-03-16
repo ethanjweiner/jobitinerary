@@ -22,9 +22,13 @@
         <ion-icon :icon="icons.time"></ion-icon>
         {{ visit.time.hours }} hours</ion-card-subtitle
       >
-      <ion-card-subtitle v-if="visit.customerID">
+      <ion-card-subtitle v-if="visit.customerID || visit.unregisteredCustomer">
         <ion-icon :icon="icons.cart"></ion-icon>
-        {{ idToName(visit.customerID) }}</ion-card-subtitle
+        {{
+          visit.customerID
+            ? idToName(visit.customerID)
+            : visit.unregisteredCustomer
+        }}</ion-card-subtitle
       >
       <ion-card-subtitle v-if="visit.employeeID">
         <ion-icon :icon="icons.hammer"></ion-icon>
@@ -81,10 +85,10 @@ import {
   IonToolbar,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
-import { calendar,cart, hammer, time, trashOutline } from "ionicons/icons";
+import { calendar, cart, hammer, time, trashOutline } from "ionicons/icons";
 
 import VisitModal from "@/components/modals/VisitModal.vue";
-import { formatTime,idToName } from "@/helpers";
+import { formatTime, idToName } from "@/helpers";
 
 export default {
   name: "Visit Item",

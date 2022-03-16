@@ -50,6 +50,7 @@ export interface VisitInterface {
   companyID: string;
   employeeID: string;
   customerID: string;
+  unregisteredCustomer: string;
   workType: string;
   plannedStart: string;
   plannedEnd: string;
@@ -74,6 +75,7 @@ export function newVisitInterface(
     companyID,
     employeeID: options.employeeID ? options.employeeID : "",
     customerID: options.customerID ? options.customerID : "",
+    unregisteredCustomer: "",
     workType: "",
     plannedStart: "",
     plannedEnd: "",
