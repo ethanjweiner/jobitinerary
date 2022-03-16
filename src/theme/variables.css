@@ -190,14 +190,14 @@ h3 {
 
 /* Modals */
 @media (min-width: 768px) {
-  .small-modal .modal-wrapper {
+  .small-modal::part(content) {
     height: 270px;
     width: 350px;
   }
 
-  .medium-modal .modal-wrapper {
-    height: 400px;
-    width: 500px;
+  .medium-modal::part(content) {
+    height: 270px;
+    width: 350px;
   }
 }
 

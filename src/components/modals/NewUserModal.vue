@@ -6,7 +6,7 @@
           <ion-text color="light"> Add {{ capitalize(type) }} </ion-text>
         </ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="$emit('didDismiss')">
+          <ion-button @click="$emit('willDismiss')">
             <ion-icon :icon="icons.close"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -90,7 +90,7 @@ export default {
     IonText,
   },
   props: ["type"],
-  emits: ["userAdded", "didDismiss"],
+  emits: ["userAdded", "willDismiss"],
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
       name: "",
@@ -109,7 +109,7 @@ export default {
         emit("userAdded", nameToID(state.name));
       } else throw Error("You must enter a name for the new user.");
 
-      emit("didDismiss");
+      emit("willDismiss");
     };
 
     return {
