@@ -29,6 +29,7 @@ import App from "./App.vue";
 import { signOut } from "./authentication";
 import { loadUser } from "./authentication";
 import router from "./router";
+import store from "./store";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -62,6 +63,12 @@ export const employeesCollection = db.collectionGroup("employees");
 // SET UP THE USER UPON ANY AUTH CHANGES
 let app: null | AppType = null;
 
+// Set up global error handler
+
+window.onerror = (message) => {
+  store.setAlert({ message: message as string, color: "danger" });
+};
+
 auth.onAuthStateChanged(async (user) => {
   //
   if (!app) {
@@ -70,8 +77,15 @@ auth.onAuthStateChanged(async (user) => {
     app = createApp(App)
       .use(IonicVue)
       .use(router);
+
     defineCustomElements(window);
     await router.isReady();
+
+    app.config.errorHandler = (err) => {
+      const error = err as Error;
+      store.setAlert({ message: error.message, color: "danger" });
+    };
+
     if (user) {
       await loadUser(user);
     } else {
