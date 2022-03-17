@@ -9,12 +9,32 @@ import store from "./store";
 import { DocRef } from "./types/auxiliary";
 import { Company } from "./types/users";
 
+function validatePassword(password: string) {
+  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  if (!password.match(regex)) {
+    throw new Error(
+      "Your password must contain a minimum eight characters, at least one letter, one number and one special character."
+    );
+  }
+}
+
+function validatePhone(phone: string) {
+  const regex = /^\d{3}-\d{3}-\d{4}$/;
+  if (!phone.match(regex)) {
+    throw new Error("Phone number must be in the form 123-123-1234");
+  }
+}
+
 export async function signUpCompany(credentials: {
   name: string;
   email: string;
   password: string;
   phone?: string;
 }) {
+  // Validation
+  validatePassword(credentials.password);
+  if (credentials.phone) validatePhone(credentials.phone);
+
   const companyID = generateUUID();
   const company = new Company(companyID);
   await company.create(
@@ -82,11 +102,7 @@ export async function loadUser(user: firebase.User) {
 }
 
 export async function signIn(email: string, password: string) {
-  try {
-    const { user } = await auth.signInWithEmailAndPassword(email, password);
-    if (user) loadUser(user);
-    else throw Error("User could not be found.");
-  } catch (error) {
-    console.log(error);
-  }
+  const { user } = await auth.signInWithEmailAndPassword(email, password);
+  if (user) loadUser(user);
+  else throw Error("User could not be found.");
 }
