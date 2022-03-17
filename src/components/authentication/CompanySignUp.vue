@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { IonButton,IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
+import { IonButton, IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
 
 import { signUpCompany } from "@/authentication";
@@ -89,13 +89,8 @@ export default {
 
     const signUp = async () => {
       if (credentials.name && credentials.email && credentials.password) {
-        try {
-          await signUpCompany(credentials);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          resetCredentials();
-        }
+        await signUpCompany(credentials);
+        resetCredentials();
       }
     };
 

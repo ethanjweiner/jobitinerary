@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { IonButton,IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
+import { IonButton, IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
 import { ref } from "vue";
 
@@ -55,14 +55,10 @@ export default {
     const activationToken = ref("");
 
     const activate = async () => {
-      try {
-        const employeeDoc = await verifyEmployee(activationToken.value);
-        if (employeeDoc) {
-          const employee = new Employee(employeeDoc);
-          if (await employee.init()) employee.signUp(credentials.password);
-        }
-      } catch (error) {
-        console.log(error);
+      const employeeDoc = await verifyEmployee(activationToken.value);
+      if (employeeDoc) {
+        const employee = new Employee(employeeDoc);
+        if (await employee.init()) employee.signUp(credentials.password);
       }
     };
 

@@ -97,18 +97,14 @@ export class User implements UserInterface {
   }
 
   async create(name: string, email: string, id: string, phone?: string) {
-    try {
-      this.data.name = name;
-      this.data.email = email;
-      this.data.id = id;
-      this.data.phone = phone ? phone : "";
+    this.data.name = name;
+    this.data.email = email;
+    this.data.id = id;
+    this.data.phone = phone ? phone : "";
 
-      await this.save();
+    await this.save();
 
-      return this;
-    } catch (error) {
-      console.log(error);
-    }
+    return this;
   }
 
   async save() {
@@ -145,21 +141,17 @@ class ChildUser extends User {
   }
 
   async create(name: string, email: string, id: string, phone?: string) {
-    try {
-      this.data.name = name;
-      this.data.email = email;
-      this.data.id = id;
-      this.data.phone = phone ? phone : "";
-      this.parentCompany = null;
-      this.activationToken = generateUUID();
-      this.activated = false;
+    this.data.name = name;
+    this.data.email = email;
+    this.data.id = id;
+    this.data.phone = phone ? phone : "";
+    this.parentCompany = null;
+    this.activationToken = generateUUID();
+    this.activated = false;
 
-      await this.save();
+    await this.save();
 
-      return this;
-    } catch (error) {
-      console.log(error);
-    }
+    return this;
   }
 
   async save() {
@@ -183,14 +175,10 @@ class ChildUser extends User {
   }
 
   async assignCompany(company: MetaData) {
-    try {
-      this.parentCompany = company;
-      await this.dbRef.update({
-        parentCompany: company,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.parentCompany = company;
+    await this.dbRef.update({
+      parentCompany: company,
+    });
     return this;
   }
 

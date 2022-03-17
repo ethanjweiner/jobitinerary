@@ -62,15 +62,10 @@ export default {
     const loading = ref(false);
 
     const logIn = async () => {
-      try {
-        loading.value = true;
-        await signIn(credentials.email, credentials.password);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        resetCredentials();
-        loading.value = false;
-      }
+      loading.value = true;
+      await signIn(credentials.email, credentials.password);
+      resetCredentials();
+      loading.value = false;
     };
     return { ...toRefs(credentials), logIn, loading };
   },

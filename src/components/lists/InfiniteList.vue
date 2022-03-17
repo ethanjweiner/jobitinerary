@@ -124,10 +124,10 @@ export default {
         state.infiniteList
           .loadNewBatch()
           .then(() => ev.target.complete())
-          .catch((error) => {
-            console.log(error);
+          .catch(() => {
             ev.target.complete();
             ev.target.disabled = true;
+            throw new Error("You've reached the end of the list!");
           });
       }, 500);
     };
