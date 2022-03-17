@@ -53,15 +53,6 @@
       >
       </ion-loading>
     </ion-tabs>
-    <!-- Global Alerts -->
-    <ion-toast
-      :is-open="alertIsOpen"
-      :message="store.alert.message"
-      :color="store.alert.color"
-      :duration="5000"
-      @didDismiss="setAlertOpen(false)"
-    >
-    </ion-toast>
   </ion-page>
 </template>
 
@@ -76,7 +67,6 @@ import {
   IonTabButton,
   IonTabs,
   IonTitle,
-  IonToast,
 } from "@ionic/vue";
 import { onMounted, ref, watch } from "@vue/runtime-core";
 import { cart, hammer, home, list, settings } from "ionicons/icons";
@@ -97,7 +87,6 @@ export default {
     IonRouterOutlet,
     IonTitle,
     CreateButton,
-    IonToast,
     IonLoading,
   },
   setup() {
@@ -113,13 +102,6 @@ export default {
       }
     });
 
-    const alertIsOpen = ref(false);
-    const setAlertOpen = (state: boolean) => (alertIsOpen.value = state);
-
-    watch(store.alert, () => {
-      if (store.alert.message) setAlertOpen(true);
-    });
-
     onMounted(() => {
       screenWidth.value = window.innerWidth;
       window.addEventListener("resize", () => {
@@ -131,10 +113,8 @@ export default {
       icons: { home, cart, hammer, settings, list },
       screenWidth,
       route,
-      alertIsOpen,
       store,
       refresher,
-      setAlertOpen,
     };
   },
 };
