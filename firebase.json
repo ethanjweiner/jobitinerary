@@ -6,8 +6,12 @@
     "source": "functions"
   },
   "emulators": {
+    "hosting": {
+      "host": "localhost",
+      "port": 5010
+    },
     "functions": {
-      "port": 5001
+      "port": 5050
     },
     "firestore": {
       "port": 8080
