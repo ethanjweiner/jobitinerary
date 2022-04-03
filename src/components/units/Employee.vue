@@ -9,7 +9,11 @@
       />
     </template>
     <template v-slot:expenses>
-      <Expenses :key="expensesRef" title="Expenses" :dbRef="expensesRef" />
+      <Expenses
+        v-model="state.expenses"
+        title="Expenses"
+        :employeeID="state.employee.data.id"
+      />
     </template>
     <template v-slot:pay>
       <PaymentInfo v-model="state.employee" />
@@ -32,18 +36,19 @@ import {
 
 import EmployeeForm from "@/components/forms/EmployeeForm.vue";
 import EmployeeDays from "@/components/lists/EmployeeDays.vue";
-import Expenses from "@/components/lists/ExpensesInfinite.vue";
+import Expenses from "@/components/lists/Expenses.vue";
 import PaymentInfo from "@/components/PaymentInfo.vue";
-import { nameToID } from "@/helpers";
 import { companiesCollection } from "@/main";
 import store from "@/store";
-import { CollectionRef, Query, SectionsType } from "@/types/auxiliary";
+import { CollectionRef, SectionsType } from "@/types/auxiliary";
+import { Expense } from "@/types/units";
 import { Company, Employee } from "@/types/users";
 
 import Sections from "../Sections.vue";
 
 interface State {
   employee: Employee | undefined;
+  expenses: Array<Expense>;
 }
 
 export default {
@@ -54,6 +59,7 @@ export default {
   setup(props: any) {
     const state = reactive<State>({
       employee: undefined,
+      expenses: [],
     });
 
     const sections = ref<SectionsType>([
@@ -87,13 +93,25 @@ export default {
       return base;
     });
 
-    const expensesRef = computed<Query>(() => {
-      const base = companiesCollection
-        .doc(`${store.state.companyID}/employees/${nameToID(props.userID)}`)
-        .collection("expenses");
+    const initializeExpenses = async () => {
+      const expenseDocs = (
+        await companiesCollection
+          .doc(`${store.state.companyID}/employees/${props.userID}`)
+          .collection("expenses")
+          .get()
+      ).docs;
 
-      return base;
-    });
+      for (const doc of expenseDocs) {
+        const expense = new Expense(
+          doc.id,
+          store.state.companyID,
+          props.userID
+        );
+        expense.init(doc.data().data).then(() => {
+          state.expenses.push(expense);
+        });
+      }
+    };
 
     // If the user is a Company, assign the employee based on the prop
     if (props.userID && store.state.user instanceof Company) {
@@ -105,10 +123,12 @@ export default {
       state.employee = store.state.user;
     }
 
-    if (state.employee)
+    if (state.employee) {
       watch(state.employee.data, () => {
         if (state.employee) state.employee.save();
       });
+      initializeExpenses();
+    }
 
     // Retrieve employee-specific data (dates, messages)
     return {
@@ -116,7 +136,6 @@ export default {
       store,
       state,
       daysRef,
-      expensesRef,
       icons: { pricetagsOutline },
     };
   },

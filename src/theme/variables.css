@@ -134,8 +134,7 @@ ion-searchbar {
 ion-card,
 ion-card-header,
 ion-card-content,
-ion-card ion-toolbar,
-ion-list {
+ion-card ion-toolbar {
   --background: white !important;
   background-color: white !important;
 }

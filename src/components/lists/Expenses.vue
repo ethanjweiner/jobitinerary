@@ -1,27 +1,29 @@
 <template>
   <SearchToolbar :addAction="addExpense" disableSearch title="Expenses" />
-  <List type="list" :items="state.expenses">
-    <template v-slot:item="itemProps">
-      <ExpenseItem
-        :key="itemProps.item.id"
-        @deleteExpense="deleteExpense"
-        :expense="itemProps.item"
-        :showDate="true"
-        enableDelete
-      />
-    </template>
-  </List>
-  <ion-button
-    class="ion-margin"
-    color="tertiary"
-    @click="addExpense"
-    fill="outline"
-    expand="block"
-    size="lg"
-  >
-    <ion-icon :icon="icons.add"></ion-icon>
-    Add Expense
-  </ion-button>
+  <div class="expenses-list">
+    <List type="list" :items="state.expenses">
+      <template v-slot:item="itemProps">
+        <ExpenseItem
+          :key="itemProps.item.id"
+          @deleteExpense="deleteExpense"
+          :expense="itemProps.item"
+          :showDate="true"
+          enableDelete
+        />
+      </template>
+    </List>
+    <ion-button
+      class="ion-margin"
+      color="tertiary"
+      @click="addExpense"
+      fill="outline"
+      expand="block"
+      size="lg"
+    >
+      <ion-icon :icon="icons.add"></ion-icon>
+      Add Expense
+    </ion-button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -31,6 +33,7 @@ import { add } from "ionicons/icons";
 
 import SearchToolbar from "@/components/inputs/SearchToolbar.vue";
 import { createExpense } from "@/db";
+import { formatDate } from "@/helpers";
 import { Expense } from "@/types/units";
 
 import ExpenseItem from "./items/ExpenseItem.vue";
@@ -45,7 +48,6 @@ export default {
     employeeID: String,
   },
   setup(props: any, { emit }: { emit: any }) {
-    console.log(props.modelValue);
     const state = reactive({
       expenses: props.modelValue,
     });
@@ -53,15 +55,13 @@ export default {
     const addExpense = async () => {
       // Add expense to database & retrieve
       const expense = await createExpense(props.employeeID, {
-        date: props.date,
+        date: props.date ? props.date : formatDate(new Date().toISOString()),
       });
-      console.log(expense);
       state.expenses.push(expense);
       emit("update:modelValue", state.expenses);
     };
 
     const deleteExpense = async (expense: Expense) => {
-      console.log(expense);
       await expense.delete();
       state.expenses = state.expenses.filter(
         (_expense: Expense) => _expense.id != expense.id
@@ -102,5 +102,8 @@ ion-grid {
   --ion-grid-column-padding-md: 0;
   --ion-grid-column-padding-lg: 0;
   --ion-grid-column-padding-xl: 0;
+}
+.expenses-list {
+  max-width: 800px;
 }
 </style>
