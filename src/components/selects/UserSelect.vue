@@ -61,9 +61,9 @@
       </ion-buttons>
     </ion-item>
     <ion-modal
-      :is-open="newUserModalIsOpen"
+      :is-open="newUserModalIsOpen ? newUserModalIsOpen : false"
       @didDismiss="newUserModalIsOpen = false"
-      css-class="small-modal"
+      class="small-modal"
     >
       <NewUserModal
         :type="type"
@@ -141,8 +141,11 @@ export default defineComponent({
     refreshState();
 
     const addUser = (id: string) => {
-      emit("update:modelValue", id);
-      refreshState();
+      newUserModalIsOpen.value = false;
+      setTimeout(() => {
+        emit("update:modelValue", id);
+        refreshState();
+      });
     };
 
     return {

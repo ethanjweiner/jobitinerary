@@ -1,56 +1,54 @@
 <template>
-  <div style="height: 100%;">
-    <ion-header>
-      <ion-toolbar color="dark">
-        <ion-title>
-          <ion-text color="light"> Add {{ capitalize(type) }} </ion-text>
-        </ion-title>
-        <ion-buttons slot="end">
-          <ion-button @click="$emit('willDismiss')">
-            <ion-icon :icon="icons.close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <ion-item lines="none">
-        <ion-text color="tertiary" style="font-size: 13px;"
-          >The {{ type }} will receive an email with instructions to setup their
-          account.</ion-text
-        >
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="stacked">{{ capitalize(type) }} Name</ion-label>
-        <ion-input
-          placeholder="name"
-          type="text"
-          v-model="name"
-          @keyup.enter="addUser"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked">{{ capitalize(type) }} Email</ion-label>
-        <ion-input
-          placeholder="email"
-          type="email"
-          inputmode="email"
-          v-model="email"
-          @keyup.enter="addUser"
-        ></ion-input>
-      </ion-item>
-      <ion-button
-        color="dark"
-        expand="block"
-        fill="outline"
-        button
-        @click="addUser"
-        class="ion-text-center"
+  <ion-header>
+    <ion-toolbar color="dark">
+      <ion-title>
+        <ion-text color="light"> Add {{ capitalize(type) }} </ion-text>
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button @click="$emit('didDismiss')">
+          <ion-icon :icon="icons.close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-item lines="none">
+      <ion-text color="tertiary" style="font-size: 13px;"
+        >The {{ type }} will receive an email with instructions to setup their
+        account.</ion-text
       >
-        <ion-input type="submit"> Create {{ capitalize(type) }} </ion-input>
-      </ion-button>
-    </ion-content>
-  </div>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">{{ capitalize(type) }} Name</ion-label>
+      <ion-input
+        placeholder="name"
+        type="text"
+        v-model="name"
+        @keyup.enter="addUser"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">{{ capitalize(type) }} Email</ion-label>
+      <ion-input
+        placeholder="email"
+        type="email"
+        inputmode="email"
+        v-model="email"
+        @keyup.enter="addUser"
+      ></ion-input>
+    </ion-item>
+    <ion-button
+      color="dark"
+      expand="block"
+      fill="outline"
+      button
+      @click="addUser"
+      class="ion-text-center"
+    >
+      <ion-input type="submit"> Create {{ capitalize(type) }} </ion-input>
+    </ion-button>
+  </ion-content>
 </template>
 
 <script lang="ts">
@@ -77,20 +75,20 @@ import { Company } from "@/types/users";
 export default {
   name: "New User Modal",
   components: {
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
     IonButton,
-    IonIcon,
+    IonButtons,
     IonContent,
+    IonHeader,
+    IonIcon,
+    IonInput,
     IonItem,
     IonLabel,
-    IonInput,
     IonText,
+    IonTitle,
+    IonToolbar,
   },
   props: ["type"],
-  emits: ["userAdded", "willDismiss"],
+  emits: ["userAdded", "didDismiss"],
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
       name: "",
@@ -108,8 +106,6 @@ export default {
         }
         emit("userAdded", nameToID(state.name));
       } else throw Error("You must enter a name for the new user.");
-
-      emit("willDismiss");
     };
 
     return {
