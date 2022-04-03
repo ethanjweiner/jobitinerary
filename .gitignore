@@ -32,3 +32,4 @@ npm-debug.log*
 /emulators
 public/assets/Color Palette 2.jpeg
 public/assets/Color Palette.jpeg
+.firebase
