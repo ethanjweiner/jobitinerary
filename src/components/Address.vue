@@ -95,7 +95,7 @@ export default {
           };
         });
       }),
-        0;
+        50;
     });
 
     const onInput = (e) => {
