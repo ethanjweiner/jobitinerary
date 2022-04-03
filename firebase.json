@@ -8,13 +8,13 @@
   "emulators": {
     "hosting": {
       "host": "localhost",
-      "port": 5010
+      "port": 5001
     },
     "functions": {
       "port": 5050
     },
     "firestore": {
-      "port": 8080
+      "port": 8088
     },
     "ui": {
       "enabled": true

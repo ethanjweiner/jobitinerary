@@ -52,7 +52,7 @@ export const storage = firebase.storage();
 
 // Set up emulators in localhost environments
 if (location.hostname === "localhost") {
-  db.useEmulator("localhost", 8080);
+  db.useEmulator("localhost", 8088);
   auth.useEmulator("http://localhost:9099");
   storage.useEmulator("localhost", 9199);
 }
