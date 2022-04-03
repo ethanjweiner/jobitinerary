@@ -158,7 +158,7 @@ class ChildUser extends User {
     await this.dbRef.set({
       data: this.data,
       parentCompany: this.parentCompany,
-      activationToken: this.activationToken, // Placeholder activation token
+      activationToken: this.activationToken,
       activated: this.activated,
     });
   }

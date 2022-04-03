@@ -15,6 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/authentication/EmployeeActivation.vue"),
     props: true,
   },
+  // Company
   {
     path: "/company/",
     component: CompanyTabs,
@@ -163,6 +164,7 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  // Employee
   {
     path: "/employee/",
     component: EmployeeTabs,
@@ -196,11 +198,6 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "pay/days/:date",
         component: () => import("@/views/employee/EmployeeDay.vue"),
-      },
-      // MESSAGES
-      {
-        path: "messages",
-        component: () => import("@/views/employee/Messages.vue"),
       },
       // VISITS
       {
