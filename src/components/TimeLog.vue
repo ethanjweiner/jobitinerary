@@ -27,7 +27,7 @@
         color="danger"
         size="small"
         @click="refreshHours"
-        >Auto-Calculate</ion-button
+        >Auto-Calculate Hours</ion-button
       >
     </ion-row>
     <ion-row color="light">
@@ -51,6 +51,7 @@
             type="number"
             inputmode="numeric"
             :value="state.time.hours"
+            :placeholder="hoursPlaceholder"
             @ionInput="updateHours($event.target.value)"
           ></ion-input>
         </ion-item>
@@ -91,6 +92,7 @@ export default {
   props: {
     modelValue: Object,
     title: String,
+    hoursPlaceholder: String,
   },
   emits: ["update:modelValue"],
   setup(props: any, { emit }: { emit: any }) {
@@ -98,7 +100,7 @@ export default {
       time: props.modelValue,
     });
 
-    const retrieveHours = (): number => {
+    const startToEndHours = (): number => {
       const startDate = new Date(state.time.start);
       const startHours = startDate.getHours() + startDate.getMinutes() / 60;
 
@@ -112,7 +114,7 @@ export default {
     };
 
     const refreshHours = () => {
-      state.time.hours = retrieveHours();
+      state.time.hours = startToEndHours();
     };
 
     const setStartTime = () => {
@@ -143,8 +145,7 @@ export default {
       () =>
         state.time.start &&
         state.time.end &&
-        state.time.hours &&
-        state.time.hours != retrieveHours()
+        state.time.hours != startToEndHours()
     );
 
     const startDate = ref();

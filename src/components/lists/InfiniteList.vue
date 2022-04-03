@@ -127,7 +127,6 @@ export default {
           .catch(() => {
             ev.target.complete();
             ev.target.disabled = true;
-            throw new Error("You've reached the end of the list!");
           });
       }, 500);
     };
