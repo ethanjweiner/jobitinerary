@@ -65,7 +65,8 @@ let app: null | AppType = null;
 
 // Set up global error handler
 
-window.onerror = (message) => {
+window.onerror = (message, source, lineno, colno, error) => {
+  console.log(error);
   store.setAlert({ message: message as string, color: "danger" });
 };
 
@@ -83,6 +84,7 @@ auth.onAuthStateChanged(async (user) => {
 
     app.config.errorHandler = (err) => {
       const error = err as Error;
+      console.log(error);
       store.setAlert({ message: error.message, color: "danger" });
     };
 
