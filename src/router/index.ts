@@ -106,7 +106,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "employees/:userID/days/:id",
-        name: "Employee Day",
+        name: "Employee Day / company",
         props: true,
         component: () => import("@/views/general/EmployeeDay.vue"),
         meta: {
@@ -180,24 +180,35 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "today",
         component: () => import("@/views/employee/EmployeeDay.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       // DAYS
       {
         path: "days",
         component: () => import("@/views/employee/Days.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       {
         path: "days/:id",
-        component: () => import("@/views/employee/EmployeeDay.vue"),
+        name: "Employee Day / employee",
+        props: true,
+        component: () => import("@/views/general/EmployeeDay.vue"),
+        meta: {
+          class: "employee",
+          refresh: true,
+        },
       },
       // PAY
       {
         path: "pay",
         component: () => import("@/views/employee/Pay.vue"),
-      },
-      {
-        path: "pay/days/:date",
-        component: () => import("@/views/employee/EmployeeDay.vue"),
+        meta: {
+          class: "employee",
+        },
       },
       // VISITS
       {
@@ -205,6 +216,9 @@ const routes: Array<RouteRecordRaw> = [
         name: "Visit",
         props: true,
         component: () => import("@/views/general/VisitView.vue"),
+        meta: {
+          class: "employee",
+        },
       },
 
       // SETTINGS
