@@ -231,14 +231,12 @@ ion-chip {
   cursor: default;
 }
 
-@media (min-width: 768px) {
-  ion-row {
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-  ion-grid {
-    height: 100%;
-  }
+ion-row {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+ion-grid {
+  height: 100%;
 }
 </style>

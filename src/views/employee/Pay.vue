@@ -1,45 +1,42 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Pay</ion-title>
-        <SettingsButton />
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Pay</ion-title>
-          <SettingsButton />
-        </ion-toolbar>
-      </ion-header>
-      <PaymentInfo />
+    <ion-content>
+      <PaymentInfo v-model="state.employee" />
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/vue";
+import { IonContent, IonPage } from "@ionic/vue";
+import { reactive } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 
-import SettingsButton from "@/components/buttons/SettingsButton.vue";
 import PaymentInfo from "@/components/PaymentInfo.vue";
+import store from "@/store";
 
 export default {
   name: "Days",
   components: {
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonPage,
     PaymentInfo,
-    SettingsButton,
+  },
+  setup() {
+    const state = reactive({
+      employee: store.state.user,
+    });
+
+    if (state.employee) {
+      watch(state.employee.data, () => {
+        if (state.employee) state.employee.save();
+      });
+    }
+
+    return {
+      state,
+    };
   },
 };
 </script>
+
+<style scoped></style>
