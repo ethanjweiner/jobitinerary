@@ -67,6 +67,7 @@ let app: null | AppType = null;
 
 window.onerror = (message) => {
   store.setAlert({ message: message as string, color: "danger" });
+  setTimeout(() => store.resetAlert(), 0);
 };
 
 auth.onAuthStateChanged(async (user) => {
@@ -84,6 +85,7 @@ auth.onAuthStateChanged(async (user) => {
     app.config.errorHandler = (err) => {
       const error = err as Error;
       store.setAlert({ message: error.message, color: "danger" });
+      setTimeout(() => store.resetAlert(), 0);
     };
 
     if (user) {
