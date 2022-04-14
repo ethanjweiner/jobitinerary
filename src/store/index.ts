@@ -21,7 +21,7 @@ const store = {
     companyID: "",
   }),
   alert: reactive<Alert>({
-    message: "Unidentified error",
+    message: "",
     color: "danger",
   }),
   loadingCounter: ref<number>(0),
@@ -96,9 +96,14 @@ const store = {
     return false;
   },
 
-  async setAlert(alert: Alert) {
+  setAlert(alert: Alert) {
     this.alert.message = alert.message;
     this.alert.color = alert.color;
+  },
+
+  resetAlert() {
+    this.alert.message = "";
+    this.alert.color = "danger";
   },
 };
 

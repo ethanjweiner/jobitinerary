@@ -50,18 +50,25 @@
         Looking to sign up as an employee? Ask your company to add you to their
         system and send you an activation email.
       </p>
-      <ion-button color="secondary" expand="block" type="submit"
-        >Sign Up</ion-button
+      <button-with-spinner
+        :loading="loading"
+        title="Sign Up"
+        color="secondary"
+        type="submit"
+        expand="block"
       >
+      </button-with-spinner>
     </form>
   </ion-card>
 </template>
 
 <script lang="ts">
-import { IonButton, IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
-import { reactive, toRefs } from "@vue/reactivity";
+import { IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
+import { reactive, ref, toRefs } from "@vue/reactivity";
 
 import { signUpCompany } from "@/authentication";
+
+import ButtonWithSpinner from "../buttons/ButtonWithSpinner.vue";
 
 export default {
   name: "Company Sign Up",
@@ -69,8 +76,8 @@ export default {
     IonItem,
     IonInput,
     IonLabel,
-    IonButton,
     IonCard,
+    ButtonWithSpinner,
   },
   setup() {
     const credentials = reactive({
@@ -87,14 +94,21 @@ export default {
       credentials.password = "";
     };
 
+    const loading = ref(false);
+
     const signUp = async () => {
+      loading.value = true;
       if (credentials.name && credentials.email && credentials.password) {
-        await signUpCompany(credentials);
-        resetCredentials();
+        try {
+          await signUpCompany(credentials);
+          resetCredentials();
+        } finally {
+          loading.value = false;
+        }
       }
     };
 
-    return { ...toRefs(credentials), signUp };
+    return { ...toRefs(credentials), signUp, loading };
   },
 };
 </script>
