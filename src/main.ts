@@ -71,7 +71,6 @@ window.onerror = (message, source, lineno, colno, error) => {
 };
 
 auth.onAuthStateChanged(async (user) => {
-  //
   if (!app) {
     // Create app and update user
 

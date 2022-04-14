@@ -1,5 +1,4 @@
 <template>
-  <!-- ADD A PAID STATUS FILTER -->
   <SearchToolbar
     :addAction="createDay"
     title="Dates"

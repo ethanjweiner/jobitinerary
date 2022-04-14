@@ -114,7 +114,7 @@ export default {
       if (state.employeeID && state.date) {
         await createEmployeeDay(state.date, state.employeeID);
         router.replace({
-          name: "Employee Day",
+          name: `Employee Day / ${store.state.userType}`,
           params: { userID: state.employeeID, id: state.date },
         });
       } else throw Error("Please select an employee and date.");

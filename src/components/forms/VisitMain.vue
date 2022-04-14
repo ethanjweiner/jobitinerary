@@ -26,7 +26,7 @@
     <!-- Employee Select -->
 
     <UserSelect
-      v-if="!hideEmployeeSelect"
+      v-if="!hideEmployeeSelect && store.state.userType == 'company'"
       :key="state.visit.data.employeeID"
       v-model="state.visit.data.employeeID"
       type="employee"
@@ -210,6 +210,10 @@ export default {
       jobData: null,
       showTextAreas: false,
     });
+
+    if (store.state.user) {
+      console.log(store.state.user.employees);
+    }
 
     const jobsRef = computed(() => {
       if (state.visit.data.customerID) {

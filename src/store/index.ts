@@ -83,7 +83,8 @@ const store = {
         companiesCollection
           .doc(doc.parentCompany.id)
           .collection("employees")
-          .doc(doc.data.id)
+          .doc(doc.data.id),
+        doc.parentCompany
       );
       if (await employee.init()) {
         this.setUser(employee);

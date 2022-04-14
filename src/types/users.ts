@@ -89,11 +89,22 @@ export class User implements UserInterface {
 
   async init() {
     const user = (await this.dbRef.get()).data();
+
     if (user) {
       this.data = user.data;
+      await this.fetchEmployees();
+      await this.fetchCustomers();
       return user;
     }
     return false;
+  }
+
+  async fetchEmployees() {
+    return;
+  }
+
+  async fetchCustomers() {
+    return;
   }
 
   async create(name: string, email: string, id: string, phone?: string) {
@@ -129,13 +140,13 @@ export class User implements UserInterface {
 }
 
 class ChildUser extends User {
-  parentCompany: UserData | null;
+  parentCompany: UserData;
   activationToken: string | null;
   activated: boolean;
 
-  constructor(dbRef: DocRef) {
+  constructor(dbRef: DocRef, company: MetaData) {
     super(dbRef);
-    this.parentCompany = null;
+    this.parentCompany = company;
     this.activationToken = null;
     this.activated = false;
   }
@@ -145,13 +156,40 @@ class ChildUser extends User {
     this.data.email = email;
     this.data.id = id;
     this.data.phone = phone ? phone : "";
-    this.parentCompany = null;
     this.activationToken = generateUUID();
     this.activated = false;
 
     await this.save();
 
     return this;
+  }
+
+  // async fetchEmployees() {
+  //   const companyDoc = companiesCollection.doc(this.parentCompany.id);
+  //   const docs = (await companyDoc.collection("employees").get()).docs;
+  //   for (const doc of docs) {
+  //     // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  //     const employee = new Employee(
+  //       companyDoc.collection("employees").doc(doc.id),
+  //       this.parentCompany
+  //     );
+  //     await employee.init();
+  //     this.employees.push(employee);
+  //   }
+  // }
+
+  async fetchCustomers() {
+    const companyDoc = companiesCollection.doc(this.parentCompany.id);
+    const docs = (await companyDoc.collection("customers").get()).docs;
+    for (const doc of docs) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      const customer = new Customer(
+        companyDoc.collection("customers").doc(doc.id),
+        this.parentCompany
+      );
+      await customer.init();
+      this.customers.push(customer);
+    }
   }
 
   async save() {
@@ -174,14 +212,6 @@ class ChildUser extends User {
     return false;
   }
 
-  async assignCompany(company: MetaData) {
-    this.parentCompany = company;
-    await this.dbRef.update({
-      parentCompany: company,
-    });
-    return this;
-  }
-
   // For child user's only call this AFTER verification process is complete
   async signUp(password: string) {
     await super.signUp(password);
@@ -196,8 +226,8 @@ class ChildUser extends User {
 export class Employee extends ChildUser {
   data: EmployeeData;
 
-  constructor(dbRef: DocRef) {
-    super(dbRef);
+  constructor(dbRef: DocRef, company: MetaData) {
+    super(dbRef, company);
     this.data = { ...emptyEmployeeData };
   }
   getVisitsRef() {
@@ -213,16 +243,13 @@ export class Employee extends ChildUser {
 
 export class Customer extends ChildUser {
   data: CustomerData;
-  constructor(dbRef: DocRef) {
-    super(dbRef);
+  constructor(dbRef: DocRef, company: MetaData) {
+    super(dbRef, company);
     this.data = { ...emptyCustomerData };
   }
 }
 
 export class Company extends User {
-  // Q: Why store employees & customers globally?
-  // A: We access them in disconnected components (e.g. in the "user select" component)
-
   constructor(id: string) {
     super(companiesCollection.doc(id));
   }
@@ -243,7 +270,8 @@ export class Company extends User {
     const docs = (await this.dbRef.collection("employees").get()).docs;
     for (const doc of docs) {
       const employee = new Employee(
-        this.dbRef.collection("employees").doc(doc.id)
+        this.dbRef.collection("employees").doc(doc.id),
+        this.data
       );
       await employee.init();
       this.employees.push(employee);
@@ -253,11 +281,11 @@ export class Company extends User {
   async addEmployee(name: string, email: string) {
     const id = nameToID(name);
     const newEmployee = new Employee(
-      this.dbRef.collection("employees").doc(id)
+      this.dbRef.collection("employees").doc(id),
+      this.data
     );
     // Update database
     await newEmployee.create(name, email, id);
-    await newEmployee.assignCompany(this.data);
     // Update local state
     this.employees.push(newEmployee);
   }
@@ -277,7 +305,8 @@ export class Company extends User {
     const docs = (await this.dbRef.collection("customers").get()).docs;
     for (const doc of docs) {
       const customer = new Customer(
-        this.dbRef.collection("customers").doc(doc.id)
+        this.dbRef.collection("customers").doc(doc.id),
+        this.data
       );
       await customer.init();
       this.customers.push(customer);
@@ -287,11 +316,11 @@ export class Company extends User {
   async addCustomer(name: string, email: string) {
     const id = nameToID(name);
     const newCustomer = new Customer(
-      this.dbRef.collection("customers").doc(id)
+      this.dbRef.collection("customers").doc(id),
+      this.data
     );
     // Update database
     await newCustomer.create(name, email, id);
-    await newCustomer.assignCompany(this.data);
     // Update local state
     this.customers.push(newCustomer);
   }

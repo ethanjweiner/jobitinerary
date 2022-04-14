@@ -3,7 +3,7 @@
     button
     @click="
       router.push({
-        name: 'Employee Day',
+        name: `Employee Day / ${store.state.userType}`,
         params: {
           userID: day.employeeID,
           id: day.date,
@@ -73,6 +73,7 @@ import { cart, checkmark, hammer, time } from "ionicons/icons";
 import { idToName, retrieveVisitsOnDate } from "@/helpers";
 import { companiesCollection } from "@/main";
 import router from "@/router";
+import store from "@/store";
 import { EmployeeDayInterface, Visit } from "@/types/units";
 
 interface State {
@@ -132,6 +133,7 @@ export default {
       router,
       togglePaid,
       customers,
+      store,
     };
   },
   components: {

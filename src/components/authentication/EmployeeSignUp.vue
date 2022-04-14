@@ -56,8 +56,10 @@ export default {
 
     const activate = async () => {
       const employeeDoc = await verifyEmployee(activationToken.value);
+      const company = (await employeeDoc.get()).data().parentCompany;
+
       if (employeeDoc) {
-        const employee = new Employee(employeeDoc);
+        const employee = new Employee(employeeDoc, company);
         if (await employee.init()) employee.signUp(credentials.password);
       }
     };

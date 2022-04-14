@@ -8,6 +8,7 @@ import {
   idToName,
 } from "@/helpers";
 import { companiesCollection } from "@/main";
+import router from "@/router";
 
 import {
   DocRef,
@@ -233,7 +234,10 @@ export class DBUnit<T> {
     if (docData) {
       this.data = docData.data;
       this.keywords = docData.keywords;
-    } else throw Error("The document for the work unit could not be found.");
+    } else {
+      router.push("/");
+      throw Error("The document for the work unit could not be found.");
+    }
     return this;
   }
 

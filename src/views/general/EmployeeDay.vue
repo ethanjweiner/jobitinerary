@@ -6,7 +6,7 @@
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>
-          <ion-text color="light">{{ idToName(userID) }}</ion-text>
+          <ion-text color="light">{{ idToName(employeeID) }}</ion-text>
         </ion-title>
         <ion-buttons :collapse="true" slot="end">
           <ion-button @click="toggleDaySettings(true, $event)">
@@ -26,7 +26,7 @@
         @changeDate="changeDate"
         @copyDay="copyDay"
         type="employee"
-        :employeeID="userID"
+        :employeeID="employeeID"
         :key="state.day.data.date"
         :currentDate="state.day.data.date"
       />
@@ -41,7 +41,7 @@
         <DayVisits
           :key="state.visits.length || state.day"
           v-model="state.visits"
-          :employeeID="userID"
+          :employeeID="employeeID"
           :date="id"
         />
       </template>
@@ -49,7 +49,7 @@
         <Expenses
           :key="state.day"
           v-model="state.expenses"
-          :employeeID="userID"
+          :employeeID="employeeID"
           :date="id"
         />
       </template>
@@ -104,6 +104,9 @@ export default {
     id: String,
   },
   setup(props: any) {
+    const employeeID = ref<string>(
+      props.userID ? props.userID : store.state.user.data.id
+    );
     // SETUP
     const sections = ref<SectionsType>([
       {
@@ -130,26 +133,26 @@ export default {
     });
 
     // Retrieve the day
-    const initialize = async (id: string, userID: string) => {
+    const initialize = async (id: string, employeeID: string) => {
       // Initialize Day
-      const day = new EmployeeDay(id, store.state.companyID, props.userID);
+      const day = new EmployeeDay(id, store.state.companyID, employeeID);
       await day.init();
       state.day = day;
       // Initialze Visits
       state.visits = await retrieveVisitsOnDate(id, {
-        employeeID: userID,
+        employeeID: employeeID,
       });
       // Initialize Expenses
       const expenseDocs = (
         await companiesCollection
-          .doc(`${store.state.companyID}/employees/${userID}`)
+          .doc(`${store.state.companyID}/employees/${employeeID}`)
           .collection("expenses")
           .where("data.date", "==", id)
           .orderBy("data.name")
           .get()
       ).docs;
       for (const doc of expenseDocs) {
-        const expense = new Expense(doc.id, store.state.companyID, userID);
+        const expense = new Expense(doc.id, store.state.companyID, employeeID);
         await expense.init(doc.data().data);
         state.expenses.push(expense);
       }
@@ -158,7 +161,7 @@ export default {
       });
     };
 
-    initialize(props.id, props.userID);
+    initialize(props.id, employeeID.value);
 
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
@@ -175,7 +178,7 @@ export default {
           await visit.delete();
         }
       }
-      router.push({ name: "Employee", params: { userID: props.userID } });
+      router.push({ name: "Employee", params: { userID: employeeID.value } });
       popoverIsOpen.value = false;
 
       store.setAlert({
@@ -185,7 +188,6 @@ export default {
     };
 
     const changeDate = async (date: string) => {
-      console.log(date);
       if (state.day) {
         state.day = await state.day.changeDate(date);
         for (const visit of state.visits) {
@@ -197,7 +199,7 @@ export default {
 
         await router.push({
           name: "Employee Day",
-          params: { employee: props.userID, id: date },
+          params: { employee: employeeID.value, id: date },
         });
 
         // router.go(0);
@@ -259,6 +261,7 @@ export default {
       changeDate,
       copyDay,
       idToName,
+      employeeID,
     };
   },
   components: {
