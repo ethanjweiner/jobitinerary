@@ -64,6 +64,8 @@ const store = {
 
       if (await company.init()) {
         this.setUser(company);
+        await company.fetchEmployees();
+        await company.fetchCustomers();
         this.setCompanyID(company.data.id);
         initializeUserRouting("company");
         return true;
@@ -87,6 +89,8 @@ const store = {
         doc.parentCompany
       );
       if (await employee.init()) {
+        await employee.fetchEmployees();
+        await employee.fetchCustomers();
         this.setUser(employee);
         this.setCompanyID(doc.parentCompany.id);
         initializeUserRouting("employee");
