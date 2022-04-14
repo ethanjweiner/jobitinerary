@@ -92,19 +92,9 @@ export class User implements UserInterface {
 
     if (user) {
       this.data = user.data;
-      await this.fetchEmployees();
-      await this.fetchCustomers();
       return user;
     }
     return false;
-  }
-
-  async fetchEmployees() {
-    return;
-  }
-
-  async fetchCustomers() {
-    return;
   }
 
   async create(name: string, email: string, id: string, phone?: string) {
@@ -164,19 +154,19 @@ class ChildUser extends User {
     return this;
   }
 
-  // async fetchEmployees() {
-  //   const companyDoc = companiesCollection.doc(this.parentCompany.id);
-  //   const docs = (await companyDoc.collection("employees").get()).docs;
-  //   for (const doc of docs) {
-  //     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  //     const employee = new Employee(
-  //       companyDoc.collection("employees").doc(doc.id),
-  //       this.parentCompany
-  //     );
-  //     await employee.init();
-  //     this.employees.push(employee);
-  //   }
-  // }
+  async fetchEmployees() {
+    const companyDoc = companiesCollection.doc(this.parentCompany.id);
+    const docs = (await companyDoc.collection("employees").get()).docs;
+    for (const doc of docs) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      const employee = new Employee(
+        companyDoc.collection("employees").doc(doc.id),
+        this.parentCompany
+      );
+      await employee.init();
+      this.employees.push(employee);
+    }
+  }
 
   async fetchCustomers() {
     const companyDoc = companiesCollection.doc(this.parentCompany.id);
@@ -252,17 +242,6 @@ export class Customer extends ChildUser {
 export class Company extends User {
   constructor(id: string) {
     super(companiesCollection.doc(id));
-  }
-
-  async init() {
-    const user = await super.init();
-    // Retrieve child employees and customers
-    if (user) {
-      await this.fetchEmployees();
-      await this.fetchCustomers();
-      return user;
-    }
-    return false;
   }
 
   // Override
