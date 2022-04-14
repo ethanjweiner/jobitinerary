@@ -179,7 +179,7 @@ const routes: Array<RouteRecordRaw> = [
       // TODAY
       {
         path: "today",
-        component: () => import("@/views/employee/EmployeeDay.vue"),
+        component: () => import("@/views/employee/Today.vue"),
         meta: {
           class: "employee",
         },

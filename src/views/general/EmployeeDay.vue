@@ -29,6 +29,7 @@
         :employeeID="employeeID"
         :key="state.day.data.date"
         :currentDate="state.day.data.date"
+        :preventChange="preventChange"
       />
       <!-- Add Day Popover here -->
     </ion-popover>
@@ -102,6 +103,8 @@ export default {
   props: {
     userID: String,
     id: String,
+    day: Object,
+    preventChange: Boolean,
   },
   setup(props: any) {
     const employeeID = ref<string>(
@@ -178,7 +181,6 @@ export default {
           await visit.delete();
         }
       }
-      router.push({ name: "Employee", params: { userID: employeeID.value } });
       popoverIsOpen.value = false;
 
       store.setAlert({

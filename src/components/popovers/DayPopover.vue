@@ -11,6 +11,7 @@
       </ion-text>
     </ion-item>
     <date-picker
+      v-if="!preventChange"
       title="Change Date"
       v-model="date"
       @update:modelValue="(newDate) => $emit('changeDate', newDate)"
@@ -71,6 +72,7 @@ export default {
     type: String,
     currentDate: String,
     employeeID: String,
+    preventChange: Boolean,
   },
   components: {
     IonList,

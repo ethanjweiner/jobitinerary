@@ -235,7 +235,6 @@ export class DBUnit<T> {
       this.data = docData.data;
       this.keywords = docData.keywords;
     } else {
-      router.push("/");
       throw Error("The document for the work unit could not be found.");
     }
     return this;
