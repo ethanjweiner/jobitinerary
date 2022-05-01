@@ -130,7 +130,7 @@ export default {
     });
 
     // Retrieve the day
-    const initialize = async (id: string, employeeID: string) => {
+    const initialize = async (id, employeeID) => {
       // Initialize Day
       const day = new EmployeeDay(id, store.state.companyID, employeeID);
       await day.init();
@@ -162,7 +162,7 @@ export default {
 
     const popoverIsOpen = ref(false);
     const popoverEvent = ref();
-    const toggleDaySettings = (state: boolean, ev?: Event) => {
+    const toggleDaySettings = (state, ev) => {
       popoverEvent.value = ev;
       popoverIsOpen.value = state;
     };
@@ -183,7 +183,7 @@ export default {
       });
     };
 
-    const changeDate = async (date: string) => {
+    const changeDate = async (date) => {
       if (state.day) {
         state.day = await state.day.changeDate(date);
         for (const visit of state.visits) {
@@ -197,8 +197,6 @@ export default {
           name: "Employee Day",
           params: { employee: employeeID.value, id: date },
         });
-
-        // router.go(0);
       }
 
       store.setAlert({
@@ -207,13 +205,13 @@ export default {
       });
     };
 
-    const copyVisits = async (employeeID: string) => {
+    const copyVisits = async (employeeID) => {
       for (const visit of state.visits) {
         await copyVisit(visit, employeeID);
       }
     };
 
-    const copyDay = async (employeeName: string) => {
+    const copyDay = async (employeeName) => {
       const employeeID = nameToID(employeeName);
 
       if (state.day) {
@@ -236,8 +234,6 @@ export default {
         });
       }
     };
-
-    // refreshOnRouteChange(initialize);
 
     return {
       store,

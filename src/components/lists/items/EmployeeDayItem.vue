@@ -39,9 +39,8 @@
       <ion-card-subtitle v-if="customers.length">
         <ion-icon :icon="icons.cart"></ion-icon>
         Customers:
-        <span v-for="(id, index) in customers" :key="id"
-          >{{ idToName(id)
-          }}<span v-if="index != customers.length - 1">, </span>
+        <span v-for="(name, index) in customers" :key="name"
+          >{{ name }}<span v-if="index != customers.length - 1">, </span>
         </span>
       </ion-card-subtitle>
 
@@ -102,10 +101,14 @@ export default {
 
     const customers = computed(() =>
       state.visits.reduce((customers: Array<string>, visit: Visit) => {
-        if (!customers.includes(visit.data.customerID))
-          customers.push(visit.data.customerID);
-        if (!customers.includes(visit.data.unregisteredCustomer))
+        if (visit.data.customerID && !customers.includes(visit.data.customerID))
+          customers.push(idToName(visit.data.customerID));
+        if (
+          visit.data.unregisteredCustomer &&
+          !customers.includes(visit.data.unregisteredCustomer)
+        )
           customers.push(visit.data.unregisteredCustomer);
+        console.log(customers);
         return customers;
       }, [])
     );
