@@ -2,7 +2,7 @@
   <ion-button>
     <slot></slot>
     <span class="ion-margin">{{ title }}</span>
-    <ion-spinner v-if="loading"></ion-spinner>
+    <ion-spinner color="primary" v-if="loading"></ion-spinner>
   </ion-button>
 </template>
 

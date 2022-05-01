@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header collapse="condense">
+    <ion-header>
       <ion-toolbar class="unit-toolbar" color="primary" v-if="state.day">
         <ion-buttons slot="start">
           <ion-back-button></ion-back-button>

@@ -1,13 +1,7 @@
 <template>
   <ion-card class="ion-margin">
-    <ion-item lines="none" class="ion-padding">
-      <ion-label position="stacked" v-if="showDate">
-        {{ state.expense.data.date }}
-      </ion-label>
-      <ion-input v-model="state.expense.data.name" placeholder="Name">
-      </ion-input>
-
-      <ion-buttons slot="end" style="margin: 0;">
+    <ion-item>
+      <ion-buttons slot="start" style="margin: 0;">
         <CurrencyInput
           v-model="state.expense.data.cost"
           placeholder="Cost"
@@ -15,6 +9,16 @@
           :disabled="disableInput"
           style="margin-right: 8px;"
         />
+      </ion-buttons>
+      <ion-input v-model="state.expense.data.name" placeholder="Name">
+      </ion-input>
+    </ion-item>
+    <ion-item lines="none" class="ion-padding">
+      <ion-label v-if="showDate">
+        {{ state.expense.data.date }}
+      </ion-label>
+
+      <ion-buttons slot="end" style="margin: 0;">
         <ion-note style="margin-right: 7px;" v-if="state.expense.data.paid"
           ><ion-icon :icon="icons.checkmark"></ion-icon> Paid</ion-note
         >

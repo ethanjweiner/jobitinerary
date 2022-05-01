@@ -104,6 +104,8 @@ export default {
       state.visits.reduce((customers: Array<string>, visit: Visit) => {
         if (!customers.includes(visit.data.customerID))
           customers.push(visit.data.customerID);
+        if (!customers.includes(visit.data.unregisteredCustomer))
+          customers.push(visit.data.unregisteredCustomer);
         return customers;
       }, [])
     );

@@ -1,17 +1,11 @@
 <template>
-  <SearchToolbar :addAction="addExpense" disableSearch title="Expenses" />
+  <SearchToolbar
+    :addAction="addExpense"
+    disableSearch
+    title="Expenses"
+    v-if="!hideToolbar"
+  />
   <div class="expenses-list">
-    <List type="list" :items="state.expenses">
-      <template v-slot:item="itemProps">
-        <ExpenseItem
-          :key="itemProps.item.id"
-          @deleteExpense="deleteExpense"
-          :expense="itemProps.item"
-          :showDate="true"
-          enableDelete
-        />
-      </template>
-    </List>
     <ion-button
       class="ion-margin"
       color="tertiary"
@@ -23,6 +17,17 @@
       <ion-icon :icon="icons.add"></ion-icon>
       Add Expense
     </ion-button>
+    <List type="list" :items="state.expenses">
+      <template v-slot:item="itemProps">
+        <ExpenseItem
+          :key="itemProps.item.id"
+          @deleteExpense="deleteExpense"
+          :expense="itemProps.item"
+          :showDate="true"
+          enableDelete
+        />
+      </template>
+    </List>
   </div>
 </template>
 
@@ -46,6 +51,7 @@ export default {
     modelValue: Array,
     date: String,
     employeeID: String,
+    hideToolbar: Boolean,
   },
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
@@ -57,7 +63,7 @@ export default {
       const expense = await createExpense(props.employeeID, {
         date: props.date ? props.date : formatDate(new Date().toISOString()),
       });
-      state.expenses.push(expense);
+      state.expenses.unshift(expense);
       emit("update:modelValue", state.expenses);
     };
 

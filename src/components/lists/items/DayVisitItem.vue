@@ -5,9 +5,17 @@
         <ion-reorder slot="start"></ion-reorder>
       </ion-buttons>
       <div style="width: 100%;">
-        <ion-label v-if="state.visit.data.customerID">
+        <ion-label
+          v-if="
+            state.visit.data.customerID || state.visit.data.unregisteredCustomer
+          "
+        >
           <ion-icon :icon="icons.cart"></ion-icon>
-          {{ idToName(state.visit.data.customerID) }}</ion-label
+          {{
+            state.visit.data.customerID
+              ? idToName(state.visit.data.customerID)
+              : state.visit.data.unregisteredCustomer
+          }}</ion-label
         >
         <ion-label v-else>Visit</ion-label>
         <ion-note v-if="state.visit.data.plannedStart">

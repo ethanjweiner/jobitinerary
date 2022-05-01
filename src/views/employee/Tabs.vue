@@ -2,7 +2,6 @@
   <ion-page :class="route.meta.class">
     <ion-tabs>
       <ion-router-outlet :key="refresher"></ion-router-outlet>
-      <CreateButton />
       <ion-tab-bar :slot="screenWidth < 768 ? 'bottom' : 'top'" color="primary">
         <div style="height: 100%;">
           <ion-title class="main-title" style="height: 90%;">
@@ -26,6 +25,15 @@
         >
           <ion-icon :icon="icons.calendar" />
           <ion-label>Days</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button
+          :layout="screenWidth < 768 ? 'icon-top' : 'icon-start'"
+          tab="expenses"
+          href="/employee/expenses"
+        >
+          <ion-icon :icon="icons.pricetags" />
+          <ion-label>Expenses</ion-label>
         </ion-tab-button>
 
         <ion-tab-button
@@ -69,10 +77,9 @@ import {
   IonTitle,
 } from "@ionic/vue";
 import { onMounted, ref, watch } from "@vue/runtime-core";
-import { calendar, cash, settings, today } from "ionicons/icons";
+import { calendar, cash, pricetags, settings, today } from "ionicons/icons";
 import { useRoute } from "vue-router";
 
-import CreateButton from "@/components/buttons/CreateButton.vue";
 import store from "@/store";
 
 export default {
@@ -86,7 +93,6 @@ export default {
     IonPage,
     IonRouterOutlet,
     IonTitle,
-    CreateButton,
     IonLoading,
   },
   setup() {
@@ -110,7 +116,7 @@ export default {
     });
 
     return {
-      icons: { calendar, cash, settings, today },
+      icons: { calendar, cash, settings, today, pricetags },
       screenWidth,
       route,
       store,

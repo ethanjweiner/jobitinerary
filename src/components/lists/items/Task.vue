@@ -9,6 +9,9 @@
           ></ion-checkbox>
         </ion-buttons>
         <ion-input
+          class="task-input"
+          :id="state.task.id"
+          autocapitalize="on"
           placeholder="General name"
           @ionInput="$emit('update:modelValue', state.task)"
           :debounce="config.constants.DEBOUNCE_AMOUNT"
@@ -16,15 +19,8 @@
           type="text"
         >
         </ion-input>
-        <ion-thumbnail
-          slot="end"
-          v-if="state.task.image.ref"
-          @click="state.imageModalIsOpen = true"
-        >
-          <img :src="state.imageURL" alt="Img" />
-        </ion-thumbnail>
+
         <ion-buttons slot="end">
-          <ImageUploader :hideText="true" @imageChange="changeImage" />
           <ion-button @click="$emit('deleteTask')">
             <ion-icon :icon="icons.trashOutline"></ion-icon>
           </ion-button>
@@ -32,6 +28,7 @@
       </ion-item>
       <ion-item v-if="state.showTextAreas" lines="none" color="light">
         <ion-textarea
+          autocapitalize="on"
           placeholder="Additional notes"
           auto-grow
           rows="1"
@@ -72,13 +69,11 @@ import {
   IonModal,
   IonReorder,
   IonTextarea,
-  IonThumbnail,
   IonToolbar,
 } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { cameraOutline, close, trashOutline } from "ionicons/icons";
 
-import ImageUploader from "@/components/ImageUploader.vue";
 import config from "@/config/config";
 import { getImageURL, showTextAreas } from "@/helpers";
 import store from "@/store";
@@ -97,11 +92,9 @@ export default {
     IonIcon,
     IonReorder,
     IonInput,
-    IonThumbnail,
     IonModal,
     IonCard,
     IonToolbar,
-    ImageUploader,
   },
   emits: ["update:modelValue", "deleteTask"],
   setup(props: any, { emit }: { emit: any }) {
@@ -165,5 +158,9 @@ ion-card {
 .task-container {
   border: 1px solid var(--ion-color-secondary);
   border-radius: 10px;
+}
+
+.item-native {
+  padding-inline-start: 0;
 }
 </style>

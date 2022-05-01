@@ -14,7 +14,7 @@
       "port": 5050
     },
     "firestore": {
-      "port": 8088
+      "port": 8090
     },
     "ui": {
       "enabled": true

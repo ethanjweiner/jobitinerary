@@ -202,6 +202,14 @@ const routes: Array<RouteRecordRaw> = [
           refresh: true,
         },
       },
+      // Expenses
+      {
+        path: "expenses",
+        component: () => import("@/views/employee/ExpensesView.vue"),
+        meta: {
+          class: "employee",
+        },
+      },
       // PAY
       {
         path: "pay",

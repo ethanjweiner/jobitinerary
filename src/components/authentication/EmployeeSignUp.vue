@@ -26,7 +26,7 @@
   </ion-card>
 </template>
 
-<script lang="ts">
+<script>
 import { IonButton, IonCard, IonInput, IonItem, IonLabel } from "@ionic/vue";
 import { reactive, toRefs } from "@vue/reactivity";
 import { ref } from "vue";
@@ -46,7 +46,7 @@ export default {
   props: {
     email: String,
   },
-  setup(props: any) {
+  setup(props) {
     const credentials = reactive({
       email: props.email,
       password: "",

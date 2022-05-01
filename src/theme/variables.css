@@ -87,6 +87,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-font-family: "Work Sans", sans-serif;
 }
 
+:host {
+}
+
 /* Custom Themes */
 :root .main {
   --ion-color-primary: #01796f;

@@ -67,6 +67,7 @@ export default defineComponent({
     // Task updates
 
     const addTask = () => {
+      const id = `task-${Date.now()}`;
       state.tasks.push({
         text: "",
         complete: false,
@@ -75,8 +76,11 @@ export default defineComponent({
           ref: "",
           caption: "",
         },
-        id: Date.now(),
+        id,
       });
+      setTimeout(() => {
+        document.querySelector(`#${id}`).setFocus();
+      }, 50);
     };
 
     const reorderTasks = (ev: CustomEvent) => {

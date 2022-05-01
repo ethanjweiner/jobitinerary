@@ -15,6 +15,7 @@
           v-model="state.tool.name"
           @ionInput="$emit('update:modelValue', state.tool)"
           :debounce="config.constants.DEBOUNCE_AMOUNT"
+          :id="state.tool.id"
         ></ion-input>
         <ion-buttons slot="end">
           <ion-note v-if="state.tool.returned">

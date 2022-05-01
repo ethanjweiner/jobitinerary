@@ -1,12 +1,14 @@
 <template>
   <ion-page>
     <ion-content>
-      <EmployeeDays
-        :employeeID="state.employee.data.id"
-        title="Dates"
-        :dbRef="daysRef"
-        :showPaidToggle="true"
-      />
+      <div class="top-spacing">
+        <EmployeeDays
+          :employeeID="state.employee.data.id"
+          title="Dates"
+          :dbRef="daysRef"
+          :showPaidToggle="true"
+        />
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -56,4 +58,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-content {
+  margin-top: 80px;
+}
+</style>

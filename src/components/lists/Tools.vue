@@ -42,11 +42,16 @@ export default defineComponent({
     });
 
     const addTool = () => {
+      const id = `tool-${Date.now()}`;
       state.tools.push({
         name: "",
         returned: false,
-        id: Date.now(),
+        id,
       });
+
+      setTimeout(() => {
+        document.querySelector(`#${id}`).setFocus();
+      }, 100);
     };
 
     const reorderTools = (ev: CustomEvent) => {

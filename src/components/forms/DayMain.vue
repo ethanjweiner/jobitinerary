@@ -4,6 +4,19 @@
       <ion-col size="12" size-lg="6">
         <ion-card>
           <ion-card-header>
+            <ion-card-title>TIME LOG</ion-card-title>
+            <ion-card-subtitle>Total hours for the day</ion-card-subtitle>
+          </ion-card-header>
+          <TimeLog
+            @update:modelValue="$emit('update:modelValue', state.day)"
+            v-model="state.day.data.time"
+            :title="'Track Day Hours'"
+          />
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-lg="6">
+        <ion-card>
+          <ion-card-header>
             <ion-card-title>MAIN</ion-card-title>
           </ion-card-header>
           <ion-card-content>
@@ -81,19 +94,6 @@
               </ion-item>
             </ion-list>
           </ion-card-content>
-        </ion-card>
-      </ion-col>
-      <ion-col size="12" size-lg="6">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>TIME LOG</ion-card-title>
-            <ion-card-subtitle>Total hours for the day</ion-card-subtitle>
-          </ion-card-header>
-          <TimeLog
-            @update:modelValue="$emit('update:modelValue', state.day)"
-            v-model="state.day.data.time"
-            :title="'Track Day Hours'"
-          />
         </ion-card>
       </ion-col>
     </ion-row>

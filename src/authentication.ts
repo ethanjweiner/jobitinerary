@@ -86,7 +86,7 @@ export async function signOut() {
     router.currentRoute.value.fullPath.startsWith("/employee") ||
     router.currentRoute.value.fullPath.startsWith("/company")
   )
-    router.push("/");
+    router.push("/").then(() => router.go(0));
 }
 
 // loadUser: Load the signed-in user into the store, based on the user's type
