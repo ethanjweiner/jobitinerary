@@ -15,7 +15,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonButton, IonContent, IonIcon, IonPage } from "@ionic/vue";
 import { reactive, ref } from "@vue/reactivity";
 import { add } from "ionicons/icons";
@@ -26,10 +26,6 @@ import store from "@/store";
 import { EmployeeDay } from "@/types/units";
 
 import EmployeeDayComponent from "../general/EmployeeDay.vue";
-
-interface State {
-  day: EmployeeDay | null;
-}
 
 export default {
   name: "Today",
@@ -43,7 +39,7 @@ export default {
   setup() {
     const today = ref(dateToString(new Date()));
 
-    const state = reactive<State>({
+    const state = reactive({
       day: null,
     });
 

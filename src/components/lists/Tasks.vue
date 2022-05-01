@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import {
   IonIcon,
   IonItem,
@@ -58,7 +58,7 @@ export default defineComponent({
     IonToggle,
     IonNote,
   },
-  setup(props: any, { emit }: { emit: any }) {
+  setup(props, { emit }) {
     const state = reactive({
       tasks: [...props.modelValue],
       enableReorder: false,
@@ -83,14 +83,14 @@ export default defineComponent({
       }, 50);
     };
 
-    const reorderTasks = (ev: CustomEvent) => {
+    const reorderTasks = (ev) => {
       ev.detail.complete();
       const temp = state.tasks[ev.detail.from];
       state.tasks[ev.detail.from] = state.tasks[ev.detail.to];
       state.tasks[ev.detail.to] = temp;
     };
 
-    const deleteTask = (index: number) => {
+    const deleteTask = (index) => {
       state.tasks.splice(index, 1);
     };
 

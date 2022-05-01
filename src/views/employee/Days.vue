@@ -13,7 +13,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonContent, IonPage } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { computed, watch } from "@vue/runtime-core";
@@ -21,7 +21,6 @@ import { computed, watch } from "@vue/runtime-core";
 import EmployeeDays from "@/components/lists/EmployeeDays.vue";
 import { companiesCollection } from "@/main";
 import store from "@/store";
-import { CollectionRef } from "@/types/auxiliary";
 
 export default {
   name: "Days",
@@ -35,7 +34,7 @@ export default {
       employee: store.state.user,
     });
 
-    const daysRef = computed<CollectionRef>(() => {
+    const daysRef = computed(() => {
       const base = companiesCollection
         .doc(`${store.state.companyID}/employees/${store.state.user.data.id}`)
         .collection("days");

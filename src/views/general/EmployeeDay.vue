@@ -58,7 +58,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import {
   IonBackButton,
   IonButton,
@@ -90,14 +90,8 @@ import { idToName, nameToID, retrieveVisitsOnDate } from "@/helpers";
 import { companiesCollection } from "@/main";
 import router from "@/router";
 import store from "@/store";
-import { SectionsType } from "@/types/auxiliary";
-import { EmployeeDay, Expense, Visit } from "@/types/units";
+import { EmployeeDay, Expense } from "@/types/units";
 
-interface State {
-  day: EmployeeDay | null;
-  visits: Array<Visit>;
-  expenses: Array<Expense>;
-}
 export default {
   name: "Employee Day",
   props: {
@@ -106,12 +100,12 @@ export default {
     day: Object,
     preventChange: Boolean,
   },
-  setup(props: any) {
-    const employeeID = ref<string>(
+  setup(props) {
+    const employeeID = ref(
       props.userID ? props.userID : store.state.user.data.id
     );
     // SETUP
-    const sections = ref<SectionsType>([
+    const sections = ref([
       {
         name: "Main",
         icon: documentTextOutline,
@@ -129,7 +123,7 @@ export default {
       },
     ]);
 
-    const state = reactive<State>({
+    const state = reactive({
       day: null, // Use the default hourly rate
       visits: [],
       expenses: [],

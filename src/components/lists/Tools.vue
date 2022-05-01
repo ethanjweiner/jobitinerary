@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { IonIcon, IonItem, IonLabel, IonReorderGroup } from "@ionic/vue";
 import { reactive } from "@vue/reactivity";
 import { defineComponent, watch } from "@vue/runtime-core";
@@ -36,7 +36,7 @@ export default defineComponent({
     IonLabel,
     IonIcon,
   },
-  setup(props: any, { emit }: { emit: any }) {
+  setup(props, { emit }) {
     const state = reactive({
       tools: [...props.modelValue],
     });
@@ -54,14 +54,14 @@ export default defineComponent({
       }, 100);
     };
 
-    const reorderTools = (ev: CustomEvent) => {
+    const reorderTools = (ev) => {
       ev.detail.complete();
       const temp = state.tools[ev.detail.from];
       state.tools[ev.detail.from] = state.tools[ev.detail.to];
       state.tools[ev.detail.to] = temp;
     };
 
-    const deleteTool = (index: number) => {
+    const deleteTool = (index) => {
       state.tools.splice(index, 1);
     };
 
