@@ -108,7 +108,6 @@ export default {
           !customers.includes(visit.data.unregisteredCustomer)
         )
           customers.push(visit.data.unregisteredCustomer);
-        console.log(customers);
         return customers;
       }, [])
     );

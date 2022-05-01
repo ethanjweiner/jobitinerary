@@ -78,6 +78,5 @@ export default {
 <style scoped>
 ion-button.add-day {
   margin-top: 30vh;
-  font-size: 1.5em;
 }
 </style>
