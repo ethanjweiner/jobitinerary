@@ -51,14 +51,16 @@ export const db = firebase.firestore();
 export const storage = firebase.storage();
 
 // Set up emulators in localhost environments
-if (location.hostname === 'localhost') {
-  db.useEmulator('localhost', 8090);
-  auth.useEmulator('http://localhost:9099');
-  storage.useEmulator('localhost', 9199);
-}
+// if (location.hostname === 'localhost') {
+//   db.useEmulator('localhost', 8090);
+//   auth.useEmulator('http://localhost:9099');
+//   storage.useEmulator('localhost', 9199);
+// }
 
 export const companiesCollection = db.collection('companies');
+export const emailsCollection = db.collection('emails');
 export const employeesCollection = db.collectionGroup('employees');
+export const DOMAIN = 'jobitinerary.com';
 
 // SET UP THE USER UPON ANY AUTH CHANGES
 let app: null | AppType = null;

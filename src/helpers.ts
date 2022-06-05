@@ -1,26 +1,26 @@
-import date from "date-and-time";
+import date from 'date-and-time';
 
-import { companiesCollection, storage } from "./main";
-import router from "./router";
-import store from "./store";
-import { Loader } from "./types/auxiliary";
-import { Visit } from "./types/units";
+import { companiesCollection, emailsCollection, storage } from './main';
+import router from './router';
+import store from './store';
+import { Loader } from './types/auxiliary';
+import { Visit } from './types/units';
 
 // ROUTING HELPERS
 
 let routeGuardsInitialized = false;
 
-const initRouteGuards = (userKind: "employee" | "company" | "customer") => {
+const initRouteGuards = (userKind: 'employee' | 'company' | 'customer') => {
   if (!routeGuardsInitialized) {
     // This route guard does not actually secure the user out of the route
     router.beforeEach((to, from, next) => {
       if (to.meta.requiresAuth) {
-        if (to.fullPath.includes("company/") && userKind == "company") next();
-        else if (to.fullPath.includes("employee/") && userKind == "employee")
+        if (to.fullPath.includes('company/') && userKind == 'company') next();
+        else if (to.fullPath.includes('employee/') && userKind == 'employee')
           next();
-        else if (to.fullPath.includes("customer/") && userKind == "customer")
+        else if (to.fullPath.includes('customer/') && userKind == 'customer')
           next();
-        else router.push("/");
+        else router.push('/');
       } else next();
     });
   }
@@ -29,7 +29,7 @@ const initRouteGuards = (userKind: "employee" | "company" | "customer") => {
 };
 
 export function initializeUserRouting(
-  userKind: "employee" | "company" | "customer"
+  userKind: 'employee' | 'company' | 'customer'
 ) {
   initRouteGuards(userKind);
   if (!router.currentRoute.value.fullPath.startsWith(`/${userKind}`))
@@ -39,7 +39,7 @@ export function initializeUserRouting(
 // DATE HELPERS
 
 export function dateToString(inputDate: Date) {
-  return date.format(inputDate, "YYYY-MM-DD");
+  return date.format(inputDate, 'YYYY-MM-DD');
 }
 
 export function formatDate(inputDate: string) {
@@ -54,15 +54,15 @@ export function dateToStrings(inputDate: Date): Array<string> {
     inputDate.toLocaleDateString(),
     inputDate.toLocaleString(),
     inputDate.toUTCString(),
-    date.format(inputDate, "MMMM"),
-    date.format(inputDate, "dddd"),
+    date.format(inputDate, 'MMMM'),
+    date.format(inputDate, 'dddd'),
   ];
 
   return strs;
 }
 
 export function formatTime(inputDate: string): string {
-  return date.format(new Date(inputDate), "hh:mm A");
+  return date.format(new Date(inputDate), 'hh:mm A');
 }
 
 // STRING MANIPULATION HELPERS
@@ -75,15 +75,15 @@ function toWords(input: string): Array<string> {
 
 export function nameToID(name: string): string {
   const words = toWords(name);
-  if (words.length) return words.map((word) => word.toLowerCase()).join("_");
+  if (words.length) return words.map((word) => word.toLowerCase()).join('_');
   return name.toLowerCase();
 }
 
 export function idToName(id: string): string {
   return id
-    .split("_")
+    .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+    .join(' ');
 }
 
 export function capitalize(input: string) {
@@ -92,7 +92,7 @@ export function capitalize(input: string) {
 
 export function explode(str: any): Array<string> {
   const explosion: Array<string> = [];
-  const strs = str.split(" ");
+  const strs = str.split(' ');
   strs.push(str);
   strs.forEach((str: string) => {
     for (let i = 1; i < str.length + 1; i++) {
@@ -115,9 +115,9 @@ export async function loadData(ev: any, loader: Loader, searchFilter?: string) {
 // OTHER
 
 export function generateUUID() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
+      v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -147,12 +147,12 @@ export async function retrieveVisitsOnDate(
   // RETRIEVE VISITS ASSOCIATED WITH THE PROVIDED DAY
   let query = companiesCollection
     .doc(store.state.companyID)
-    .collection("visits")
-    .where("data.date", "==", date);
+    .collection('visits')
+    .where('data.date', '==', date);
   if (options.customerID)
-    query = query.where("data.customerID", "==", options.customerID);
+    query = query.where('data.customerID', '==', options.customerID);
   if (options.employeeID)
-    query = query.where("data.employeeID", "==", options.employeeID);
+    query = query.where('data.employeeID', '==', options.employeeID);
 
   const visitDocs = (await query.get()).docs;
   for (const doc of visitDocs) {
@@ -178,4 +178,18 @@ export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
 
 export function showTextAreas(state: any) {
   setTimeout(() => (state.showTextAreas = true), 250);
+}
+
+// Emails
+
+export async function sendEmail(recipient: string, date: string) {
+  await emailsCollection.add({
+    to: recipient,
+    template: {
+      name: 'handlebars',
+      data: {
+        date,
+      },
+    },
+  });
 }

@@ -1,13 +1,18 @@
-import { reactive } from "@vue/reactivity";
+import { reactive } from '@vue/reactivity';
 
-import { generateUUID, nameToID, retrieveCustomerAddress } from "./helpers";
-import store from "./store";
+import {
+  generateUUID,
+  nameToID,
+  retrieveCustomerAddress,
+  sendEmail,
+} from './helpers';
+import store from './store';
 import {
   CollectionRef,
   DocSnapshot,
   Query,
   QuerySnapshot,
-} from "./types/auxiliary";
+} from './types/auxiliary';
 import {
   CustomerDay,
   EmployeeDay,
@@ -19,8 +24,8 @@ import {
   newJobInterface,
   newVisitInterface,
   Visit,
-} from "./types/units";
-import { Company, Employee } from "./types/users";
+} from './types/units';
+import { Company, Employee } from './types/users';
 
 export class InfiniteList {
   query: Query;
@@ -37,8 +42,8 @@ export class InfiniteList {
   ) {
     this.query = dbRef
       .limit(bufferSize)
-      .orderBy("data." + orderByParam, "desc")
-      .where("keywords", "array-contains", searchFilter.toLowerCase().trim());
+      .orderBy('data.' + orderByParam, 'desc')
+      .where('keywords', 'array-contains', searchFilter.toLowerCase().trim());
     this.list = reactive<{ items: Array<any> }>({ items: [] }); // Make reactive for computed purposes
     this.listeners = [];
     this.bufferEnd = null;
@@ -64,18 +69,18 @@ export class InfiniteList {
 
           snapshot.docChanges().forEach((change) => {
             switch (change.type) {
-              case "added":
+              case 'added':
                 // Temporary solution
                 if (snapshot.docs.length == 1)
                   this.list.items.unshift(change.doc.data().data);
                 else this.list.items.push(change.doc.data().data);
                 break;
-              case "removed":
+              case 'removed':
                 this.list.items = this.list.items.filter(
                   (item) => item.id != change.doc.id
                 );
                 break;
-              case "modified":
+              case 'modified':
                 this.list.items[
                   this.list.items.findIndex((item) => item.id == change.doc.id)
                 ] = change.doc.data().data;
@@ -84,7 +89,7 @@ export class InfiniteList {
                 break;
             }
           });
-          if (snapshot.empty) reject("The snapshot is empty.");
+          if (snapshot.empty) reject('The snapshot is empty.');
           else {
             this.bufferEnd = snapshot.docs[snapshot.docs.length - 1];
             resolve(0);
@@ -112,8 +117,8 @@ export async function search(
 ): Promise<Array<DocSnapshot>> {
   let query: Query = dbRef
     .limit(limit)
-    .orderBy("data." + orderByParam, "desc")
-    .where("keywords", "array-contains", searchFilter.toLowerCase().trim());
+    .orderBy('data.' + orderByParam, 'desc')
+    .where('keywords', 'array-contains', searchFilter.toLowerCase().trim());
 
   // Update the query depending on search param
   if (startAfterDoc) query = query.startAfter(startAfterDoc);
@@ -166,11 +171,14 @@ export async function createJob(jobName: string, customerID: string) {
 
 export async function createEmployeeDay(date: string, employeeID: string) {
   // Determine hourly rate
+  let employee;
   let hourlyRate;
+
   if (store.state.user instanceof Employee) {
-    hourlyRate = store.state.user.data.defaultHourlyRate;
+    employee = store.state.user;
+    hourlyRate = employee.data.defaultHourlyRate;
   } else if (store.state.user instanceof Company) {
-    const employee = store.state.user.employees.find(
+    employee = store.state.user.employees.find(
       (employee) => employee.data.id == employeeID
     );
     if (employee) hourlyRate = employee.data.defaultHourlyRate;
@@ -183,6 +191,14 @@ export async function createEmployeeDay(date: string, employeeID: string) {
       employeeID,
     })
   );
+
+  console.log(employee);
+
+  if (employee) {
+    const recipient = `${employee.data.name} <${employee.data.email}>`;
+    await sendEmail(recipient, date);
+  }
+
   return day;
 }
 
