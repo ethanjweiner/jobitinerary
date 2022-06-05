@@ -64,16 +64,15 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
-} from "@ionic/vue";
-import { reactive, toRefs } from "@vue/reactivity";
-import { close } from "ionicons/icons";
+} from '@ionic/vue';
+import { reactive, toRefs } from '@vue/reactivity';
+import { close } from 'ionicons/icons';
 
-import { capitalize, nameToID } from "@/helpers";
-import store from "@/store";
-import { Company } from "@/types/users";
+import { capitalize, nameToID } from '@/helpers';
+import store from '@/store';
 
 export default {
-  name: "New User Modal",
+  name: 'New User Modal',
   components: {
     IonButton,
     IonButtons,
@@ -87,25 +86,25 @@ export default {
     IonTitle,
     IonToolbar,
   },
-  props: ["type"],
-  emits: ["userAdded", "didDismiss"],
+  props: ['type'],
+  emits: ['userAdded', 'didDismiss'],
   setup(props: any, { emit }: { emit: any }) {
     const state = reactive({
-      name: "",
-      email: "",
+      name: '',
+      email: '',
     });
 
     const addUser = async () => {
-      if (state.name && store.state.user instanceof Company) {
-        if (props.type == "employee") {
+      if (state.name) {
+        if (props.type == 'employee') {
           await store.state.user.addEmployee(state.name, state.email);
-        } else if (props.type == "customer") {
+        } else if (props.type == 'customer') {
           await store.state.user.addCustomer(state.name, state.email);
         } else {
-          throw Error("The specified user type is not valid.");
+          throw Error('The specified user type is not valid.');
         }
-        emit("userAdded", nameToID(state.name));
-      } else throw Error("You must enter a name for the new user.");
+        emit('userAdded', nameToID(state.name));
+      } else throw Error('You must enter a name for the new user.');
     };
 
     return {

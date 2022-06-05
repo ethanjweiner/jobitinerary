@@ -1,7 +1,7 @@
-import { loadUser } from "@/authentication";
-import { generateUUID, nameToID } from "@/helpers";
-import { auth, companiesCollection } from "@/main";
-import { DocData, DocRef, ImageWithCaption, Location } from "@/types/auxiliary";
+import { loadUser } from '@/authentication';
+import { generateUUID, nameToID } from '@/helpers';
+import { auth, companiesCollection } from '@/main';
+import { DocData, DocRef, ImageWithCaption, Location } from '@/types/auxiliary';
 
 // USERS
 
@@ -26,31 +26,31 @@ export interface CustomerData extends MetaData {
 export type UserData = MetaData | EmployeeData | CustomerData;
 
 const emptyUserData: MetaData = {
-  id: "",
-  email: "",
-  name: "",
-  phone: "",
+  id: '',
+  email: '',
+  name: '',
+  phone: '',
 };
 
 const emptyEmployeeData: EmployeeData = {
-  id: "",
-  email: "",
-  name: "",
-  phone: "",
+  id: '',
+  email: '',
+  name: '',
+  phone: '',
   defaultHourlyRate: null,
 };
 
 const emptyCustomerData: CustomerData = {
-  id: "",
-  email: "",
-  name: "",
-  phone: "",
+  id: '',
+  email: '',
+  name: '',
+  phone: '',
   location: {
-    address: "",
+    address: '',
     coordinates: null,
   },
-  customerNotes: "",
-  propertyNotes: "",
+  customerNotes: '',
+  propertyNotes: '',
   propertyImages: [],
 };
 
@@ -101,7 +101,7 @@ export class User implements UserInterface {
     this.data.name = name;
     this.data.email = email;
     this.data.id = id;
-    this.data.phone = phone ? phone : "";
+    this.data.phone = phone ? phone : '';
 
     await this.save();
 
@@ -145,7 +145,7 @@ class ChildUser extends User {
     this.data.name = name;
     this.data.email = email;
     this.data.id = id;
-    this.data.phone = phone ? phone : "";
+    this.data.phone = phone ? phone : '';
     this.activationToken = generateUUID();
     this.activated = false;
 
@@ -156,11 +156,11 @@ class ChildUser extends User {
 
   async fetchEmployees() {
     const companyDoc = companiesCollection.doc(this.parentCompany.id);
-    const docs = (await companyDoc.collection("employees").get()).docs;
+    const docs = (await companyDoc.collection('employees').get()).docs;
     for (const doc of docs) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const employee = new Employee(
-        companyDoc.collection("employees").doc(doc.id),
+        companyDoc.collection('employees').doc(doc.id),
         this.parentCompany
       );
       await employee.init();
@@ -170,11 +170,11 @@ class ChildUser extends User {
 
   async fetchCustomers() {
     const companyDoc = companiesCollection.doc(this.parentCompany.id);
-    const docs = (await companyDoc.collection("customers").get()).docs;
+    const docs = (await companyDoc.collection('customers').get()).docs;
     for (const doc of docs) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const customer = new Customer(
-        companyDoc.collection("customers").doc(doc.id),
+        companyDoc.collection('customers').doc(doc.id),
         this.parentCompany
       );
       await customer.init();
@@ -213,6 +213,14 @@ class ChildUser extends User {
   }
 }
 
+export class Customer extends ChildUser {
+  data: CustomerData;
+  constructor(dbRef: DocRef, company: MetaData) {
+    super(dbRef, company);
+    this.data = { ...emptyCustomerData };
+  }
+}
+
 export class Employee extends ChildUser {
   data: EmployeeData;
 
@@ -224,18 +232,24 @@ export class Employee extends ChildUser {
     if (this.parentCompany)
       return companiesCollection
         .doc(this.parentCompany.id)
-        .collection("visits");
+        .collection('visits');
     throw Error(
-      "Visits can not be found, since the user does not have a parent company"
+      'Visits can not be found, since the user does not have a parent company'
     );
   }
-}
 
-export class Customer extends ChildUser {
-  data: CustomerData;
-  constructor(dbRef: DocRef, company: MetaData) {
-    super(dbRef, company);
-    this.data = { ...emptyCustomerData };
+  async addCustomer(name: string, email: string) {
+    const companyDoc = companiesCollection.doc(this.parentCompany.id);
+
+    const id = nameToID(name);
+    const newCustomer = new Customer(
+      companyDoc.collection('customers').doc(id),
+      this.data
+    );
+    // Update database
+    await newCustomer.create(name, email, id);
+    // Update local state
+    this.customers.push(newCustomer);
   }
 }
 
@@ -246,10 +260,10 @@ export class Company extends User {
 
   // Override
   async fetchEmployees() {
-    const docs = (await this.dbRef.collection("employees").get()).docs;
+    const docs = (await this.dbRef.collection('employees').get()).docs;
     for (const doc of docs) {
       const employee = new Employee(
-        this.dbRef.collection("employees").doc(doc.id),
+        this.dbRef.collection('employees').doc(doc.id),
         this.data
       );
       await employee.init();
@@ -260,7 +274,7 @@ export class Company extends User {
   async addEmployee(name: string, email: string) {
     const id = nameToID(name);
     const newEmployee = new Employee(
-      this.dbRef.collection("employees").doc(id),
+      this.dbRef.collection('employees').doc(id),
       this.data
     );
     // Update database
@@ -281,10 +295,10 @@ export class Company extends User {
 
   // Override
   async fetchCustomers() {
-    const docs = (await this.dbRef.collection("customers").get()).docs;
+    const docs = (await this.dbRef.collection('customers').get()).docs;
     for (const doc of docs) {
       const customer = new Customer(
-        this.dbRef.collection("customers").doc(doc.id),
+        this.dbRef.collection('customers').doc(doc.id),
         this.data
       );
       await customer.init();
@@ -295,7 +309,7 @@ export class Company extends User {
   async addCustomer(name: string, email: string) {
     const id = nameToID(name);
     const newCustomer = new Customer(
-      this.dbRef.collection("customers").doc(id),
+      this.dbRef.collection('customers').doc(id),
       this.data
     );
     // Update database
