@@ -22,10 +22,11 @@
             size-xl="4"
           >
             <ion-card class="input-card">
-              <div class="ion-text-start">
+              <div class="ion-text-start" v-if="showSelect">
                 <h3 class="text-secondary">Select an Employee</h3>
               </div>
               <UserSelect
+                v-if="showSelect"
                 :names="
                   store.state.user.employees.map((employee) => employee.name)
                 "
@@ -72,18 +73,18 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
-} from "@ionic/vue";
-import { reactive } from "@vue/reactivity";
+} from '@ionic/vue';
+import { reactive } from '@vue/reactivity';
 
-import DatePicker from "@/components/inputs/DatePicker.vue";
-import UserSelect from "@/components/selects/UserSelect.vue";
-import { createEmployeeDay } from "@/db";
-import { dateToString } from "@/helpers";
-import router from "@/router";
-import store from "@/store";
+import DatePicker from '@/components/inputs/DatePicker.vue';
+import UserSelect from '@/components/selects/UserSelect.vue';
+import { createEmployeeDay } from '@/db';
+import { dateToString } from '@/helpers';
+import router from '@/router';
+import store from '@/store';
 
 export default {
-  name: "Select Date",
+  name: 'Select Date',
   components: {
     IonPage,
     IonContent,
@@ -103,10 +104,11 @@ export default {
   },
   props: {
     employeeID: String,
+    showSelect: Boolean,
   },
   setup(props: any) {
     const state = reactive({
-      employeeID: props.employeeID == "new" ? "" : props.employeeID,
+      employeeID: props.employeeID == 'new' ? '' : props.employeeID,
       date: dateToString(new Date()),
     });
 
@@ -117,7 +119,7 @@ export default {
           name: `Employee Day / ${store.state.userType}`,
           params: { userID: state.employeeID, id: state.date },
         });
-      } else throw Error("Please select an employee and date.");
+      } else throw Error('Please select an employee and date.');
     };
 
     return {

@@ -60,20 +60,21 @@ import {
   IonRadio,
   IonRadioGroup,
   IonRow,
-} from "@ionic/vue";
-import { computed, reactive, ref, watch } from "vue";
+} from '@ionic/vue';
+import { computed, reactive, ref, watch } from 'vue';
 
-import config from "@/config/config";
-import router from "@/router";
-import { CollectionRef, Query, Splitter } from "@/types/auxiliary";
-import { EmployeeDayInterface } from "@/types/units";
+import config from '@/config/config';
+import router from '@/router';
+import store from '@/store';
+import { CollectionRef, Query, Splitter } from '@/types/auxiliary';
+import { EmployeeDayInterface } from '@/types/units';
 
-import SearchToolbar from "../inputs/SearchToolbar.vue";
-import InfiniteList from "./InfiniteList.vue";
-import EmployeeDayItem from "./items/EmployeeDayItem.vue";
+import SearchToolbar from '../inputs/SearchToolbar.vue';
+import InfiniteList from './InfiniteList.vue';
+import EmployeeDayItem from './items/EmployeeDayItem.vue';
 
 export default {
-  name: "Employee Days",
+  name: 'Employee Days',
   components: {
     EmployeeDayItem,
     InfiniteList,
@@ -101,24 +102,24 @@ export default {
     const daysRef = computed<Query>(() => {
       let ref: CollectionRef | Query = props.dbRef;
       if (state.filterUnpaid) {
-        ref = ref.where("data.paid", "==", false);
+        ref = ref.where('data.paid', '==', false);
       }
       return ref;
     });
 
     const key = ref(0);
-    const searchDate = ref<string>("");
+    const searchDate = ref<string>('');
 
     watch(searchDate, () => (key.value += 1));
     watch(daysRef, () => (key.value += 1));
 
     const splitters = ref<Array<Splitter>>([
       {
-        name: "Future Dates",
+        name: 'Future Dates',
         filter: (day: EmployeeDayInterface) => new Date(day.date) >= new Date(),
       },
       {
-        name: "Logged Dates",
+        name: 'Logged Dates',
         filter: (day: EmployeeDayInterface) => new Date(day.date) < new Date(),
       },
     ]);
@@ -133,7 +134,7 @@ export default {
 
     const createDay = async () => {
       router.push({
-        name: "New Employee Day",
+        name: `New Employee Day / ${store.state.userType}`,
         params: { employeeID: props.employeeID },
       });
     };
