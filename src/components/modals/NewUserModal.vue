@@ -95,7 +95,7 @@ export default {
     });
 
     const addUser = async () => {
-      if (state.name) {
+      if (state.name && store.state.user) {
         if (props.type == 'employee') {
           await store.state.user.addEmployee(state.name, state.email);
         } else if (props.type == 'customer') {

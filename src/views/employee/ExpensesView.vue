@@ -13,15 +13,15 @@
 </template>
 
 <script>
-import { IonContent, IonPage } from "@ionic/vue";
-import { reactive } from "@vue/reactivity";
+import { IonContent, IonPage } from '@ionic/vue';
+import { reactive } from '@vue/reactivity';
 
-import Expenses from "@/components/lists/Expenses.vue";
-import { companiesCollection } from "@/main";
-import store from "@/store";
-import { Expense } from "@/types/units";
+import Expenses from '@/components/lists/Expenses.vue';
+import { companiesCollection } from '@/main';
+import store from '@/store';
+import { Expense } from '@/types/units';
 export default {
-  name: "Expenses View",
+  name: 'Expenses View',
   setup() {
     const state = reactive({
       employee: store.state.user,
@@ -32,7 +32,8 @@ export default {
       const expenseDocs = (
         await companiesCollection
           .doc(`${store.state.companyID}/employees/${store.state.user.data.id}`)
-          .collection("expenses")
+          .collection('expenses')
+          .orderBy('data.date', 'desc')
           .get()
       ).docs;
 

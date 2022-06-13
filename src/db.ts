@@ -4,7 +4,7 @@ import {
   generateUUID,
   nameToID,
   retrieveCustomerAddress,
-  sendEmail,
+  sendNewDayEmail,
 } from './helpers';
 import store from './store';
 import {
@@ -196,7 +196,7 @@ export async function createEmployeeDay(date: string, employeeID: string) {
 
   if (employee) {
     const recipient = `${employee.data.name} <${employee.data.email}>`;
-    await sendEmail(recipient, date);
+    await sendNewDayEmail(recipient, date);
   }
 
   return day;

@@ -182,13 +182,26 @@ export function showTextAreas(state: any) {
 
 // Emails
 
-export async function sendEmail(recipient: string, date: string) {
+export async function sendNewDayEmail(recipient: string, date: string) {
   await emailsCollection.add({
     to: recipient,
     template: {
-      name: 'handlebars',
+      name: 'new_day',
       data: {
         date,
+      },
+    },
+  });
+}
+
+export async function sendActivationEmail(recipient: string, token: string) {
+  await emailsCollection.add({
+    to: recipient,
+    template: {
+      name: 'activation',
+      data: {
+        token,
+        email: recipient,
       },
     },
   });

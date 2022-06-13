@@ -6,9 +6,8 @@ import {
   explode,
   hasKey,
   idToName,
-} from "@/helpers";
-import { companiesCollection } from "@/main";
-import router from "@/router";
+} from '@/helpers';
+import { companiesCollection } from '@/main';
 
 import {
   DocRef,
@@ -17,7 +16,7 @@ import {
   Task,
   TimeLog,
   Tool,
-} from "./auxiliary";
+} from './auxiliary';
 
 export interface ExpenseInterface {
   id: string;
@@ -39,8 +38,8 @@ export function newExpenseInterface(
     id,
     companyID,
     employeeID,
-    date: options.date ? options.date : "",
-    name: "",
+    date: options.date ? options.date : '',
+    name: '',
     cost: 0,
     paid: false,
   };
@@ -74,24 +73,24 @@ export function newVisitInterface(
   return {
     id,
     companyID,
-    employeeID: options.employeeID ? options.employeeID : "",
-    customerID: options.customerID ? options.customerID : "",
-    unregisteredCustomer: "",
-    workType: "",
-    plannedStart: "",
-    plannedEnd: "",
-    jobID: options.jobID ? options.jobID : "",
+    employeeID: options.employeeID ? options.employeeID : '',
+    customerID: options.customerID ? options.customerID : '',
+    unregisteredCustomer: '',
+    workType: '',
+    plannedStart: '',
+    plannedEnd: '',
+    jobID: options.jobID ? options.jobID : '',
     date: options.date ? options.date : dateToString(new Date()),
     time: {
-      start: "",
-      end: "",
+      start: '',
+      end: '',
       hours: 0,
     },
-    notes: "",
+    notes: '',
     location: options.location
       ? options.location
       : {
-          address: "",
+          address: '',
           coordinates: null,
         },
     tasks: [],
@@ -128,15 +127,15 @@ export function newEmployeeDayInterface(
     date,
     companyID,
     employeeID: options.employeeID ? options.employeeID : null,
-    startLocation: "",
-    plannedStart: "",
-    plannedEnd: "",
+    startLocation: '',
+    plannedStart: '',
+    plannedEnd: '',
     time: {
-      start: "",
-      end: "",
+      start: '',
+      end: '',
       hours: 0,
     },
-    notes: "",
+    notes: '',
     paid: false,
     hourlyRate: options.hourlyRate ? options.hourlyRate : null,
     readByEmployee: false,
@@ -168,12 +167,12 @@ export function newJobInterface(
     name,
     companyID,
     customerID,
-    description: "",
-    startDate: "", // Must manually select start date
-    endDate: "",
+    description: '',
+    startDate: '', // Must manually select start date
+    endDate: '',
     tasks: [],
     location: {
-      address: "",
+      address: '',
       coordinates: null,
     },
   };
@@ -197,8 +196,8 @@ export function newCustomerDayInterface(
     id: date,
     date,
     companyID,
-    customerID: options.customerID ? options.customerID : "",
-    notes: "",
+    customerID: options.customerID ? options.customerID : '',
+    notes: '',
     visitIDs: [],
   };
 }
@@ -219,7 +218,7 @@ export class DBUnit<T> {
     this.dbRef = dbRef;
     this.data = {} as T;
     this.searchKeys = searchKeys;
-    this.keywords = [""];
+    this.keywords = [''];
   }
 
   async init(data?: T) {
@@ -235,7 +234,7 @@ export class DBUnit<T> {
       this.data = docData.data;
       this.keywords = docData.keywords;
     } else {
-      throw Error("The document for the work unit could not be found.");
+      throw Error('The document for the work unit could not be found.');
     }
     return this;
   }
@@ -274,9 +273,11 @@ export class DBUnit<T> {
 
     const generateKeywordsForKey = (key: string): Array<string> => {
       if (hasKey(this.data, key)) {
-        if (key.toLowerCase().includes("date"))
+        if (key.toLowerCase().includes('date'))
           return generateKeywordsForDate(this.data[key]);
-        else if (key == "customerID" || key == "employeeID")
+        else if (
+          ['customerID', 'employeeID', 'unregisteredCustomer'].includes(key)
+        )
           return generateKeywordsForID(this.data[key]);
         else return explode(this.data[key]);
       }
@@ -287,7 +288,7 @@ export class DBUnit<T> {
       .map(generateKeywordsForKey)
       .reduce((keywords, list) => keywords.concat(list))
       .map((keyword) => keyword.toLowerCase().trim());
-    this.keywords.unshift("");
+    this.keywords.unshift('');
   }
 
   async save() {
@@ -301,10 +302,11 @@ export class DBUnit<T> {
 export class Visit extends DBUnit<VisitInterface> {
   constructor(visitID: string, companyID: string) {
     super(visitID, companiesCollection.doc(`${companyID}/visits/${visitID}`), [
-      "date",
-      "customerID",
-      "employeeID",
-      "notes",
+      'date',
+      'customerID',
+      'employeeID',
+      'unregisteredCustomer',
+      'notes',
     ]);
   }
 
@@ -322,7 +324,7 @@ export class Job extends DBUnit<JobInterface> {
       companiesCollection.doc(
         `${companyID}/customers/${customerID}/jobs/${jobID}`
       ),
-      ["name", "customerID", "employeeID", "startDate"]
+      ['name', 'customerID', 'employeeID', 'startDate']
     );
   }
 }
@@ -334,7 +336,7 @@ export class EmployeeDay extends DBUnit<EmployeeDayInterface> {
       companiesCollection.doc(
         `${companyID}/employees/${employeeID}/days/${date}`
       ),
-      ["date", "employeeID"]
+      ['date', 'employeeID']
     );
   }
 
@@ -374,7 +376,7 @@ export class CustomerDay extends DBUnit<CustomerDayInterface> {
       companiesCollection.doc(
         `${companyID}/customers/${customerID}/days/${date}`
       ),
-      ["date", "customerID"]
+      ['date', 'customerID']
     );
   }
 
@@ -400,7 +402,7 @@ export class Expense extends DBUnit<ExpenseInterface> {
       companiesCollection.doc(
         `${companyID}/employees/${employeeID}/expenses/${id}`
       ),
-      ["name", "date", "employeeID"]
+      ['name', 'date', 'employeeID']
     );
   }
   async changeDate(date: string) {

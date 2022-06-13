@@ -25,26 +25,26 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, ref } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
+import { computed, reactive, ref } from '@vue/reactivity';
+import { watch } from '@vue/runtime-core';
 import {
   calendarNumberOutline,
   cashOutline,
   personOutline,
   pricetagsOutline,
-} from "ionicons/icons";
+} from 'ionicons/icons';
 
-import EmployeeForm from "@/components/forms/EmployeeForm.vue";
-import EmployeeDays from "@/components/lists/EmployeeDays.vue";
-import Expenses from "@/components/lists/Expenses.vue";
-import PaymentInfo from "@/components/PaymentInfo.vue";
-import { companiesCollection } from "@/main";
-import store from "@/store";
-import { CollectionRef, SectionsType } from "@/types/auxiliary";
-import { Expense } from "@/types/units";
-import { Company, Employee } from "@/types/users";
+import EmployeeForm from '@/components/forms/EmployeeForm.vue';
+import EmployeeDays from '@/components/lists/EmployeeDays.vue';
+import Expenses from '@/components/lists/Expenses.vue';
+import PaymentInfo from '@/components/PaymentInfo.vue';
+import { companiesCollection } from '@/main';
+import store from '@/store';
+import { CollectionRef, SectionsType } from '@/types/auxiliary';
+import { Expense } from '@/types/units';
+import { Company, Employee } from '@/types/users';
 
-import Sections from "../Sections.vue";
+import Sections from '../Sections.vue';
 
 interface State {
   employee: Employee | undefined;
@@ -52,7 +52,7 @@ interface State {
 }
 
 export default {
-  name: "Employee",
+  name: 'Employee',
   props: {
     userID: String,
   },
@@ -64,31 +64,31 @@ export default {
 
     const sections = ref<SectionsType>([
       {
-        name: "Dates",
+        name: 'Dates',
         icon: calendarNumberOutline,
-        id: "dates",
+        id: 'dates',
       },
       {
-        name: "Expenses",
+        name: 'Expenses',
         icon: pricetagsOutline,
-        id: "expenses",
+        id: 'expenses',
       },
       {
-        name: "Pay",
+        name: 'Pay',
         icon: cashOutline,
-        id: "pay",
+        id: 'pay',
       },
       {
-        name: "Info",
+        name: 'Info',
         icon: personOutline,
-        id: "employee-info",
+        id: 'employee-info',
       },
     ]);
 
     const daysRef = computed<CollectionRef>(() => {
       const base = companiesCollection
         .doc(`${store.state.companyID}/employees/${props.userID}`)
-        .collection("days");
+        .collection('days');
 
       return base;
     });
@@ -97,7 +97,8 @@ export default {
       const expenseDocs = (
         await companiesCollection
           .doc(`${store.state.companyID}/employees/${props.userID}`)
-          .collection("expenses")
+          .collection('expenses')
+          .orderBy('data.date', 'desc')
           .get()
       ).docs;
 

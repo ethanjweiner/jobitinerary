@@ -1,5 +1,5 @@
 import { loadUser } from '@/authentication';
-import { generateUUID, nameToID } from '@/helpers';
+import { generateUUID, nameToID, sendActivationEmail } from '@/helpers';
 import { auth, companiesCollection } from '@/main';
 import { DocData, DocRef, ImageWithCaption, Location } from '@/types/auxiliary';
 
@@ -68,6 +68,7 @@ interface UserInterface {
     phone?: string
   ) => Promise<ThisParameterType<UserInterface>>;
   signUp: (password: string) => void;
+  addCustomer: (name: string, email: string) => Promise<void>;
 
   employees: Array<Employee>;
   customers: Array<Customer>;
@@ -106,6 +107,11 @@ export class User implements UserInterface {
     await this.save();
 
     return this;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async addCustomer(name: string, email: string) {
+    return;
   }
 
   async save() {
@@ -151,7 +157,30 @@ class ChildUser extends User {
 
     await this.save();
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    if (this instanceof Employee) {
+      await sendActivationEmail(
+        email,
+        this.parentCompany.id + '_' + this.activationToken
+      );
+    }
+
     return this;
+  }
+
+  async addCustomer(name: string, email: string) {
+    const companyDoc = companiesCollection.doc(this.parentCompany.id);
+
+    const id = nameToID(name);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    const newCustomer = new Customer(
+      companyDoc.collection('customers').doc(id),
+      this.data
+    );
+    // Update database
+    await newCustomer.create(name, email, id);
+    // Update local state
+    this.customers.push(newCustomer);
   }
 
   async fetchEmployees() {
@@ -236,20 +265,6 @@ export class Employee extends ChildUser {
     throw Error(
       'Visits can not be found, since the user does not have a parent company'
     );
-  }
-
-  async addCustomer(name: string, email: string) {
-    const companyDoc = companiesCollection.doc(this.parentCompany.id);
-
-    const id = nameToID(name);
-    const newCustomer = new Customer(
-      companyDoc.collection('customers').doc(id),
-      this.data
-    );
-    // Update database
-    await newCustomer.create(name, email, id);
-    // Update local state
-    this.customers.push(newCustomer);
   }
 }
 
