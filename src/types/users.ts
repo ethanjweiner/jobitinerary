@@ -98,6 +98,11 @@ export class User implements UserInterface {
     return false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async addEmployee(name: string, email: string) {
+    return;
+  }
+
   async create(name: string, email: string, id: string, phone?: string) {
     this.data.name = name;
     this.data.email = email;

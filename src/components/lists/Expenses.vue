@@ -105,7 +105,7 @@ export default {
 
     if (filterUnpaid.value === true) {
       state.expenses = state.allExpenses.filter(
-        (expense) => expense.data.paid === false
+        (expense: Expense) => expense.data.paid === false
       );
     } else {
       state.expenses = state.allExpenses;
@@ -116,7 +116,7 @@ export default {
     watch(filterUnpaid, (status) => {
       if (status === true) {
         state.expenses = state.allExpenses.filter(
-          (expense) => expense.data.paid === false
+          (expense: Expense) => expense.data.paid === false
         );
       } else {
         state.expenses = state.allExpenses;
