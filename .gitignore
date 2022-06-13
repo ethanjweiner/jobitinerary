@@ -33,3 +33,5 @@ npm-debug.log*
 public/assets/Color Palette 2.jpeg
 public/assets/Color Palette.jpeg
 .firebase
+firebase-export-*
+ios
